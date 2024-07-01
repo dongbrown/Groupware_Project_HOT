@@ -1,0 +1,561 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body{
+    font-family: 'Pretendard-Regular';
+    /* position: relative; */
+    background-image: url("https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-size: 100%;
+    z-index: 500;
+}
+
+header{
+    position: relative;
+    z-index:1000;
+}
+
+th{
+    white-space: nowrap;
+}
+/* 메인 헤더 css */
+.sideHeader {
+    margin: 15px;
+    width: 80px;     /*조정시 서브 카테고리 left도 조정해줘야함. */
+    height: 96.5vh;
+    overflow: hidden;
+    transition: width 0.3s;
+    position: fixed;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sideHeader-sub {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 80%; /* 전체 높이 중 메뉴들이 차지하는 비율 */
+}
+#sideHeader > div {
+    margin: 10px 0; /* 각 메뉴 사이의 간격 */
+    text-decoration: none;
+
+
+    color: white;
+}
+
+#sideHeader1 {
+    background-color: rgb(0, 57, 100);
+    left: 0;
+
+}
+
+.headerContent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    opacity: 0.5;
+    transition: all 0.3s ease-in-out;
+}
+.headerContent:hover{
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* 메인 헤더 호버시 서브 카테고리 나오는 창 */
+.sideHeader-sub {
+    z-index:1000;
+    width: 65px;
+    margin-left: 15px;
+    height: 96.5vh;
+    overflow: hidden;
+    position: fixed;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+    left: 80px;
+    top:15px;
+}
+/* 메일 카테고리 css */
+
+#mail-category:hover +#mailWrap{
+    display: block;
+    width: 400px;
+}
+#mailWrap:hover{
+    /* display: block; */
+    width: 400px;
+}
+
+#mailWrap{
+    /* display: none; */
+    width: 0px;
+    transition: width 0.3s ease-in-out;
+}
+
+#mailContent{
+    font-family: 'Pretendard-Regular';
+    font-size: 20px;
+    text-align: center;
+}
+
+/* 프로젝트 카테고리 css */
+#project-category:hover +#projectWrap{
+    display: block;
+    width: 400px;
+}
+#projectWrap:hover{
+    /* display: block; */
+    width: 400px;
+}
+
+#projectWrap{
+    /* display: none; */
+    width: 0px;
+    transition: width 0.3s ease-in-out;
+}
+
+#projectContent{
+    font-family: 'Pretendard-Regular';
+    font-size: 20px;
+    text-align: center;
+}
+
+/* 전자결재 카테고리 css */
+#approval-category:hover +#approvalWrap{
+    display: block;
+    width: 400px;
+}
+#approvalWrap:hover{
+    /* display: block; */
+    width: 400px;
+}
+
+#approvalWrap{
+    /* display: none; */
+    width: 0px;
+    transition: width 0.3s ease-in-out;
+}
+
+#approvalContent{
+    font-family: 'Pretendard-Regular';
+    font-size: 20px;
+    text-align: center;
+}
+
+/* 켈린더 카테고리 css */
+#calender-category:hover +#calenderWrap{
+    display: block;
+    width: 400px;
+}
+#calenderWrap:hover{
+    /* display: block; */
+    width: 400px;
+}
+
+#calenderWrap{
+    /* display: none; */
+    width: 0px;
+    transition: width 0.3s ease-in-out;
+}
+
+#calenderContent{
+    font-family: 'Pretendard-Regular';
+    font-size: 20px;
+    text-align: center;
+}
+
+/* 커뮤니티 카테고리 css */
+#community-category:hover +#communityWrap{
+    display: block;
+    width: 400px;
+}
+#communityWrap:hover{
+    /* display: block; */
+    width: 400px;
+}
+
+#communityWrap{
+    /* display: none; */
+    width: 0px;
+    transition: width 0.3s ease-in-out;
+}
+
+#communityContent{
+    font-family: 'Pretendard-Regular';
+    font-size: 20px;
+    text-align: center;
+}
+
+/* 채팅 카테고리 css */
+#chat-category:hover +#chatWrap{
+    display: block;
+    width: 400px;
+}
+#chatWrap:hover{
+    /* display: block; */
+    width: 400px;
+}
+
+#chatWrap{
+    /* display: none; */
+    width: 0px;
+    transition: width 0.3s ease-in-out;
+}
+
+#chatContent{
+    font-family: 'Pretendard-Regular';
+    font-size: 20px;
+    text-align: center;
+}
+
+
+/* 인사 카테고리 css */
+#insa-category:hover +#insaWrap{
+    display: block;
+    width: 400px;
+}
+#insaWrap:hover{
+    /* display: block; */
+    width: 400px;
+}
+
+#insaWrap{
+    /* display: none; */
+    width: 0px;
+    transition: width 0.3s ease-in-out;
+}
+
+#insaContent{
+    font-family: 'Pretendard-Regular';
+    font-size: 20px;
+    text-align: center;
+}
+
+
+/* index css ------------------------------------------------------------------------------ */
+#main-wrap{
+    position: fixed;
+    left: 110px;
+    width: 93.5%;
+    margin: 15px 0;
+    height: 96.5vh;
+    background-color: rgba(255, 255, 255, 0.511);
+    backdrop-filter: blur(10px);
+    display: flex;
+    border-radius: 20px;
+
+}
+
+/* 첫번째 줄 css */
+#first-wrap{
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    padding: 10px;
+}
+/* 호버시 크키 커지는 css */
+#first-wrap>div{
+    transition: all 0.3s
+}
+#first-wrap>div:hover{
+    transform: scale(1.05);
+}
+/* 1-1 */
+#member-card{
+    position: relative;
+    width: 100%;
+    height: 40%;
+    border-radius: 15px;
+    background-color: rgb(0, 57, 100);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+/* 프로필 사진 */
+#member-card-profile{
+    background-image: url("https://i.imgur.com/WDQ52RE.png");
+    background-size: 100% 100%;
+    border-radius: 1000px;
+    width: 150px;
+    height: 150px;
+}
+
+/* 프로필 체인지 버튼 */
+#changeBtn{
+    position: absolute;
+   top:15px;
+   right: 15px;
+   cursor: pointer;
+}
+#changeBtn:hover{
+    animation: rotate 4s linear infinite;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg); /* 초기 상태 */
+    }
+    to {
+        transform: rotate(360deg); /* 최종 상태 */
+    }
+}
+
+
+/* 프로필 하단 버튼 박스 */
+#member-card-mail{
+ display: flex;
+ width: 50%;
+ justify-content: center;
+ align-items: center;
+ justify-content: space-between;
+ margin-top: 30px;
+}
+#member-card-mail>div{
+opacity: 0.5;
+}
+#member-card-mail>div:hover{
+opacity: 1;
+}
+
+/* 1-2 */
+#approval-card{
+    margin-top:10px ;
+    width: 100%;
+    height: 15%;
+    border-radius: 15px;
+    background-color: white;
+}
+/* 1-3 */
+#search-card{
+    margin-top:10px ;
+    width: 100%;
+    height: 15%;
+    border-radius: 15px;
+    border: 3px solid rgb(0, 57, 100);
+}
+/* 1-4 */
+#mail-card{
+    margin-top:10px ;
+    width: 100%;
+    height: 27%;
+    border-radius: 15px;
+    background-color: white;
+}
+
+/* 두번째 줄 css */
+#second-wrap{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+/* 호버시 크키 커지는 css */
+#second-wrap>div{
+    transition: all 0.3s
+}
+#second-wrap>div:hover{
+    transform: scale(1.03);
+}
+
+/* 2-1 */
+#board-card{
+    width: 100%;
+    height: 35%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 2-2 */
+#project-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 40%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* 2-2-* */
+#project-card>div{
+    margin: 10px;
+    width: 48%;
+    height: 100%;
+    border: 1px solid red;
+    transition: all 0.3s
+}
+
+#project-card>div:hover{
+    transform: scale(1.07);
+}
+
+#agenda-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 25%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+
+
+
+/* 세번째 줄 css */
+#third-wrap{
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+/* 호버시 크키 커지는 css */
+#third-wrap>div{
+    transition: all 0.3s
+}
+#third-wrap>div:hover{
+    transform: scale(1.03);
+}
+
+/* 3-1 */
+#calender-card{
+    width: 100%;
+    height: 30%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 3-2 */
+#today-work-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 15%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 3-3 */
+#banner-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 25%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 3-4 */
+#menu-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 30%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 프로젝트 생성 모달창 css */
+
+/* 사원 조회 div */
+#input-member-title{
+    margin-top: 15px;
+    margin-right: 15px;
+    width: 300px;
+    max-height: 200px;
+
+}
+
+#input-member-title>div{
+    display: block;
+}
+
+#input-member-list{
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    overflow: scroll;
+}
+
+/* 저장 출력된 사원 div */
+#checked-member-wrab{
+    display: flex;
+    align-items: center;
+    font-weight: bolder;
+    justify-content: center;
+    justify-content: space-evenly;
+    margin-top: 5px;
+    height: 30px;
+    width: 300px;
+    background-color: rgb(222, 222, 222);
+    border-radius: 100px;
+}
+
+#member-save-btn{
+    margin-top: 10px;
+}
+
+.project-choice{
+    cursor: pointer;
+}
+
+/* 프로젝트 수정 목록 css */
+#projectListTable{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+#modal-size1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* 그래프 표시 */
+.graph-container {
+    width: 100%;
+    display: flex;
+
+}
+
+.bar {
+    width: 0;
+    background-color: #1b35ffe3;
+    margin: 10px 0;
+    border-radius: 100px;
+    overflow: hidden;
+    height: 15px;
+    transition: width 2s ease-in-out;
+}
+
+
+/* 작업 모달  css */
+#work-contents{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+#project-contents{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
