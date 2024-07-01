@@ -23,7 +23,7 @@ target/
 /nbproject/private/
 /nbbuild/
 /dist/
-/nbdist/
+/nbdist/j
 /.nb-gradle/
 build/
 !**/src/main/**/build/
@@ -34,4 +34,6 @@ build/
 
 /src/main/resources/**/*.properties
 /src/main/resources/**/*.xml
-
+.dbeaver/
+Script/
+*.log
