@@ -2,8 +2,9 @@ package com.project.hot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class HotApplication {
 
 	public static void main(String[] args) {
