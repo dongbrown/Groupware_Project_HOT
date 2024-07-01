@@ -2,6 +2,8 @@ package com.project.hot.chatting.model.dto;
 
 import java.util.List;
 
+import com.project.hot.employee.model.dto.Employee;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
