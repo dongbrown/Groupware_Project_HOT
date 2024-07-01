@@ -1,49 +1,49 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 <body>
-    <!-- ¸ÞÀÎ ÄÁÅÙÆ® Á¦ÀÛ -->
+    <!-- ë©”ì¸ ì»¨í…íŠ¸ ì œìž‘ -->
         <div id="main-wrap">
-            <!-- Ã¹¹øÂ° ÁÙ wrap (»ç¿øÁ¤º¸, ¸ÞÀÏ, ÀüÀÚ°áÀç È®ÀÎ µî) -->
+            <!-- ì²«ë²ˆì§¸ ì¤„ wrap (ì‚¬ì›ì •ë³´, ë©”ì¼, ì „ìžê²°ìž¬ í™•ì¸ ë“±) -->
              <div id="first-wrap">
                 <div id="member-card">
                     <div id="changeBtn"><img src="https://i.imgur.com/tTdzHN7.png" width="25px"></div>
                     <div id="member-card-profile"></div>
-                    <h4 style="margin-top: 30px; font-weight: bolder;">È« ±æ µ¿</h3>
-                    <a>°³¹ß ºÎ¼­/ÆÀ</a>
+                    <h4 style="margin-top: 30px; font-weight: bolder;">í™ ê¸¸ ë™</h3>
+                    <a>ê°œë°œ ë¶€ì„œ/íŒ€</a>
                     <div id="member-card-mail">
                         <div><a href=""><img src="https://i.imgur.com/LIHIxyI.png" width="40px" style="margin-bottom: 3px;"></a></div>
                         <div><a href=""><img src="https://i.imgur.com/JjYn69Q.png" width="40px"></a></div>
                     </div>
 
                 </div>
-                <div id="approval-card">ÀüÀÚ°áÀç</div>
-                <div id="search-card">Á÷¿ø Á¶È¸</div>
-                <div id="mail-card">¹ÞÀº¸ÞÀÏ</div>
+                <div id="approval-card">ì „ìžê²°ìž¬</div>
+                <div id="search-card">ì§ì› ì¡°íšŒ</div>
+                <div id="mail-card">ë°›ì€ë©”ì¼</div>
              </div>
-             <!-- µÎ¹øÂ° ÁÙ wrap (°Ô½ÃÆÇ, ÇÁ·ÎÁ§Æ®/ÀÛ¾÷ÇöÈ², È¸ÀÇ¾È°Ç) -->
+             <!-- ë‘ë²ˆì§¸ ì¤„ wrap (ê²Œì‹œíŒ, í”„ë¡œì íŠ¸/ìž‘ì—…í˜„í™©, íšŒì˜ì•ˆê±´) -->
              <div id="second-wrap">
-                <div id="board-card">°Ô½ÃÆÇ</div>
+                <div id="board-card">ê²Œì‹œíŒ</div>
                 <div id="project-card">
-                    <div>ÇÁ·ÎÁ§Æ® ÇöÈ²</div>
-                    <div>ÀÛ¾÷ ÇöÈ²</div>
+                    <div>í”„ë¡œì íŠ¸ í˜„í™©</div>
+                    <div>ìž‘ì—… í˜„í™©</div>
                 </div>
-            <div id="agenda-card">È¸ÀÇ¾È°Ç</div>
+            <div id="agenda-card">íšŒì˜ì•ˆê±´</div>
 
              </div>
-            <!-- ¼¼¹øÂ° ÁÙ wrap (ÄÌ¸°´õ, ¿À´ÃÀÇ ÀÏÁ¤, È«º¸¹è³Ê, È¸»çÁ¡½É½Ä´ÜÇ¥) -->
+            <!-- ì„¸ë²ˆì§¸ ì¤„ wrap (ì¼ˆë¦°ë”, ì˜¤ëŠ˜ì˜ ì¼ì •, í™ë³´ë°°ë„ˆ, íšŒì‚¬ì ì‹¬ì‹ë‹¨í‘œ) -->
              <div id="third-wrap">
-                <div id="calender-card">ÄÌ¸°´õ</div>
-                <div id="today-work-card">¿À´ÃÀÇ ÀÏÁ¤</div>
-                <div id="banner-card">È«º¸¹è³Ê</div>
-                <div id="menu-card">È¸»çÁ¡½É½Ä´ÜÇ¥</div>
+                <div id="calender-card">ì¼ˆë¦°ë”</div>
+                <div id="today-work-card">ì˜¤ëŠ˜ì˜ ì¼ì •</div>
+                <div id="banner-card">í™ë³´ë°°ë„ˆ</div>
+                <div id="menu-card">íšŒì‚¬ì ì‹¬ì‹ë‹¨í‘œ</div>
              </div>
 
 
