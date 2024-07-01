@@ -94,6 +94,32 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		   <dependency>
+          <groupId>org.apache.tomcat.embed</groupId>
+          <artifactId>tomcat-embed-jasper</artifactId>
+          <!--<version>11.0.0-M21</version>-->
+      </dependency>
+      <dependency>
+          <groupId>jakarta.servlet.jsp.jstl</groupId>
+          <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+          <!--<version>3.0.0</version>-->
+      </dependency>
+      <dependency>
+         <!-- jakarta.servlet.jsp.jstl : jstl 구현체 -->
+          <groupId>org.glassfish.web</groupId>
+          <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+          <!--<version>3.0.1</version>-->
+      </dependency>
+		<dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-aop</artifactId>
+      	</dependency>
+      <!-- @EnableConfigurationProperties을 사용하기 위한 Configuration processor DI -->
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-configuration-processor</artifactId>
+      </dependency>
+
 	</dependencies>
 
 	<build>
