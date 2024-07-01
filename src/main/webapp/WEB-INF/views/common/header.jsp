@@ -22,73 +22,69 @@
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
     <div id="modal-size" class="modal-dialog">
     <div class="modal-content">
-    <div class="modal-header">
+        <div class="modal-header">
         <h1 class="modal-title fs-5" id="createModalLabel">프로젝트 생성</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
     <div style="display: flex; flex-direction: row;">
-    <div class="modal-body">
-    </div>
+        <div class="modal-body">
         <!-- 프로젝트 이름 -->
-     <div class="input-group mb-3">
+        <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 이름</span>
             <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-     </div>
+            </div>
             <!-- 프로젝트 생성자 이름 -->
-     <div class="input-group mb-3">
-	        <span class="input-group-text" id="inputGroup-sizing-default">작성자</span>
-	        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="홍길동" disabled>
-     </div>
+            <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">작성자</span>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="홍길동" disabled>
+            </div>
             <!-- 프로젝트 중요도 체크박스  -->
-     <div class="input-group mb-3">
-	      <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 중요도</span>
-	      <select class="form-select" aria-label="Default select example">
-	          <option selected>선택하세요.</option>
-	          <option value="1" style="color: red;">상</option>
-	          <option value="2" style="color: rgb(255, 132, 0);">중</option>
-	          <option value="3" style="color: green;">하</option>
-	        </select>
-	</div>
-     <!-- 프로젝트 설명 -->
-     <p style="font-weight: bolder;">프로젝트 설명</p>
-     <div id="project-contents" class="form-floating">
-     <textarea id="floatingTextarea-project" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-     <label for="floatingTextarea">프로젝트 설명</label>
-     <span id="project-contents-count" style="margin-left: auto;">0/1000</span>
-     </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 중요도</span>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>선택하세요.</option>
+                    <option value="1" style="color: red;">상</option>
+                    <option value="2" style="color: rgb(255, 132, 0);">중</option>
+                    <option value="3" style="color: green;">하</option>
+                  </select>
+            </div>
+            <!-- 프로젝트 설명 -->
+            <p style="font-weight: bolder;">프로젝트 설명</p>
+            <div id="project-contents" class="form-floating">
+            <textarea id="floatingTextarea-project" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+            <label for="floatingTextarea">프로젝트 설명</label>
+            <span id="project-contents-count" style="margin-left: auto;">0/1000</span>
+            </div>
 
-     <!-- 프로젝트 종료 예정일 -->
-     <br>
-	 <div>
-	     <div class="input-group mb-3">
-	         <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 종료일</span>
-	         <select id="year" class="form-select" aria-label="Year" required>
-	             <option value="" selected>년</option>
-	               <!-- 연도 옵션 추가  올해와 내년만 출력되게 설정-->
+             <br>
+            <div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 종료일</span>
+                    <select id="year1" class="form-select" aria-label="Year" required>
+                        <option value="" selected>년</option>
 
-	         </select>
-	         <select id="month" class="form-select" aria-label="Month" required>
-	             <option value="" selected>월</option>
-	             <!-- 월 옵션 추가 -->
+                    </select>
+                    <select id="month1" class="form-select" aria-label="Month" required>
+                        <option value="" selected>월</option>
 
-	         </select>
-	         <select id="day" class="form-select" aria-label="Day" required>
-	             <option value="" selected>일</option>
-	             <!-- 일 옵션 추가 -->
+                    </select>
+                    <select id="day1" class="form-select" aria-label="Day" required>
+                        <option value="" selected>일</option>
 
-	         </select>
-	     </div>
-	 </div>
-	 <br>
-    <!-- 프로젝트 배정 예산 -->
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="inputGroup-sizing-default">배정예산</span>
-        <input type="text" id="project-budget" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="입력하세요.">
-    </div>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <!-- 프로젝트 배정 예산 -->
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">배정예산</span>
+                <input type="text" id="project-budget" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="입력하세요.">
+                </div>
 
-	<br>
-    <!--  최대 참여 인원(수)-->
-    <div id="member-list" style="display: flex; flex-direction: row;">
+
+            <br>
+            <!--  최대 참여 인원(수)-->
+            <div id="member-list" style="display: flex; flex-direction: row;">
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="inputGroup-sizing-default">총 인원</span>
                     <input id="totalMember" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="1" disabled>
@@ -115,13 +111,13 @@
         <div id="input-member"></div>
     </div>
 
-     <div class="modal-footer">
-             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-             <button type="button" class="btn btn-primary">프로젝트 생성</button>
-             </div>
-         </div>
-         </div>
-     </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary">프로젝트 생성</button>
+                    </div>
+                </div>
+                </div>
+            </div>
      <!-- ------------------ -->
 
      <!-- 프로젝트 수정 모달 창 -->

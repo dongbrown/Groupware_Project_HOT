@@ -8,15 +8,15 @@
     const nextYear = currentYear + 1;
 
     for (let year = currentYear; year <= nextYear; year++) {
-        $('#year').append('<option value="' + year + '">' + year + '</option>');
+        $('#year1').append('<option value="' + year + '">' + year + '</option>');
     };
 
     for (let month = 1; month <= 12; month++) {
-        $('#month').append('<option value="' + month + '">' + month + '</option>');
+        $('#month1').append('<option value="' + month + '">' + month + '</option>');
     }
 
     for (let day = 1; day <= 31; day++) {
-        $('#day').append('<option value="' + day + '">' + day + '</option>');
+        $('#day1').append('<option value="' + day + '">' + day + '</option>');
     }
 
     $('#project-budget').keyup(e=>{
