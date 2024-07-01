@@ -121,7 +121,6 @@
      <!-- ------------------ -->
 
      <!-- 프로젝트 수정 모달 창 -->
-            <!-- Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div id="modal-size" class="modal-dialog modal-lg">
             <div class="modal-content align-items-center justify-content-center">
