@@ -11,22 +11,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Employee {
+	public class Employee {
 
-	private int employeeNo;
-	private Department departmentCode;
-	private Position psitionCode;
-	private String employeeName;
-	private String employeePhone;
-	private String employeePassword;
-	private String employeeId;
-	private String employeeAddress;
-	private String employeeBirthDay;
-	private String employeeSsn;
-	private Date employeeHireDate;
-	private String employeeSalary;
-	private String employeePhoto;
-	private String employeeResignationDay;
-	private String employeeTotalVacation;
+		private int employeeNo;
+		private Department departmentCode;
+		private Position positionCode;
+		private String employeeName;
+		private String employeePhone;
+		private String employeePassword;
+		private String employeeId;
+		private String employeeAddress;
+		private Date employeeBirthDay;
+		private String employeeSsn;
+		private Date employeeHireDate;
+		private int employeeSalary;
+		private String employeePhoto;
+		private Date employeeResignationDay;
+		private int employeeTotalVacation;
 
-}
+	}

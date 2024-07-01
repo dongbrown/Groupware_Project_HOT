@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -14,123 +14,123 @@
 </style>
 
 <head>
-<meta charset="EUC-KR">
-<title>H.O.T ±×·ì¿þ¾î</title>
+<meta charset="UTF-8">
+<title>H.O.T ê·¸ë£¹ì›¨ì–´</title>
 </head>
-<!-- ÇÁ·ÎÁ§Æ® »ý¼º ¸ð´Þ Ã¢ -->
+<!-- í”„ë¡œì íŠ¸ ìƒì„± ëª¨ë‹¬ ì°½ -->
     <!-- create Modal -->
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
     <div id="modal-size" class="modal-dialog">
     <div class="modal-content">
     <div class="modal-header">
-        <h1 class="modal-title fs-5" id="createModalLabel">ÇÁ·ÎÁ§Æ® »ý¼º</h1>
+        <h1 class="modal-title fs-5" id="createModalLabel">í”„ë¡œì íŠ¸ ìƒì„±</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
     <div style="display: flex; flex-direction: row;">
     <div class="modal-body">
     </div>
-        <!-- ÇÁ·ÎÁ§Æ® ÀÌ¸§ -->
+        <!-- í”„ë¡œì íŠ¸ ì´ë¦„ -->
      <div class="input-group mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-default">ÇÁ·ÎÁ§Æ® ÀÌ¸§</span>
+            <span class="input-group-text" id="inputGroup-sizing-default">í”„ë¡œì íŠ¸ ì´ë¦„</span>
             <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
      </div>
-            <!-- ÇÁ·ÎÁ§Æ® »ý¼ºÀÚ ÀÌ¸§ -->
+            <!-- í”„ë¡œì íŠ¸ ìƒì„±ìž ì´ë¦„ -->
      <div class="input-group mb-3">
-	        <span class="input-group-text" id="inputGroup-sizing-default">ÀÛ¼ºÀÚ</span>
-	        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="È«±æµ¿" disabled>
+	        <span class="input-group-text" id="inputGroup-sizing-default">ìž‘ì„±ìž</span>
+	        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="í™ê¸¸ë™" disabled>
      </div>
-            <!-- ÇÁ·ÎÁ§Æ® Áß¿äµµ Ã¼Å©¹Ú½º  -->
+            <!-- í”„ë¡œì íŠ¸ ì¤‘ìš”ë„ ì²´í¬ë°•ìŠ¤  -->
      <div class="input-group mb-3">
-	      <span class="input-group-text" id="inputGroup-sizing-default">ÇÁ·ÎÁ§Æ® Áß¿äµµ</span>
+	      <span class="input-group-text" id="inputGroup-sizing-default">í”„ë¡œì íŠ¸ ì¤‘ìš”ë„</span>
 	      <select class="form-select" aria-label="Default select example">
-	          <option selected>¼±ÅÃÇÏ¼¼¿ä.</option>
-	          <option value="1" style="color: red;">»ó</option>
-	          <option value="2" style="color: rgb(255, 132, 0);">Áß</option>
-	          <option value="3" style="color: green;">ÇÏ</option>
+	          <option selected>ì„ íƒí•˜ì„¸ìš”.</option>
+	          <option value="1" style="color: red;">ìƒ</option>
+	          <option value="2" style="color: rgb(255, 132, 0);">ì¤‘</option>
+	          <option value="3" style="color: green;">í•˜</option>
 	        </select>
 	</div>
-     <!-- ÇÁ·ÎÁ§Æ® ¼³¸í -->
-     <p style="font-weight: bolder;">ÇÁ·ÎÁ§Æ® ¼³¸í</p>
+     <!-- í”„ë¡œì íŠ¸ ì„¤ëª… -->
+     <p style="font-weight: bolder;">í”„ë¡œì íŠ¸ ì„¤ëª…</p>
      <div id="project-contents" class="form-floating">
      <textarea id="floatingTextarea-project" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-     <label for="floatingTextarea">ÇÁ·ÎÁ§Æ® ¼³¸í</label>
+     <label for="floatingTextarea">í”„ë¡œì íŠ¸ ì„¤ëª…</label>
      <span id="project-contents-count" style="margin-left: auto;">0/1000</span>
      </div>
 
-     <!-- ÇÁ·ÎÁ§Æ® Á¾·á ¿¹Á¤ÀÏ -->
+     <!-- í”„ë¡œì íŠ¸ ì¢…ë£Œ ì˜ˆì •ì¼ -->
      <br>
 	 <div>
 	     <div class="input-group mb-3">
-	         <span class="input-group-text" id="inputGroup-sizing-default">ÇÁ·ÎÁ§Æ® Á¾·áÀÏ</span>
+	         <span class="input-group-text" id="inputGroup-sizing-default">í”„ë¡œì íŠ¸ ì¢…ë£Œì¼</span>
 	         <select id="year" class="form-select" aria-label="Year" required>
-	             <option value="" selected>³â</option>
-	               <!-- ¿¬µµ ¿É¼Ç Ãß°¡  ¿ÃÇØ¿Í ³»³â¸¸ Ãâ·ÂµÇ°Ô ¼³Á¤-->
+	             <option value="" selected>ë…„</option>
+	               <!-- ì—°ë„ ì˜µì…˜ ì¶”ê°€  ì˜¬í•´ì™€ ë‚´ë…„ë§Œ ì¶œë ¥ë˜ê²Œ ì„¤ì •-->
 
 	         </select>
 	         <select id="month" class="form-select" aria-label="Month" required>
-	             <option value="" selected>¿ù</option>
-	             <!-- ¿ù ¿É¼Ç Ãß°¡ -->
+	             <option value="" selected>ì›”</option>
+	             <!-- ì›” ì˜µì…˜ ì¶”ê°€ -->
 
 	         </select>
 	         <select id="day" class="form-select" aria-label="Day" required>
-	             <option value="" selected>ÀÏ</option>
-	             <!-- ÀÏ ¿É¼Ç Ãß°¡ -->
+	             <option value="" selected>ì¼</option>
+	             <!-- ì¼ ì˜µì…˜ ì¶”ê°€ -->
 
 	         </select>
 	     </div>
 	 </div>
 	 <br>
-    <!-- ÇÁ·ÎÁ§Æ® ¹èÁ¤ ¿¹»ê -->
+    <!-- í”„ë¡œì íŠ¸ ë°°ì • ì˜ˆì‚° -->
     <div class="input-group mb-3">
-        <span class="input-group-text" id="inputGroup-sizing-default">¹èÁ¤¿¹»ê</span>
-        <input type="text" id="project-budget" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="ÀÔ·ÂÇÏ¼¼¿ä.">
+        <span class="input-group-text" id="inputGroup-sizing-default">ë°°ì •ì˜ˆì‚°</span>
+        <input type="text" id="project-budget" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="ìž…ë ¥í•˜ì„¸ìš”.">
     </div>
 
 	<br>
-    <!--  ÃÖ´ë Âü¿© ÀÎ¿ø(¼ö)-->
+    <!--  ìµœëŒ€ ì°¸ì—¬ ì¸ì›(ìˆ˜)-->
     <div id="member-list" style="display: flex; flex-direction: row;">
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="inputGroup-sizing-default">ÃÑ ÀÎ¿ø</span>
+                    <span class="input-group-text" id="inputGroup-sizing-default">ì´ ì¸ì›</span>
                     <input id="totalMember" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="1" disabled>
                     </div>
 
                 <div class="input-group mb-3" style="margin-left: 20px;">
-                    <span class="input-group-text" id="inputGroup-sizing-default">ºÎ¼­</span>
+                    <span class="input-group-text" id="inputGroup-sizing-default">ë¶€ì„œ</span>
                     <select id="select-dept" class="form-select" aria-label="Default select example">
-                        <option selected>¼±ÅÃÇÏ¼¼¿ä.</option>
-                        <option value="°³¹ß1ÆÀ">°³¹ß1ÆÀ</option>
-                        <option value="°³¹ß2ÆÀ">°³¹ß2ÆÀ</option>
-                        <option value="°³¹ß3ÆÀ">°³¹ß3ÆÀ</option>
-                        <option value="È«º¸ÆÀ">È«º¸ÆÀ</option>
-                        <option value="µðÀÚÀÎ1ÆÀ">µðÀÚÀÎ1ÆÀ</option>
-                        <option value="µðÀÚÀÎ2ÆÀ">µðÀÚÀÎ2ÆÀ</option>
+                        <option selected>ì„ íƒí•˜ì„¸ìš”.</option>
+                        <option value="ê°œë°œ1íŒ€">ê°œë°œ1íŒ€</option>
+                        <option value="ê°œë°œ2íŒ€">ê°œë°œ2íŒ€</option>
+                        <option value="ê°œë°œ3íŒ€">ê°œë°œ3íŒ€</option>
+                        <option value="í™ë³´íŒ€">í™ë³´íŒ€</option>
+                        <option value="ë””ìžì¸1íŒ€">ë””ìžì¸1íŒ€</option>
+                        <option value="ë””ìžì¸2íŒ€">ë””ìžì¸2íŒ€</option>
                     </select>
                 </div>
             </div>
-            <!-- Ã¼Å©ÇÑ »ç¿ø Ãß°¡ div -->
+            <!-- ì²´í¬í•œ ì‚¬ì› ì¶”ê°€ div -->
             <div id="saved-members"></div>
 
         </div>
-                <!-- »ç¿ø Á¶È¸ »ý¼º -->
+                <!-- ì‚¬ì› ì¡°íšŒ ìƒì„± -->
         <div id="input-member"></div>
     </div>
 
      <div class="modal-footer">
-             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ãë¼Ò</button>
-             <button type="button" class="btn btn-primary">ÇÁ·ÎÁ§Æ® »ý¼º</button>
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ì·¨ì†Œ</button>
+             <button type="button" class="btn btn-primary">í”„ë¡œì íŠ¸ ìƒì„±</button>
              </div>
          </div>
          </div>
      </div>
      <!-- ------------------ -->
 
-     <!-- ÇÁ·ÎÁ§Æ® ¼öÁ¤ ¸ð´Þ Ã¢ -->
+     <!-- í”„ë¡œì íŠ¸ ìˆ˜ì • ëª¨ë‹¬ ì°½ -->
             <!-- Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div id="modal-size" class="modal-dialog modal-lg">
             <div class="modal-content align-items-center justify-content-center">
 
-                    <p style="font-weight: bolder; font-size: 20px; margin-top: 20px;">ÇÁ·ÎÁ§Æ® ¸ñ·Ï</p>
+                    <p style="font-weight: bolder; font-size: 20px; margin-top: 20px;">í”„ë¡œì íŠ¸ ëª©ë¡</p>
 
                 <div id="projectListTable" class="table-responsive">
                     <div>
@@ -138,86 +138,86 @@
                         <table class="table text-start align-middle table-bordered table-hover mb-0"  style="text-align: center;">
                             <thead>
                                 <tr class="text-dark">
-                                    <th scope="col">³¯Â¥</th>
-                                    <th scope="col">¹øÈ£</th>
-                                    <th scope="col">´ã´çÀÚ</th>
-                                    <th scope="col">ÇÁ·ÎÁ§Æ® Á¦¸ñ</th>
-                                    <th scope="col" style="width: 300px;">ÁøÇà·ü</th>
-                                    <th scope="col">»èÁ¦</th>
+                                    <th scope="col">ë‚ ì§œ</th>
+                                    <th scope="col">ë²ˆí˜¸</th>
+                                    <th scope="col">ë‹´ë‹¹ìž</th>
+                                    <th scope="col">í”„ë¡œì íŠ¸ ì œëª©</th>
+                                    <th scope="col" style="width: 300px;">ì§„í–‰ë¥ </th>
+                                    <th scope="col">ì‚­ì œ</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="project-choice">
                                     <td>01 Jan 2045</td>
                                     <td>1</td>
-                                    <td>±èµ¿ÈÆ</td>
-                                    <td>ÇÁ·ÎÁ§Æ® Á¦¸ñ 01</td>
+                                    <td>ê¹€ë™í›ˆ</td>
+                                    <td>í”„ë¡œì íŠ¸ ì œëª© 01</td>
                                     <td>
                                         <div class="graph-container">
                                             <div class="bar" data-percentage="55"></div>
                                             <div style="margin-top: 5px;"> 55%</div>
                                         </div>
                                     </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">»èÁ¦</a></td>
+                                    <td><a class="btn btn-sm btn-danger" href="">ì‚­ì œ</a></td>
                                 </tr>
                                 <tr class="project-choice">
                                     <td>01 Jan 2045</td>
                                     <td>2</td>
-                                    <td>±è¸íÁØ</td>
-                                    <td>ÇÁ·ÎÁ§Æ® Á¦¸ñ 02</td>
+                                    <td>ê¹€ëª…ì¤€</td>
+                                    <td>í”„ë¡œì íŠ¸ ì œëª© 02</td>
                                     <td>
                                         <div class="graph-container">
                                             <div class="bar" data-percentage="30"></div>
                                             <div style="margin-top: 5px;"> 30%</div>
                                         </div>
                                     </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">»èÁ¦</a></td>
+                                    <td><a class="btn btn-sm btn-danger" href="">ì‚­ì œ</a></td>
                                 </tr>
                                 <tr class="project-choice">
                                     <td>01 Jan 2045</td>
                                     <td>3</td>
-                                    <td>ÃÖ¼±¿õ</td>
-                                    <td>ÇÁ·ÎÁ§Æ® Á¦¸ñ 03</td>
+                                    <td>ìµœì„ ì›…</td>
+                                    <td>í”„ë¡œì íŠ¸ ì œëª© 03</td>
                                     <td>
                                         <div class="graph-container">
                                             <div class="bar" data-percentage="80"></div>
                                             <div style="margin-top: 5px;"> 80%</div>
                                         </div>
                                     </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">»èÁ¦</a></td>
+                                    <td><a class="btn btn-sm btn-danger" href="">ì‚­ì œ</a></td>
                                 </tr>
                                 <tr class="project-choice">
                                     <td>01 Jan 2045</td>
                                     <td>4</td>
-                                    <td>ÀÓ¼º¿í</td>
-                                    <td>ÇÁ·ÎÁ§Æ® Á¦¸ñ 04</td>
+                                    <td>ìž„ì„±ìš±</td>
+                                    <td>í”„ë¡œì íŠ¸ ì œëª© 04</td>
                                     <td>
                                         <div class="graph-container">
                                             <div class="bar" data-percentage="50"></div>
                                             <div style="margin-top: 5px;"> 50%</div>
                                         </div>
                                     </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">»èÁ¦</a></td>
+                                    <td><a class="btn btn-sm btn-danger" href="">ì‚­ì œ</a></td>
                                 </tr>
                                 <tr class="project-choice">
                                     <td>01 Jan 2045</td>
                                     <td>5</td>
-                                    <td>°íÀçÇö</td>
-                                    <td>ÇÁ·ÎÁ§Æ® Á¦¸ñ 05</td>
+                                    <td>ê³ ìž¬í˜„</td>
+                                    <td>í”„ë¡œì íŠ¸ ì œëª© 05</td>
                                     <td>
                                         <div class="graph-container">
                                             <div class="bar" data-percentage="90"></div>
                                             <div style="margin-top: 5px;">90%</div>
                                         </div>
                                     </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">»èÁ¦</a></td>
+                                    <td><a class="btn btn-sm btn-danger" href="">ì‚­ì œ</a></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <br>
-                    <!-- ÆäÀÌÂ¡ Ã³¸® ¿¹Á¤ -->
+                    <!-- íŽ˜ì´ì§• ì²˜ë¦¬ ì˜ˆì • -->
                     <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups" style="display: flex; justify-content: center;">
                         <div class="btn-group me-2" role="group" aria-label="First group">
                             <button type="button" class="btn btn-secondary">prev</button>
@@ -237,71 +237,71 @@
 
 
 
-	<!-- ÇÁ·ÎÁ§Æ® -- ÀÛ¾÷ »ý¼º ¸ð´Þ Ã¢ -->
+	<!-- í”„ë¡œì íŠ¸ -- ìž‘ì—… ìƒì„± ëª¨ë‹¬ ì°½ -->
     <!-- create Modal -->
     <div class="modal fade" id="createWorkModal" tabindex="-1" aria-labelledby="createWorkModalLabel" aria-hidden="true">
         <div id="modal-size" class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createWorkModalLabel">ÀÛ¾÷ »ý¼º</h1>
+                    <h1 class="modal-title fs-5" id="createWorkModalLabel">ìž‘ì—… ìƒì„±</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div style="display: flex; flex-direction: row;">
                     <div class="modal-body">
-                        <!-- ÇÁ·ÎÁ§Æ® ÀÌ¸§ -->
+                        <!-- í”„ë¡œì íŠ¸ ì´ë¦„ -->
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">ÇÁ·ÎÁ§Æ® ÀÌ¸§</span>
+                            <span class="input-group-text" id="inputGroup-sizing-default">í”„ë¡œì íŠ¸ ì´ë¦„</span>
                             <input type="text" class="form-control" aria-label="Sizing example input"
                                 aria-describedby="inputGroup-sizing-default" disabled>
                         </div>
-                        <!-- ÇÁ·ÎÁ§Æ® »ý¼ºÀÚ ÀÌ¸§ -->
+                        <!-- í”„ë¡œì íŠ¸ ìƒì„±ìž ì´ë¦„ -->
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">ÇÁ·ÎÁ§Æ® ´ã´çÀÚ</span>
+                            <span class="input-group-text" id="inputGroup-sizing-default">í”„ë¡œì íŠ¸ ë‹´ë‹¹ìž</span>
                             <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-default" value="È«±æµ¿" disabled>
+                                aria-describedby="inputGroup-sizing-default" value="í™ê¸¸ë™" disabled>
                         </div>
                         <hr style="border: 1.5px solid rgb(9, 9, 87);">
-                        <!-- ÀÛ¾÷ ÀÌ¸§ -->
+                        <!-- ìž‘ì—… ì´ë¦„ -->
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">ÀÛ¾÷ ÀÌ¸§</span>
+                            <span class="input-group-text" id="inputGroup-sizing-default">ìž‘ì—… ì´ë¦„</span>
                             <input type="text" class="form-control" aria-label="Sizing example input"
                                 aria-describedby="inputGroup-sizing-default">
                         </div>
-                        <!-- ÀÛ¾÷ »ý¼ºÀÚ ÀÌ¸§ -->
+                        <!-- ìž‘ì—… ìƒì„±ìž ì´ë¦„ -->
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">ÀÛ¾÷ ´ã´çÀÚ</span>
+                            <span class="input-group-text" id="inputGroup-sizing-default">ìž‘ì—… ë‹´ë‹¹ìž</span>
                             <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-default" value="±è¸íÁØ" disabled>
+                                aria-describedby="inputGroup-sizing-default" value="ê¹€ëª…ì¤€" disabled>
                         </div>
 
-                        <!-- ÀÛ¾÷ ¼³¸í -->
-                        <p style="font-weight: bolder;">ÀÛ¾÷ ¼³¸í</p>
+                        <!-- ìž‘ì—… ì„¤ëª… -->
+                        <p style="font-weight: bolder;">ìž‘ì—… ì„¤ëª…</p>
                         <div id="work-contents" class="form-floating">
                             <textarea class="form-control" placeholder="Leave a comment here"
                                 id="floatingTextarea-work"></textarea>
-                            <label for="floatingTextarea">ÀÛ¾÷ ¼³¸í</label>
+                            <label for="floatingTextarea">ìž‘ì—… ì„¤ëª…</label>
                             <span id="work-contents-count" style="margin-left: auto;">0/1000</span>
                         </div>
 
 
-                        <!-- ÀÛ¾÷ Á¾·á ¿¹Á¤ÀÏ -->
+                        <!-- ìž‘ì—… ì¢…ë£Œ ì˜ˆì •ì¼ -->
                         <br>
                         <div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">ÀÛ¾÷ Á¾·áÀÏ</span>
+                                <span class="input-group-text" id="inputGroup-sizing-default">ìž‘ì—… ì¢…ë£Œì¼</span>
                                 <select id="year" class="form-select" aria-label="Year" required>
-                                    <option value="" selected>³â</option>
-                                    <!-- ¿¬µµ ¿É¼Ç Ãß°¡ ¿ÃÇØ¿Í ³»³â¸¸ Ãâ·ÂµÇ°Ô ¼³Á¤-->
+                                    <option value="" selected>ë…„</option>
+                                    <!-- ì—°ë„ ì˜µì…˜ ì¶”ê°€ ì˜¬í•´ì™€ ë‚´ë…„ë§Œ ì¶œë ¥ë˜ê²Œ ì„¤ì •-->
 
                                 </select>
                                 <select id="month" class="form-select" aria-label="Month" required>
-                                    <option value="" selected>¿ù</option>
-                                    <!-- ¿ù ¿É¼Ç Ãß°¡ -->
+                                    <option value="" selected>ì›”</option>
+                                    <!-- ì›” ì˜µì…˜ ì¶”ê°€ -->
 
                                 </select>
                                 <select id="day" class="form-select" aria-label="Day" required>
-                                    <option value="" selected>ÀÏ</option>
-                                    <!-- ÀÏ ¿É¼Ç Ãß°¡ -->
+                                    <option value="" selected>ì¼</option>
+                                    <!-- ì¼ ì˜µì…˜ ì¶”ê°€ -->
 
                                 </select>
                             </div>
@@ -311,97 +311,97 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ãë¼Ò</button>
-                    <button type="button" class="btn btn-primary">ÇÁ·ÎÁ§Æ® »ý¼º</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ì·¨ì†Œ</button>
+                    <button type="button" class="btn btn-primary">í”„ë¡œì íŠ¸ ìƒì„±</button>
                 </div>
             </div>
         </div>
     </div>
 <header>
-    <!-- ¸ÞÀÎ Ä«Å×°í¸® -->
+    <!-- ë©”ì¸ ì¹´í…Œê³ ë¦¬ -->
     <div id="sideHeader1" class="sideHeader">
         <div id="sideHeader-sub">
-            <!-- ¸ÞÀÎ == ¸ÞÀÏ Ä«Å×°í¸® -->
+            <!-- ë©”ì¸ == ë©”ì¼ ì¹´í…Œê³ ë¦¬ -->
             <div id="mail-category" class="headerContent"><a href=""><img src="https://i.imgur.com/c0Ze4Y2.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
                 <div id="mailWrap" class="sideHeader-sub">
                         <table id="mailContent" class="table table-dark table-hover">
-                            <tr><th style="white-space: nowrap;">¸ÞÀÏ º¸³»±â</th></tr>
-                            <tr><th>¼ö½Å ¸ÞÀÏÇÔ</th></tr>
-                            <tr><th>¹ß½Å ¸ÞÀÏÇÔ</th></tr>
-                            <tr><th>¸ÞÀÏ º¸°üÇÔ</th></tr>
-                            <tr><th>ÈÞÁöÅë</th></tr>
+                            <tr><th style="white-space: nowrap;">ë©”ì¼ ë³´ë‚´ê¸°</th></tr>
+                            <tr><th>ìˆ˜ì‹  ë©”ì¼í•¨</th></tr>
+                            <tr><th>ë°œì‹  ë©”ì¼í•¨</th></tr>
+                            <tr><th>ë©”ì¼ ë³´ê´€í•¨</th></tr>
+                            <tr><th>íœ´ì§€í†µ</th></tr>
                         </table>
                 </div>
-            <!-- ¸ÞÀÎ == ÇÁ·ÎÁ§Æ® Ä«Å×°í¸® -->
+            <!-- ë©”ì¸ == í”„ë¡œì íŠ¸ ì¹´í…Œê³ ë¦¬ -->
                 <div id="project-category" class="headerContent"><a href=""><img src="https://i.imgur.com/8yHARRe.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
                 <div id="projectWrap" class="sideHeader-sub">
                     <table id="projectContent" class="table table-dark table-hover">
-                        <tr><th>ÀüÃ¼ ÇÁ·ÎÁ§Æ® Á¶È¸</th></tr>
-                        <tr><th id="createProject" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#createModal">ÇÁ·ÎÁ§Æ® »ý¼º</th></tr>
-                        <tr><th id="updateProject" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#updateModal">ÇÁ·ÎÁ§Æ® ¼öÁ¤</th></tr>
-                        <tr><th id="createProjectWork" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#createWorkModal">ÇÁ·ÎÁ§Æ®-ÀÛ¾÷ ¼öÁ¤</th></tr>
-                        <tr><th id="updateProjectWork" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#updateProjectWork">ÇÁ·ÎÁ§Æ®-ÀÛ¾÷ »èÁ¦</th></tr>
+                        <tr><th>ì „ì²´ í”„ë¡œì íŠ¸ ì¡°íšŒ</th></tr>
+                        <tr><th id="createProject" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#createModal">í”„ë¡œì íŠ¸ ìƒì„±</th></tr>
+                        <tr><th id="updateProject" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#updateModal">í”„ë¡œì íŠ¸ ìˆ˜ì •</th></tr>
+                        <tr><th id="createProjectWork" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#createWorkModal">í”„ë¡œì íŠ¸-ìž‘ì—… ìˆ˜ì •</th></tr>
+                        <tr><th id="updateProjectWork" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#updateProjectWork">í”„ë¡œì íŠ¸-ìž‘ì—… ì‚­ì œ</th></tr>
                     </table>
 
 
             </div>
-            <!-- ¸ÞÀÎ == ÀüÀÚ°áÀç Ä«Å×°í¸® -->
+            <!-- ë©”ì¸ == ì „ìžê²°ìž¬ ì¹´í…Œê³ ë¦¬ -->
                 <div id="approval-category" class="headerContent"><a href=""><img src="https://i.imgur.com/Nn5TmVd.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
                 <div id="approvalWrap" class="sideHeader-sub">
                     <table id="approvalContent" class="table table-dark table-hover">
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º1</th></tr>
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º2</th></tr>
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º3</th></tr>
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º4</th></tr>
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º5</th></tr>
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º6</th></tr>
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º7</th></tr>
-                        <tr><th>ÀüÀÚ°áÀç ¸Þ´º8</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´1</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´2</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´3</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´4</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´5</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´6</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´7</th></tr>
+                        <tr><th>ì „ìžê²°ìž¬ ë©”ë‰´8</th></tr>
                     </table>
                 </div>
-            <!-- ¸ÞÀÎ == ÄÌ¸°´õ Ä«Å×°í¸® -->
+            <!-- ë©”ì¸ == ì¼ˆë¦°ë” ì¹´í…Œê³ ë¦¬ -->
             <div id="calender-category" class="headerContent"><a href=""><img src="https://i.imgur.com/8yHARRe.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
             <div id="calenderWrap" class="sideHeader-sub">
                 <table id="calenderContent" class="table table-dark table-hover">
-                    <tr><th>ÄÌ¸°´õ ¸Þ´º1</th></tr>
-                    <tr><th>ÄÌ¸°´õ ¸Þ´º2</th></tr>
-                    <tr><th>ÄÌ¸°´õ ¸Þ´º3</th></tr>
-                    <tr><th>ÄÌ¸°´õ ¸Þ´º4</th></tr>
-                    <tr><th>ÄÌ¸°´õ ¸Þ´º5</th></tr>
+                    <tr><th>ì¼ˆë¦°ë” ë©”ë‰´1</th></tr>
+                    <tr><th>ì¼ˆë¦°ë” ë©”ë‰´2</th></tr>
+                    <tr><th>ì¼ˆë¦°ë” ë©”ë‰´3</th></tr>
+                    <tr><th>ì¼ˆë¦°ë” ë©”ë‰´4</th></tr>
+                    <tr><th>ì¼ˆë¦°ë” ë©”ë‰´5</th></tr>
                 </table>
             </div>
 
-            <!-- ¸ÞÀÎ == Ä¿¹Â´ÏÆ¼ Ä«Å×°í¸® -->
+            <!-- ë©”ì¸ == ì»¤ë®¤ë‹ˆí‹° ì¹´í…Œê³ ë¦¬ -->
             <div id="community-category" class="headerContent"><a href=""><img src="https://i.imgur.com/c0Ze4Y2.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
             <div id="communityWrap" class="sideHeader-sub">
                 <table id="communityContent" class="table table-dark table-hover">
-                    <tr><th>Ä¿¹Â´ÏÆ¼ ¸Þ´º1</th></tr>
-                    <tr><th>Ä¿¹Â´ÏÆ¼ ¸Þ´º2</th></tr>
-                    <tr><th>Ä¿¹Â´ÏÆ¼ ¸Þ´º3</th></tr>
-                    <tr><th>Ä¿¹Â´ÏÆ¼ ¸Þ´º4</th></tr>
-                    <tr><th>Ä¿¹Â´ÏÆ¼ ¸Þ´º5</th></tr>
+                    <tr><th>ì»¤ë®¤ë‹ˆí‹° ë©”ë‰´1</th></tr>
+                    <tr><th>ì»¤ë®¤ë‹ˆí‹° ë©”ë‰´2</th></tr>
+                    <tr><th>ì»¤ë®¤ë‹ˆí‹° ë©”ë‰´3</th></tr>
+                    <tr><th>ì»¤ë®¤ë‹ˆí‹° ë©”ë‰´4</th></tr>
+                    <tr><th>ì»¤ë®¤ë‹ˆí‹° ë©”ë‰´5</th></tr>
                 </table>
             </div>
 
-            <!-- ¸ÞÀÎ == Ã¤ÆÃ Ä«Å×°í¸® -->
+            <!-- ë©”ì¸ == ì±„íŒ… ì¹´í…Œê³ ë¦¬ -->
             <div id="chat-category" class="headerContent"><a href=""><img src="https://i.imgur.com/Nn5TmVd.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
             <div id="chatWrap" class="sideHeader-sub">
                 <table id="chatContent" class="table table-dark table-hover" style="cursor: pointer;">
-                    <tr><th>HOT»ç¿ø</th></tr>
-                    <tr><th id="hottalk-list">ÇÖÅå¸ñ·Ï</th></tr>
-                    <tr><th>È¯°æ»ýÈ°</th></tr>
+                    <tr><th>HOTì‚¬ì›</th></tr>
+                    <tr><th id="hottalk-list">í•«í†¡ëª©ë¡</th></tr>
+                    <tr><th>í™˜ê²½ìƒí™œ</th></tr>
                 </table>
             </div>
 
-                <!-- ¸ÞÀÎ == ÀÎ»ç Ä«Å×°í¸® -->
+                <!-- ë©”ì¸ == ì¸ì‚¬ ì¹´í…Œê³ ë¦¬ -->
                 <div id="insa-category" class="headerContent"><a href=""><img src="https://i.imgur.com/8yHARRe.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
                 <div id="insaWrap" class="sideHeader-sub">
                     <table id="insaContent" class="table table-dark table-hover">
-                        <tr><th>ÀÎ»ç ¸Þ´º1</th></tr>
-                        <tr><th>ÀÎ»ç ¸Þ´º2</th></tr>
-                        <tr><th>ÀÎ»ç ¸Þ´º3</th></tr>
-                        <tr><th>ÀÎ»ç ¸Þ´º4</th></tr>
-                        <tr><th>ÀÎ»ç ¸Þ´º5</th></tr>
+                        <tr><th>ì¸ì‚¬ ë©”ë‰´1</th></tr>
+                        <tr><th>ì¸ì‚¬ ë©”ë‰´2</th></tr>
+                        <tr><th>ì¸ì‚¬ ë©”ë‰´3</th></tr>
+                        <tr><th>ì¸ì‚¬ ë©”ë‰´4</th></tr>
+                        <tr><th>ì¸ì‚¬ ë©”ë‰´5</th></tr>
                     </table>
                 </div>
         </div>

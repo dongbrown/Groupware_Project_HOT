@@ -7,8 +7,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 <body>
+<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
     <!-- 메인 컨텐트 제작 -->
         <div id="main-wrap">
             <!-- 첫번째 줄 wrap (사원정보, 메일, 전자결재 확인 등) -->

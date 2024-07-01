@@ -13,7 +13,7 @@ public class Commuting {
 
 	private int commutingNo;
 	private Employee employeeNo;
-	private String commutingGoWalkTime;
+	private String commutingGoWorkTime;
 	private String commutingLeaveWorkTime;
 	private String commutingStatus;
 }
