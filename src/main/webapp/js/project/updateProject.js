@@ -1,40 +1,40 @@
-// 설명  text 크기 카운트
-    $('#floatingTextarea-project').on('input', function() {
-        let textLength = $(this).val().length;
-        $('#project-contents-count').text(textLength + '/1000');
-    });
-
-    const currentYear = new Date().getFullYear();
+ //연도 옵션 추가  올해와 내년만 출력되게 설정
+   const currentYear = new Date().getFullYear();
     const nextYear = currentYear + 1;
 
     for (let year = currentYear; year <= nextYear; year++) {
-        $('#year1').append('<option value="' + year + '">' + year + '</option>');
+        $('#year').append('<option value="' + year + '">' + year + '</option>');
     };
 
-    for (let month = 1; month <= 12; month++) {
-        $('#month1').append('<option value="' + month + '">' + month + '</option>');
-    }
+    //월 옵션 추가
+	for (let month = 1; month <= 12; month++) {
+	    $('#month').append('<option value="' + month + '">' + month + '</option>');
+	}
 
+	//일 옵션 추가
     for (let day = 1; day <= 31; day++) {
-        $('#day1').append('<option value="' + day + '">' + day + '</option>');
+        $('#day').append('<option value="' + day + '">' + day + '</option>');
     }
 
-    $('#project-budget').keyup(e=>{
-        let value = e.target.value;
-        let value1 = value.replace(/,/g,'');
-        let result = Number(value1).toLocaleString('ko-KR');
-        e.target.value=result;
-    });
+    //통화 표시
+	$('#project-budget').keyup(e=>{
+	    let value = e.target.value;
+	    let value1 = value.replace(/,/g,'');
+	    let result = Number(value1).toLocaleString('ko-KR');
+	    e.target.value=result;
+	});
 
     $(document).ready(function() {
         let checkedTotalCount = 1;
 
     $('#select-dept').on('change', function() {
+        $("#project-update-window").width('800px');
         const selectedText = $("#select-dept option:selected").val();
         const inputMember = $("#input-member");
         //선택하세요 선택시 맴버 비워주기
         if(selectedText === '선택하세요.'){
             inputMember.text('');
+            $("#project-update-window").width('600px');
         }else{
             inputMember.empty();
 
@@ -42,9 +42,6 @@
             const inputMemberList = $('<div>', { id: 'input-member-list' });
             const inputMemberTitle = $('<div>', { text: selectedText, class: 'input-group-text' });
             const memberSaveBtn = $('<button>', {id:'member-save-btn', class:'btn btn-primary', text:"저장"})
-
-            // 부서 선택시 모달창 가로폭 늘어나는 코드
-            $("#modal-size").addClass('modal-lg');
 
             inputDept.append(inputMemberTitle);
             inputMember.append(inputDept);
@@ -100,8 +97,6 @@
         $(this).closest('.saved-item').remove();
         // 총 인원수 차감 출력
         checkedTotalCount--;
-
-
         $("#totalMember").val(checkedTotalCount);
         // 삭제된 항목의 체크박스 해제
         const removedText = $(this).parent().text();
@@ -114,44 +109,7 @@
     });
 });
 
-    $(".project-choice").click(e=>{
-        const projectNo = e.target.parentElement.children[1].textContent;
-        console.log(projectNo); // 프로젝트 고유번호 넘겨서 프로젝트 수정페이지로 이동
-        location.assign("/project/projectUpdate.do?projectNo="+projectNo);
-
-    });
 
 
-    $(document).ready(function() {
-    $("#updateProject").click(e=>{
-    // 진행도 애니메이션
-        const bars = document.querySelectorAll('.bar');
-        bars.forEach(bar => {
-            const percentage = bar.getAttribute('data-percentage');
-            setTimeout(() => {
-                bar.style.width = `${percentage}%`;
-            }, 300);// 속도 조절
-        });
-    });
-});
 
-    // 설명  text 크기 카운트
-    $('#floatingTextarea-work').on('input', function() {
-        let textLength = $(this).val().length;
-        $('#work-contents-count').text(textLength + '/1000');
-    });
 
-    const currentYear1 = new Date().getFullYear();
-    const nextYear1 = currentYear + 1;
-
-    for (let year = currentYear; year <= nextYear; year++) {
-        $('#year').append('<option value="' + year + '">' + year + '</option>');
-    };
-
-    for (let month = 1; month <= 12; month++) {
-        $('#month').append('<option value="' + month + '">' + month + '</option>');
-    }
-
-    for (let day = 1; day <= 31; day++) {
-        $('#day').append('<option value="' + day + '">' + day + '</option>');
-    }
