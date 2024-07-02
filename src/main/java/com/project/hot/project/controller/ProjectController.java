@@ -11,6 +11,6 @@ public class ProjectController {
 	@RequestMapping("/projectUpdate.do")
 	public String projectUpdate (int projectNo,Model m) {
 		m.addAttribute("projectNo",projectNo);
-		return "csw/project/updateProject";
+		return "project/updateProject";
 	};
 }

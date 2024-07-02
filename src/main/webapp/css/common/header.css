@@ -501,11 +501,12 @@ opacity: 1;
     font-weight: bolder;
     justify-content: center;
     justify-content: space-evenly;
-    margin-top: 5px;
+    margin-top: 10px;
     height: 30px;
     width: 300px;
-    background-color: rgb(222, 222, 222);
-    border-radius: 100px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 3px 3px 3px #666;
+    border-radius: 5px;
 }
 
 #member-save-btn{

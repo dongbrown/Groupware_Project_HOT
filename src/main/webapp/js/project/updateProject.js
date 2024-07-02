@@ -8,12 +8,12 @@
 
     //월 옵션 추가
 	for (let month = 1; month <= 12; month++) {
-	    document.write('<option value="' + month + '">' + month + '</option>');
+	    $('#month').append('<option value="' + month + '">' + month + '</option>');
 	}
 
 	//일 옵션 추가
     for (let day = 1; day <= 31; day++) {
-        document.write('<option value="' + day + '">' + day + '</option>');
+        $('#day').append('<option value="' + day + '">' + day + '</option>');
     }
 
     //통화 표시

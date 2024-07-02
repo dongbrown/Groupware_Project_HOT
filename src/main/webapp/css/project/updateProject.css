@@ -7,6 +7,12 @@
 
 }
 
+#floatingTextarea{
+	resize:none;
+	height:200px;
+	overflow:scoll;
+}
+
 #project-update-main{
     display: flex;
     justify-content: center;

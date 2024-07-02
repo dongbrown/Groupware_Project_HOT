@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <style>
-	<c:import url="${path}/css/csw/updateProject.css"/>
+	<c:import url="${path}/css/project/updateProject.css"/>
 </style>
 <head>
 <meta charset="EUC-KR">
@@ -131,5 +131,5 @@
 
 	</div>
 </body>
-<script type="text/javascript" src="${path }/js/csw/updateProject.js"></script>
+<script type="text/javascript" src="${path }/js/project/updateProject.js"></script>
 </html>
