@@ -6,10 +6,19 @@
 <head>
 <meta charset="UTF-8">
 <title>일정관리</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet">
+<link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
+<style>
+    <c:import url="${path}/css/schedule/schedule.css"/>
+</style>
 </head>
-<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 <body>
-<div id="calendar"></div>
+<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
+
+<div id="calendar-container">
+    <div id="calendar"></div>
+</div>
 
 <!-- 일정 추가 모달 -->
 <div id="scheduleModal" class="modal">
@@ -97,5 +106,10 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+<script type="text/javascript" src="${path}/js/schedule/schedule.js"></script>
 </body>
 </html>
