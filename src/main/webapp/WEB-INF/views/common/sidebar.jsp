@@ -14,13 +14,13 @@
     <title>SB Admin 2 - Dashboard</title>
 
     <!-- Custom fonts for this template-->
-    <link href="${path }vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="${path }/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="${path }css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="${path }/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -92,7 +92,7 @@
                         <h6 class="collapse-header">프로젝트</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 프로젝트 조회</a>
                         <a class="collapse-item" href="utilities-border.html">프로젝트 생성</a>
-                        <a class="collapse-item" href="utilities-animation.html">프로젝트 수정</a><br>
+                        <a class="collapse-item" href="${path}/project/projectupdate.do">프로젝트 수정</a><br>
                         <h6 class="collapse-header">작업</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 작업 조회</a>
                         <a class="collapse-item" href="utilities-border.html">작업 생성</a>
