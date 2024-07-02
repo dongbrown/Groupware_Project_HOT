@@ -14,13 +14,13 @@
     <title>SB Admin 2 - Dashboard</title>
 
     <!-- Custom fonts for this template-->
-    <link href="${path }vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="${path }/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="${path }css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="${path }/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -204,7 +204,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">주소록</h6>
-                        <a class="collapse-item" href="utilities-color.html">주소록 조회</a><br>
+                        <a class="collapse-item" href="${path }/employee/addressbook.do">주소록 조회</a><br>
                         <h6 class="collapse-header">조직도</h6>
                         <a class="collapse-item" href="utilities-color.html">조직도 조회</a>
                         <a class="collapse-item" href="utilities-border.html">조직도 수정</a>
