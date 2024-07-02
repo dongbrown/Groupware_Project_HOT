@@ -15,7 +15,7 @@ public class WebMVCConfig implements WebMvcConfigurer{
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("index");
-		registry.addViewController("/hottalk.do").setViewName("hotTalk/hottalk");
+		registry.addViewController("/hottalk").setViewName("hotTalk/hottalk");
 	}
 
 	@Bean

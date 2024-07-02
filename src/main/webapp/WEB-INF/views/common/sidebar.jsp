@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>HOT Solution</title>
 
     <!-- Custom fonts for this template-->
     <link href="${path }/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -169,7 +169,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">핫톡</h6>
-                        <a class="collapse-item" href="utilities-border.html">HotTalk</a>
+                        <a class="collapse-item" href="${path }/hottalk">HotTalk</a>
                         <a class="collapse-item" href="utilities-animation.html">환경설정</a>
                     </div>
                 </div>
