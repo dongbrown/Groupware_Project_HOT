@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>HOT Solution</title>
 
     <!-- Custom fonts for this template-->
     <link href="${path }/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -92,7 +92,7 @@
                         <h6 class="collapse-header">프로젝트</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 프로젝트 조회</a>
                         <a class="collapse-item" href="utilities-border.html">프로젝트 생성</a>
-                        <a class="collapse-item" href="utilities-animation.html">프로젝트 수정</a><br>
+                        <a class="collapse-item" href="${path}/project/projectupdate.do">프로젝트 수정</a><br>
                         <h6 class="collapse-header">작업</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 작업 조회</a>
                         <a class="collapse-item" href="utilities-border.html">작업 생성</a>
@@ -169,7 +169,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">핫톡</h6>
-                        <a class="collapse-item" href="utilities-border.html">HotTalk</a>
+                        <a class="collapse-item" href="${path }/hottalk">HotTalk</a>
                         <a class="collapse-item" href="utilities-animation.html">환경설정</a>
                     </div>
                 </div>
