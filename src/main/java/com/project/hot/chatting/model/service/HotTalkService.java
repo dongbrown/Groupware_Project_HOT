@@ -1,5 +1,9 @@
 package com.project.hot.chatting.model.service;
 
-public interface HotTalkService {
+import java.util.List;
 
+import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
+
+public interface HotTalkService {
+	List<ResponseEmployeeDTO> getHotTalkMemberList();
 }

@@ -11,6 +11,8 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
+
 <h4 class="page-title"> &nbsp; &nbsp; HotTalk</h4>
 <section>
 	<div class="chat-container">
@@ -20,7 +22,7 @@
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 				    <i class="fas fa-cog"></i>
 			 	</a>
-                <h2 class="user-name">아이유</h2>
+                <h2 class="user-name">${loginEmployee.employeeName}</h2>
                 <p class="user-profile">집에 가고싶어요</p>
               	<div class="dropdown">
 				  <ul class="dropdown-menu">
@@ -39,13 +41,15 @@
                 <button id="chat-option3">그룹핫톡</button>
             </div>
             <h4 id="chat-option">HOT 사원</h4>
+			<div id="option-result">
 
+			</div>
         </div>
         <div class="chat-main ">
             <div class="chat-header">
                 <img src="https://cdn.eroun.net/news/photo/202305/32650_59862_4410.jpg" alt="아이유" class="user-avatar IUimg">
                 <div>
-                    <h2>아이유</h2>
+                    <h2>${loginEmployee.employeeName}</h2>
                     <p>Online</p>
                 </div>
                 <div class="chat-actions">
@@ -77,6 +81,8 @@
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
 <script>
 	const path = "${pageContext.request.contextPath}";
+	const loginEmployee = '${loginEmployee}';
+	const loginEmployeeNo= '${loginEmployee.employeeNo}'
 	const loginEmployeeName = '${loginEmployee.employeeName}';
 </script>
 <script type="text/javascript" src="${path }/js/hotTalk/hottalk.js"></script>

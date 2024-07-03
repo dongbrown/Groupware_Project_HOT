@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class Message {
+public class CommonMessageDTO {
 	private String type;
 	private String sender;	// employeeName
 	private String receiver;	// employeeName
