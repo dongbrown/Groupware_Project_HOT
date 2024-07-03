@@ -13,4 +13,9 @@ public class ProjectController {
 //		m.addAttribute("projectNo",projectNo);
 		return "project/projectUpdate";
 	};
+
+	@GetMapping("/projectinsert.do")
+	public String projectInsert () {
+		return "project/projectInsert";
+	};
 }
