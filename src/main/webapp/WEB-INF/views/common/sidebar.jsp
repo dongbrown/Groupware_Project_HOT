@@ -92,7 +92,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">프로젝트</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 프로젝트 조회</a>
-                        <a class="collapse-item" href="utilities-border.html">프로젝트 생성</a>
+                        <a class="collapse-item" href="${path}/project/projectinsert.do">프로젝트 생성</a>
                         <a class="collapse-item" href="${path}/project/projectupdate.do">프로젝트 수정</a><br>
                         <h6 class="collapse-header">작업</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 작업 조회</a>

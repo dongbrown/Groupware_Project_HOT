@@ -1,14 +1,15 @@
 @charset "UTF-8";
-
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
     font-weight: 400;
-    font-style: normal;
+    font-style: border;
 }
 
+html{
+	font-family: 'Pretendard-Regular';
+}
 body{
-    font-family: 'Pretendard-Regular';
     /* position: relative; */
     background-image: url("https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
     background-size: 100%;
