@@ -7,7 +7,7 @@
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
 
 <section>
-	<h2> 섹스 </h2>
+	<h2> -- </h2>
 </section>
 </div>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

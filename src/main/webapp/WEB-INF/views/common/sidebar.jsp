@@ -14,13 +14,13 @@
     <title>SB Admin 2 - Dashboard</title>
 
     <!-- Custom fonts for this template-->
-    <link href="${path }vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="${path }/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="${path }css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="${path }/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -67,7 +67,7 @@
                         <a class="collapse-item" href="${path}/approvalAll.do">전체</a>
                         <a class="collapse-item" href="${path}/approvalWait.do">결재대기</a>
                         <a class="collapse-item" href="${path}/approvalProcess.do">결재진행</a>
-                        <a class="collapse-item" href="${path}/approvalComplete.do">결재확인</a><br>
+                        <a class="collapse-item" href="${path}/approvalComplete.do">결재완료</a><br>
 
                         <h6 class="collapse-header">문서함</h6>
                         <a class="collapse-item" href="${path}/documentAll.do">전체문서</a>
