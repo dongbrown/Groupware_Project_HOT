@@ -3,6 +3,7 @@
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
 <head>
 
     <meta charset="UTF-8">
@@ -11,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>HOT Solution</title>
 
     <!-- Custom fonts for this template-->
     <link href="${path }/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -91,8 +92,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">프로젝트</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 프로젝트 조회</a>
-                        <a class="collapse-item" href="utilities-border.html">프로젝트 생성</a>
-                        <a class="collapse-item" href="utilities-animation.html">프로젝트 수정</a><br>
+                        <a class="collapse-item" href="${path}/project/projectinsert.do">프로젝트 생성</a>
+                        <a class="collapse-item" href="${path}/project/projectupdate.do">프로젝트 수정</a><br>
                         <h6 class="collapse-header">작업</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 작업 조회</a>
                         <a class="collapse-item" href="utilities-border.html">작업 생성</a>
@@ -169,7 +170,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">핫톡</h6>
-                        <a class="collapse-item" href="utilities-border.html">HotTalk</a>
+                        <a class="collapse-item" href="${path }/hottalk">HotTalk</a>
                         <a class="collapse-item" href="utilities-animation.html">환경설정</a>
                     </div>
                 </div>
@@ -204,14 +205,14 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">주소록</h6>
-                        <a class="collapse-item" href="utilities-color.html">주소록 조회</a><br>
+                        <a class="collapse-item" href="${path }/employee/addressbook.do">주소록 조회</a><br>
                         <h6 class="collapse-header">조직도</h6>
                         <a class="collapse-item" href="utilities-color.html">조직도 조회</a>
                         <a class="collapse-item" href="utilities-border.html">조직도 수정</a>
                     </div>
                 </div>
             </li>
-            <c:if test="${loginEmployee.departmentCode==2}">
+            <%-- <c:if test="${loginEmployee.departmentCode==2}">
                 <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#human"
@@ -231,7 +232,7 @@
                     </div>
                 </div>
             </li>
-            </c:if>
+            </c:if> --%>
 
 
             <!-- Divider -->

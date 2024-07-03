@@ -25,8 +25,26 @@
 	});
 
     $(document).ready(function() {
-        let checkedTotalCount = 1;
 
+		const savedItems = $('.saved-item');
+
+		let checkedTotalCount = 1;
+
+		savedItems.each(function() {
+		    if ($(this).text().includes('사번')) {
+		        checkedTotalCount++;
+		    }
+		});
+
+		$("#totalMember").val(checkedTotalCount);
+
+
+
+
+
+
+
+		/*부서 선택 시 해당 부서 오른쪽에 리스트 출력*/
     $('#select-dept').on('change', function() {
         $("#project-update-window").width('800px');
         const selectedText = $("#select-dept option:selected").val();
@@ -40,7 +58,7 @@
 
             const inputDept = $('<div>', { id:'input-member-title'});
             const inputMemberList = $('<div>', { id: 'input-member-list' });
-            const inputMemberTitle = $('<div>', { text: selectedText, class: 'input-group-text' });
+            const inputMemberTitle = $('<div>', { text: selectedText, class: 'input-group-text', id:'input-group-text'});
             const memberSaveBtn = $('<button>', {id:'member-save-btn', class:'btn btn-primary', text:"저장"})
 
             inputDept.append(inputMemberTitle);
@@ -48,9 +66,9 @@
             inputMember.append(inputMemberList);
             inputMember.append(memberSaveBtn);
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 20; i++) {
                 const checkboxId = 'flexCheckDefault' + i;
-                const inputMemberWrab = $('<div>');
+                const inputMemberWrab = $('<div>',{id: 'input-check-member'});
                 const inputMemberDetail = $('<input>', { class: 'form-check-input', type: 'checkbox', id: checkboxId });
                 const inputMemberDetailText = $('<label>', { class: 'form-check-label', for: checkboxId, text:selectedText + ': 홍길동 사번 / ' +i+"12341234"});
 
@@ -109,7 +127,39 @@
     });
 });
 
+	/*프로젝트 목록 자바스크릡트 */
+	$(document).ready(function() {
+		$("#project-update-window").css('display','none');
+			// 진행도 애니메이션
+			const bars = document.querySelectorAll('.bar');
+			bars.forEach(bar => {
+				const percentage = bar.getAttribute('data-percentage');
+				setTimeout(() => {
+					bar.style.width = `${percentage}%`;
+				}, 300);// 속도 조절
+			});
+	});
+	 /*------------------------------------------*/
 
+	/*프로젝트 목록중 하나 클릭시 해당 프로젝트 정보와 수정가능한 테이블 표시*/
+ 	$(".project-choice").click(e=>{
+	    const projectNo = e.target.parentElement.children[1].textContent;
+	    console.log(projectNo); // 프로젝트 고유번호 넘겨서 프로젝트 수정페이지로 이동
+	    //선택된 프로젝트가 없습니다 안보이게
 
+	    $("#noneProjectImg").css('display','none');
+	    $("#project-list").css('display','none');
+	    $("#project-update-window").css('display','flex'); //ajax로 구현할 예정
+    });
 
+    projectUpdateCancle
+	$("#projectUpdateCancle").click(e=>{
+	    const projectNo = e.target.parentElement.children[1].textContent;
+	    console.log(projectNo); // 프로젝트 고유번호 넘겨서 프로젝트 수정페이지로 이동
+	    //선택된 프로젝트가 없습니다 안보이게
+
+	    $("#noneProjectImg").css('display','block');
+	    $("#project-list").css('display','block');
+	    $("#project-update-window").css('display','none');//ajax 받아온 값 지워주기
+    });
 

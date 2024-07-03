@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Department {
 
 	private int departmentCode;
-	private Department departmentHighCode;
+	private int departmentHighCode;
 	private String departmentTitle;
 	private String departmentAuthority;
 

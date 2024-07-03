@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class HotTalk {
+public class RequestHotTalkDTO {
 	private int employeeNo;
 	private String hotTalkIsGroup;
 	private int hotTalkNo;
