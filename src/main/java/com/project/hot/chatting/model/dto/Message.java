@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class HotTalkMessage {
+public class Message {
 	private String type;
-	private String hotTalkTitle;
-	private int employeeNo;
+	private String sender;	// employeeName
+	private String receiver;	// employeeName
 	private int hotTalkNo;
+	private String msg;
 	private LocalDateTime eventTime;
 }
