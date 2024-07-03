@@ -1,408 +1,224 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 <!DOCTYPE html>
-<html>
-<c:set var="path" value="${pageContext.request.contextPath}"/>
-<style>
-   <c:import url="${path}/css/common/header.css"/>
-</style>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html lang="UTF-8">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${pageContext.request.contextPath }"/>
 
-<head>
-<meta charset="UTF-8">
-<title>H.O.T 그룹웨어</title>
-</head>
-<!-- 프로젝트 생성 모달 창 -->
-    <!-- create Modal -->
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div id="modal-size" class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h1 class="modal-title fs-5" id="createModalLabel">프로젝트 생성</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-    <div style="display: flex; flex-direction: row;">
-        <div class="modal-body">
-        <!-- 프로젝트 이름 -->
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 이름</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            </div>
-            <!-- 프로젝트 생성자 이름 -->
-            <div class="input-group mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-default">작성자</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="홍길동" disabled>
-            </div>
-            <!-- 프로젝트 중요도 체크박스  -->
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 중요도</span>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>선택하세요.</option>
-                    <option value="1" style="color: red;">상</option>
-                    <option value="2" style="color: rgb(255, 132, 0);">중</option>
-                    <option value="3" style="color: green;">하</option>
-                  </select>
-            </div>
-            <!-- 프로젝트 설명 -->
-            <p style="font-weight: bolder;">프로젝트 설명</p>
-            <div id="project-contents" class="form-floating">
-            <textarea id="floatingTextarea-project" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-            <label for="floatingTextarea">프로젝트 설명</label>
-            <span id="project-contents-count" style="margin-left: auto;">0/1000</span>
-            </div>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-             <br>
-            <div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 종료일</span>
-                    <select id="year1" class="form-select" aria-label="Year" required>
-                        <option value="" selected>년</option>
+            <!-- Main Content -->
+            <div id="content">
 
-                    </select>
-                    <select id="month1" class="form-select" aria-label="Month" required>
-                        <option value="" selected>월</option>
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                    </select>
-                    <select id="day1" class="form-select" aria-label="Day" required>
-                        <option value="" selected>일</option>
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
 
-                    </select>
-                </div>
-            </div>
-            <br>
-            <!-- 프로젝트 배정 예산 -->
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">배정예산</span>
-                <input type="text" id="project-budget" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="입력하세요.">
-                </div>
-
-
-            <br>
-            <!--  최대 참여 인원(수)-->
-            <div id="member-list" style="display: flex; flex-direction: row;">
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="inputGroup-sizing-default">총 인원</span>
-                    <input id="totalMember" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="1" disabled>
-                    </div>
-
-                <div class="input-group mb-3" style="margin-left: 20px;">
-                    <span class="input-group-text" id="inputGroup-sizing-default">부서</span>
-                    <select id="select-dept" class="form-select" aria-label="Default select example">
-                        <option selected>선택하세요.</option>
-                        <option value="개발1팀">개발1팀</option>
-                        <option value="개발2팀">개발2팀</option>
-                        <option value="개발3팀">개발3팀</option>
-                        <option value="홍보팀">홍보팀</option>
-                        <option value="디자인1팀">디자인1팀</option>
-                        <option value="디자인2팀">디자인2팀</option>
-                    </select>
-                </div>
-            </div>
-            <!-- 체크한 사원 추가 div -->
-            <div id="saved-members"></div>
-
-        </div>
-                <!-- 사원 조회 생성 -->
-        <div id="input-member"></div>
-    </div>
-
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-primary">프로젝트 생성</button>
-                    </div>
-                </div>
-                </div>
-            </div>
-     <!-- ------------------ -->
-
-     <!-- 프로젝트 수정 모달 창 -->
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-        <div id="modal-size" class="modal-dialog modal-lg">
-            <div class="modal-content align-items-center justify-content-center">
-
-                    <p style="font-weight: bolder; font-size: 20px; margin-top: 20px;">프로젝트 목록</p>
-
-                <div id="projectListTable" class="table-responsive">
-                    <div>
-
-                        <table class="table text-start align-middle table-bordered table-hover mb-0"  style="text-align: center;">
-                            <thead>
-                                <tr class="text-dark">
-                                    <th scope="col">날짜</th>
-                                    <th scope="col">번호</th>
-                                    <th scope="col">담당자</th>
-                                    <th scope="col">프로젝트 제목</th>
-                                    <th scope="col" style="width: 300px;">진행률</th>
-                                    <th scope="col">삭제</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="project-choice">
-                                    <td>01 Jan 2045</td>
-                                    <td>1</td>
-                                    <td>김동훈</td>
-                                    <td>프로젝트 제목 01</td>
-                                    <td>
-                                        <div class="graph-container">
-                                            <div class="bar" data-percentage="55"></div>
-                                            <div style="margin-top: 5px;"> 55%</div>
-                                        </div>
-                                    </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-                                </tr>
-                                <tr class="project-choice">
-                                    <td>01 Jan 2045</td>
-                                    <td>2</td>
-                                    <td>김명준</td>
-                                    <td>프로젝트 제목 02</td>
-                                    <td>
-                                        <div class="graph-container">
-                                            <div class="bar" data-percentage="30"></div>
-                                            <div style="margin-top: 5px;"> 30%</div>
-                                        </div>
-                                    </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-                                </tr>
-                                <tr class="project-choice">
-                                    <td>01 Jan 2045</td>
-                                    <td>3</td>
-                                    <td>최선웅</td>
-                                    <td>프로젝트 제목 03</td>
-                                    <td>
-                                        <div class="graph-container">
-                                            <div class="bar" data-percentage="80"></div>
-                                            <div style="margin-top: 5px;"> 80%</div>
-                                        </div>
-                                    </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-                                </tr>
-                                <tr class="project-choice">
-                                    <td>01 Jan 2045</td>
-                                    <td>4</td>
-                                    <td>임성욱</td>
-                                    <td>프로젝트 제목 04</td>
-                                    <td>
-                                        <div class="graph-container">
-                                            <div class="bar" data-percentage="50"></div>
-                                            <div style="margin-top: 5px;"> 50%</div>
-                                        </div>
-                                    </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-                                </tr>
-                                <tr class="project-choice">
-                                    <td>01 Jan 2045</td>
-                                    <td>5</td>
-                                    <td>고재현</td>
-                                    <td>프로젝트 제목 05</td>
-                                    <td>
-                                        <div class="graph-container">
-                                            <div class="bar" data-percentage="90"></div>
-                                            <div style="margin-top: 5px;">90%</div>
-                                        </div>
-                                    </td>
-                                    <td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <br>
-                    <!-- 페이징 처리 예정 -->
-                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups" style="display: flex; justify-content: center;">
-                        <div class="btn-group me-2" role="group" aria-label="First group">
-                            <button type="button" class="btn btn-secondary">prev</button>
-                            <button type="button" class="btn btn-outline-secondary">1</button>
-                            <button type="button" class="btn btn-outline-secondary">2</button>
-                            <button type="button" class="btn btn-outline-secondary">3</button>
-                            <button type="button" class="btn btn-outline-secondary">4</button>
-                            <button type="button" class="btn btn-secondary">next</button>
-                        </div>
-                        </div>
-
-            </div>
-        </div>
-    </div>
-   <!-- ------------------------------------------------------------------------------- -->
-
-
-
-
-   <!-- 프로젝트 -- 작업 생성 모달 창 -->
-    <!-- create Modal -->
-    <div class="modal fade" id="createWorkModal" tabindex="-1" aria-labelledby="createWorkModalLabel" aria-hidden="true">
-        <div id="modal-size" class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createWorkModalLabel">작업 생성</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div style="display: flex; flex-direction: row;">
-                    <div class="modal-body">
-                        <!-- 프로젝트 이름 -->
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 이름</span>
-                            <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-default" disabled>
-                        </div>
-                        <!-- 프로젝트 생성자 이름 -->
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">프로젝트 담당자</span>
-                            <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-default" value="홍길동" disabled>
-                        </div>
-                        <hr style="border: 1.5px solid rgb(9, 9, 87);">
-                        <!-- 작업 이름 -->
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">작업 이름</span>
-                            <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-default">
-                        </div>
-                        <!-- 작업 생성자 이름 -->
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">작업 담당자</span>
-                            <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="inputGroup-sizing-default" value="김명준" disabled>
-                        </div>
-
-                        <!-- 작업 설명 -->
-                        <p style="font-weight: bolder;">작업 설명</p>
-                        <div id="work-contents" class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here"
-                                id="floatingTextarea-work"></textarea>
-                            <label for="floatingTextarea">작업 설명</label>
-                            <span id="work-contents-count" style="margin-left: auto;">0/1000</span>
-                        </div>
-
-
-                        <!-- 작업 종료 예정일 -->
-                        <br>
-                        <div>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">작업 종료일</span>
-                                <select id="year" class="form-select" aria-label="Year" required>
-                                    <option value="" selected>년</option>
-                                    <!-- 연도 옵션 추가 올해와 내년만 출력되게 설정-->
-
-                                </select>
-                                <select id="month" class="form-select" aria-label="Month" required>
-                                    <option value="" selected>월</option>
-                                    <!-- 월 옵션 추가 -->
-
-                                </select>
-                                <select id="day" class="form-select" aria-label="Day" required>
-                                    <option value="" selected>일</option>
-                                    <!-- 일 옵션 추가 -->
-
-                                </select>
+                    <!-- Topbar Search -->
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
                             </div>
                         </div>
-                        <br>
+                    </form>
 
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-primary">프로젝트 생성</button>
-                </div>
-            </div>
-        </div>
-    </div>
-<header>
-    <!-- 메인 카테고리 -->
-    <div id="sideHeader1" class="sideHeader">
-        <div id="sideHeader-sub">
-            <!-- 메인 == 메일 카테고리 -->
-            <div id="mail-category" class="headerContent"><a href=""><img src="https://i.imgur.com/c0Ze4Y2.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
-                <div id="mailWrap" class="sideHeader-sub">
-                        <table id="mailContent" class="table table-dark table-hover">
-                            <tr><th style="white-space: nowrap;">메일 보내기</th></tr>
-                            <tr><th>수신 메일함</th></tr>
-                            <tr><th>발신 메일함</th></tr>
-                            <tr><th>메일 보관함</th></tr>
-                            <tr><th>휴지통</th></tr>
-                        </table>
-                </div>
-            <!-- 메인 == 프로젝트 카테고리 -->
-                <div id="project-category" class="headerContent"><a href=""><img src="https://i.imgur.com/8yHARRe.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
-                <div id="projectWrap" class="sideHeader-sub">
-                    <table id="projectContent" class="table table-dark table-hover">
-                        <tr><th>전체 프로젝트 조회</th></tr>
-                        <tr><th id="createProject" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#createModal">프로젝트 생성</th></tr>
-                        <tr><th id="updateProject" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#updateModal">프로젝트 수정</th></tr>
-                        <tr><th id="createProjectWork" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#createWorkModal">프로젝트-작업 수정</th></tr>
-                        <tr><th id="updateProjectWork" style="cursor: pointer;"data-bs-toggle="modal" data-bs-target="#updateProjectWork">프로젝트-작업 삭제</th></tr>
-                    </table>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+                                <span class="badge badge-danger badge-counter">7</span>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Message Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                            alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div class="font-weight-bold">
+                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
+                                            problem I've been having.</div>
+                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                            alt="...">
+                                        <div class="status-indicator"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">I have the photos that you ordered last month, how
+                                            would you like them sent to you?</div>
+                                        <div class="small text-gray-500">Jae Chun · 1d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                            alt="...">
+                                        <div class="status-indicator bg-warning"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">Last month's report looks great, I am very happy with
+                                            the progress so far, keep up the good work!</div>
+                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                            alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
+                                            told me that people say this to all dogs, even if they aren't good...</div>
+                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+
+        <!-- End of Content Wrapper -->
 
 
-            </div>
-            <!-- 메인 == 전자결재 카테고리 -->
-                <div id="approval-category" class="headerContent"><a href=""><img src="https://i.imgur.com/Nn5TmVd.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
-                <div id="approvalWrap" class="sideHeader-sub">
-                    <table id="approvalContent" class="table table-dark table-hover">
-                        <tr><th>전자결재 메뉴1</th></tr>
-                        <tr><th>전자결재 메뉴2</th></tr>
-                        <tr><th>전자결재 메뉴3</th></tr>
-                        <tr><th>전자결재 메뉴4</th></tr>
-                        <tr><th>전자결재 메뉴5</th></tr>
-                        <tr><th>전자결재 메뉴6</th></tr>
-                        <tr><th>전자결재 메뉴7</th></tr>
-                        <tr><th>전자결재 메뉴8</th></tr>
-                    </table>
-                </div>
-            <!-- 메인 == 켈린더 카테고리 -->
-            <div id="calender-category" class="headerContent"><a href=""><img src="https://i.imgur.com/8yHARRe.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
-            <div id="calenderWrap" class="sideHeader-sub">
-                <table id="calenderContent" class="table table-dark table-hover">
-                    <tr><th>켈린더 메뉴1</th></tr>
-                    <tr><th>켈린더 메뉴2</th></tr>
-                    <tr><th>켈린더 메뉴3</th></tr>
-                    <tr><th>켈린더 메뉴4</th></tr>
-                    <tr><th>켈린더 메뉴5</th></tr>
-                </table>
-            </div>
+    <!-- End of Page Wrapper -->
 
-            <!-- 메인 == 커뮤니티 카테고리 -->
-            <div id="community-category" class="headerContent"><a href=""><img src="https://i.imgur.com/c0Ze4Y2.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
-            <div id="communityWrap" class="sideHeader-sub">
-                <table id="communityContent" class="table table-dark table-hover">
-                    <tr><th>커뮤니티 메뉴1</th></tr>
-                    <tr><th>커뮤니티 메뉴2</th></tr>
-                    <tr><th>커뮤니티 메뉴3</th></tr>
-                    <tr><th>커뮤니티 메뉴4</th></tr>
-                    <tr><th>커뮤니티 메뉴5</th></tr>
-                </table>
-            </div>
-
-            <!-- 메인 == 채팅 카테고리 -->
-            <div id="chat-category" class="headerContent"><a href=""><img src="https://i.imgur.com/Nn5TmVd.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
-            <div id="chatWrap" class="sideHeader-sub">
-                <table id="chatContent" class="table table-dark table-hover" style="cursor: pointer;">
-                    <tr><th>HOT사원</th></tr>
-                    <tr><th id="hottalk-list">핫톡목록</th></tr>
-                    <tr><th>환경생활</th></tr>
-                </table>
-            </div>
-
-                <!-- 메인 == 인사 카테고리 -->
-                <div id="insa-category" class="headerContent"><a href=""><img src="https://i.imgur.com/8yHARRe.png" width="30px"></a><div style="margin-top: 6px;"></div></div>
-                <div id="insaWrap" class="sideHeader-sub">
-                    <table id="insaContent" class="table table-dark table-hover">
-                        <tr><th>인사 메뉴1</th></tr>
-                        <tr><th>인사 메뉴2</th></tr>
-                        <tr><th>인사 메뉴3</th></tr>
-                        <tr><th>인사 메뉴4</th></tr>
-                        <tr><th>인사 메뉴5</th></tr>
-                    </table>
-                </div>
-        </div>
-</div>
-<div>
-</div>
-</header>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 

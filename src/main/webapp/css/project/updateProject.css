@@ -1,0 +1,28 @@
+@charset "EUC-KR";
+#project-update-window{
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+#floatingTextarea{
+	resize:none;
+	height:200px;
+	overflow:scoll;
+}
+
+#project-update-main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+/* 프로젝트 제목 */
+#project-update-title{
+    font-weight: bolder;
+    font-size: 30px;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
