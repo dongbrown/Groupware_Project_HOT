@@ -3,6 +3,7 @@
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
 <head>
 
     <meta charset="UTF-8">
@@ -211,7 +212,7 @@
                     </div>
                 </div>
             </li>
-            <c:if test="${loginEmployee.departmentCode==2}">
+            <%-- <c:if test="${loginEmployee.departmentCode==2}">
                 <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#human"
@@ -231,7 +232,7 @@
                     </div>
                 </div>
             </li>
-            </c:if>
+            </c:if> --%>
 
 
             <!-- Divider -->
