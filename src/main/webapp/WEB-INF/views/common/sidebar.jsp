@@ -186,9 +186,9 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">커뮤니티 목록</h6>
-                        <a class="collapse-item" href="utilities-color.html">즐겨찾는 커뮤니티</a>
+                        <a class="collapse-item" href="${path }/community/">즐겨찾는 커뮤니티</a>
                         <a class="collapse-item" href="${path }/community/">내 커뮤니티</a>
-                        <a class="collapse-item" href="${path }/community/">공개 커뮤니티</a>
+                        <a class="collapse-item" href="${path }/oepnCommunity/">공개 커뮤니티</a>
                     </div>
                 </div>
             </li>

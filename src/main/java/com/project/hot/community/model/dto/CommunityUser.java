@@ -1,18 +1,18 @@
 package com.project.hot.community.model.dto;
-import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class Community {
+@Builder
+public class CommunityUser {
+    private int employeeNo;
     private int communityNo;
-    private String communityTitle;
-    private String communityIntroduce;
-    private String communityIsOpen;
-    private List<CommunityUser> members;
+    private String communityUserIsAccept;
+    private String communityUserBookmark;
+    private Community community;
 }

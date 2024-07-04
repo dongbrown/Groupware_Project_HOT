@@ -34,7 +34,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: '/api/community/create',
+            url: '/api/community/insert',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),

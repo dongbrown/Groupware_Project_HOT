@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,8 +13,8 @@
 </style>
 </head>
 <body>
-<!-- 페이지 Wrapper -->
-<div id="wrapper">
+	<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
+
     <!-- 사이드바 include -->
     <c:import url="/WEB-INF/views/common/sidebar.jsp"/>
 
@@ -29,96 +30,52 @@
                 <div class="community-container">
                     <div class="section">
                         <h2>즐겨찾는 커뮤니티</h2>
-                        <div class="group">
-                            <div class="group-title">축구 모임 <span class="star">★</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
-                        <div class="group">
-                            <div class="group-title">AI 딥러닝 스터디 <span class="star">★</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
-                        <div class="group">
-                            <div class="group-title">주말 등산 모임 <span class="star">★</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
+                        <c:forEach var="community" items="${communities}">
+                            <c:set var="isBookmarked" value="false" />
+                            <c:forEach var="member" items="${community.members}">
+                                <c:if test="${member.employeeNo eq loginEmployee.employeeNo and member.communityUserBookmark eq 'Y'}">
+                                    <c:set var="isBookmarked" value="true" />
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${isBookmarked}">
+                                <div class="group">
+                                    <div class="group-title">${community.communityTitle} <span class="star">★</span></div>
+                                    <c:forEach var="member" items="${community.members}" begin="0" end="4">
+                                        <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon" title="Employee ${member.employeeNo}">
+                                    </c:forEach>
+                                    <c:if test="${fn:length(community.members) > 5}">
+                                        <span class="more-members">+${fn:length(community.members) - 5}</span>
+                                    </c:if>
+                                </div>
+                            </c:if>
+                        </c:forEach>
                     </div>
 
                     <div class="section">
                         <h2>내 커뮤니티</h2>
-                        <div class="group">
-                            <div class="group-title">축구 모임 <span class="star">★</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
-                        <div class="group">
-                            <div class="group-title">AI 딥러닝 스터디 <span class="star">★</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
-                        <div class="group">
-                            <div class="group-title">주말 등산 모임 <span class="star">★</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
-                        <div class="group">
-                            <div class="group-title">아이디어 브레인 스토밍 <span class="star">☆</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
-                        <div class="group">
-                            <div class="group-title">마케팅 업무 <span class="star">☆</span></div>
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                            <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon">
-                        </div>
+                        <c:forEach var="community" items="${communities}">
+                            <div class="group">
+                                <div class="group-title">
+                                    ${community.communityTitle}
+                                    <c:set var="isBookmarked" value="false" />
+                                    <c:forEach var="member" items="${community.members}">
+                                        <c:if test="${member.employeeNo eq loginEmployee.employeeNo}">
+                                            <c:set var="isBookmarked" value="${member.communityUserBookmark eq 'Y'}" />
+                                        </c:if>
+                                    </c:forEach>
+                                    <span class="star" data-community-no="${community.communityNo}">${isBookmarked ? '★' : '☆'}</span>
+                                </div>
+                                <c:forEach var="member" items="${community.members}" begin="0" end="4">
+                                    <img src="${pageContext.request.contextPath}/img/undraw_profile_1.svg" alt="User" class="user-icon" title="Employee ${member.employeeNo}">
+                                </c:forEach>
+                                <c:if test="${fn:length(community.members) > 5}">
+                                    <span class="more-members">+${fn:length(community.members) - 5}</span>
+                                </c:if>
+                            </div>
+                        </c:forEach>
                         <div class="add-group" id="addGroupBtn">
                             +
                         </div>
-                    </div>
-                </div>
-
-                <!-- 커뮤니티 생성 모달 -->
-                <div id="createCommunityModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h5>커뮤니티 만들기</h5>
-                        <form id="createCommunityForm">
-                            <div class="form-group">
-                                <label for="communityTitle">커뮤니티명</label>
-                                <input type="text" class="form-control" id="communityTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="communityIntroduce">소개</label>
-                                <textarea class="form-control" id="communityIntroduce" rows="3"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>공개 여부</label>
-                                <div>
-                                    <input type="radio" id="communityIsOpenY" name="communityIsOpen" value="Y" checked>
-                                    <label for="communityIsOpenY">공개</label>
-                                    <input type="radio" id="communityIsOpenN" name="communityIsOpen" value="N">
-                                    <label for="communityIsOpenN">비공개</label>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">등록</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -130,11 +87,35 @@
         <c:import url="/WEB-INF/views/common/footer.jsp"/>
     </div>
     <!-- 콘텐츠 Wrapper 끝 -->
-</div>
-<!-- 페이지 Wrapper 끝 -->
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="${path}/js/community/community.js"></script>
+<script>
+$(document).ready(function() {
+    // 북마크 토글 기능
+    $('.star').click(function() {
+        var communityNo = $(this).data('community-no');
+        $.ajax({
+            url: '${pageContext.request.contextPath}/community/toggleBookmark',
+            type: 'POST',
+            data: { communityNo: communityNo },
+            success: function(response) {
+                if(response.success) {
+                    location.reload();  // 페이지 새로고침
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert('북마크 변경 중 오류가 발생했습니다.');
+            }
+        });
+    });
+});
+</script>
+
+
+
 </body>
 </html>
