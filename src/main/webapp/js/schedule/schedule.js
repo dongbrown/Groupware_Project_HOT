@@ -16,6 +16,7 @@ jQuery(document).ready(function($) {
         defaultView: 'month',
         timezone: 'local',
         editable: true,
+        eventDurationEditable: true,
         events: function(start, end, timezone, callback) {
             $.ajax({
                 url: '/schedule/schedule',
@@ -30,7 +31,10 @@ jQuery(document).ready(function($) {
                             start: item.start,
                             end: item.end,
                             allDay: item.allDay,
-                            color: item.color
+                            color: item.color,
+                            description: item.description,
+                            location: item.location,
+                            type: item.type
                         });
                     });
                     callback(events);
@@ -50,11 +54,13 @@ jQuery(document).ready(function($) {
                     data: JSON.stringify({
                         id: event.id,
                         title: event.title,
-                        start: event.start.format(),
-                        end: event.end ? event.end.format() : null,
+                        start: event.start.format('YYYY-MM-DD HH:mm:ss'),
+                        end: event.end ? event.end.format('YYYY-MM-DD HH:mm:ss') : null,
                         allDay: event.allDay,
                         color: event.color,
-                        type: event.type
+                        type: event.type,
+                        description: event.description,
+                        location: event.location
                     }),
                     contentType: 'application/json',
                     type: 'POST',
@@ -80,6 +86,8 @@ jQuery(document).ready(function($) {
             $('#viewScheduleModal').css('display', 'block');
             $('#viewScheduleId').val(calEvent.id);
             $('#viewScheduleTitle').val(calEvent.title);
+            $('#viewSchedulePlace').val(calEvent.location);
+            $('#viewScheduleContent').val(calEvent.description);
             $('#viewScheduleStart').val(moment(calEvent.start).format('YYYY-MM-DD'));
             $('#viewScheduleEnd').val(calEvent.end ? moment(calEvent.end).format('YYYY-MM-DD') : '');
             $('#viewScheduleAllDay').prop('checked', calEvent.allDay);
@@ -106,7 +114,9 @@ jQuery(document).ready(function($) {
             end: $('#scheduleEnd').val() || null,
             allDay: $('#scheduleAllDay').is(':checked'),
             color: $('#scheduleColor').val(),
-            type: $('input[name="scheduleType"]:checked').val()
+            type: $('input[name="scheduleType"]:checked').val(),
+            description: $('#scheduleContent').val(),
+            location: $('#schedulePlace').val()
         };
 
         $.ajax({
@@ -131,6 +141,8 @@ jQuery(document).ready(function($) {
         var formData = {
             id: $('#viewScheduleId').val(),
             title: $('#viewScheduleTitle').val(),
+            location: $('#viewSchedulePlace').val(),
+            description: $('#viewScheduleContent').val(),
             start: $('#viewScheduleStart').val(),
             end: $('#viewScheduleEnd').val() || null,
             allDay: $('#viewScheduleAllDay').is(':checked'),

@@ -3,6 +3,7 @@
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
 <head>
 
     <meta charset="UTF-8">
@@ -67,7 +68,7 @@
                         <a class="collapse-item" href="${path}/approvalAll.do">전체</a>
                         <a class="collapse-item" href="${path}/approvalWait.do">결재대기</a>
                         <a class="collapse-item" href="${path}/approvalProcess.do">결재진행</a>
-                        <a class="collapse-item" href="${path}/approvalComplete.do">결재확인</a><br>
+                        <a class="collapse-item" href="${path}/approvalComplete.do">결재완료</a><br>
 
                         <h6 class="collapse-header">문서함</h6>
                         <a class="collapse-item" href="${path}/documentAll.do">전체문서</a>
@@ -91,7 +92,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">프로젝트</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 프로젝트 조회</a>
-                        <a class="collapse-item" href="utilities-border.html">프로젝트 생성</a>
+                        <a class="collapse-item" href="${path}/project/projectinsert.do">프로젝트 생성</a>
                         <a class="collapse-item" href="${path}/project/projectupdate.do">프로젝트 수정</a><br>
                         <h6 class="collapse-header">작업</h6>
                         <a class="collapse-item" href="utilities-color.html">전체 작업 조회</a>
@@ -211,7 +212,7 @@
                     </div>
                 </div>
             </li>
-            <c:if test="${loginEmployee.departmentCode==2}">
+            <%-- <c:if test="${loginEmployee.departmentCode==2}">
                 <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#human"
@@ -231,7 +232,7 @@
                     </div>
                 </div>
             </li>
-            </c:if>
+            </c:if> --%>
 
 
             <!-- Divider -->
@@ -244,4 +245,3 @@
 
         </ul>
         <!-- End of Sidebar -->
-
