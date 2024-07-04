@@ -8,7 +8,9 @@
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
 
 <section>
+
 	<h2> 메인페이지 </h2>
+
 </section>
 </div>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

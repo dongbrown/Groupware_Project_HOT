@@ -32,6 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Map<String, Object> result=new HashMap<>();
 		result.put("totalData", dao.countEmployeeTotalData(session));
 		result.put("employees", dao.selectEmployees(session, param));
+		result.put("departments", dao.selectDepartmentTitle(session));
 		return result;
 	}
 

@@ -28,7 +28,7 @@ public class ScheduleController {
 
 	@GetMapping("/")
 	public String showCalendar() {
-		return "schedule/schedule";
+		return "schedule/schedule" ;
 	}
 
 	@GetMapping("/schedule")
@@ -41,11 +41,14 @@ public class ScheduleController {
             Map<String, Object> event = new HashMap<>();
             event.put("id", schedule.getId());
             event.put("title", schedule.getTitle());
+            event.put("location", schedule.getLocation());
+            event.put("description", schedule.getDescription());
+            event.put("type", schedule.getDescription());
             event.put("start", schedule.getStart());
             event.put("end", schedule.getEnd());
             event.put("allDay", schedule.isAllDay());
             event.put("color", schedule.getColor());
-            // 필요한 다른 필드들도 추가
+
             events.add(event);
         }
 
@@ -53,32 +56,33 @@ public class ScheduleController {
     }
 
 
-    @PostMapping("/addSchedule")
-    @ResponseBody
-    public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
-        try {
-            System.out.println("Received schedule: " + schedule);  // 로깅 추가
-            service.addSchedule(schedule);
-            return ResponseEntity.ok("일정이 성공적으로 추가되었습니다");
-        } catch (Exception e) {
-            e.printStackTrace();  // 스택 트레이스 출력
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("일정 추가 중 오류 발생: " + e.getMessage());
-        }
-    }
+	@PostMapping("/addSchedule")
+	@ResponseBody
+	public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
+	    try {
+	        System.out.println("Received schedule: " + schedule);
+	        service.addSchedule(schedule);
+	        return ResponseEntity.ok("일정이 성공적으로 추가되었습니다");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("일정 추가 중 오류 발생: " + e.getMessage());
+	    }
+	}
 
-    @PostMapping("/updateSchedule")
-    @ResponseBody
-    public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
-        try {
-        	System.out.println("Received schedule: " + schedule);
-            service.updateSchedule(schedule);
-            return ResponseEntity.ok("일정이 성공적으로 수정되었습니다");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("일정 수정 중 오류 발생: " + e.getMessage());
-        }
-    }
+	@PostMapping("/updateSchedule")
+	@ResponseBody
+	public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
+	    try {
+	        System.out.println("Received schedule for update: " + schedule);  // 로깅 추가
+	        service.updateSchedule(schedule);
+	        return ResponseEntity.ok("일정이 성공적으로 수정되었습니다");
+	    } catch (Exception e) {
+	        e.printStackTrace();  // 스택 트레이스 출력
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("일정 수정 중 오류 발생: " + e.getMessage());
+	    }
+	}
 
     @PostMapping("/deleteSchedule")
     @ResponseBody
