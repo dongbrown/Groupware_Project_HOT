@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
@@ -22,23 +23,21 @@
 				<div id="project-insert-body">
 					<!-- 프로젝트 이름 -->
 					<div class="input-group mb-3">
-						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
-							이름</span> <input type="text" class="form-control"
-							aria-label="Sizing example input"
+						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트이름</span>
+						<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default">
 					</div>
 					<!-- 프로젝트 생성자 이름 -->
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">작성자</span>
-						<input type="text" class="form-control"
+						<input type="text" class="form-control" name="writer"
 							aria-label="Sizing example input"
-							aria-describedby="inputGroup-sizing-default" value="${loginEmployee.employeeName }" disabled>
+							aria-describedby="inputGroup-sizing-default"  value="${loginEmployee.employeeName }" disabled>
 					</div>
 					<!-- 프로젝트 중요도 체크박스  -->
 					<div class="input-group mb-3">
-						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
-							중요도</span> <select class="form-select"
-							aria-label="Default select example">
+						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트중요도</span>
+						<select class="form-select" name="importance" aria-label="Default select example">
 							<option selected>선택하세요.</option>
 							<option value="1" style="color: red;">상</option>
 							<option value="2" style="color: rgb(255, 132, 0);">중</option>
@@ -48,10 +47,10 @@
 					<!-- 프로젝트 설명 -->
 					<p style="font-weight: bolder;">프로젝트 설명</p>
 					<div id="project-contents" class="form-floating">
-						<textarea class="form-control" placeholder="Leave a comment here"
+						<textarea class="form-control" name="projectContent" placeholder="Leave a comment here"
 							id="floatingTextarea"></textarea>
-						<label for="floatingTextarea">프로젝트 설명</label> <span
-							id="project-contents-count" style="margin-left: auto;">0/1000</span>
+						<label for="floatingTextarea">프로젝트 설명</label>
+						<span id="project-contents-count" style="margin-left: auto;">0/1000</span>
 					</div>
 
 					<br>
@@ -94,12 +93,11 @@
 							<select id="select-dept" class="form-select"
 								aria-label="Default select example">
 								<option selected>선택하세요.</option>
-								<option value="1">경영</option>
-								<option value="2">디자인2팀</option>
-								<option value="3">디자인1팀</option>
-								<option value="4">개발3팀</option>
-								<option value="5">개발2팀</option>
-								<option value="6">개발1팀</option>
+								<c:if test="${not empty depts }">
+									<c:forEach var="d" items="${depts }">
+										<option value="${d.departmentCode}">${d.departmentTitle }</option>
+									</c:forEach>
+								</c:if>
 							</select>
 						</div>
 					</div>
@@ -130,7 +128,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">취소</button>
-						<button type="button" class="btn btn-primary">등록</button>
+				<button type="button" class="btn btn-primary" id="insertProjectBtn">등록</button>
 					</div>
 				</div>
 			</div>
@@ -138,5 +136,8 @@
 	</div>
 </section>
 </div>
+<script>
+	const empNo ="${loginEmployee.employeeNo }";
+</script>
 <script src="${path }/js/project/insertProject.js"></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

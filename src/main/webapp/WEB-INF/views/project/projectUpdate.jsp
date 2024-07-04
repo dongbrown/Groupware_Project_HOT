@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
@@ -125,7 +126,7 @@
 			</div>
 
 
-			<div>
+			<div style="display:flex;">
 
 				<div id="project-update-window">
 					<div class="modal-body">
@@ -162,6 +163,7 @@
 							<textarea class="form-control" placeholder="Leave a comment here"
 								id="floatingTextarea"></textarea>
 							<label for="floatingTextarea">프로젝트 설명</label>
+							<span id="project-contents-count" style="margin-left: auto;">0/1000</span>
 						</div>
 						<!-- 프로젝트 종료 예정일 -->
 						<br>
@@ -207,12 +209,11 @@
 								<select id="select-dept" class="form-select"
 									aria-label="Default select example">
 									<option selected>선택하세요.</option>
-									<option value="개발1팀">개발1팀</option>
-									<option value="개발2팀">개발2팀</option>
-									<option value="개발3팀">개발3팀</option>
-									<option value="홍보팀">홍보팀</option>
-									<option value="디자인1팀">디자인1팀</option>
-									<option value="디자인2팀">디자인2팀</option>
+									<c:if test="${not empty depts }">
+										<c:forEach var="d" items="${depts }">
+											<option value="${d.departmentCode}">${d.departmentTitle }</option>
+										</c:forEach>
+									</c:if>
 								</select>
 							</div>
 						</div>
@@ -260,11 +261,12 @@
 							</div>
 						</div>
 					</div>
-					<!-- 사원 조회 생성 -->
-					<div id="input-member"></div>
-					<!-- 선택된 프로젝트 파일이 없습니다. 이미지 -->
 
 				</div>
+					<!-- 사원 조회 생성 -->
+					<div id="input-member"></div>
+
+					<!-- 선택된 프로젝트 파일이 없습니다. 이미지 -->
 					<div id="noneProjectImg" style="margin-left:30px;">
 						<img src="https://i.imgur.com/oGbyqGQ.png" width="600px" height="600px">
 					</div>
