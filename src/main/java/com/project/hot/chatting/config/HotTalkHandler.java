@@ -14,6 +14,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
+import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
 import com.project.hot.chatting.model.service.HotTalkService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	private final HotTalkService service;
 
-	Map<String, WebSocketSession> employees = new HashMap<>();
+	Map<Integer, WebSocketSession> employees = new HashMap<>();
 
 
 	@Override
@@ -36,12 +37,24 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	}
 
-	public void enterEmployees(WebSocketSession session, CommonMessageDTO msg) {
+	private void enterEmployees(WebSocketSession session, CommonMessageDTO msg) {
 		employees.put(msg.getSender(), session);
 		List<ResponseEmployeeDTO> list = service.getHotTalkMemberList();
 		list.forEach(l->l.setType("사원"));
 		// System.out.println(list);
-		responseEmployeeDTO(list);
+		responseListDTO(list);
+	}
+
+	private void privateHotTalkList(WebSocketSession session, CommonMessageDTO msg) {
+		List<ResponseHotTalkListDTO> list = service.getPrivateHotTalkList(msg.getSender());
+		list.forEach(l->l.setType("갠톡"));
+		responseListDTO(list);
+	}
+
+	private void groupHotTalkList(WebSocketSession session, CommonMessageDTO msg) {
+		List<ResponseHotTalkListDTO> list = service.getGroupHotTalkList(msg.getSender());
+		list.forEach(l->l.setType("단톡"));
+		responseListDTO(list);
 	}
 
 	@Override
@@ -49,6 +62,8 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		CommonMessageDTO msg = mapper.readValue(message.getPayload(), CommonMessageDTO.class);
 		switch(msg.getType()){
 			case "enter" : enterEmployees(session, msg); break;
+			case "privateHotTalk" : privateHotTalkList(session, msg); break;
+			case "groupHotTalk" : groupHotTalkList(session, msg); break;
 		}
 	}
 
@@ -58,8 +73,8 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		super.afterConnectionClosed(session, status);
 	}
 
-	private void responseEmployeeDTO(List<ResponseEmployeeDTO> list) {
-		for(Map.Entry<String, WebSocketSession> employee : employees.entrySet()) {
+	private void responseListDTO(List list) {
+		for(Map.Entry<Integer, WebSocketSession> employee : employees.entrySet()) {
 			WebSocketSession emp = employee.getValue();
 			try {
 				String message = mapper.writeValueAsString(list);
@@ -70,16 +85,5 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		}
 	}
 
-	private void responseMessage(CommonMessageDTO msg) {
-		for(Map.Entry<String, WebSocketSession> employee : employees.entrySet()) {
-			WebSocketSession emp = employee.getValue();
-			try {
-				String message = mapper.writeValueAsString(msg);
-				emp.sendMessage(new TextMessage(message));
-			}catch(Exception e){
-				log.debug("responseMessage() 실패");
-			}
-		}
-	}
 
 }

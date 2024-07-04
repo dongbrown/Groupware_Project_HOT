@@ -2,10 +2,13 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     const chatButtons = document.querySelectorAll('#chat-option1, #chat-option2, #chat-option3');
+    // chat-option1 ? HOT사원
+    // chat-option2 ? 개인 핫톡
+    // chat-option3 ? 그룹 핫톡
     const chatOptionDisplay = document.getElementById('chat-option');
     function setActiveButton(button) {
-        chatButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
+        chatButtons.forEach(btn => btn.classList.remove('btn-active'));
+        button.classList.add('btn-active');
         chatOptionDisplay.textContent = button.textContent;
     }
     setActiveButton(document.getElementById('chat-option1'));
@@ -19,20 +22,39 @@ document.addEventListener('DOMContentLoaded', function() {
 	chatServer = new WebSocket("ws://localhost:9090/hottalk.do");
 	// HotTalk Open시
 	chatServer.onopen=(e)=>{
-		console.log("WebSocket 연결 성공 : ", e);
+		// console.log("WebSocket 연결 성공 : ", e);
 		//constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString())
 		const msg = new CommonMessage("enter", loginEmployeeNo).convert()
 		chatServer.send(msg);
 	}
+	$("#chat-option1").click(()=>{
+		$("#option-result").text("");
+		const msg = new CommonMessage("enter", loginEmployeeNo).convert()
+		chatServer.send(msg);
+	})
+
+	$("#chat-option2").click(()=>{
+		$("#option-result").text("");
+		const msg = new CommonMessage("privateHotTalk", loginEmployeeNo).convert();
+		chatServer.send(msg);
+	})
+
+	$("#chat-option3").click(()=>{
+		$("#option-result").text("");
+		const msg = new CommonMessage("groupHotTalk", loginEmployeeNo).convert();
+		chatServer.send(msg);
+	})
 
 	chatServer.onmessage=(response)=>{
 		const data = JSON.parse(response.data);
 		// console.log(data);
+		const $option = document.querySelector("#option-result");
+		console.log(data);
 		if(data != null && data.length>0){
+
 			switch(data[0].type){
 				case '사원':
 					data.forEach(d=>{
-						const $option = document.querySelector("#option-result");
 						const $employee = document.createElement("div");
 						const $profile = document.createElement("div");
 						const $photo = document.createElement("img");
@@ -60,9 +82,55 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						$employee.classList.add("hotTalkEmployee");
 						$option.appendChild($employee);
-					})
-				break;
-				case '핫톡':console.log("핫톡"); break;
+					}); break;
+				case '갠톡':
+					data.forEach(d=>{
+						console.log(d);
+						const $chattingroom = document.createElement("div");
+						const $hotTalkTitle = document.createElement("h5");
+						$hotTalkTitle.innerText=d.hotTalkTitle;
+						const $name = document.createElement("h6");
+						const $content = document.createElement("p");
+						$content.innerText=d.hotTalkContent;
+						const $profile = document.createElement("div");
+						const $photo = document.createElement("img");
+						$photo.src="https://cdn-icons-png.freepik.com/512/219/219986.png";
+						$photo.style.width="30px";
+						$photo.style.height="30px";
+						$photo.style.borderRadius="60px";
+						$photo.style.marginRight="10px";
+						$chattingroom.appendChild($photo);
+						$profile.appendChild($hotTalkTitle);
+						$profile.appendChild($name);
+						$profile.appendChild($content);
+						$chattingroom.appendChild($profile);
+						$chattingroom.classList.add("hotTalkEmployee");
+						$option.appendChild($chattingroom);
+					}); break;
+				case '단톡':
+					data.forEach(d=>{
+						console.log(d);
+						const $chattingroom = document.createElement("div");
+						const $hotTalkTitle = document.createElement("h5");
+						$hotTalkTitle.innerText=d.hotTalkTitle;
+						const $name = document.createElement("h6");
+						const $content = document.createElement("p");
+						$content.innerText=d.hotTalkContent;
+						const $profile = document.createElement("div");
+						const $photo = document.createElement("img");
+						$photo.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbunjG0clqdBDZUtPkuGFbXuL1csW0EAQ_BQ&s";
+						$photo.style.width="30px";
+						$photo.style.height="30px";
+						$photo.style.borderRadius="60px";
+						$photo.style.marginRight="10px";
+						$chattingroom.appendChild($photo);
+						$profile.appendChild($hotTalkTitle);
+						$profile.appendChild($name);
+						$profile.appendChild($content);
+						$chattingroom.appendChild($profile);
+						$chattingroom.classList.add("hotTalkEmployee");
+						$option.appendChild($chattingroom);
+					}); break;
 			}
 		}
 
@@ -88,7 +156,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.querySelector("#msg").focus();
 		}
 	})
+
 });
+
+
+
 
 class CommonMessage{
 	constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString()){

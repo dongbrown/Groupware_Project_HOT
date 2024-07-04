@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommonMessageDTO {
 	private String type;
-	private String sender;	// employeeName
+	private int sender;	// employeeName
 	private String receiver;	// employeeName
 	private int hotTalkNo;
 	private String msg;

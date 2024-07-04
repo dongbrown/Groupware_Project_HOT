@@ -27,7 +27,7 @@
               	<div class="dropdown">
 				  <ul class="dropdown-menu">
 				    <li><a class="dropdown-item" href="#">상태 변경</a></li>
-				    <li><a class="dropdown-item" href="#">프로필 변경</a></li>
+				    <li><a class="dropdown-item" href="#">상태메세지 변경</a></li>
 				  </ul>
 				</div>
             </div>
@@ -74,7 +74,6 @@
             </div>
         </div>
     </div>
-
 
 </section>
 </div>
