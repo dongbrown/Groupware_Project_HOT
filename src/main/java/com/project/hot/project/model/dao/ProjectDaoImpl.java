@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.project.model.dto.Project;
 @Repository
@@ -37,6 +38,11 @@ public class ProjectDaoImpl implements ProjectDao {
 	public Project selectProjectAll(SqlSession session) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Department> selectDeptAll(SqlSession session) {
+		return session.selectList("project.selectDeptAll");
 	}
 
 }

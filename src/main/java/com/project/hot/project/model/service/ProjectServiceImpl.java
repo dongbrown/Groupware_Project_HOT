@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
+import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.project.model.dao.ProjectDao;
 import com.project.hot.project.model.dto.Project;
@@ -44,6 +45,11 @@ public class ProjectServiceImpl implements ProjectService {
 	public Project selectProjectAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Department> selectDeptAll() {
+		return dao.selectDeptAll(session);
 	}
 
 }
