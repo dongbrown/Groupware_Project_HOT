@@ -35,7 +35,7 @@ public class ApprovalDocumentController {
 	    @GetMapping("/newApproval.do")
 	    public String newApproval(@RequestParam Map<String, String> params, Model model) {
 	        model.addAllAttributes(params);
-	        return "approval/newApproval"; // 뷰 이름을 반환
+	        return "approval/newApproval";
 	    }
 
 
