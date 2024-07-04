@@ -5,6 +5,7 @@
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -264,7 +265,7 @@
 					<!-- 선택된 프로젝트 파일이 없습니다. 이미지 -->
 
 				</div>
-					<div id="noneProjectImg">
+					<div id="noneProjectImg" style="margin-left:30px;">
 						<img src="https://i.imgur.com/oGbyqGQ.png" width="600px" height="600px">
 					</div>
 
