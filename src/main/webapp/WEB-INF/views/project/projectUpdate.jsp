@@ -2,9 +2,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -124,7 +126,7 @@
 			</div>
 
 
-			<div>
+			<div style="display:flex;">
 
 				<div id="project-update-window">
 					<div class="modal-body">
@@ -161,6 +163,7 @@
 							<textarea class="form-control" placeholder="Leave a comment here"
 								id="floatingTextarea"></textarea>
 							<label for="floatingTextarea">프로젝트 설명</label>
+							<span id="project-contents-count" style="margin-left: auto;">0/1000</span>
 						</div>
 						<!-- 프로젝트 종료 예정일 -->
 						<br>
@@ -206,12 +209,11 @@
 								<select id="select-dept" class="form-select"
 									aria-label="Default select example">
 									<option selected>선택하세요.</option>
-									<option value="개발1팀">개발1팀</option>
-									<option value="개발2팀">개발2팀</option>
-									<option value="개발3팀">개발3팀</option>
-									<option value="홍보팀">홍보팀</option>
-									<option value="디자인1팀">디자인1팀</option>
-									<option value="디자인2팀">디자인2팀</option>
+									<c:if test="${not empty depts }">
+										<c:forEach var="d" items="${depts }">
+											<option value="${d.departmentCode}">${d.departmentTitle }</option>
+										</c:forEach>
+									</c:if>
 								</select>
 							</div>
 						</div>
@@ -259,12 +261,13 @@
 							</div>
 						</div>
 					</div>
-					<!-- 사원 조회 생성 -->
-					<div id="input-member"></div>
-					<!-- 선택된 프로젝트 파일이 없습니다. 이미지 -->
 
 				</div>
-					<div id="noneProjectImg">
+					<!-- 사원 조회 생성 -->
+					<div id="input-member"></div>
+
+					<!-- 선택된 프로젝트 파일이 없습니다. 이미지 -->
+					<div id="noneProjectImg" style="margin-left:30px;">
 						<img src="https://i.imgur.com/oGbyqGQ.png" width="600px" height="600px">
 					</div>
 

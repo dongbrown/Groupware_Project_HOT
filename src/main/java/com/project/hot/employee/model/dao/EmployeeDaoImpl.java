@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
 @Repository
@@ -26,6 +27,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	@Override
 	public int countEmployeeTotalData(SqlSession session) {
 		return session.selectOne("employee.countEmployeeTotalData");
+	}
+
+	@Override
+	public List<Department> selectDepartmentTitle(SqlSession session) {
+		return session.selectList("employee.selectDepartmentTitle");
 	}
 
 }

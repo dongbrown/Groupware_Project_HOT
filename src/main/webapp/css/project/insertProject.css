@@ -1,0 +1,119 @@
+@charset "EUC-KR";
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+section{
+	display:flex;
+	flex-direction:column;
+	font-family: 'Pretendard-Regular';
+}
+
+/* 프로젝트 제목 */
+#project-insert-title{
+    font-weight: bolder;
+    font-size: 25px;
+    color:white;
+    text-shadow: 3px 4px 5px black;
+    margin-right:20px;
+}
+
+
+#project-first-wrap>div:first-child{
+	width:300px;
+	height:70px;
+	display:flex;
+	justify-content:end;
+	align-items:center;
+	border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    background-color:#4e73df;
+}
+
+#project-insert-body{
+	width:600px;
+}
+
+#floatingTextarea{
+	resize:none;
+	height:200px;
+	overflow:scoll;
+}
+
+.form-check-input{
+	margin-left:0;
+}
+
+#input-check-member{
+	display:flex;
+
+}
+
+#input-check-member{
+	display:flex;
+
+}
+
+#input-group-text {
+	margin-bottom:10px;
+}
+
+#member-save-btn{
+	margin-top:10px;
+}
+
+#input-member-list{
+	height:200px;
+	overflow:auto;
+
+   &::-webkit-scrollbar {
+        width: 8px;
+   }
+
+   &::-webkit-scrollbar-track {
+     background: #f1f1f1;
+     border-radius: 10px;
+   }
+
+   &::-webkit-scrollbar-thumb {
+     background: #888;
+     border-radius: 10px;
+     transition: all 0.3s ease;
+   }
+
+   &::-webkit-scrollbar-thumb:hover {
+     background: #555;
+   }
+}
+
+#checked-member-wrab{
+	width:350px;
+	display:flex;
+	justify-content:space-between;
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    width: 280px;
+}
+
+.form-check-input {
+	position: relative;
+}
+
+#input-member{
+	display:flex;
+	flex-direction:column;
+	margin-left:50px;
+}
+
+#checked-member-wrab {
+    border-radius: 30px;
+    padding: 5px 20px;
+    background-color: #d3d3d366;
+    margin-top:10px;
+}
