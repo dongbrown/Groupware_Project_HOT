@@ -9,6 +9,12 @@
 	<div>
 		주소록
 	</div>
+	<c:forEach items="${employees }" var="e">
+		${e.employeeName }
+	</c:forEach>
+	<div>
+		${pagebar }
+	</div>
 </section>
 </div>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

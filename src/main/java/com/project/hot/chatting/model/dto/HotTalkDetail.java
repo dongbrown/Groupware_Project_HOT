@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class HotTalkDetail {
-	HotTalk hotTalk;
+	RequestHotTalkDTO hotTalk;
 	List<Employee> employees;
 	List<HotTalkContent> hotTalkContents;
 }

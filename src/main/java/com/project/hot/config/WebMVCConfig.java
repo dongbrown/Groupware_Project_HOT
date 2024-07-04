@@ -16,15 +16,16 @@ public class WebMVCConfig implements WebMvcConfigurer{
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("index");
 		registry.addViewController("/hottalk").setViewName("hotTalk/hottalk");
+		registry.addViewController("/loginpage").setViewName("common/loginpage");
 	}
 
-	@Bean
-	HandlerExceptionResolver hadleException() {
-		SimpleMappingExceptionResolver smer = new SimpleMappingExceptionResolver();
-		Properties mappingException = new Properties();
-		mappingException.setProperty("BadAuthenticationException", "common/error/authentication");
-		smer.setExceptionMappings(mappingException);
-		smer.setDefaultErrorView("common/error/defaultErrorpage");
-		return smer;
-	}
+//	@Bean
+//	HandlerExceptionResolver hadleException() {
+//		SimpleMappingExceptionResolver smer = new SimpleMappingExceptionResolver();
+//		Properties mappingException = new Properties();
+//		mappingException.setProperty("BadAuthenticationException", "common/error/authentication");
+//		smer.setExceptionMappings(mappingException);
+//		smer.setDefaultErrorView("common/error/defaultErrorpage");
+//		return smer;
+//	}
 }
