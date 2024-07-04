@@ -34,6 +34,7 @@ public class ScheduleController {
 		return "schedule/schedule" ;
 	}
 
+
 	@GetMapping("/schedule")
     @ResponseBody
     public List<Map<String, Object>> getSchedules() {
