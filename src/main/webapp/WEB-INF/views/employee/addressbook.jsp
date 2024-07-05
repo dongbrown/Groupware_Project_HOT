@@ -65,11 +65,11 @@
 		</c:forEach>
 	</div>
 	<div class="pagebar-div">
-		${pagebar }
+
 	</div>
 </section>
 </div>
-<script>
-
-</script>
+<script>const path='${path}';</script>
+<script src='${path }/js/employee/addressbook.js'></script>
+<script src='${path }/js/common/pagebar.js'></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

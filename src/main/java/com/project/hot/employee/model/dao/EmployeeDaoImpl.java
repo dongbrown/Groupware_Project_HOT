@@ -19,7 +19,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	}
 
 	@Override
-	public List<Employee> selectEmployees(SqlSession session, Map<String, Object> param) {
+	public List<Employee> selectEmployeeList(SqlSession session, Map<String, Object> param) {
 		return session.selectList("employee.selectEmployees", param,
 				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
 	}
@@ -30,8 +30,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	}
 
 	@Override
-	public List<Department> selectDepartmentTitle(SqlSession session) {
-		return session.selectList("employee.selectDepartmentTitle");
+	public List<Department> selectDepartmentList(SqlSession session) {
+		return session.selectList("employee.selectDepartmentList");
 	}
 
 }

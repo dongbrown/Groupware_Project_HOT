@@ -17,13 +17,13 @@ public class HotTalkDaoImpl implements HotTalkDao {
 
 	@Override
 	public List<ResponseHotTalkListDTO> getPrivateHotTalkList(SqlSession session, int employeeNo) {
-		System.out.println(employeeNo);
+		System.out.println("aaaaa");
+		System.out.println("bbbbb");
 		return session.selectList("hottalk.getPrivateHotTalkList", employeeNo);
 	}
 
 	@Override
 	public List<ResponseHotTalkListDTO> getGroupHotTalkList(SqlSession session, int employeeNo) {
-		System.out.println(employeeNo);
 		return session.selectList("hottalk.getGroupHotTalkList", employeeNo);
 	}
 
