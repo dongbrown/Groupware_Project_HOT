@@ -18,4 +18,6 @@ public class Feed {
 	private int communityNo;
 	private int employeeNo;
 
+	private String employeeName;
+
 }
