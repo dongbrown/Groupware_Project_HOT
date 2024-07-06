@@ -1,20 +1,28 @@
-//연도 옵션 추가  올해와 내년만 출력되게 설정
-    const currentYear = new Date().getFullYear();
-    const nextYear = currentYear + 1;
+//종료 날짜 설정
+//오늘 날짜 생성
+function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
-    for (let year = currentYear; year <= nextYear; year++) {
-        $('#year').append('<option value="' + year + '">' + year + '</option>');
-    };
+// 1년 후 날짜를 가져오는 함수
+      function getOneYearLaterDate() {
+        const today = new Date();
+        const nextYear = new Date(today.setFullYear(today.getFullYear() + 1));
+        const year = nextYear.getFullYear();
+        const month = String(nextYear.getMonth() + 1).padStart(2, '0');
+        const day = String(nextYear.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
 
-//월 옵션 추가
-	for (let month = 1; month <= 12; month++) {
-	    $('#month').append('<option value="' + month + '">' + month + '</option>');
-	}
+// 날짜 입력 필드에 오늘 날짜 설정
+  $("#project-end-date").val(getTodayDate());
+  $("#project-end-date").attr('min', getTodayDate());
+  $("#project-end-date").attr('max', getOneYearLaterDate());
 
-//일 옵션 추가
-    for (let day = 1; day <= 31; day++) {
-        $('#day').append('<option value="' + day + '">' + day + '</option>');
-    }
 
 //통화 표시
 	$('#project-budget').keyup(e=>{
@@ -29,7 +37,8 @@
 		let textLength = $(this).val().length;
 		$('#project-contents-count').text(textLength + '/1000');
 	});
-	//총 인원 추가될때 값 변환
+
+//총 인원 추가될때 총인원 값 변환
 	$(document).ready(function() {
 		const savedItems = $('.saved-item');
 		let checkedTotalCount = 1;
@@ -49,7 +58,7 @@
 			inputMember.text('');
 		} else {
 			inputMember.empty();
-//ajax 해당 사원 값 가져오기
+//ajax로 해당 사원 값 가져오기
 			$.ajax({
 				type: 'GET',
 				url: '/project/selectEmpByDept.do',
@@ -117,8 +126,7 @@
 
 						const checkedMembersDel = $('<button>', { class: 'btn-close', type: 'button' });
 						const savedItem = $('<div>', { text: label, id: 'checked-member-wrab', class: 'saved-item' });
-						savedItem.append(checkedMembersDel);
-						savedMembers.append(savedItem);
+						savedItem.append(checkedMembersDel).appendTo(savedMembers);
 					});
 				});
 			}
@@ -158,13 +166,58 @@
 
 /*프로젝트 목록중 하나 클릭시 해당 프로젝트 정보와 수정가능한 테이블 표시*/
  	$(".project-choice").click(e=>{
-	    const projectNo = e.target.parentElement.children[1].textContent;
-	    console.log(projectNo); // 프로젝트 고유번호 넘겨서 프로젝트 수정페이지로 이동
-//선택된 프로젝트가 없습니다 이미지 안보이게
+	    const projectNo = Number(e.target.parentElement.children[1].textContent);
+	    console.log(projectNo);
+	    $.ajax({
+			url: '/project/selectProjectByNo.do',
+			type: 'GET',
+			data: { projectNo: projectNo },
+			dataType: 'json',
+			success: function(p) {
+//선택 프로젝트의 원본 내용 출력
+				 $("#project-title").val(p.projectTitle);
+				 $("#project-emp").val(p.employeeCode.employeeName);
+				 $('#project-rank').val(p.projectRank);
+				 $('#floatingTextarea').text(p.projectContent);
+				 $('#project-budget').val(p.projectBudget);
+				 $('#project-end-date').val(p.projectEndDate);
 
-	    $("#noneProjectImg").css('display','none');
-	    $("#project-list").css('display','none');
-	    $("#project-update-window").css('display','flex'); //ajax로 구현할 예정
+//선택된 프로젝트가 없습니다 이미지 안보이게
+			    $("#noneProjectImg").css('display','none');
+			    $("#project-list").css('display','none');
+			    $("#project-update-window").css('display','flex');
+
+//참여 사원 정보 ajax로 가져오기
+				$.ajax({
+					url:'/project/selectEmployeetByProjectNo.do',
+					type: 'GET',
+					data: { projectNo: projectNo },
+					success: function(pe) {
+						console.log("성공");
+						const empInfo = `${pe.employee.departmentCode}`;
+						console.log(empInfo);
+//프로젝트 맴버 출력하기
+					const empWrapDiv=$('<div>',{id:'checked-member-wrab', class:'saved-item', text:"안녕사헤숑"});
+					const empWrapDivDelete=$('<button>',{class:'btn-close', type:'button'})
+//반복문 사용 -- 프로젝트 기존 참여 인원 출력
+					//pe.forEach((pi) => {
+					//const empInfo = pi.employee.departmentCode.departmentTitle;
+					//개발3팀: 홍길동 사번 / 212341234
+					empWrapDiv.append(empWrapDivDelete).appendTo($('#saved-members'));
+					//})
+
+
+					}
+				});
+			},
+//에러 발생시 알림 창
+			error: function() {
+				alert("로그인 후 이용할 수 있습니다.")
+				location.assign("/project/projectupdate.do");
+			}
+		})
+
+
     });
 
 	$("#projectUpdateCancle").click(e=>{
@@ -172,6 +225,7 @@
 	    console.log(projectNo); // 프로젝트 고유번호 넘겨서 프로젝트 수정페이지로 이동
 //선택된 프로젝트가 없습니다 이미지 안보이게
 
+	    $("#input-member").css('display','none');
 	    $("#noneProjectImg").css('display','block');
 	    $("#project-list").css('display','block');
 	    $("#project-update-window").css('display','none');//ajax 받아온 값 지워주기

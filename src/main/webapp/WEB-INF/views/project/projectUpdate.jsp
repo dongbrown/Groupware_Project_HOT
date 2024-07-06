@@ -25,8 +25,7 @@
 				<div id="projectListTable" class="table-responsive">
 					<div>
 
-						<table
-							class="table text-start align-middle table-bordered table-hover mb-0"
+						<table class="table text-start align-middle table-bordered table-hover mb-0"
 							style="text-align: center;">
 							<thead>
 								<tr class="text-dark">
@@ -39,72 +38,23 @@
 								</tr>
 							</thead>
 							<tbody>
-							<tr class="project-choice">
-									<td>01 Jan 2045</td>
-									<td>2</td>
-									<td>김동훈</td>
-									<td>프로젝트 제목 01</td>
-									<td>
-										<div class="graph-container">
-											<div class="bar" data-percentage="55"></div>
-											<div style="margin-top: 5px; margin-left:5px;">55%</div>
-										</div>
-									</td>
-									<td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-								</tr>
-
-								<tr class="project-choice">
-									<td>01 Jan 2045</td>
-									<td>2</td>
-									<td>김명준</td>
-									<td>프로젝트 제목 02</td>
-									<td>
-										<div class="graph-container">
-											<div class="bar" data-percentage="30"></div>
-											<div style="margin-top: 5px; margin-left:5px;">30%</div>
-										</div>
-									</td>
-									<td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-								</tr>
-								<tr class="project-choice">
-									<td>01 Jan 2045</td>
-									<td>3</td>
-									<td>최선웅</td>
-									<td>프로젝트 제목 03</td>
-									<td>
-										<div class="graph-container">
-											<div class="bar" data-percentage="80"></div>
-											<div style="margin-top: 5px; margin-left:5px;">80%</div>
-										</div>
-									</td>
-									<td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-								</tr>
-								<tr class="project-choice">
-									<td>01 Jan 2045</td>
-									<td>4</td>
-									<td>임성욱</td>
-									<td>프로젝트 제목 04</td>
-									<td>
-										<div class="graph-container">
-											<div class="bar" data-percentage="50"></div>
-											<div style="margin-top: 5px; margin-left:5px;">50%</div>
-										</div>
-									</td>
-									<td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-								</tr>
-								<tr class="project-choice">
-									<td>01 Jan 2045</td>
-									<td>5</td>
-									<td>고재현</td>
-									<td>프로젝트 제목 05</td>
-									<td>
-										<div class="graph-container">
-											<div class="bar" data-percentage="90"></div>
-											<div style="margin-top: 5px; margin-left:5px;">90%</div>
-										</div>
-									</td>
-									<td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-								</tr>
+									<c:forEach var="pl" items="${projects}">
+								<c:if test="${not empty projects}">
+										<tr class="project-choice">
+											<td><c:out value="${pl.projectStartDate}"/></td>
+											<td><c:out value="${pl.projectNo}"/></td>
+											<td><c:out value="${pl.employeeCode.employeeName}"/></td>
+											<td><c:out value="${pl.projectTitle}"/></td>
+											<td>
+												<div class="graph-container">
+													<div class="bar" data-percentage="<c:out value="${pl.projectProgress}"/>"></div>
+													<div style="margin-top: 5px; margin-left:5px;"><c:out value="${pl.projectProgress}"/>%</div>
+												</div>
+											</td>
+											<td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
+										</tr>
+								</c:if>
+									</c:forEach>
 							</tbody>
 						</table>
 					</div>
@@ -127,29 +77,29 @@
 
 
 			<div style="display:flex;">
-
+<!-- 프로젝트 조회시 업데이트 창 -->
 				<div id="project-update-window">
 					<div class="modal-body">
 						<!-- 프로젝트 이름 -->
 						<div class="input-group mb-3">
 							<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
-								이름</span> <input type="text" class="form-control"
+								이름</span> <input type="text" id="project-title" class="form-control"
 								aria-label="Sizing example input"
 								aria-describedby="inputGroup-sizing-default"
-								value="${projectNo}">
+								>
 						</div>
 						<!-- 프로젝트 생성자 이름 -->
 						<div class="input-group mb-3">
 							<span class="input-group-text" id="inputGroup-sizing-default">작성자</span>
-							<input type="text" class="form-control"
+							<input type="text" id="project-emp" class="form-control"
 								aria-label="Sizing example input"
-								aria-describedby="inputGroup-sizing-default" value="홍길동"
+								aria-describedby="inputGroup-sizing-default"
 								disabled>
 						</div>
 						<!-- 프로젝트 중요도 체크박스  -->
 						<div class="input-group mb-3">
 							<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
-								중요도</span> <select class="form-select"
+								중요도</span> <select id="project-rank" class="form-select"
 								aria-label="Default select example">
 								<option selected>선택하세요.</option>
 								<option value="1" style="color: red;">상</option>
@@ -169,28 +119,17 @@
 						<br>
 						<div>
 							<div class="input-group mb-3">
-								<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
-									종료일</span> <select id="year" class="form-select" aria-label="Year"
-									required>
-									<option value="" selected>년</option>
-
-								</select> <select id="month" class="form-select" aria-label="Month"
-									required>
-									<option value="" selected>월</option>
-								</select> <select id="day" class="form-select" aria-label="Day" required>
-									<option value="" selected>일</option>
-
-								</select>
+								<label for="date">마감 날짜:
+								  <input type="date" id="project-end-date" max="2077-06-20">
+								</label>
 							</div>
 						</div>
 						<br>
 						<!-- 프로젝트 배정 예산 -->
 						<div class="input-group mb-3">
 							<span class="input-group-text" id="inputGroup-sizing-default">배정예산</span>
-							<input type="text" id="project-budget" class="form-control"
-								aria-label="Sizing example input"
-								aria-describedby="inputGroup-sizing-default"
-								placeholder="입력하세요.">
+							<input type="text" id="project-budget" class="form-control" aria-label="Sizing example input"
+								aria-describedby="inputGroup-sizing-default" placeholder="입력하세요.">
 						</div>
 
 
@@ -235,7 +174,7 @@
 						<div
 							style="display: flex; justify-content: center; align-items: center; margin-top: 30px;">
 							<button style="margin-bottom: 70px;" type="button"
-								class="btn btn-secondary" id="projectUpdateCancle">취소</button>
+								class="btn btn-secondary" id="projectUpdateCancle">목록으로</button>
 								<button style="margin-bottom: 70px;" type="button"
 								class="btn btn-primary" data-bs-toggle="modal"
 								data-bs-target="#updateSelectModal">프로젝트 수정</button>
