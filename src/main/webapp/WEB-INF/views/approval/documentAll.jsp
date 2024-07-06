@@ -132,145 +132,137 @@
 
 
 
-    /* 모달 스타일 */
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        position: relative;
-    }
+    /* 모달 스타일 개선 */
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: none;
+}
 
-    .closeModal {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 20px 25px;
+}
 
-    .closeModal:hover,
-    .closeModal:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.modal-title {
+    font-weight: 600;
+    color: #333;
+}
 
-    .modal-dialog {
-        max-width: 800px;
-    }
+.modal-body {
+    padding: 25px;
+}
 
-    .modal-body {
-        padding: 20px;
-    }
+.closeModal {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: 0.5;
+    transition: opacity 0.15s linear;
+}
 
-    .form-group {
-        margin-bottom: 20px;
-    }
+.closeModal:hover {
+    opacity: 1;
+}
 
-    .form-control-sm {
-        margin-bottom: 10px;
-    }
+/* 폼 요소 스타일 개선 */
+.form-control, select {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
 
-    .recipient-list {
-        margin-top: 10px;
-        height:50px;
-        width:100%;
-        border:1px solid red;
-        max-height: 200px; /* 원하는 최대 높이 설정 */
-	    overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
-	    border: 1px solid #ccc; /* 시각적 구분을 위한 테두리 */
-	    padding: 5px;
-    }
+.form-control:focus, select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
 
-    .recipient-list .recipient {
-        display: inline-block;
-        padding: 5px 10px;
-        margin-right: 5px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
+/* 버튼 스타일 개선 */
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
 
-    .recipient-list .recipient .closeModal {
-        cursor: pointer;
-        margin-left: 5px;
-    }
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
 
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
 
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
 
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #4e555b;
+}
 
+/* 리스트 스타일 개선 */
+.recipient-list {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    min-height: 150px;
+}
 
-    .Approver-container {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px;
-        }
-        .left-section {
-            flex: 1;
-            margin-right: 10px;
-        }
-        .middle-section {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .right-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            margin-left: 10px;
-        }
-        .recipient-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 5px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .button-section {
-            margin-top: 10px;
-        }
+.recipient {
+    background-color: #e9ecef;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin: 5px;
+    display: inline-block;
+    font-size: 14px;
+}
 
-        .middle-section {
-            display: flex;
-            gap: 80px; /* 버튼 사이의 간격 설정 */
-            padding-top:19px;
-        }
+/* 레이아웃 개선 */
+.Approver-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
 
+.left-section, .right-section {
+    flex: 1;
+    margin: 0 15px;
+}
 
+.middle-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
 
-		 #employeeList {
-            border: 1px solid #ccc; /* 테두리 설정 */
-            height: 150px; /* 높이 설정 */
-            width: 200px; /* 너비 설정 */
-            margin-top: 10px; /* 위쪽 마진 설정 */
-            padding: 10px; /* 안쪽 여백 설정 */
-        }
-
-         .btn-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .closeModal {
-	        color: #000;
-	        font-size: 24px;
-	        line-height: 1;
-	        opacity: 0.5;
-	        transition: opacity 0.3s ease;
-	    }
-
-	    .closeModal:hover {
-	        opacity: 1;
-	    }
+/* 버튼 컨테이너 스타일 */
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+    gap: 15px;
+}
 
 </style>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 
 <body>
 <div class="documentTitle">
@@ -310,27 +302,32 @@
 									<label for="department">부서 선택</label>
 									<select id="department" onchange="loadEmployees()">
 										<option value="">부서를 선택하세요</option>
-										<option value="인사팀">인사팀</option>
+										<option value="경영팀">경영팀</option>
 										<option value="개발팀">개발팀</option>
-										<option value="영업팀">영업팀</option>
-										<option value="경리팀">경리팀</option>
+										<option value="인사팀">인사팀</option>
+										<option value="디자인팀">디자인팀</option>
+										<option value="홍보팀">홍보팀</option>
 									</select>
 									<div id="employeeList" style="margin-top: 10px;"></div>
 								</div>
 							</div>
-							<div class="middle-section">
-								<button type="button" onclick="addSelectedEmployees()">추가</button>
-								<button type="button" onclick="addSelectedEmployees()">추가</button>
-							</div>
 							<div class="right-section">
 								<div class="form-group">
-									<label for="approver">결재자 선택</label>
+									<div class="selection-group">
+										<label for="approver">결재자 선택</label>
+										<button type="button" class="btn btn-sm btn-outline-primary"
+											onclick="addApproverEmployees()">추가</button>
+									</div>
 									<div id="approver" class="recipient-list">
 										<!-- 선택된 결재자 표시될 곳 -->
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="referrer">참조자 선택</label>
+									<div class="selection-group">
+										<label for="referrer">참조자 선택</label>
+										<button type="button" class="btn btn-sm btn-outline-primary"
+											onclick="addRefererEmployees()">추가</button>
+									</div>
 									<div id="referrer" class="recipient-list">
 										<!-- 선택된 참조자 표시될 곳 -->
 									</div>
@@ -339,9 +336,9 @@
 						</div>
 
 						<div class="btn-container">
-		                    <button type="button" class="btn btn-primary">저장</button>
-		                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-		                </div>
+						    <button type="button" class="btn btn-primary" id="saveApprovalBtn">저장</button>
+						    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+						</div>
                     </div>
                 </div>
             </div>
@@ -410,8 +407,8 @@
                 <tr data-status="${approval.status}">
                     <td>${approval.approvalNo}</td>
                     <td>${approval.approvalTitle}</td>
-                    <td>${approval.employeeName}</td>
-                    <td>${approval.departmentName}</td>
+                    <td>${approval.employeeNo.employeeName}</td>
+                    <td>${approval.departmentTitle.departmentTitle}</td>
                     <td>${approval.approvalDraftDate}</td>
                     <td>${approval.approverDate}</td>
                     <td>${approval.status}</td>
@@ -430,149 +427,160 @@
 
 </body>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    function filterList() {
-        const selectType = document.getElementById('selectType').value;
-        const searchType = document.getElementById('searchType').value.toLowerCase();
-        const rows = document.querySelectorAll('#approvalBody tr');
+    $(document).ready(function() {
+        // 작성하기 버튼 클릭 시 모달 열기
+        $("#newApprovalBtn").click(function() {
+            $("#newApprovalModal").modal('show');
+        });
 
-        rows.forEach(row => {
-            const status = row.getAttribute('data-status');
-            const title = row.cells[1].textContent.toLowerCase();
+        // 부서 선택 시 직원 목록 불러오기
+        $("#department").change(function() {
+            loadEmployees();
+        });
 
-            if (status === selectType && title.includes(searchType)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
+        // 결재자 추가 버튼 클릭 시
+        $("#addApprover").click(function() {
+            addEmployees("approver");
+        });
+
+        // 참조자 추가 버튼 클릭 시
+        $("#addReferrer").click(function() {
+            addEmployees("referrer");
+        });
+
+        // 저장 버튼 클릭 시
+        $("#saveApprovalBtn").click(function() {
+            saveApproval();
+        });
+
+        // 페이지 로드 시 휴가신청서를 기본으로 선택
+        $("#formType").val("휴가신청서").trigger('change');
+    });
+
+    // 직원 목록 불러오기 (Ajax 사용)
+    function loadEmployees() {
+        var department = $("#department").val();
+        $.ajax({
+            url: "/getEmployees", // 실제 서버의 엔드포인트로 변경
+            method: "GET",
+            data: { department: department },
+            success: function(response) {
+                var employeeList = $("#employeeList");
+                employeeList.empty();
+                response.forEach(function(employee) {
+                    employeeList.append(
+                        '<div class="form-check">' +
+                        '<input class="form-check-input" type="checkbox" value="' + employee.id + '" id="emp' + employee.id + '">' +
+                        '<label class="form-check-label" for="emp' + employee.id + '">' +
+                        employee.name + ' (' + employee.position + ')' +
+                        '</label>' +
+                        '</div>'
+                    );
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error loading employees:", error);
             }
         });
     }
 
+    // 선택된 직원을 결재자 또는 참조자로 추가
+    function addEmployees(type) {
+        var selectedEmployees = $("#employeeList input:checked");
+        var targetContainer = $("#" + type);
 
-    // 모달 창 초기화 함수
-    function initModal() {
-        $('#formType').val('출장보고서'); // 초기 양식 선택
-        $('#approver').empty(); // 결재자 목록 초기화
-        $('#referrer').empty(); // 참조자 목록 초기화
-        $('#referrerInput').val(''); // 참조자 입력창 초기화
+        selectedEmployees.each(function() {
+            var employeeId = $(this).val();
+            var employeeName = $(this).next("label").text();
+
+            if (targetContainer.find("[data-id='" + employeeId + "']").length === 0) {
+                targetContainer.append(
+                    '<div class="selected-employee" data-id="' + employeeId + '">' +
+                    employeeName +
+                    '<button type="button" class="btn btn-sm btn-danger remove-employee">X</button>' +
+                    '</div>'
+                );
+            }
+
+            $(this).prop("checked", false);
+        });
+
+        // 삭제 버튼 이벤트 추가
+        $(".remove-employee").click(function() {
+            $(this).parent().remove();
+        });
     }
 
-    // 작성하기 버튼 클릭 시 모달 창 열기
-    $('#newApprovalBtn').click(function() {
-        initModal(); // 모달 초기화
-        $('#newApprovalModal').modal('show');
-    });
+    function saveApproval() {
+        var formType = $("#formType").val();
+        var approvers = getSelectedEmployees("approver");
+        var referrers = getSelectedEmployees("referrer");
+
+        if (formType === "휴가신청서") {
+            $.ajax({
+                url: "/vacation",  // 서버의 엔드포인트
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    formType: formType,
+                    approvers: approvers,
+                    referrers: referrers,
+                    employeeId: $("#employeeId").val()  // 예시로 추가한 employeeId 입력 필드
+                }),
+                success: function(response) {
+                    console.log(response); // 응답 로그 출력
+                    if (response.success) {
+                        window.location.href = '/vacationForm.jsp?employeeId=' + response.employeeId;
+                    } else {
+                        alert("저장 중 오류가 발생했습니다: " + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error saving approval draft:", xhr.responseText); // 응답 텍스트 로그 출력
+                    alert("저장 중 오류가 발생했습니다. 상세 내용: " + error);
+                }
+            });
+        }
+    }
 
 
+    console.log(JSON.stringify({
+        formType: formType,
+        approvers: approvers,
+        referrers: referrers,
+        employeeId: $("#employeeId").val()
+    }));
 
+    // 선택된 직원 정보를 배열로 반환
+    function getSelectedEmployees(type) {
+        var employees = [];
+        $("#" + type + " .selected-employee").each(function() {
+            employees.push({
+                id: $(this).data('id'),
+                name: $(this).text().replace('X', '').trim()
+            });
+        });
+        return employees;
+    }
 
+    // 검색 기능 구현
+    function filterList() {
+        var selectType = $("#selectType").val();
+        var searchType = $("#searchType").val().toLowerCase();
 
+        $("#approvalBody tr").each(function() {
+            var status = $(this).data('status');
+            var title = $(this).find("td:nth-child(2)").text().toLowerCase();
 
- // 부서별 직원 데이터 (실제로는 서버에서 가져와야 함)
-    const departmentEmployees = {
-      '인사팀': ['김인사', '이인사', '박인사'],
-      '개발팀': ['김개발', '이개발', '박개발'],
-      '영업팀': ['김영업', '이영업', '박영업'],
-      '경리팀': ['김경리', '이경리', '박경리']
-    };
-
-    function loadEmployees() {
-    	  const department = document.getElementById('department').value;
-    	  const employeeList = document.getElementById('employeeList');
-    	  employeeList.innerHTML = '';
-
-    	  if (department) {
-    	    const employees = departmentEmployees[department];
-    	    employees.forEach((employee, index) => {
-    	      const checkbox = document.createElement('input');
-    	      checkbox.type = 'checkbox';
-    	      checkbox.id = `employee${index}`;
-    	      checkbox.name = 'employee';
-    	      checkbox.value = employee;
-
-    	      const label = document.createElement('label');
-    	      label.htmlFor = `employee${index}`;
-    	      label.textContent = employee;
-
-    	      // 체크박스에 대한 클릭 이벤트 리스너
-    	      checkbox.addEventListener('click', (event) => {
-    	        event.stopPropagation();
-    	      });
-
-    	      // 라벨에 대한 클릭 이벤트 리스너
-    	      label.addEventListener('click', (event) => {
-    	        event.preventDefault(); // 기본 동작 방지
-    	        checkbox.checked = !checkbox.checked; // 체크박스 상태 토글
-    	      });
-
-    	      const wrapper = document.createElement('div');
-    	      wrapper.appendChild(checkbox);
-    	      wrapper.appendChild(label);
-    	      employeeList.appendChild(wrapper);
-    	    });
-    	  }
-    	}
-
-    function isApproverAlreadyAdded(employeeName) {
-    	  const approverList = document.getElementById('approver');
-    	  return approverList.querySelector(`[data-employee="${employeeName}"]`) !== null;
-    	}
-
-    	function updateCheckboxState() {
-    	  const checkboxes = document.querySelectorAll('input[name="employee"]');
-    	  checkboxes.forEach((checkbox) => {
-    	    if (isApproverAlreadyAdded(checkbox.value)) {
-    	      checkbox.checked = true;
-    	      checkbox.disabled = true;
-    	    } else {
-    	      checkbox.disabled = false;
-    	    }
-    	  });
-    	}
-
-    	function addSelectedEmployees() {
-    	  const selectedEmployees = document.querySelectorAll('input[name="employee"]:checked:not(:disabled)');
-    	  const approverList = document.getElementById('approver');
-    	  let addedCount = 0;
-
-    	  selectedEmployees.forEach((checkbox) => {
-    	    const employeeName = checkbox.value;
-    	    if (!isApproverAlreadyAdded(employeeName)) {
-    	      const approverElement = document.createElement('div');
-    	      approverElement.textContent = employeeName;
-    	      approverElement.setAttribute('data-employee', employeeName);
-
-    	      const removeButton = document.createElement('button');
-    	      removeButton.textContent = '제거';
-    	      removeButton.className = 'remove-approver';
-    	      removeButton.onclick = function() {
-    	        approverElement.remove();
-    	        updateCheckboxState();
-    	      };
-
-    	      approverElement.appendChild(removeButton);
-    	      approverList.appendChild(approverElement);
-    	      addedCount++;
-    	    }
-    	  });
-
-    	  updateCheckboxState();
-
-    	  if (addedCount === 0) {
-    	    alert("새로 추가된 직원이 없습니다. 이미 추가되었거나 선택되지 않았습니다.");
-    	  } else {
-    	    alert(`${addedCount}명의 직원이 결재자 목록에 추가되었습니다.`);
-    	  }
-    	}
-
-
-
-
-
+            if (status === selectType && title.includes(searchType)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
 </script>
 
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

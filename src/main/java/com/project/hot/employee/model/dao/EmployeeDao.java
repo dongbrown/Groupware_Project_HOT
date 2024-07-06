@@ -10,7 +10,7 @@ import com.project.hot.employee.model.dto.Employee;
 
 public interface EmployeeDao {
 	Employee selectEmployeeById(SqlSession session, String id);
-	List<Employee> selectEmployees(SqlSession session, Map<String, Object> param);
+	List<Employee> selectEmployeeList(SqlSession session, Map<String, Object> param);
 	int countEmployeeTotalData(SqlSession session);
-	List<Department> selectDepartmentTitle(SqlSession session);
+	List<Department> selectDepartmentList(SqlSession session);
 }

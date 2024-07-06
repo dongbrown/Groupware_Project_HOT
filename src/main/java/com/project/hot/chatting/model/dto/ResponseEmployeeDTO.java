@@ -17,5 +17,4 @@ public class ResponseEmployeeDTO {
 	private String employeePhoto;
 	private String status;
 	private String profile;
-
 }

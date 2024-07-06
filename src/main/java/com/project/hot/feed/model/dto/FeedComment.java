@@ -7,20 +7,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Feed {
+@Data
+public class FeedComment {
+
+	private int feedCommentNo;
+	private String feedCommentContent;
+	private Date feedCommentEnrolldate;
 	private int feedNo;
-	private String feedContent;
-	private Date feedEnrollDate;
-	private int communityNo;
 	private int employeeNo;
-    private String originalFileName;
-    private String renamedFileName;
-
-	private String employeeName;
-
+	private int commentParentNo;
 
 }

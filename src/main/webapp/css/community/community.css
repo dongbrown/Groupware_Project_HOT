@@ -1,138 +1,268 @@
-@charset "UTF-8";
-/* community.css */
+/* 리셋 및 기본 스타일 */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 
-body {
-    font-family: 'GmarketSans', sans-serif;
+body, html {
+	height: 100%;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 전체 레이아웃 스타일 */
+#wrapper {
+	display: flex;
+	height: 100vh;
+}
+
+/* 사이드바 스타일 */
+#sidebar {
+	width: 250px;
+	background-color: #4e73df;
+	color: white;
+	padding: 20px;
+	overflow-y: auto;
+	transition: all 0.3s ease;
+}
+
+#sidebar .sidebar-heading {
+	font-size: 1.2rem;
+	font-weight: bold;
+	padding: 10px 0;
+	margin-bottom: 20px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 네비게이션 메뉴 스타일 */
+.nav {
+	list-style-type: none;
+}
+
+.nav-item {
+	margin-bottom: 15px;
+}
+
+.nav-link {
+	color: rgba(255, 255, 255, .8);
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border-radius: 5px;
+	transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+	color: #fff;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link i {
+	margin-right: 10px;
+	width: 20px;
+	text-align: center;
+}
+
+/* 토글 버튼 스타일 */
+#sidebarToggle {
+	background-color: rgba(255, 255, 255, .2);
+	border: none;
+	color: white;
+	padding: 10px;
+	cursor: pointer;
+	margin-top: 20px;
+	width: 100%;
+	border-radius: 5px;
+	transition: all 0.3s ease;
+}
+
+#sidebarToggle:hover {
+	background-color: rgba(255, 255, 255, .3);
+}
+
+/* 메인 콘텐츠 영역 스타일 */
+#content-wrapper {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow-x: hidden;
+	background-color: #f8f9fc;
+}
+
+#content {
+	flex: 1;
+	padding: 20px;
+	overflow-y: auto;
+}
+
+/* 헤더 스타일 (옵션) */
+.topbar {
+	background-color: #fff;
+	height: 70px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+}
+
+/* 푸터 스타일 (옵션) */
+.footer {
+	background-color: #fff;
+	padding: 15px 20px;
+	text-align: center;
+	font-size: 0.9rem;
+	color: #858796;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media ( max-width : 768px) {
+	#sidebar {
+		width: 100px;
+	}
+	#sidebar .sidebar-heading {
+		font-size: 1rem;
+		text-align: center;
+	}
+	.nav-link span {
+		display: none;
+	}
+	.nav-link i {
+		margin-right: 0;
+	}
+	#sidebarToggle {
+		padding: 5px;
+	}
+}
+
+/* 사이드바 접힘 상태 스타일 */
+.sidebar-toggled #sidebar {
+	width: 100px;
+}
+
+.sidebar-toggled #sidebar .sidebar-heading {
+	text-align: center;
+}
+
+.sidebar-toggled .nav-link span {
+	display: none;
+}
+
+.sidebar-toggled .nav-link i {
+	margin-right: 0;
+}
+
+.sidebar-toggled #content-wrapper {
+	margin-left: 100px;
 }
 
 .community-container {
-    padding: 20px;
+	font-family: Arial, sans-serif;
 }
 
 .section {
-    margin-bottom: 30px;
-}
-
-.section h2 {
-    color: #333;
-    margin-bottom: 15px;
+	margin-bottom: 20px;
 }
 
 .group {
-    display: inline-block;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    margin: 10px;
-    width: 220px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.group:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+	display: inline-block;
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin: 5px;
+	width: 200px;
 }
 
 .group-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 5px;
 }
 
 .user-icon {
-    width: 30px;
-    height: 30px;
-    margin-right: 5px;
-    border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	margin-right: 5px;
 }
 
 .star {
-    color: gold;
-    font-size: 18px;
-    margin-left: 5px;
+	color: gold;
+	font-size: 20px;
 }
 
 .add-group {
-    border: 2px dashed #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 220px;
-    height: 150px;
-    font-size: 40px;
-    cursor: pointer;
-    color: #888;
-    transition: all 0.3s ease;
-}
-
-.add-group:hover {
-    border-color: #007bff;
-    color: #007bff;
+	border: 1px dashed #ccc;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 200px;
+	height: 100px;
+	font-size: 24px;
+	cursor: pointer;
 }
 
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4);
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%;
-    max-width: 500px;
-    border-radius: 8px;
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 300px;
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
+.modal-title {
+	color: #6980ff;
+	text-align: center;
+	margin-bottom: 20px;
 }
 
 .form-group {
-    margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
+	display: block;
+	margin-bottom: 5px;
 }
 
-.form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.form-group input, .form-group textarea {
+	width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+.radio-group {
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 15px;
+}
+
+.btn-group {
+	display: flex;
+	justify-content: space-between;
+}
+
+.btn {
+	padding: 10px 20px;
+	cursor: pointer;
+	border: none;
+	border-radius: 5px;
 }
 
 .btn-primary {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
+	background-color: #6980ff;
+	color: white;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+.btn-secondary {
+	background-color: #f0f0f0;
+	color: #333;
 }

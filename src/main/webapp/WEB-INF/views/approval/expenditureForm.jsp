@@ -67,15 +67,6 @@
                 <table class="form-table">
                     <tr>
                         <th>문서유형</th>
-                        <td>
-                            <select name="documentType">
-                                <option value="overtimeForm">초과근무신청서</option>
-                                <option value="businessTripForm">출장신청서</option>
-                                <option value="vacationForm">휴가신청서</option>
-                                <option value="expenditureForm">경비지출신청서</option>
-                                <option value="commtingTimeForm">출퇴근정정신청서</option>
-                            </select>
-                        </td>
                         <th>제목</th>
                         <td><input type="text" name="title" value="documentTitle"></td>
                         <th>보존연한</th>
