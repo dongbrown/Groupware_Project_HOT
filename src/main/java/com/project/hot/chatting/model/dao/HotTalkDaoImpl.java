@@ -17,8 +17,6 @@ public class HotTalkDaoImpl implements HotTalkDao {
 
 	@Override
 	public List<ResponseHotTalkListDTO> getPrivateHotTalkList(SqlSession session, int employeeNo) {
-		System.out.println("aaaaa");
-		System.out.println("bbbbb");
 		return session.selectList("hottalk.getPrivateHotTalkList", employeeNo);
 	}
 
