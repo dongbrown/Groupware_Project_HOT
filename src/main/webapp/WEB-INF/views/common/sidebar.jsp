@@ -22,7 +22,7 @@
 
     <!-- Custom styles for this template-->
     <link href="${path }/css/sb-admin-2.min.css" rel="stylesheet">
-
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 
 <body id="page-top">

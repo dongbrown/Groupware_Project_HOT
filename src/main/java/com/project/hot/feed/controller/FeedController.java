@@ -1,5 +1,142 @@
 package com.project.hot.feed.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.project.hot.employee.model.dto.Employee;
+import com.project.hot.feed.model.dto.Feed;
+import com.project.hot.feed.model.service.FeedService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/community/feed")
 public class FeedController {
 
+    private final FeedService service;
+
+//    @GetMapping("/")
+//    public String getFeeds(@RequestParam Integer communityNo, Model model) {
+//        if (communityNo == null) {
+//            log.error("communityNo is required");
+//            return "error/400";
+//
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        Employee loginEmployee = (Employee) auth.getPrincipal();
+//
+//        List<Feed> feeds = service.getFeeds(communityNo);
+//        log.info("Fetched {} feeds for community {}", feeds.size(), communityNo);
+//
+//        model.addAttribute("feeds", feeds);
+//        model.addAttribute("loginEmployee", loginEmployee);
+//        model.addAttribute("communityNo", communityNo);
+//        return "community/feed";
+//    }
+
+    @PostMapping("/insert")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> insertFeed(@RequestBody Feed feed) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (feed.getFeedContent() == null || feed.getFeedContent().trim().isEmpty()) {
+                throw new IllegalArgumentException("피드 내용은 필수입니다.");
+            }
+
+            int result = service.insertFeed(feed);
+            if (result > 0) {
+                response.put("success", true);
+                response.put("message", "피드가 성공적으로 작성되었습니다.");
+                log.info("Feed inserted successfully: {}", feed.getFeedNo());
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "피드 작성에 실패했습니다.");
+                log.warn("Failed to insert feed");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        } catch (Exception e) {
+            log.error("피드 생성 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "피드 생성 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @PutMapping("/update")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateFeed(@RequestBody Feed feed) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (feed.getFeedContent() == null || feed.getFeedContent().trim().isEmpty()) {
+                throw new IllegalArgumentException("수정할 피드 내용은 필수입니다.");
+            }
+
+            int result = service.updateFeed(feed);
+            if (result > 0) {
+                response.put("success", true);
+                response.put("message", "피드가 성공적으로 수정되었습니다.");
+                log.info("Feed updated successfully: {}", feed.getFeedNo());
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "피드 수정에 실패했습니다.");
+                log.warn("Failed to update feed: {}", feed.getFeedNo());
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        } catch (Exception e) {
+            log.error("피드 수정 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "피드 수정 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteFeed(@RequestBody Feed feed) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            int result = service.deleteFeed(feed.getFeedNo());
+            if (result > 0) {
+                response.put("success", true);
+                response.put("message", "피드가 성공적으로 삭제되었습니다.");
+                log.info("Feed deleted successfully: {}", feed.getFeedNo());
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "피드 삭제에 실패했습니다.");
+                log.warn("Failed to delete feed: {}", feed.getFeedNo());
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        } catch (Exception e) {
+            log.error("피드 삭제 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "피드 삭제 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 }

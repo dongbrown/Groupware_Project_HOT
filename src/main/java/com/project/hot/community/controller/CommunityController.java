@@ -43,6 +43,7 @@ public class CommunityController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> insertCommunity(@RequestBody Community community) {
         Map<String, Object> response = new HashMap<>();
+
         try {
             if (community.getCommunityTitle() == null || community.getCommunityTitle().trim().isEmpty()) {
                 throw new IllegalArgumentException("커뮤니티 이름은 필수입니다.");

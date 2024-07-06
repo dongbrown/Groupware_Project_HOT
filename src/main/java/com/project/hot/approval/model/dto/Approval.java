@@ -2,6 +2,9 @@ package com.project.hot.approval.model.dto;
 
 import java.sql.Date;
 
+import com.project.hot.employee.model.dto.Department;
+import com.project.hot.employee.model.dto.Employee;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +22,19 @@ public class Approval {
 	 private Date approvalDraftDate;//기안일
 	 private Date approverDate; //결재일
 	 private String status;//상태(진행,완료)
-	 private int employeeNo;//FK
+//	 private Employee employeeNo;//FK
+	 private Employee employeeNo;
+	 private Department departmentTitle;
+	 private Employee employeeName;
 	 //기안자명, 기안자부서 가져와야된다
+
+
+
+
+
+
+
+
+
+
 }
