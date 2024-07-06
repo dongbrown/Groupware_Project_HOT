@@ -49,19 +49,22 @@
             </div>
 
             <!-- 피드 목록 -->
-            <div id="feed-container" data-community-no="${communityNo}">
-                <c:forEach items="${feeds}" var="feed">
-                    <div class="feed-item" id="feed-${feed.feedNo}">
-                        <h5>${feed.employeeName}</h5>
-                        <p>${feed.feedContent}</p>
-                        <small class="text-muted">${feed.feedEnrollDate}</small>
-                        <div class="feed-actions">
-                            <button class="btn btn-sm btn-outline-primary" onclick="updateFeed(${feed.feedNo})">수정</button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
+			<div id="feed-container" data-community-no="${communityNo}">
+			  <c:forEach items="${feeds}" var="feed">
+			    <div class="feed-item" id="feed-${feed.feedNo}">
+			      <h5>${feed.employeeName}</h5>
+			      <p>${feed.feedContent}</p>
+			      <small class="text-muted">${feed.feedEnrollDate}</small>
+			      <c:if test="${loginEmployee.employeeNo eq feed.employeeNo}">
+			        <div class="feed-actions">
+			          <button class="btn btn-sm btn-outline-primary" onclick="updateFeed(${feed.feedNo})">수정</button>
+			          <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
+			        </div>
+			      </c:if>
+			    </div>
+			  </c:forEach>
+			</div>
+
         </div>
         <!-- 페이지 콘텐츠 끝 -->
     </div>
@@ -73,14 +76,14 @@
 <!-- 콘텐츠 Wrapper 끝 -->
 
 <script>
-var communityNo = ${communityNo};
+    var communityNo = ${communityNo};
 
-// communityNo가 없으면 에러 처리
-if (!communityNo) {
-    alert("커뮤니티 번호가 필요합니다.");
-    // 적절한 페이지로 리다이렉트
-    window.location.href = "/error";
-}
+    // communityNo가 없으면 에러 처리
+    if (!communityNo) {
+        alert("커뮤니티 번호가 필요합니다.");
+        // 적절한 페이지로 리다이렉트
+        window.location.href = "/error";
+    }
 </script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

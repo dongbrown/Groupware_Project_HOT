@@ -13,4 +13,6 @@ public interface CommunityService {
 
 	int toggleBookmark(int communityNo, int employeeNo);
 
+	Community getCommunityByNo(int communityNo);
+
 }

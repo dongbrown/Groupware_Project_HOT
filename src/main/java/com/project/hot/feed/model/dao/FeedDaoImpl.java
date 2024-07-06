@@ -3,6 +3,8 @@ package com.project.hot.feed.model.dao;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.project.hot.feed.model.dto.Feed;
 
 @Repository
@@ -13,7 +15,7 @@ public class FeedDaoImpl implements FeedDao {
     }
 
     @Override
-    public int insertFeed(Feed feed, SqlSession session) {
+    public int insertFeed(Feed feed, MultipartFile file, SqlSession session) {
         return session.insert("feed.insertFeed", feed);
     }
 
@@ -26,4 +28,5 @@ public class FeedDaoImpl implements FeedDao {
     public int deleteFeed(int feedNo, SqlSession session) {
         return session.delete("feed.deleteFeed", feedNo);
     }
+
 }
