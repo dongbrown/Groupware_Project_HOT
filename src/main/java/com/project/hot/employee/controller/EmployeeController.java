@@ -21,16 +21,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/employee")
 public class EmployeeController {
 
-	private final EmployeeService service;
-
-	/*
-	 * @GetMapping("/addressbook.do") public String
-	 * addressBook(@RequestParam(defaultValue = "1") int cPage, Model m) {
-	 * Map<String, Object> param=new HashMap<>(); param.put("cPage", cPage);
-	 * param.put("numPerpage", 12); Map<String, Object>
-	 * result=service.selectEmployeeList(param); m.addAttribute("employees",
-	 * (List<Employee>)result.get("employees")); m.addAttribute("departments",
-	 * (List<Department>)result.get("departments")); return "employee/addressbook";
-	 * }
-	 */
+	@GetMapping("/addressbook")
+	private String addressbookPage(@RequestParam(defaultValue = "")String name, Model m) {
+		m.addAttribute("name", name);
+		return "employee/addressbook";
+	}
 }

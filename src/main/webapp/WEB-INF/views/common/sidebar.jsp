@@ -205,7 +205,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">주소록</h6>
-                        <a class="collapse-item" href="${path }/addressbook">주소록 조회</a><br>
+                        <a class="collapse-item" href="${path }/employee/addressbook">주소록 조회</a><br>
                         <h6 class="collapse-header">조직도</h6>
                         <a class="collapse-item" href="utilities-color.html">조직도 조회</a>
                         <a class="collapse-item" href="utilities-border.html">조직도 수정</a>

@@ -43,7 +43,7 @@
 	<div class="pagebar-div"></div>
 </section>
 </div>
-<script>const path='${path}';</script>
+<script>const path='${path}'; const searchName='${name}';</script>
 <script src='${path }/js/employee/addressbook.js'></script>
 <script src='${path }/js/common/pagebar.js'></script>
 <script src='${path }/js/common/loading.js'></script>

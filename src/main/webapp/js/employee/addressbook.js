@@ -3,7 +3,13 @@
  */
 
 $(document).ready(() => {
-	getEmployeeList(1);
+	console.log(searchName);
+	if(searchName == ""){
+		getEmployeeList(1);
+	}else{
+		$('.search-name').val(searchName);
+		searchEmployee(1);
+	}
 	getDepartmentList();
 });
 
