@@ -76,9 +76,9 @@
 			</div>
 
 
-			<div style="display:flex;">
+			<div>
 <!-- 프로젝트 조회시 업데이트 창 -->
-				<div id="project-update-window">
+				<%-- <div id="project-update-window">
 					<div class="modal-body">
 						<!-- 프로젝트 이름 -->
 						<div class="input-group mb-3">
@@ -201,13 +201,13 @@
 						</div>
 					</div>
 
-				</div>
+				</div> --%>
 					<!-- 사원 조회 생성 -->
 					<div id="input-member"></div>
 
 					<!-- 선택된 프로젝트 파일이 없습니다. 이미지 -->
 					<div id="noneProjectImg" style="margin-left:30px;">
-						<img src="https://i.imgur.com/oGbyqGQ.png" width="600px" height="600px">
+						<img src="https://i.imgur.com/oGbyqGQ.png" width="500px" height="500px">
 					</div>
 
 

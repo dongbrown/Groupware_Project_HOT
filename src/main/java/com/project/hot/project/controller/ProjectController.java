@@ -58,7 +58,7 @@ public class ProjectController {
 
 	@ResponseBody
 	@PostMapping("/insertProject.do")
-	public ResponseEntity<Object> insertProject(@RequestBody Project projectData) {
+	public ResponseEntity<String> insertProject(@RequestBody Project projectData) {
 		try {
 			service.insertProject(projectData);
 			return ResponseEntity.ok("프로젝트 등록 성공");
@@ -68,11 +68,22 @@ public class ProjectController {
 		}
 	}
 
-	@ResponseBody
+//	@ResponseBody
+//	@GetMapping("/selectProjectByNo.do")
+//	public Project selectProjectByNo(@RequestParam("projectNo") int projectNo) {
+//		Project result = service.selectProjectByNo(projectNo);
+//		return result;
+//	}
+
 	@GetMapping("/selectProjectByNo.do")
-	public Project selectProjectByNo(@RequestParam("projectNo") int projectNo) {
-		Project result = service.selectProjectByNo(projectNo);
-		return result;
+	public String selectProjectByNo(int projectNo,Model m) {
+		Project project = service.selectProjectByNo(projectNo);
+		List<ProjectEmployee> emps = service.selectEmployeetByProjectNo(projectNo);
+		List<Department> depts = service.selectDeptAll();
+		m.addAttribute("project",project);
+		m.addAttribute("emps",emps);
+		m.addAttribute("depts",depts);
+		return "project/projectUpdateDetail";
 	}
 
 	@ResponseBody
@@ -80,5 +91,17 @@ public class ProjectController {
 	public List<ProjectEmployee> selectEmployeetByProjectNo(@RequestParam("projectNo") int projectNo){
 		List<ProjectEmployee> result = service.selectEmployeetByProjectNo(projectNo);
 		return result;
+	}
+
+	@ResponseBody
+	@PostMapping("/updateProject.do")
+	public ResponseEntity<String> updateProject(@RequestBody Project projectData){
+		try {
+			service.updateProject(projectData);
+			return ResponseEntity.ok("프로젝트 업데이트 성공");
+		} catch (Exception e) {
+			log.error("=========프로젝트 등록 중 오류 발생=========", e);
+			return ResponseEntity.badRequest().body("프로젝트 업데이트 실패");
+		}
 	}
 }
