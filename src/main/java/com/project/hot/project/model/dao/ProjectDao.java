@@ -19,6 +19,7 @@ public interface ProjectDao {
 	List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session,int projectNo);
 	int insertProjectEmp(SqlSession session,Map<String,Object> param);
 	int updateProject(SqlSession session,Project p);
+	int updateProjectDeleteEmp(SqlSession session,int projectNo);
 	int deleteProject(SqlSession session,int projectNo);
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
 }

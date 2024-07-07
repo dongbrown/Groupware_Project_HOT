@@ -100,7 +100,7 @@ function getTodayDate() {
 						{ class: 'form-check-label', for: checkboxId, text: deptTitle + ': ' + empName + ' 사번 / ' + empNo });
 
 // 이미 선택된 항목인지 확인
-					if ($('#saved-members').find('.saved-item:contains("' + inputMemberDetailText.text() + '")').length > 0) {
+					if ($('#saved-members').find('#checked-member-wrab:contains("' + e.employeeNo + '")').length > 0) {
 						inputMemberDetail.prop('checked', true);
 					}
 
@@ -143,16 +143,16 @@ function getTodayDate() {
 // 삭제된 항목의 체크박스 해제
 			const removedText = $(this).parent().text();
 			$('#input-member-list input:checkbox').each(function() {
-				if ($(this).next('label').text() === removedText) {
+				if ($(this).next('label').text() == removedText) {
 					$(this).prop('checked', false);
-				}
+					}
+				});
 			});
 		});
-	});
 
 /*프로젝트 목록 자바스크릡트 */
 	$(document).ready(function() {
-		$("#project-update-window").css('display', 'none');
+		//$("#project-update-window").css('display', 'none');
 // 진행도 애니메이션
 		const bars = document.querySelectorAll('.bar');
 		bars.forEach(bar => {
@@ -166,7 +166,10 @@ function getTodayDate() {
 
 /*프로젝트 목록중 하나 클릭시 해당 프로젝트 정보와 수정가능한 테이블 표시*/
  	$(".project-choice").click(e=>{
-	    const projectNo = Number(e.target.parentElement.children[1].textContent);
+		const projectNo = Number(e.target.parentElement.children[1].textContent);
+	    location.assign("/project/selectProjectByNo.do?projectNo="+projectNo);
+
+	  /*  const projectNo = Number(e.target.parentElement.children[1].textContent);
 	    console.log(projectNo);
 	    $.ajax({
 			url: '/project/selectProjectByNo.do',
@@ -176,7 +179,11 @@ function getTodayDate() {
 			success: function(p) {
 //선택 프로젝트의 원본 내용 출력
 				 $("#project-title").val(p.projectTitle);
-				 $("#project-emp").val(p.employeeCode.employeeName);
+				 if (p && p.employeeCode && p.employeeCode.employeeName) {
+					    $("#project-emp").val(p.employeeCode.employeeName);
+					} else {
+					    console.error('employeeName이 존재하지 않습니다.');
+					}
 				 $('#project-rank').val(p.projectRank);
 				 $('#floatingTextarea').text(p.projectContent);
 				 $('#project-budget').val(p.projectBudget);
@@ -192,19 +199,18 @@ function getTodayDate() {
 					url:'/project/selectEmployeetByProjectNo.do',
 					type: 'GET',
 					data: { projectNo: projectNo },
+					dataType: 'json',
 					success: function(pe) {
-						console.log("성공");
-						const empInfo = `${pe.employee.departmentCode}`;
-						console.log(empInfo);
-//프로젝트 맴버 출력하기
-					const empWrapDiv=$('<div>',{id:'checked-member-wrab', class:'saved-item', text:"안녕사헤숑"});
-					const empWrapDivDelete=$('<button>',{class:'btn-close', type:'button'})
+						console.log(pe);
 //반복문 사용 -- 프로젝트 기존 참여 인원 출력
-					//pe.forEach((pi) => {
-					//const empInfo = pi.employee.departmentCode.departmentTitle;
+					pe.forEach((pi) => {
+					const empWrapDiv=$('<div>',{id:'checked-member-wrab', class:'saved-item',
+													text:"안녕"});
+					const empWrapDivDelete=$('<button>',{class:'btn-close', type:'button'})
+					const empInfo = pi.employee.departmentCode.departmentTitle;
 					//개발3팀: 홍길동 사번 / 212341234
 					empWrapDiv.append(empWrapDivDelete).appendTo($('#saved-members'));
-					//})
+					})
 
 
 					}
@@ -215,12 +221,10 @@ function getTodayDate() {
 				alert("로그인 후 이용할 수 있습니다.")
 				location.assign("/project/projectupdate.do");
 			}
-		})
-
-
+		})*/
     });
 
-	$("#projectUpdateCancle").click(e=>{
+	/*$("#projectUpdateCancle").click(e=>{
 	    const projectNo = e.target.parentElement.children[1].textContent;
 	    console.log(projectNo); // 프로젝트 고유번호 넘겨서 프로젝트 수정페이지로 이동
 //선택된 프로젝트가 없습니다 이미지 안보이게
@@ -229,5 +233,5 @@ function getTodayDate() {
 	    $("#noneProjectImg").css('display','block');
 	    $("#project-list").css('display','block');
 	    $("#project-update-window").css('display','none');//ajax 받아온 값 지워주기
-    });
+    });*/
 

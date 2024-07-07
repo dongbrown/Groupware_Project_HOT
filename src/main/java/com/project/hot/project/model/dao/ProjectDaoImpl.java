@@ -27,8 +27,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@Override
 	public int updateProject(SqlSession session, Project p) {
-		// TODO Auto-generated method stub
-		return 0;
+		return session.update("project.updateProject",p);
 	}
 
 	@Override
@@ -61,6 +60,11 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session, int projectNo) {
 		return session.selectList("project.selectEmployeetByProjectNo",projectNo);
+	}
+
+	@Override
+	public int updateProjectDeleteEmp(SqlSession session, int projectNo) {
+		return session.delete("updateProjectDeleteEmp",projectNo);
 	}
 
 }

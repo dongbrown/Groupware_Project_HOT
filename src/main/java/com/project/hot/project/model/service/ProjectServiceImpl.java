@@ -38,8 +38,17 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public int updateProject(Project p) {
-		// TODO Auto-generated method stub
-		return 0;
+		int deleteResult = 0;
+		int result = dao.updateProject(session, p);
+		if(result>0) {
+			deleteResult=dao.updateProjectDeleteEmp(session, p.getProjectNo());
+			if(deleteResult>0) {
+				p.getEmployee().forEach(e -> {
+					dao.insertProjectEmp(session, Map.of("projectNo", p.getProjectNo(), "empNo", e.getEmployeeNo()));
+				});
+			}
+		}
+		return deleteResult;
 	}
 
 	@Override
