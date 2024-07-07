@@ -49,12 +49,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		const data = JSON.parse(response.data);
 		// console.log(data);
 		const $option = document.querySelector("#option-result");
-		console.log(data);
+		// console.log(data);
 		if(data != null && data.length>0){
-
 			switch(data[0].type){
 				case '사원':
 					data.forEach(d=>{
+						if(d.employeeNo==loginEmployeeNo){
+							console.log(d.status);
+							console.log(d.profile);
+							const $status = document.querySelector(".my-status");
+							$status.innerText=d.status;
+							const $msg = document.querySelector(".my-status-message");
+							$msg.innerText=d.profile;
+							$status.innerHTML=d.status;
+						}
 						const $employee = document.createElement("div");
 						const $profile = document.createElement("div");
 						const $photo = document.createElement("img");
@@ -66,12 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
 							$photo.style.height="53px";
 							$photo.style.borderRadius="100px";
 							$photo.style.marginRight="10px";
+							$photo.style.marginLeft="20px";
 						} else {
-							$photo.src="";
+							$photo.src=path+"/upload/employee/"+d.employeePhoto;
 							$photo.style.width="53px";
 							$photo.style.height="53px";
 							$photo.style.borderRadius="100px";
 							$photo.style.marginRight="10px";
+							$photo.style.marginLeft="20px";
 						}
 						$name.innerText=d.employeeName;
 						$dept.innerText=d.departmentCode;
@@ -79,19 +89,29 @@ document.addEventListener('DOMContentLoaded', function() {
 						$profile.appendChild($name);
 						$profile.appendChild($dept);
 						$employee.appendChild($profile);
-
 						$employee.classList.add("hotTalkEmployee");
+						//$employee.addEventListener("click", )
 						$option.appendChild($employee);
+						$employee.addEventListener("dblclick",()=>{
+							// 핫톡 사원 눌렀을 때 우측 상단 메세지들 변경 로직 및 채팅창 초기화
+							const $chattingRoom = $(".chat-messages");
+							$chattingRoom.empty();
+							document.querySelector(".chat-user-name").innerText=d.employeeName;
+							document.querySelector('.user-status').innerText=d.status;
+							// 예외처리 필요(d.profile, d.employeePhoto) → null 일 수도 있음
+							document.querySelector(".user-status-message").innerText=d.profile;
+							document.querySelector(".target-avatat").src=path+"/upload/employee/"+d.employeePhoto;
+
+						})
 					}); break;
 				case '갠톡':
 					data.forEach(d=>{
-						console.log(d);
 						const $chattingroom = document.createElement("div");
 						const $hotTalkTitle = document.createElement("h5");
 						$hotTalkTitle.innerText=d.hotTalkTitle;
 						const $name = document.createElement("h6");
 						const $content = document.createElement("p");
-						$content.innerText=d.hotTalkContent;
+						$content.innerText=d.hotTalkContent[0].hotTalkContent;
 						const $profile = document.createElement("div");
 						const $photo = document.createElement("img");
 						$photo.src="https://cdn-icons-png.freepik.com/512/219/219986.png";
@@ -106,6 +126,12 @@ document.addEventListener('DOMContentLoaded', function() {
 						$chattingroom.appendChild($profile);
 						$chattingroom.classList.add("hotTalkEmployee");
 						$option.appendChild($chattingroom);
+						// 채팅방 더블클릭 시 클릭 시 채팅방 대화내용 및 채팅방 오픈
+						$chattingroom.addEventListener("dblclick", ()=>{
+								// console.log(d);
+								openChatRoom(loginEmployeeNo, d.hotTalkNo);
+							}
+						)
 					}); break;
 				case '단톡':
 					data.forEach(d=>{
@@ -115,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						$hotTalkTitle.innerText=d.hotTalkTitle;
 						const $name = document.createElement("h6");
 						const $content = document.createElement("p");
-						$content.innerText=d.hotTalkContent;
+						$content.innerText=d.hotTalkContent[0].hotTalkContent;
 						const $profile = document.createElement("div");
 						const $photo = document.createElement("img");
 						$photo.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbunjG0clqdBDZUtPkuGFbXuL1csW0EAQ_BQ&s";
@@ -130,7 +156,44 @@ document.addEventListener('DOMContentLoaded', function() {
 						$chattingroom.appendChild($profile);
 						$chattingroom.classList.add("hotTalkEmployee");
 						$option.appendChild($chattingroom);
+						// 채팅방 더블클릭 시 클릭 시 채팅방 대화내용 및 채팅방 오픈
+						$chattingroom.addEventListener("dblclick", ()=>{
+								openChatRoom(loginEmployeeNo, d.hotTalkNo);
+							}
+						)
 					}); break;
+				case 'open':
+				const $chattingRoom = $(".chat-messages");
+				$chattingRoom.empty();
+					data.forEach(d => {
+						console.log(d);
+						if(d.hotTalkIsGroup=='N'){
+							$(".chat-user-name").text(d.receivers[0].receiverName);
+							$(".user-status").text(d.receivers[0].status);
+							$(".user-status-message").text(d.receivers[0].profile);
+						}else{
+							$(".chat-user-name").text(d.hotTalkTitle);
+							$(".user-status").empty();
+							$(".user-status-message").text(d.contents[0].hotTalkContentDate);
+						}
+					  const contents = d.contents;
+					  console.log(contents);
+					  contents.forEach(c => {
+						console.log(c);
+					    const $chatBox = $("<div>").addClass("chat-message");
+					    $chatBox.append($("<sup>").text(c.hotTalkContentSender.employeeName));
+					    $chatBox.append($("<span>").text(c.hotTalkContent));
+
+					    if (c.hotTalkContentSender.employeeNo != loginEmployeeNo) {
+					      $chatBox.addClass("chattingRoom-left-msg");
+					    } else {
+					      $chatBox.addClass("chattingRoom-right-msg");
+					    }
+
+					    $chattingRoom.append($chatBox);
+					  });
+				});
+				break;
 			}
 		}
 
@@ -144,12 +207,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		console.log("WebSocket 연결 에러 : ",error);
 	}
 
+	function openChatRoom(sender, hotTalkNo){
+		// CommonMessage Class 생성자 : constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString())
+		const msg = new CommonMessage("open", sender, "", hotTalkNo, "").convert();
+		// sender, hotTalkNo 모두 int로 전달
+		chatServer.send(msg);
+	}
+
 	// 메세지 전송 버튼 클릭 이벤트
 	document.querySelector(".send-btn").addEventListener("click", ()=>{
 		const msg=document.querySelector("#msg").value;
 		if(msg.length>0){
-			// (type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString())
-			const msgObj = new Message("msg", loginEmployeeName, "", "", msg).convert();
+			// CommonMessage Class 생성자 : constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString())
+			const msgObj = new CommonMessage("msg", loginEmployeeName, "", "", msg).convert();
 			chatServer.send(msgObj);
 		}else{
 			alert("메세지를 입력하세요.");
@@ -158,8 +228,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	})
 
 });
-
-
 
 
 class CommonMessage{

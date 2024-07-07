@@ -14,6 +14,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
+import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
 import com.project.hot.chatting.model.service.HotTalkService;
 
@@ -56,7 +57,16 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		list.forEach(l->l.setType("단톡"));
 		responseListDTO(list);
 	}
-
+	private void getHotTalkContents(WebSocketSession sessionm, CommonMessageDTO msg) {
+		List<ResponseHotTalkContentDTO> contents = service.getHotTalkContents(msg.getSender(), msg.getHotTalkNo());
+		// System.out.println(contents);
+		contents.forEach(c->{
+			c.setType("open");
+			// System.out.println(c);
+		});
+		System.out.println(contents);
+		responseListDTO(contents);
+	}
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		CommonMessageDTO msg = mapper.readValue(message.getPayload(), CommonMessageDTO.class);
@@ -64,6 +74,8 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			case "enter" : enterEmployees(session, msg); break;
 			case "privateHotTalk" : privateHotTalkList(session, msg); break;
 			case "groupHotTalk" : groupHotTalkList(session, msg); break;
+			// const msg = new CommonMessage("open", sender, "", hotTalkNo, "").convert();로 전달 → 채팅방 내역 조회
+			case "open" : getHotTalkContents(session, msg);
 		}
 	}
 
