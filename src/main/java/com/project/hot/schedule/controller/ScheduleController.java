@@ -28,6 +28,8 @@ import com.project.hot.schedule.model.service.ScheduleService;
 @RequestMapping("/schedule")
 public class ScheduleController {
 
+
+
 	@Autowired
 	private ScheduleService service;
 
@@ -36,14 +38,13 @@ public class ScheduleController {
 		return "schedule/schedule" ;
 	}
 
-
 	@GetMapping("/schedule")
     @ResponseBody
     public List<Map<String, Object>> getSchedules() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
-        List<Schedule> schedules = service.getSchedules();
+        List<Schedule> schedules = service.getSchedules(employeeNo);
         List<Map<String, Object>> events = new ArrayList<>();
 
         for (Schedule schedule : schedules) {
@@ -68,9 +69,12 @@ public class ScheduleController {
 	@PostMapping("/addSchedule")
 	@ResponseBody
 	public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
 	    try {
 	        System.out.println("Received schedule: " + schedule);
-	        service.addSchedule(schedule);
+	        service.addSchedule(schedule, employeeNo);
 	        return ResponseEntity.ok("일정이 성공적으로 추가되었습니다");
 	    } catch (Exception e) {
 	        e.printStackTrace();

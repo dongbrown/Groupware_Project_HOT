@@ -24,11 +24,21 @@ $(document).ready(function() {
         }
     });
 
+    // 색상 선택기 기능 추가
+    $('.color-option').click(function() {
+        $(this).siblings().removeClass('selected');
+        $(this).addClass('selected');
+        var color = $(this).data('color');
+        $(this).closest('.form-group').find('input[type="hidden"]').val(color);
+    });
+
     // 일정 추가 모달 열기
     function openAddScheduleModal(start, end) {
         $('#scheduleModal').css('display', 'block');
         $('#scheduleDate').val(start.format('YYYY-MM-DD'));
         $('#scheduleEnd').val(end.format('YYYY-MM-DD'));
+        // 기본 색상 선택
+        $('.color-option[data-color="#0000FF"]').click();
     }
 
     // 일정 보기/수정 모달 열기
@@ -41,7 +51,9 @@ $(document).ready(function() {
         $('#viewScheduleStart').val(event.start.format('YYYY-MM-DD'));
         $('#viewScheduleEnd').val(event.end ? event.end.format('YYYY-MM-DD') : '');
         $('#viewScheduleAllDay').prop('checked', event.allDay);
-        $('#viewScheduleColor').val(event.color);
+        var color = event.color || '#0000FF';
+        $('#viewScheduleColor').val(color);
+        $(`.color-option[data-color="${color}"]`).click();
         $(`input[name=viewScheduleType][value=${event.type}]`).prop('checked', true);
     }
 
