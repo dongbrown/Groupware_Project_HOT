@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hot.schedule.model.dao.ScheduleDao;
 import com.project.hot.schedule.model.dto.Schedule;
+import com.project.hot.schedule.model.dto.ScheduleEmployee;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,13 +20,24 @@ public class ScheduleServiceImpl implements ScheduleService{
 	   private final SqlSession session;
 
 	@Override
-	public List<Schedule> getSchedules() {
-        return dao.getSchedules(session);
+	public List<Schedule> getSchedules(int employeeNo) {
+        return dao.getSchedules(session, employeeNo);
 	}
 
 	@Override
-	public void addSchedule(Schedule schedule) {
-		dao.addSchedule(schedule, session);
+	@Transactional
+	public void addSchedule(Schedule schedule, int employeeNo) {
+
+		//Schedule 추가
+		int scheduleNo = dao.addSchedule(schedule, session, employeeNo);
+
+		//ScheduleEmployee 추가
+		ScheduleEmployee se = ScheduleEmployee.builder()
+				.employeeNo(employeeNo)
+				.scheduleNo(scheduleNo)
+				.build();
+		dao.addScheduleEmployee(se, session);
+
 	}
 
 	@Override

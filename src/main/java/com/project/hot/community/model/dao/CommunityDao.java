@@ -15,4 +15,6 @@ public interface CommunityDao {
 
 	int toggleBookmark(SqlSession session, int communityNo, int employeeNo);
 
+	Community getCommunityByNo(SqlSession session, int communityNo);
+
 }

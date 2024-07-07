@@ -13,7 +13,7 @@
 </style>
 </head>
 <body>
-	<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
+    <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
 
     <!-- 사이드바 include -->
     <c:import url="/WEB-INF/views/common/sidebar.jsp"/>

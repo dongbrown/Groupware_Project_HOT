@@ -25,8 +25,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	}
 
 	@Override
-	public int countEmployeeTotalData(SqlSession session) {
-		return session.selectOne("employee.countEmployeeTotalData");
+	public int countEmployeeTotalData(SqlSession session, Map<String, Object> param) {
+		return session.selectOne("employee.countEmployeeTotalData", param);
 	}
 
 	@Override
