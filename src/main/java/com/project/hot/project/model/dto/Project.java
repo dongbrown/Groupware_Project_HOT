@@ -1,6 +1,9 @@
 package com.project.hot.project.model.dto;
 
 import java.sql.Date;
+import java.util.List;
+
+import com.project.hot.employee.model.dto.Employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,11 +26,16 @@ public class Project {
 //	 private int projectBudget;
 //	 private String projectStatus;
 
+	 	private int projectNo;
 	 	private String projectTitle;
 	    private int employeeNo;
+	    private Employee employeeCode;
 	    private int projectRank;
 	    private String projectContent;
-	    private int projectBudget;
-	    private String projectEndDate;
+	    private long projectBudget;
+	    private Date projectStartDate;
+	    private Date projectEndDate;
+	    private int projectProgress;
+	    private List<ProjectEmployee> employee;
 
 }

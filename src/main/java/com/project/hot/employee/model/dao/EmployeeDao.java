@@ -11,6 +11,6 @@ import com.project.hot.employee.model.dto.Employee;
 public interface EmployeeDao {
 	Employee selectEmployeeById(SqlSession session, String id);
 	List<Employee> selectEmployeeList(SqlSession session, Map<String, Object> param);
-	int countEmployeeTotalData(SqlSession session);
+	int countEmployeeTotalData(SqlSession session, Map<String, Object> param);
 	List<Department> selectDepartmentList(SqlSession session);
 }

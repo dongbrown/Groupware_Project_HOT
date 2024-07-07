@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Map<String, Object> selectEmployeeList(Map<String, Object> param) {
 		Map<String, Object> result=new HashMap<>();
-		result.put("totalData", dao.countEmployeeTotalData(session));
+		result.put("totalPage", Math.ceil((double)dao.countEmployeeTotalData(session, param)/12));
 		result.put("employees", dao.selectEmployeeList(session, param));
 		return result;
 	}
