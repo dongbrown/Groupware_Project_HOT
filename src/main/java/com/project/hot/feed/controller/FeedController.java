@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.feed.model.dto.Feed;
@@ -33,35 +34,52 @@ public class FeedController {
 
     private final FeedService service;
 
-//    @GetMapping("/")
-//    public String getFeeds(@RequestParam Integer communityNo, Model model) {
-//        if (communityNo == null) {
-//            log.error("communityNo is required");
-//            return "error/400";
-//
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        Employee loginEmployee = (Employee) auth.getPrincipal();
-//
-//        List<Feed> feeds = service.getFeeds(communityNo);
-//        log.info("Fetched {} feeds for community {}", feeds.size(), communityNo);
-//
-//        model.addAttribute("feeds", feeds);
-//        model.addAttribute("loginEmployee", loginEmployee);
-//        model.addAttribute("communityNo", communityNo);
-//        return "community/feed";
-//    }
-
-    @PostMapping("/insert")
+    @GetMapping("/list")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> insertFeed(@RequestBody Feed feed) {
+    public ResponseEntity<Map<String, Object>> getFeeds(@RequestParam Integer communityNo) {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            if (feed.getFeedContent() == null || feed.getFeedContent().trim().isEmpty()) {
+            if (communityNo == null) {
+                throw new IllegalArgumentException("커뮤니티 번호가 필요합니다.");
+            }
+
+            List<Feed> feeds = service.getFeeds(communityNo);
+            log.info("Fetched {} feeds for community {}", feeds.size(), communityNo);
+
+            response.put("success", true);
+            response.put("feeds", feeds);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("피드 목록 조회 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "피드 목록을 불러오는 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @PostMapping("/insert")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> insertFeed(
+            @RequestParam("feedContent") String feedContent,
+            @RequestParam("communityNo") int communityNo,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (feedContent == null || feedContent.trim().isEmpty()) {
                 throw new IllegalArgumentException("피드 내용은 필수입니다.");
             }
 
-            int result = service.insertFeed(feed);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Employee loginEmployee = (Employee) auth.getPrincipal();
+
+            Feed feed = new Feed();
+            feed.setFeedContent(feedContent);
+            feed.setCommunityNo(communityNo);
+            feed.setEmployeeNo(loginEmployee.getEmployeeNo());
+
+            int result = service.insertFeed(feed, file);
             if (result > 0) {
                 response.put("success", true);
                 response.put("message", "피드가 성공적으로 작성되었습니다.");

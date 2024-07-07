@@ -63,7 +63,7 @@ $(document).ready(function() {
             data: { communityNo: communityNo },
             success: function(response) {
                 if(response.success) {
-                    location.reload();  // 페이지 새로고침
+                    location.reload(); // 페이지 새로고침
                 } else {
                     alert(response.message);
                 }

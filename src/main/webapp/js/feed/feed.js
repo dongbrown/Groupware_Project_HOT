@@ -1,7 +1,64 @@
-// 피드 제출
+$(document).ready(function() {
+    // 페이지 로드 시 피드 목록 불러오기
+    loadFeeds();
+
+    // 피드 작성 폼 제출 이벤트
+    $("#feedForm").submit(function(e) {
+        e.preventDefault();
+        submitFeed();
+    });
+});
+
+function loadFeeds() {
+    const communityNo = $("#feed-container").data("community-no");
+    $.ajax({
+        url: '/community/feed/list',
+        method: 'GET',
+        data: { communityNo: communityNo },
+        success: function(response) {
+            if (response.success) {
+                displayFeeds(response.feeds);
+            } else {
+                alert('피드를 불러오는 데 실패했습니다: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('피드 불러오기 오류:', error);
+            alert('피드를 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function displayFeeds(feeds) {
+    const container = $("#feed-container");
+    container.empty();
+    feeds.forEach(feed => {
+        container.append(createFeedHtml(feed));
+    });
+}
+
+function createFeedHtml(feed) {
+    return `
+        <div class="feed-item" id="feed-${feed.feedNo}">
+            <h5>${feed.employeeName}</h5>
+            <p>${feed.feedContent}</p>
+            <small class="text-muted">${feed.feedEnrollDate}</small>
+            <div class="feed-actions">
+                <button class="btn btn-sm btn-outline-primary" onclick="updateFeed(${feed.feedNo})">수정</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
+            </div>
+        </div>
+    `;
+}
+
 function submitFeed() {
-    if (!communityNo) {
-        alert('커뮤니티를 선택해주세요.');
+    const communityNo = $("#feed-container").data("community-no");
+    const feedContent = $("#feedContent").val().trim();
+    const fileInput = $("#file-upload")[0];
+    const file = fileInput.files[0];
+
+    if (!feedContent) {
+        alert('피드 내용을 입력해주세요.');
         return;
     }
 
@@ -20,58 +77,21 @@ function submitFeed() {
         contentType: false,
         success: function(response) {
             if (response.success) {
-                alert(response.message);
-                $('#feedContent').val('');
-                $('#file-upload').val('');
-                loadLatestFeed();
+                alert('피드가 성공적으로 작성되었습니다.');
+                $("#feedContent").val('');
+                fileInput.value = '';
+                loadFeeds();  // 피드 목록 새로고침
             } else {
-                alert(response.message);
+                alert('피드 작성에 실패했습니다: ' + response.message);
             }
         },
         error: function(xhr, status, error) {
+            console.error('피드 작성 오류:', error);
             alert('피드 작성 중 오류가 발생했습니다.');
         }
     });
 }
 
-function loadLatestFeed() {
-    if (!communityNo) {
-        console.error('커뮤니티 번호가 설정되지 않았습니다.');
-        return;
-    }
-
-    $.ajax({
-        url: '/community/feed/',
-        method: 'GET',
-        data: { communityNo: communityNo },
-        success: function(response) {
-            if (response && response.length > 0) {
-                const latestFeed = response[0];
-                const feedHtml = createFeedHtml(latestFeed);
-                $('#feed-container').prepend(feedHtml);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('최신 피드 로딩 중 오류 발생:', error);
-        }
-    });
-}
-// 피드 HTML 생성
-function createFeedHtml(feed) {
-    return `
-        <div class="feed-item" id="feed-${feed.feedNo}">
-            <h5>${feed.employeeName}</h5>
-            <p>${feed.feedContent}</p>
-            <small class="text-muted">${feed.feedEnrollDate}</small>
-            <div class="feed-actions">
-                <button class="btn btn-sm btn-outline-primary" onclick="updateFeed(${feed.feedNo})">수정</button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
-            </div>
-        </div>
-    `;
-}
-
-// 피드 수정
 function updateFeed(feedNo) {
     const feedElement = $(`#feed-${feedNo}`);
     const currentContent = feedElement.find('p').text();
@@ -90,19 +110,19 @@ function updateFeed(feedNo) {
         data: JSON.stringify({ feedNo: feedNo, feedContent: updatedContent }),
         success: function(response) {
             if (response.success) {
-                alert(response.message);
+                alert('피드가 성공적으로 수정되었습니다.');
                 feedElement.find('p').text(updatedContent);
             } else {
-                alert(response.message);
+                alert('피드 수정에 실패했습니다: ' + response.message);
             }
         },
         error: function(xhr, status, error) {
+            console.error('피드 수정 오류:', error);
             alert('피드 수정 중 오류가 발생했습니다.');
         }
     });
 }
 
-// 피드 삭제
 function deleteFeed(feedNo) {
     if (!confirm('정말로 이 피드를 삭제하시겠습니까?')) return;
 
@@ -113,25 +133,20 @@ function deleteFeed(feedNo) {
         data: JSON.stringify({ feedNo: feedNo }),
         success: function(response) {
             if (response.success) {
-                alert(response.message);
+                alert('피드가 성공적으로 삭제되었습니다.');
                 $(`#feed-${feedNo}`).remove();
             } else {
-                alert(response.message);
+                alert('피드 삭제에 실패했습니다: ' + response.message);
             }
         },
         error: function(xhr, status, error) {
+            console.error('피드 삭제 오류:', error);
             alert('피드 삭제 중 오류가 발생했습니다.');
         }
     });
 }
 
-// 참석자 추가 함수 (구현 필요)
 function showAddParticipant() {
     // 참석자 추가 로직 구현
     alert('참석자 추가 기능은 아직 구현되지 않았습니다.');
 }
-
-// 페이지 로드 시 실행
-$(document).ready(function() {
-    // 필요한 초기화 로직
-});

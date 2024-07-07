@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -33,9 +32,13 @@ public class ProjectController {
 	private final ObjectMapper mapper;
 
 	@GetMapping("/projectupdate.do")
-	public String projectUpdatePage (Department d,Model m) {
+	public String projectUpdatePage (@RequestParam(defaultValue = "1") int cPage,
+									@RequestParam(defaultValue = "5") int numPerpage, Department d, Model m) {
+
 		List<Department> depts = service.selectDeptAll();
+		List<Project> projects = service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
 		m.addAttribute("depts",depts);
+		m.addAttribute("projects",projects);
 		return "project/projectUpdate";
 	};
 
@@ -55,18 +58,27 @@ public class ProjectController {
 
 	@ResponseBody
 	@PostMapping("/insertProject.do")
-	public ResponseEntity<?> insertProject(@RequestBody Map<String,Object> data) {
+	public ResponseEntity<Object> insertProject(@RequestBody Project projectData) {
 		try {
-		        Project project = mapper.convertValue(data.get("project"), Project.class);
-		        System.out.println(project);
-		        List<ProjectEmployee> members = mapper.convertValue(data.get("member"),
-                        				new TypeReference<List<ProjectEmployee>>(){});
-		        return ResponseEntity.ok("프로젝트 등록 성공");
-		}catch(Exception e) {
+			service.insertProject(projectData);
+			return ResponseEntity.ok("프로젝트 등록 성공");
+		} catch (Exception e) {
 			log.error("=========프로젝트 등록 중 오류 발생=========", e);
-            return ResponseEntity.badRequest().body("프로젝트 등록 실패");
+			return ResponseEntity.badRequest().body("프로젝트 등록 실패");
 		}
-
-		    }
 	}
 
+	@ResponseBody
+	@GetMapping("/selectProjectByNo.do")
+	public Project selectProjectByNo(@RequestParam("projectNo") int projectNo) {
+		Project result = service.selectProjectByNo(projectNo);
+		return result;
+	}
+
+	@ResponseBody
+	@GetMapping("/selectEmployeetByProjectNo.do")
+	public List<ProjectEmployee> selectEmployeetByProjectNo(@RequestParam("projectNo") int projectNo){
+		List<ProjectEmployee> result = service.selectEmployeetByProjectNo(projectNo);
+		return result;
+	}
+}

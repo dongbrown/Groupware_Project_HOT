@@ -31,4 +31,9 @@ public class CommunityDaoImpl implements CommunityDao {
 		return session.update("community.toggleBookmark", paramMap);
 	}
 
+	@Override
+	public Community getCommunityByNo(SqlSession session, int communityNo) {
+		return session.selectOne("community.getCommunityByNo", communityNo);
+	}
+
 }

@@ -17,7 +17,10 @@ public class Feed {
 	private Date feedEnrollDate;
 	private int communityNo;
 	private int employeeNo;
+    private String originalFileName;
+    private String renamedFileName;
 
 	private String employeeName;
+
 
 }

@@ -35,4 +35,10 @@ public class CommunityServiceImpl implements CommunityService {
 		return dao.toggleBookmark(session, communityNo, employeeNo);
 	}
 
+
+	@Override
+	public Community getCommunityByNo(int communityNo) {
+		return dao.getCommunityByNo(session, communityNo);
+	}
+
 }
