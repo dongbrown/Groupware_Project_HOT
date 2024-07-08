@@ -1,6 +1,7 @@
 package com.project.hot.chatting.model.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class ResponseHotTalkListDTO {
 	private String hotTalkIsgroup;
 	private String hotTalkTitle;
 	private int hotTalkNo;
-	private String hotTalkContent;
+	private List<HotTalkContent> hotTalkContent;
 	private Timestamp hotTalkContentDate;
 	private String sender;
 }

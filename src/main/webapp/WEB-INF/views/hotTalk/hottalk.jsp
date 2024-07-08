@@ -22,8 +22,9 @@
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 				    <i class="fas fa-cog"></i>
 			 	</a>
-                <h2 class="user-name">${loginEmployee.employeeName}</h2>
-                <p class="user-profile">집에 가고싶어요</p>
+                <h3 class="user-name">${loginEmployee.employeeName}</h3>
+                <sup class="user-profile my-status"></sup>
+                <p class="my-status-message"></p>
               	<div class="dropdown">
 				  <ul class="dropdown-menu">
 				    <li><a class="dropdown-item" href="#">상태 변경</a></li>
@@ -47,12 +48,13 @@
         </div>
         <div class="chat-main ">
             <div class="chat-header">
-                <img src="https://cdn.eroun.net/news/photo/202305/32650_59862_4410.jpg" alt="아이유" class="user-avatar IUimg">
-                <div>
-                    <h2>${loginEmployee.employeeName}</h2>
-                    <p>Online</p>
+                <img src="https://cdn.eroun.net/news/photo/202305/32650_59862_4410.jpg" alt="아이유" class="user-avatar target-avatat IUimg">
+                <div style="width: 500px; margin-left:10px">
+                    <h2 class="chat-user-name">${loginEmployee.employeeName}</h2>
+                    <sup class="user-status"></sup>
+                    <p class="user-status-message"></p>
                 </div>
-                <div class="chat-actions">
+                <div class="chat-actions" style="width: 300px; margin-left: 450px;">
                 	<input type="text" placeholder="Search..." class="search-input">
                 </div>
                 <i class="fas fa-search fa-sm"></i>
