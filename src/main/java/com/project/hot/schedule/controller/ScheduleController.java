@@ -87,6 +87,7 @@ public class ScheduleController {
     @PutMapping("/updateSchedule")
     @ResponseBody
     public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
+
         try {
             System.out.println("수정할 일정 정보: " + schedule);
             service.updateSchedule(schedule);
