@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
@@ -32,6 +33,17 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	@Override
 	public List<Department> selectDepartmentList(SqlSession session) {
 		return session.selectList("employee.selectDepartmentList");
+	}
+
+	@Override
+	public List<Commuting> selectCommutingList(SqlSession session, Map<String, Object> param) {
+		return session.selectList("employee.selectCommutingList", param, 
+				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
+	}
+
+	@Override
+	public int countCommutingTotalData(SqlSession session, Map<String, Object> param) {
+		return session.selectOne("employee.countCommutingTotalData", param);
 	}
 
 }

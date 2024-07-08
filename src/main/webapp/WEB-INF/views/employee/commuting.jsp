@@ -13,11 +13,11 @@
 			<div class="commuting-time">
 				<div class="commuting-text">
 					<span>출근 시간</span>				
-					<span>출근 시간</span>				
+					<span>08:59</span>				
 				</div>
 				<div class="commuting-text">
 					<span>퇴근 시간</span>
-					<span>퇴근 시간</span>
+					<span>18:00</span>
 				</div>
 			</div>
 			<div class="commuting-btn-div">
@@ -29,30 +29,30 @@
 			<p>이번달 근무 현황</p>
 			<div class="commuting-text">
 				<span>근무 일수</span>
-				<span>근무 일수</span>
+				<span>20일</span>
 			</div>
 			<div class="commuting-text">
 				<span>연장 근무 시간</span>
-				<span>연장 근무 시간</span>
+				<span>100시간</span>
 			</div>
 			<div class="commuting-text">
 				<span>총 근무시간</span>
-				<span>총 근무시간</span>
+				<span>204시간</span>
 			</div>
 		</div>
 		<div class="attendance-div">
 			<p>이번달 근태 현황</p>
 			<div class="commuting-text">
 				<span>지각</span>
-				<span>지각</span>
+				<span>1회</span>
 			</div>
 			<div class="commuting-text">
 				<span>결근</span>
-				<span>결근</span>
+				<span>0회</span>
 			</div>
 			<div class="commuting-text">
 				<span>연차</span>
-				<span>연차</span>
+				<span>3회</span>
 			</div>
 		</div>
 	</div>
@@ -60,10 +60,10 @@
 		<div>
 			<p>출퇴근 기록</p>
 			<div>
-				<select>월</select>
+				<select>5월</select>
 			</div>
 		</div>
-		<div class=commuting-table>
+		<div class=commuting-table id="commuting-table">
 		
 		</div>
 	</div>

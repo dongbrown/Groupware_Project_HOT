@@ -1,5 +1,7 @@
 package com.project.hot.employee.controller;
 
+import java.security.Principal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,7 @@ public class EmployeeRestController {
 
 	@GetMapping("/employeeList")
 	public Map<String, Object> getEmployeeList(
-			@RequestParam(defaultValue = "1") int cPage, 
+			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "12") int numPerpage,
 			@ModelAttribute SearchEmployeeData sd) {
 		Map<String, Object> param=new HashMap<>();
@@ -42,4 +44,20 @@ public class EmployeeRestController {
 	public List<Department> selectDepartmentList(){
 		return service.selectDepartmentList();
 	}
+
+	
+	@GetMapping("/commutingList")
+	public Map<String, Object> getCommutingList(
+			Principal principal, 
+			@RequestParam String month,
+			@RequestParam(defaultValue = "1") int cPage){
+		Map<String, Object> param=new HashMap<>();
+		param.put("employeeNo", principal.getName());
+		param.put("year", LocalDate.now().getYear());
+		param.put("month", month);
+		param.put("cPage", cPage);
+		param.put("numPerpage", 10);
+		return service.selectCommutingList(param);
+	}
+
 }

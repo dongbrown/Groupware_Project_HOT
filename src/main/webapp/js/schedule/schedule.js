@@ -145,11 +145,99 @@ $(document).ready(function() {
                 success: function(response) {
                     $('#calendar').fullCalendar('removeEvents', scheduleId);
                     closeModal('#viewScheduleModal');
+                    alert('일정이 성공적으로 삭제되었습니다.');
                 },
                 error: function(xhr, status, error) {
                     alert('일정 삭제 중 오류가 발생했습니다: ' + error);
                 }
             });
+        }
+    });
+
+    const selectDept = $('#select-dept');
+    const deptSelectGroup = $('#deptSelectGroup');
+    const employeeByDept = $('#employeeByDept');
+    const selectEmp = $('#select-emp');
+    const selectedEmployee = $('#selectedEmployee');
+    const selectedEmployeeName = $('#selectedEmployeeName');
+
+    // 공유 캘린더 선택 시 부서 선택 div 보이도록
+    $('input[name="scheduleType"]').on('change', function() {
+        if ($(this).val() === 'share') {
+            deptSelectGroup.show();
+        } else {
+            deptSelectGroup.hide();
+            employeeByDept.hide();
+            selectedEmployee.hide();
+        }
+    });
+
+    // 부서 목록 가져오기
+    $.ajax({
+        url: '/api/departmentList',
+        type: 'GET',
+        dataType: 'json',
+        success: function(departments) {
+            $.each(departments, function(index, dept) {
+                selectDept.append($('<option>', {
+                    value: dept.departmentCode,
+                    text: dept.departmentTitle
+                }));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching departments:", error);
+        }
+    });
+
+    // 부서 선택 변경 이벤트 처리
+    selectDept.on('change', function() {
+        const selectedDeptCode = $(this).val();
+        if (selectedDeptCode) {
+            $.ajax({
+                url: '/schedule/selectEmpByDept',
+                type: 'GET',
+                data: { deptCode: selectedDeptCode },
+                dataType: 'json',
+                success: function(employees) {
+                    selectEmp.empty().append($('<option>', {
+                        value: '',
+                        text: '선택하세요'
+                    }));
+
+                    if (Array.isArray(employees)) {
+                        $.each(employees, function(index, emp) {
+                            selectEmp.append($('<option>', {
+                                value: emp.employeeNo,
+                                text: emp.employeeName
+                            }));
+                        });
+                        employeeByDept.show();
+                    } else {
+                        console.error('Employees data is not an array:', employees);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching employees:", error);
+                    console.log("Status:", status);
+                    console.log("Response:", xhr.responseText);
+                }
+            });
+        } else {
+            employeeByDept.hide();
+            selectedEmployee.hide();
+        }
+    });
+
+    // 사원 선택 변경 이벤트 처리
+    selectEmp.on('change', function() {
+        const selectedEmpNo = $(this).val();
+        const selectedEmpName = $(this).find("option:selected").text();
+        if (selectedEmpNo) {
+            selectedEmployeeName.text(selectedEmpName);
+            selectedEmployee.show();
+        } else {
+            selectedEmployee.hide();
         }
     });
 
