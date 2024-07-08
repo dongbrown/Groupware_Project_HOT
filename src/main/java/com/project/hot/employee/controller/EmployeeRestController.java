@@ -1,17 +1,17 @@
 package com.project.hot.employee.controller;
 
+import java.security.Principal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
@@ -45,10 +45,19 @@ public class EmployeeRestController {
 		return service.selectDepartmentList();
 	}
 
-	/*
-	 * @GetMapping("/commutingList/{no}") public List<Commuting>
-	 * getCommutingList(@PathVariable int employeeNo){
-	 *
-	 * }
-	 */
+	
+	@GetMapping("/commutingList")
+	public Map<String, Object> getCommutingList(
+			Principal principal, 
+			@RequestParam String month,
+			@RequestParam(defaultValue = "1") int cPage){
+		Map<String, Object> param=new HashMap<>();
+		param.put("employeeNo", principal.getName());
+		param.put("year", LocalDate.now().getYear());
+		param.put("month", month);
+		param.put("cPage", cPage);
+		param.put("numPerpage", 10);
+		return service.selectCommutingList(param);
+	}
+
 }
