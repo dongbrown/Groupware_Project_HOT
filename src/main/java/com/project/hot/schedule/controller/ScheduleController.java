@@ -102,17 +102,38 @@ public class ScheduleController {
     // 일정 삭제 메서드
     @DeleteMapping("/deleteSchedule")
     @ResponseBody
-    public ResponseEntity<String> deleteSchedule(@RequestParam("id") String id) {
+    public ResponseEntity<String> deleteSchedule(@RequestParam("id") int id) {
         try {
-            int deletedCount = service.deleteSchedule(id);
-            if (deletedCount > 0) {
+        	// Schedule, ScheduleEmployee 테이블 데이터 삭제
+            service.deleteSchedule(id);
                 return ResponseEntity.ok("일정이 성공적으로 삭제되었습니다");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 일정을 찾을 수 없습니다");
-            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("일정 삭제 중 오류 발생: " + e.getMessage());
         }
     }
+
+
+    @GetMapping("/selectEmpByDept")
+    @ResponseBody
+    public ResponseEntity<List<Employee>> selectEmpByDept(@RequestParam String deptCode) {
+        try {
+            List<Employee> employees = service.getEmployeesByDepartment(deptCode);
+            return ResponseEntity.ok(employees);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.schedule.model.dao.ScheduleDao;
 import com.project.hot.schedule.model.dto.Schedule;
 import com.project.hot.schedule.model.dto.ScheduleEmployee;
@@ -47,8 +48,17 @@ public class ScheduleServiceImpl implements ScheduleService{
 
 
 	@Override
-	public int deleteSchedule(String id) {
-		return dao.deleteSchedule(id, session);
+	@Transactional
+	public void deleteSchedule(int id) {
+		// Schedule 삭제
+		dao.deleteSchedule(id, session);
+		// ScheduleEmployee 삭제
+		dao.deleteScheduleEmployee(id, session);
+	}
+
+	@Override
+	public List<Employee> getEmployeesByDepartment(String deptCode) {
+		return dao.getEmployeesByDepartment(deptCode, session);
 	}
 
 }

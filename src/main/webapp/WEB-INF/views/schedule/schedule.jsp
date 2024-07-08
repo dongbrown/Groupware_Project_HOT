@@ -27,8 +27,7 @@
             <!-- 페이지 콘텐츠 시작 -->
             <div class="container-fluid">
 
-				<!--@@@@@@ div 위치 조정 필요@@@@@ -->
-            	<div class="calendar-legend">
+                <div class="calendar-legend">
                     <h5>2024년 6월</h5>
                     <div class="legend-item">
                         <span class="legend-color" style="background-color: red;"></span>
@@ -51,7 +50,6 @@
                         <span>전사일정</span>
                     </div>
                 </div>
-				<!-- @@@@@@@@@@@@  -->
 
                 <div id="calendar"></div>
 
@@ -63,15 +61,38 @@
                 <div id="scheduleModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h5>일정 추가</h5>
+                        <h5>일정 추가</h5> <br>
                         <form id="addScheduleForm">
-                            <div class="form-group">
-                                <label>타입</label>
-                                <input type="radio" id="scheduleTypeMy" name="scheduleType" value="my" checked>
-                                <label for="scheduleTypeMy">내 캘린더</label>
-                                <input type="radio" id="scheduleTypeShare" name="scheduleType" value="share">
-                                <label for="scheduleTypeShare">공유 캘린더</label>
+                            <div class="form-group schedule-type-group">
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="scheduleTypeMy" name="scheduleType" value="my" checked>
+                                        <label for="scheduleTypeMy">내 캘린더</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="scheduleTypeShare" name="scheduleType" value="share">
+                                        <label for="scheduleTypeShare">공유 캘린더</label>
+                                    </div>
+                                </div>
                             </div>
+                            <div id="deptSelectGroup" class="form-group" style="display: none;">
+                                <label for="select-dept" class="form-label">부서</label>
+                                <select id="select-dept" class="form-select" aria-label="부서 선택">
+                                    <option selected value="">선택하세요</option>
+                                </select>
+                            </div>
+
+                            <div id="employeeByDept" class="form-group" style="display: none;">
+                                <label for="select-emp" class="form-label">사원</label>
+                                <select id="select-emp" class="form-select" aria-label="사원 선택">
+                                    <option selected value="">선택하세요</option>
+                                </select>
+                            </div>
+
+                            <div id="selectedEmployee" class="form-group" style="display: none;">
+                                <p>선택된 사원: <span id="selectedEmployeeName"></span></p>
+                            </div>
+
                             <div class="form-group">
                                 <label for="scheduleTitle">제목</label>
                                 <input type="text" class="form-control" id="scheduleTitle" required>

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.schedule.model.dto.Schedule;
 import com.project.hot.schedule.model.dto.ScheduleEmployee;
 
@@ -29,18 +30,29 @@ public class ScheduleDaoImpl implements ScheduleDao {
 	}
 
 	@Override
+	public void addScheduleEmployee(ScheduleEmployee se, SqlSession session) {
+        session.insert("schedule.addScheduleEmployee", se);
+	}
+
+	@Override
 	public void updateSchedule(Schedule schedule, SqlSession session) {
 		session.update("schedule.updateSchedule", schedule);
 	}
 
 	@Override
-	public int deleteSchedule(String id, SqlSession session) {
-		return session.delete("schedule.deleteSchedule", id);
+	public void deleteSchedule(int id, SqlSession session) {
+		session.delete("schedule.deleteSchedule", id);
+	}
+
+
+	@Override
+	public void deleteScheduleEmployee(int id, SqlSession session) {
+		session.delete("schedule.deleteScheduleEmployee", id);
 	}
 
 	@Override
-	public void addScheduleEmployee(ScheduleEmployee se, SqlSession session) {
-        session.insert("schedule.addScheduleEmployee", se);
+	public List<Employee> getEmployeesByDepartment(String deptCode, SqlSession session) {
+		return session.selectList("schedule.getEmployeesByDepartment", deptCode);
 	}
 
 }
