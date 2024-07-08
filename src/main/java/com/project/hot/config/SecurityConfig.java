@@ -8,6 +8,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsUtils;
 
 import com.project.hot.security.controller.UserPasswordAuthenticationProvider;
+import com.project.hot.security.service.SecurityLoginProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final UserPasswordAuthenticationProvider provider;
+	private final SecurityLoginProvider securityLoginProvider;
 
 	@Bean
 	SecurityFilterChain authenticationFilter(HttpSecurity http) throws Exception{
@@ -43,6 +45,11 @@ public class SecurityConfig {
 				.exceptionHandling(exception->exception
 						.accessDeniedHandler(null)
 				)
+				.rememberMe(rememberMe->rememberMe
+						.key("lmfwqemgwejgjasdq")
+						.userDetailsService(securityLoginProvider)
+						.rememberMeParameter("remember-me")
+						.tokenValiditySeconds(43200))
 				.build();
 	}
 }
