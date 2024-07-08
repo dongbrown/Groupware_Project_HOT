@@ -3,7 +3,6 @@
  */
 
 $(document).ready(() => {
-	console.log(searchName);
 	if(searchName == ""){
 		getEmployeeList(1);
 	}else{
@@ -37,7 +36,7 @@ function getDepartmentList() {
 	fetch(path + '/api/departmentList')
 		.then(response => response.json())
 		.then(data => {
-			const $target=$('.dropdown-menu');
+			const $target=$('.department-menu');
 			data.forEach(d=>{
 				const $departmentTitle=$('<span>').addClass('dropdown-item')
 				.text(d.departmentHighCode<=1?d.departmentTitle:`--${d.departmentTitle}`)
@@ -52,10 +51,10 @@ function getDepartmentList() {
 
 //사원 주소 카드 태그 만드는 함수
 function makeAddressCard(employees){
-	
+
 	employees.forEach(e=>{
 		const $addressCard=$('<div>').addClass('border-left-primary address-card');
-		
+
 		//이미지
 		const $leftDiv=$('<div>').addClass('card-left-div');
 		const $imgDiv=$('<div>').addClass('img-div');
@@ -64,7 +63,7 @@ function makeAddressCard(employees){
 		$imgDiv.append($img);
 		$leftDiv.append($imgDiv);
 		$addressCard.append($leftDiv);
-		
+
 		//사원 정보
 		const $infoDiv=$('<div>').addClass('employee-info-div');
 		const $span1=$('<span>').text(`${e.employeeName} ${e.positionCode.positionTitle}`);
@@ -73,7 +72,7 @@ function makeAddressCard(employees){
 		const $span4=$('<span>').text(`${e.employeePhone}`);
 		$infoDiv.append($span1).append($span2).append($span3).append($span4);
 		$addressCard.append($infoDiv);
-		
+
 		$('.card-div').append($addressCard);
 	})
 }
@@ -82,13 +81,13 @@ function makeAddressCard(employees){
 function changeTitle(e){
 	let title=$(e.target).text();
 	if(title[0] == '-') title=title.substring(2);
-	$('.department-menu').text(title);
+	$('.department-menu-title').text(title);
 }
 
 //검색 처리 함수
 function searchEmployee(cPage){
 	const name=$('.search-name').val().trim();
-	const title=$('.department-menu').text().trim();
+	const title=$('.department-menu-title').text().trim();
 	$('.card-div').html('');
 	showLoadingSpinner($('.card-div'));
 	fetch(`${path}/api/employeeList?cPage=${cPage}&name=${name}&title=${title}`)

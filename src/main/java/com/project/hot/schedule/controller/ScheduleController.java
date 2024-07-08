@@ -28,6 +28,8 @@ import com.project.hot.schedule.model.service.ScheduleService;
 @RequestMapping("/schedule")
 public class ScheduleController {
 
+
+
 	@Autowired
 	private ScheduleService service;
 
@@ -36,14 +38,13 @@ public class ScheduleController {
 		return "schedule/schedule" ;
 	}
 
-
 	@GetMapping("/schedule")
     @ResponseBody
     public List<Map<String, Object>> getSchedules() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
-        List<Schedule> schedules = service.getSchedules();
+        List<Schedule> schedules = service.getSchedules(employeeNo);
         List<Map<String, Object>> events = new ArrayList<>();
 
         for (Schedule schedule : schedules) {
@@ -68,9 +69,12 @@ public class ScheduleController {
 	@PostMapping("/addSchedule")
 	@ResponseBody
 	public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
 	    try {
 	        System.out.println("Received schedule: " + schedule);
-	        service.addSchedule(schedule);
+	        service.addSchedule(schedule, employeeNo);
 	        return ResponseEntity.ok("일정이 성공적으로 추가되었습니다");
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -83,6 +87,7 @@ public class ScheduleController {
     @PutMapping("/updateSchedule")
     @ResponseBody
     public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
+
         try {
             System.out.println("수정할 일정 정보: " + schedule);
             service.updateSchedule(schedule);
@@ -97,17 +102,38 @@ public class ScheduleController {
     // 일정 삭제 메서드
     @DeleteMapping("/deleteSchedule")
     @ResponseBody
-    public ResponseEntity<String> deleteSchedule(@RequestParam("id") String id) {
+    public ResponseEntity<String> deleteSchedule(@RequestParam("id") int id) {
         try {
-            int deletedCount = service.deleteSchedule(id);
-            if (deletedCount > 0) {
+        	// Schedule, ScheduleEmployee 테이블 데이터 삭제
+            service.deleteSchedule(id);
                 return ResponseEntity.ok("일정이 성공적으로 삭제되었습니다");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 일정을 찾을 수 없습니다");
-            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("일정 삭제 중 오류 발생: " + e.getMessage());
         }
     }
+
+
+    @GetMapping("/selectEmpByDept")
+    @ResponseBody
+    public ResponseEntity<List<Employee>> selectEmpByDept(@RequestParam String deptCode) {
+        try {
+            List<Employee> employees = service.getEmployeesByDepartment(deptCode);
+            return ResponseEntity.ok(employees);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

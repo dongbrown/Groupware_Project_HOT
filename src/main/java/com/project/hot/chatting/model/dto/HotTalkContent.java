@@ -15,9 +15,8 @@ import lombok.NoArgsConstructor;
 public class HotTalkContent {
 	private int hotTalkContentNo;
 	private int hotTalkNo;
-	private int hotTalkContentSender;
 	private String hotTalkContent;
-	private String hotTalkContentIsread;
 	private LocalDateTime hotTalkContentDate;
+	private ResponseEmployeeDTO hotTalkContentSender;
 	private List<HotTalkReceiver> hotTalkReceiver;
 }

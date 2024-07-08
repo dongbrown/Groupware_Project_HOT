@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
@@ -25,7 +27,7 @@ public class EmployeeRestController {
 
 	@GetMapping("/employeeList")
 	public Map<String, Object> getEmployeeList(
-			@RequestParam(defaultValue = "1") int cPage, 
+			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "12") int numPerpage,
 			@ModelAttribute SearchEmployeeData sd) {
 		Map<String, Object> param=new HashMap<>();
@@ -42,4 +44,11 @@ public class EmployeeRestController {
 	public List<Department> selectDepartmentList(){
 		return service.selectDepartmentList();
 	}
+
+	/*
+	 * @GetMapping("/commutingList/{no}") public List<Commuting>
+	 * getCommutingList(@PathVariable int employeeNo){
+	 *
+	 * }
+	 */
 }
