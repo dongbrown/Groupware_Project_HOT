@@ -4,23 +4,31 @@
 	    $('#project-contents-count').text(textLength + '/1000');
 	});
 
-//연도 옵션 추가  올해와 내년만 출력되게 설정
-    const currentYear = new Date().getFullYear();
-    const nextYear = currentYear + 1;
+//종료 날짜 설정
+//오늘 날짜 생성
+function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
-    for (let year = currentYear; year <= nextYear; year++) {
-        $('#year').append('<option value="' + year + '">' + year + '</option>');
-    };
+  // 1년 후 날짜를 가져오는 함수
+      function getOneYearLaterDate() {
+        const today = new Date();
+        const nextYear = new Date(today.setFullYear(today.getFullYear() + 1));
+        const year = nextYear.getFullYear();
+        const month = String(nextYear.getMonth() + 1).padStart(2, '0');
+        const day = String(nextYear.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
 
-//월 옵션 추가
-    for (let month = 1; month <= 12; month++) {
-        $('#month').append('<option value="' + month + '">' + month + '</option>');
-    }
+// 날짜 입력 필드에 오늘 날짜 설정
+  $("#project-end-date").val(getTodayDate());
+  $("#project-end-date").attr('min', getTodayDate());
+  $("#project-end-date").attr('max', getOneYearLaterDate());
 
-//일 옵션 추가
-    for (let day = 1; day <= 31; day++) {
-        $('#day').append('<option value="' + day + '">' + day + '</option>');
-    }
 //총 예산 원화 표시
     $('#project-budget').keyup(e=>{
         let value = e.target.value;
@@ -150,38 +158,33 @@
 				projectRank: $('select[name="importance"]').val(),
 				projectContent: $('textarea[name="projectContent"]').val(),
 				projectBudget: Number($('#project-budget').val().replace(/,/g, "")),
-				projectEndDate: $('#year').val() + '-' + $('#month').val() + '-' + $('#day').val()
+				projectEndDate: $('#project-end-date').val(),
+				employee:[]
 			};
 
 //프로젝트 참여 맴버 json 저장
-			const memberData = [];
-			$('.saved-item').each(function() {
+			$('#saved-members .saved-item').each(function() {
 				let text = $(this).text().trim();
 			    let parts = text.split(':');
 			    let nameParts = parts[1].split('사번 /');
 			    let empNo = nameParts[1].trim();
 
-			    members.push({
-			        employeeNo: empNo
-			    });
+			    projectData.employee.push(empNo);
 			});
 
-//프로젝트 생성 자료와 생성 시 들어간 참여 맴버 자료 맵으로 사전 설정
-			const data={
-				project: projectData,
-				member: projectData
-			}
 //프로젝트 생성 ajax
 			$.ajax({
 				url: '/project/insertProject.do',
 				type: 'POST',
 				contentType: 'application/JSON',
-				data: JSON.stringify(data),
+				data: JSON.stringify(projectData),
 				success: function(response) {
 					alert("프로젝트 등록이 완료되었습니다.")
+					console.log(projectData);
 					location.assign("/");
 				},
 				error: function(error) {
+					console.log(projectData);
 					alert("프로젝트 등록이 실패하였습니다.")
 					location.assign("/project/projectinsert.do");
 				}

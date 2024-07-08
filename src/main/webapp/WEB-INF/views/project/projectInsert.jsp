@@ -56,19 +56,10 @@
 					<br>
 					<div>
 						<div class="input-group mb-3">
-							<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
-								종료일</span> <select id="year" class="form-select" aria-label="Year"
-								required>
-								<option value="" selected>년</option>
-
-							</select> <select id="month" class="form-select" aria-label="Month"
-								required>
-								<option value="" selected>월</option>
-							</select> <select id="day" class="form-select" aria-label="Day" required>
-								<option value="" selected>일</option>
-
-							</select>
-						</div>
+								<label for="date">마감 날짜:
+								  <input type="date" id="project-end-date">
+								</label>
+							</div>
 					</div>
 					<br>
 					<!-- 프로젝트 배정 예산 -->

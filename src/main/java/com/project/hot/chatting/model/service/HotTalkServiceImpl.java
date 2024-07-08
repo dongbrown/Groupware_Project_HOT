@@ -1,6 +1,5 @@
 package com.project.hot.chatting.model.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.hot.chatting.model.dao.HotTalkDao;
 import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
+import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,10 @@ public class HotTalkServiceImpl implements HotTalkService {
 	@Override
 	public List<ResponseHotTalkListDTO> getGroupHotTalkList(int employeeNo) {
 		return dao.getGroupHotTalkList(session, employeeNo);
+	}
+	@Override
+	public List<ResponseHotTalkContentDTO> getHotTalkContents(int openEmployeeNo, int openHotTalkNo) {
+		return dao.getHotTalkContents(session, openEmployeeNo, openHotTalkNo);
 	}
 
 }

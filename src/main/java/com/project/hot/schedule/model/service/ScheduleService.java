@@ -6,9 +6,9 @@ import com.project.hot.schedule.model.dto.Schedule;
 
 public interface ScheduleService {
 
-	List<Schedule> getSchedules();
+	List<Schedule> getSchedules(int employeeNo);
 
-	void addSchedule(Schedule schedule);
+	void addSchedule(Schedule schedule, int employeeNo);
 
 	void updateSchedule(Schedule schedule);
 

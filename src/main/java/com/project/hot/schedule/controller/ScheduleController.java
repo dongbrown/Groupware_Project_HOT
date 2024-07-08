@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,8 @@ import com.project.hot.schedule.model.service.ScheduleService;
 @Controller
 @RequestMapping("/schedule")
 public class ScheduleController {
+
+
 
 	@Autowired
 	private ScheduleService service;
@@ -40,7 +44,7 @@ public class ScheduleController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
-        List<Schedule> schedules = service.getSchedules();
+        List<Schedule> schedules = service.getSchedules(employeeNo);
         List<Map<String, Object>> events = new ArrayList<>();
 
         for (Schedule schedule : schedules) {
@@ -65,9 +69,12 @@ public class ScheduleController {
 	@PostMapping("/addSchedule")
 	@ResponseBody
 	public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
 	    try {
 	        System.out.println("Received schedule: " + schedule);
-	        service.addSchedule(schedule);
+	        service.addSchedule(schedule, employeeNo);
 	        return ResponseEntity.ok("일정이 성공적으로 추가되었습니다");
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -76,21 +83,23 @@ public class ScheduleController {
 	    }
 	}
 
-	@PostMapping("/updateSchedule")
-	@ResponseBody
-	public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
-	    try {
-	        System.out.println("Received schedule for update: " + schedule);  // 로깅 추가
-	        service.updateSchedule(schedule);
-	        return ResponseEntity.ok("일정이 성공적으로 수정되었습니다");
-	    } catch (Exception e) {
-	        e.printStackTrace();  // 스택 트레이스 출력
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body("일정 수정 중 오류 발생: " + e.getMessage());
-	    }
-	}
+	// 일정 수정 메서드
+    @PutMapping("/updateSchedule")
+    @ResponseBody
+    public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
+        try {
+            System.out.println("수정할 일정 정보: " + schedule);
+            service.updateSchedule(schedule);
+            return ResponseEntity.ok("일정이 성공적으로 수정되었습니다");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("일정 수정 중 오류 발생: " + e.getMessage());
+        }
+    }
 
-    @PostMapping("/deleteSchedule")
+    // 일정 삭제 메서드
+    @DeleteMapping("/deleteSchedule")
     @ResponseBody
     public ResponseEntity<String> deleteSchedule(@RequestParam("id") String id) {
         try {
@@ -105,5 +114,4 @@ public class ScheduleController {
                     .body("일정 삭제 중 오류 발생: " + e.getMessage());
         }
     }
-
 }

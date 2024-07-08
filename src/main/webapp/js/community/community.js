@@ -1,5 +1,3 @@
-// community.js
-
 $(document).ready(function() {
     // 모달 관련 변수
     var modal = $("#createCommunityModal");
@@ -34,7 +32,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: '/api/community/insert',
+            url: '/community/insert',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
@@ -54,40 +52,33 @@ $(document).ready(function() {
         });
     });
 
-    // 즐겨찾기 토글
+    // 북마크 토글
     $(".star").click(function(e) {
         e.stopPropagation(); // 이벤트 버블링 방지
-        var groupId = $(this).closest('.group').data('id');
-        var isFavorite = $(this).text() === "★";
+        var communityNo = $(this).data('community-no');
 
         $.ajax({
-            url: '/api/community/toggleFavorite',
+            url: '/community/toggleBookmark',
             type: 'POST',
-            data: {
-                groupId: groupId,
-                isFavorite: !isFavorite
-            },
+            data: { communityNo: communityNo },
             success: function(response) {
                 if(response.success) {
-                    if(isFavorite) {
-                        $(e.target).text("☆");
-                    } else {
-                        $(e.target).text("★");
-                    }
+                    location.reload(); // 페이지 새로고침
                 } else {
-                    alert("즐겨찾기 설정에 실패했습니다.");
+                    alert(response.message);
                 }
             },
-            error: function(xhr, status, error) {
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
-                console.error(error);
+            error: function() {
+                alert('북마크 변경 중 오류가 발생했습니다.');
             }
         });
     });
 
-    // 그룹 클릭 이벤트 (그룹 상세 페이지로 이동)
-    $(".group").click(function() {
-        var groupId = $(this).data('id');
-        window.location.href = '/community/detail/' + groupId;
+    // 커뮤니티 클릭 이벤트 (피드 페이지로 이동)
+    $(".group").click(function(e) {
+        if (!$(e.target).hasClass('star')) {
+            var communityNo = $(this).data('community-no');
+            window.location.href = '/community/feed?communityNo=' + communityNo;
+        }
     });
 });
