@@ -266,13 +266,15 @@
 
 <body>
 <div class="documentTitle">
-    <h3>전체 결재 문서</h3>
-    <button id="newApprovalBtn" class="btn btn-primary">작성하기</button>
-</div>
-    <div class="container mt-5">
-        <!-- 전체 결재 문서 버튼 -->
+        <h3>전체 결재 문서</h3>
+        <a href="<c:url value='/newApproval.do' />">
+            <button class="btn btn-primary">작성하기</button>
+        </a>
+    </div>
+    <!-- <div class="container mt-5">
+        전체 결재 문서 버튼
 
-        <!-- 모달 창 -->
+        모달 창
         <div id="newApprovalModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newApprovalModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -283,7 +285,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- 전자결재 양식 선택 -->
+                        전자결재 양식 선택
                         <div class="form-group">
                             <label for="formType">전자결재 양식 선택</label>
                             <select id="formType" class="form-control form-control-sm">
@@ -297,7 +299,7 @@
 
 						<div class="Approver-container">
 							<div class="left-section">
-								<!-- 결재자 선택 -->
+								결재자 선택
 								<div class="form-group">
 									<label for="department">부서 선택</label>
 									<select id="department" onchange="loadEmployees()">
@@ -319,7 +321,7 @@
 											onclick="addApproverEmployees()">추가</button>
 									</div>
 									<div id="approver" class="recipient-list">
-										<!-- 선택된 결재자 표시될 곳 -->
+										선택된 결재자 표시될 곳
 									</div>
 								</div>
 								<div class="form-group">
@@ -329,7 +331,7 @@
 											onclick="addRefererEmployees()">추가</button>
 									</div>
 									<div id="referrer" class="recipient-list">
-										<!-- 선택된 참조자 표시될 곳 -->
+										선택된 참조자 표시될 곳
 									</div>
 								</div>
 							</div>
@@ -345,7 +347,7 @@
         </div>
     </div>
 
-
+ -->
 <div class="approvalStatusTable">
     <span>결재함</span>
     <table border="1">

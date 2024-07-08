@@ -9,5 +9,5 @@ import com.project.hot.approval.model.dto.VacationForm;
 public interface ApprovalDocumentDao {
 
 	List<Approval> AllDocuments();
-	Map<String, Object> inputVacationForm(VacationForm vacationForm);
+	public List<String> getEmployeesByDepartment(String department);
 }
