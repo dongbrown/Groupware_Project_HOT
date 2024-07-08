@@ -25,7 +25,7 @@
 				<div id="projectListTable" class="table-responsive">
 					<div>
 
-						<table class="table text-start align-middle table-bordered table-hover mb-0"
+						<table id="project-list-table" class="table text-start align-middle table-bordered table-hover mb-0"
 							style="text-align: center;">
 							<thead>
 								<tr class="text-dark">
@@ -38,41 +38,32 @@
 								</tr>
 							</thead>
 							<tbody>
-									<c:forEach var="pl" items="${projects}">
-								<c:if test="${not empty projects}">
-										<tr class="project-choice">
-											<td><c:out value="${pl.projectStartDate}"/></td>
-											<td><c:out value="${pl.projectNo}"/></td>
-											<td><c:out value="${pl.employeeCode.employeeName}"/></td>
-											<td><c:out value="${pl.projectTitle}"/></td>
-											<td>
-												<div class="graph-container">
-													<div class="bar" data-percentage="<c:out value="${pl.projectProgress}"/>"></div>
-													<div style="margin-top: 5px; margin-left:5px;"><c:out value="${pl.projectProgress}"/>%</div>
-												</div>
-											</td>
-											<td><a class="btn btn-sm btn-danger" href="">삭제</a></td>
-										</tr>
-								</c:if>
-									</c:forEach>
+								<!-- Modal -->
+								<div class="modal fade" id="projectDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								  <div class="modal-dialog">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h1 class="modal-title fs-5" id="exampleModalLabel">프로젝트 삭제</h1>
+								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								      </div>
+								      <div class="modal-body">
+								       프로젝트를 정말 삭제하시겠습니까?
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+								        <button type="button" class="btn btn-primary" onclick="delectProjectBtn();">삭제</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>
+
 							</tbody>
 						</table>
 					</div>
 				</div>
 				<br>
 				<!-- 페이징 처리 예정 -->
-				<div class="btn-toolbar mb-3" role="toolbar"
-					aria-label="Toolbar with button groups"
-					style="display: flex; justify-content: center;">
-					<div class="btn-group me-2" role="group" aria-label="First group">
-						<button type="button" class="btn btn-secondary">prev</button>
-						<button type="button" class="btn btn-outline-secondary">1</button>
-						<button type="button" class="btn btn-outline-secondary">2</button>
-						<button type="button" class="btn btn-outline-secondary">3</button>
-						<button type="button" class="btn btn-outline-secondary">4</button>
-						<button type="button" class="btn btn-secondary">next</button>
-					</div>
-				</div>
+				<div class="pagebar-div"></div>
 			</div>
 
 
@@ -219,5 +210,7 @@
 	</div>
 </section>
 </div>
+<script>const path='${path}';</script>
 <script src="${path }/js/project/updateProject.js"></script>
+<script src='${path }/js/common/pagebar.js'></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

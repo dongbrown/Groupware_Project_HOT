@@ -84,11 +84,6 @@
 							<select id="select-dept" class="form-select"
 								aria-label="Default select example">
 								<option selected>선택하세요.</option>
-								<c:if test="${not empty depts }">
-									<c:forEach var="d" items="${depts }">
-										<option value="${d.departmentCode}">${d.departmentTitle }</option>
-									</c:forEach>
-								</c:if>
 							</select>
 						</div>
 					</div>
@@ -128,6 +123,7 @@
 </section>
 </div>
 <script>
+	const path="${path}"
 	const empNo ="${loginEmployee.employeeNo }";
 </script>
 <script src="${path }/js/project/insertProject.js"></script>

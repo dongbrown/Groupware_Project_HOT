@@ -15,6 +15,7 @@ public interface ProjectDao {
 	List<Employee> selectEmpByDept(SqlSession session,int deptCode);
 	List<Department> selectDeptAll(SqlSession session);
 	Project selectProjectByNo(SqlSession session,int projectNo);
+	int selectProjectAllCount(SqlSession session);
 	int insertProject(SqlSession session,Project p);
 	List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session,int projectNo);
 	int insertProjectEmp(SqlSession session,Map<String,Object> param);
@@ -22,4 +23,5 @@ public interface ProjectDao {
 	int updateProjectDeleteEmp(SqlSession session,int projectNo);
 	int deleteProject(SqlSession session,int projectNo);
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
+
 }
