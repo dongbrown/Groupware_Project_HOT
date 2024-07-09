@@ -267,87 +267,11 @@
 <body>
 <div class="documentTitle">
         <h3>전체 결재 문서</h3>
-        <a href="<c:url value='/newApproval.do' />">
+        <a href="<c:url value='/approval/newApproval.do' />">
             <button class="btn btn-primary">작성하기</button>
         </a>
     </div>
-    <!-- <div class="container mt-5">
-        전체 결재 문서 버튼
 
-        모달 창
-        <div id="newApprovalModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newApprovalModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="newApprovalModalLabel">결재선택</h5>
-                        <button type="button" class="closeModal" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        전자결재 양식 선택
-                        <div class="form-group">
-                            <label for="formType">전자결재 양식 선택</label>
-                            <select id="formType" class="form-control form-control-sm">
-                                <option value="출장신청서">출장신청서</option>
-                                <option value="휴가신청서">휴가신청서</option>
-                                <option value="초과근무신청서">초과근무신청서</option>
-                                <option value="경비지출신청서">경비지출신청서</option>
-                                <option value="출퇴근신청서">출퇴근정정신청서</option>
-                            </select>
-                        </div>
-
-						<div class="Approver-container">
-							<div class="left-section">
-								결재자 선택
-								<div class="form-group">
-									<label for="department">부서 선택</label>
-									<select id="department" onchange="loadEmployees()">
-										<option value="">부서를 선택하세요</option>
-										<option value="경영팀">경영팀</option>
-										<option value="개발팀">개발팀</option>
-										<option value="인사팀">인사팀</option>
-										<option value="디자인팀">디자인팀</option>
-										<option value="홍보팀">홍보팀</option>
-									</select>
-									<div id="employeeList" style="margin-top: 10px;"></div>
-								</div>
-							</div>
-							<div class="right-section">
-								<div class="form-group">
-									<div class="selection-group">
-										<label for="approver">결재자 선택</label>
-										<button type="button" class="btn btn-sm btn-outline-primary"
-											onclick="addApproverEmployees()">추가</button>
-									</div>
-									<div id="approver" class="recipient-list">
-										선택된 결재자 표시될 곳
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="selection-group">
-										<label for="referrer">참조자 선택</label>
-										<button type="button" class="btn btn-sm btn-outline-primary"
-											onclick="addRefererEmployees()">추가</button>
-									</div>
-									<div id="referrer" class="recipient-list">
-										선택된 참조자 표시될 곳
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="btn-container">
-						    <button type="button" class="btn btn-primary" id="saveApprovalBtn">저장</button>
-						    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-						</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
- -->
 <div class="approvalStatusTable">
     <span>결재함</span>
     <table border="1">
@@ -405,12 +329,12 @@
     </thead>
     <tbody id="approvalBody">
         <c:if test="${not empty approvalAll}">
-            <c:forEach items="${approvalAll}" var="approval">
+            <c:forEach var="approval" items="${approvalAll}">
                 <tr data-status="${approval.status}">
                     <td>${approval.approvalNo}</td>
                     <td>${approval.approvalTitle}</td>
                     <td>${approval.employeeNo.employeeName}</td>
-                    <td>${approval.departmentTitle.departmentTitle}</td>
+                    <td>${approval.departmentCode.departmentTitle}</td>
                     <td>${approval.approvalDraftDate}</td>
                     <td>${approval.approverDate}</td>
                     <td>${approval.status}</td>
@@ -431,158 +355,7 @@
 
 
 <script>
-    $(document).ready(function() {
-        // 작성하기 버튼 클릭 시 모달 열기
-        $("#newApprovalBtn").click(function() {
-            $("#newApprovalModal").modal('show');
-        });
 
-        // 부서 선택 시 직원 목록 불러오기
-        $("#department").change(function() {
-            loadEmployees();
-        });
-
-        // 결재자 추가 버튼 클릭 시
-        $("#addApprover").click(function() {
-            addEmployees("approver");
-        });
-
-        // 참조자 추가 버튼 클릭 시
-        $("#addReferrer").click(function() {
-            addEmployees("referrer");
-        });
-
-        // 저장 버튼 클릭 시
-        $("#saveApprovalBtn").click(function() {
-            saveApproval();
-        });
-
-        // 페이지 로드 시 휴가신청서를 기본으로 선택
-        $("#formType").val("휴가신청서").trigger('change');
-    });
-
-    // 직원 목록 불러오기 (Ajax 사용)
-    function loadEmployees() {
-        var department = $("#department").val();
-        $.ajax({
-            url: "/getEmployees", // 실제 서버의 엔드포인트로 변경
-            method: "GET",
-            data: { department: department },
-            success: function(response) {
-                var employeeList = $("#employeeList");
-                employeeList.empty();
-                response.forEach(function(employee) {
-                    employeeList.append(
-                        '<div class="form-check">' +
-                        '<input class="form-check-input" type="checkbox" value="' + employee.id + '" id="emp' + employee.id + '">' +
-                        '<label class="form-check-label" for="emp' + employee.id + '">' +
-                        employee.name + ' (' + employee.position + ')' +
-                        '</label>' +
-                        '</div>'
-                    );
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error("Error loading employees:", error);
-            }
-        });
-    }
-
-    // 선택된 직원을 결재자 또는 참조자로 추가
-    function addEmployees(type) {
-        var selectedEmployees = $("#employeeList input:checked");
-        var targetContainer = $("#" + type);
-
-        selectedEmployees.each(function() {
-            var employeeId = $(this).val();
-            var employeeName = $(this).next("label").text();
-
-            if (targetContainer.find("[data-id='" + employeeId + "']").length === 0) {
-                targetContainer.append(
-                    '<div class="selected-employee" data-id="' + employeeId + '">' +
-                    employeeName +
-                    '<button type="button" class="btn btn-sm btn-danger remove-employee">X</button>' +
-                    '</div>'
-                );
-            }
-
-            $(this).prop("checked", false);
-        });
-
-        // 삭제 버튼 이벤트 추가
-        $(".remove-employee").click(function() {
-            $(this).parent().remove();
-        });
-    }
-
-    function saveApproval() {
-        var formType = $("#formType").val();
-        var approvers = getSelectedEmployees("approver");
-        var referrers = getSelectedEmployees("referrer");
-
-        if (formType === "휴가신청서") {
-            $.ajax({
-                url: "/vacation",  // 서버의 엔드포인트
-                method: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    formType: formType,
-                    approvers: approvers,
-                    referrers: referrers,
-                    employeeId: $("#employeeId").val()  // 예시로 추가한 employeeId 입력 필드
-                }),
-                success: function(response) {
-                    console.log(response); // 응답 로그 출력
-                    if (response.success) {
-                        window.location.href = '/vacationForm.jsp?employeeId=' + response.employeeId;
-                    } else {
-                        alert("저장 중 오류가 발생했습니다: " + response.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error saving approval draft:", xhr.responseText); // 응답 텍스트 로그 출력
-                    alert("저장 중 오류가 발생했습니다. 상세 내용: " + error);
-                }
-            });
-        }
-    }
-
-
-    console.log(JSON.stringify({
-        formType: formType,
-        approvers: approvers,
-        referrers: referrers,
-        employeeId: $("#employeeId").val()
-    }));
-
-    // 선택된 직원 정보를 배열로 반환
-    function getSelectedEmployees(type) {
-        var employees = [];
-        $("#" + type + " .selected-employee").each(function() {
-            employees.push({
-                id: $(this).data('id'),
-                name: $(this).text().replace('X', '').trim()
-            });
-        });
-        return employees;
-    }
-
-    // 검색 기능 구현
-    function filterList() {
-        var selectType = $("#selectType").val();
-        var searchType = $("#searchType").val().toLowerCase();
-
-        $("#approvalBody tr").each(function() {
-            var status = $(this).data('status');
-            var title = $(this).find("td:nth-child(2)").text().toLowerCase();
-
-            if (status === selectType && title.includes(searchType)) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    }
 </script>
 
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

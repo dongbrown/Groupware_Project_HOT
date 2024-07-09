@@ -1,13 +1,16 @@
 package com.project.hot.approval.model.dao;
 
 import java.util.List;
-import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
 
 import com.project.hot.approval.model.dto.Approval;
-import com.project.hot.approval.model.dto.VacationForm;
+import com.project.hot.employee.model.dto.Department;
+import com.project.hot.employee.model.dto.Employee;
 
 public interface ApprovalDocumentDao {
 
-	List<Approval> AllDocuments();
-	public List<String> getEmployeesByDepartment(String department);
+	List<Approval> AllDocuments(SqlSession session);
+	List<Employee> getEmployeesByDepartment(SqlSession session, String departmentCode);
+	List<Department> selectDepartmentList(SqlSession session);
 }

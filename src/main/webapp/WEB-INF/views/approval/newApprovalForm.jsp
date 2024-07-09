@@ -1,133 +1,195 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<c:set var="path" value="${pageContext.request.contextPath }" />
-<c:set var="loginEmployee"
-	value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }" />
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+
+<%
+    LocalDate currentDate = LocalDate.now();
+    String formattedDate = currentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    request.setAttribute("currentDate", formattedDate);
+%>
+
+<c:set var="path" value="${pageContext.request.contextPath}" />
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}" />
+<c:set var="approval" value="${com.project.hot.approval.model.dto.Approval}" />
+
 <c:import url="${path }/WEB-INF/views/common/sidebar.jsp" />
 <c:import url="${path }/WEB-INF/views/common/header.jsp" />
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <title>결재신청서</title>
 
 
 
 <style>
-html, body {
-	height: 100%;
-	margin: 0;
-	padding: 0;
-}
 
-.page-container {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-}
+	html, body {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
 
-.content-container {
-	display: flex;
-	flex: 1;
-	overflow: hidden;
-}
+	.page-container {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+	}
 
-.left-section {
-	width: 25%;
-	padding: 20px;
-	box-sizing: border-box;
-	overflow-y: auto;
-	border-right: 1px solid #ddd;
-}
+	.content-container {
+		display: flex;
+		flex: 1;
+		overflow: hidden;
+	}
 
-.right-section {
-	width: 75%;
-	padding: 20px;
-	box-sizing: border-box;
-	overflow-y: auto;
-}
+	.left-section {
+		width: 25%;
+		padding: 20px;
+		box-sizing: border-box;
+		overflow-y: auto;
+		border-right: 1px solid #ddd;
+	}
 
-.form-container {
-	display: none;
-	padding: 20px;
-	background-color: #f9f9f9;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	margin-bottom: 20px;
-}
+	.right-section {
+		width: 75%;
+		padding: 20px;
+		box-sizing: border-box;
+		overflow-y: auto;
+	}
 
-.form-container h5 {
-	font-weight: bold;
-	margin-bottom: 20px;
-	color: #333;
-}
+	.form-container {
+		display: none;
+		padding: 20px;
+		background-color: #f9f9f9;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		margin-bottom: 20px;
+	}
 
-.approval-line {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 20px;
-}
+	.form-container h5 {
+		font-weight: bold;
+		margin-bottom: 20px;
+		color: #333;
+	}
 
-.approval-box {
-	flex: 1;
-	padding: 10px;
-	margin-right: 10px;
-	background-color: #fff;
-	border: 1px solid #ddd;
-}
 
-.button-container {
-	display: flex;
-	justify-content: center;
-	margin-top: 10px; /* 필요한 경우 마진 조정 */
-}
+	.form-control {
+		font-size: 0.9rem; /* 폼 컨트롤의 폰트 크기 조정 */
+	}
 
-.button-container button {
-	margin-left: 10px; /* 버튼 간의 간격 조정 */
-}
+	.approval-line {
+	    display: flex;
+	    justify-content: flex-end; /* 오른쪽 정렬 */
+	    margin-bottom: 20px;
+	}
 
-#itemTable {
-	margin: 0 auto; /* 테이블을 가운데 정렬 */
-	border-collapse: collapse; /* 테이블 테두리 겹치지 않도록 설정 */
-	width: 100%; /* 테이블이 전체 너비를 차지하도록 설정 */
-}
+	.approval-box {
+	    flex: 0 0 auto; /* 크기를 고정 */
+	    width: 200px; /* 너비를 줄임 */
+	    padding: 10px;
+	    margin-left: 10px; /* 왼쪽에 간격을 줘서 상자 사이에 간격 추가 */
+	    background-color: #fff;
+	    border: 1px solid #ddd;
+	}
 
-#itemTable th, #itemTable td {
-	text-align: center; /* 테이블 셀 가운데 정렬 */
-	vertical-align: middle; /* 셀 세로 가운데 정렬 */
-	border: 1px solid #dddddd; /* 테이블 셀에 테두리 추가 */
-	padding: 8px; /* 테이블 셀에 패딩 추가 */
-	background-color: #fff; /* 테이블 셀 배경색 흰색으로 설정 */
-}
+	.approval-box h5 {
+	    text-align: center; /* 제목을 가운데 정렬 */
+	    margin-bottom: 10px; /* 제목 아래에 간격 추가 */
+	}
 
-#itemTable th {
-	background-color: #f2f2f2; /* 테이블 헤더 배경색 연한 회색으로 설정 */
-	font-weight: bold; /* 테이블 헤더 글씨체 굵게 설정 */
-}
+	.approval-content p {
+	    margin: 5px 0; /* 문단 사이에 간격 추가 */
+	    text-align: center;
+	}
 
-#itemTable tbody tr:nth-child(even) {
-	background-color: #f9f9f9; /* 짝수 행 배경색 연한 회색으로 설정 */
-}
+	.button-container {
+		display: flex;
+		justify-content: center;
+		margin-top: 10px; /* 필요한 경우 마진 조정 */
+	}
 
-#itemTable tbody tr:nth-child(odd) {
-	background-color: #fff; /* 홀수 행 배경색 흰색으로 설정 */
-}
+	.button-container button {
+		margin-left: 10px; /* 버튼 간의 간격 조정 */
+	}
 
-.form-control {
-	font-size: 0.9rem; /* 폼 컨트롤의 폰트 크기 조정 */
-}
+	#itemTable, #infoTable {
+		margin: 0 auto; /* 테이블을 가운데 정렬 */
+		border-collapse: collapse; /* 테이블 테두리 겹치지 않도록 설정 */
+		width: 100%; /* 테이블이 전체 너비를 차지하도록 설정 */
+	}
 
-/* 입력 필드의 너비를 일관되게 조정 */
-#itemTable input[type="text"], #itemTable input[type="date"], #itemTable select
-	{
-	width: 100%; /* 입력 필드가 테이블 셀의 전체 너비를 차지하도록 설정 */
-	box-sizing: border-box; /* 패딩과 테두리를 요소의 총 너비와 높이에 포함 */
-}
+	#itemTable th, #itemTable td , #infoTable th, #infoTable td{
+		text-align: center; /* 테이블 셀 가운데 정렬 */
+		vertical-align: middle; /* 셀 세로 가운데 정렬 */
+		border: 1px solid #dddddd; /* 테이블 셀에 테두리 추가 */
+		padding: 8px; /* 테이블 셀에 패딩 추가 */
+		background-color: #fff; /* 테이블 셀 배경색 흰색으로 설정 */
+		width: 16.67%;
+	}
+
+	#itemTable th, #infoTable th {
+		background-color: #f2f2f2; /* 테이블 헤더 배경색 연한 회색으로 설정 */
+		font-weight: bold; /* 테이블 헤더 글씨체 굵게 설정 */
+	}
+
+	#itemTable tbody tr:nth-child(even),
+	#infoTable tbody tr:nth-child(even){
+		background-color: #f9f9f9; /* 짝수 행 배경색 연한 회색으로 설정 */
+	}
+
+	#itemTable tbody tr:nth-child(odd),
+	#infoTable tbody tr:nth-child(odd){
+		background-color: #fff; /* 홀수 행 배경색 흰색으로 설정 */
+	}
+		/* 특정 셀들의 너비를 조정할 수 있습니다 */
+	#itemTable th:nth-child(1), #itemTable td:nth-child(1), /* 기안자 */
+	#itemTable th:nth-child(2), #itemTable td:nth-child(2), /* 부서 */
+	#itemTable th:nth-child(3), #itemTable td:nth-child(3), /* 기안자 */
+	#infoTable th:nth-child(1), #infoTable td:nth-child(1),
+	#infoTable th:nth-child(2), #infoTable td:nth-child(2),
+	#infoTable th:nth-child(3), #infoTable td:nth-child(3) {
+	    width: 13%;
+	}
+
+	#itemTable th:nth-child(4), #itemTable td:nth-child(4), /* 제목 */
+	#itemTable th:nth-child(5), #itemTable td:nth-child(5), /* 휴가시작일 */
+	#itemTable th:nth-child(6), #itemTable td:nth-child(6), /* 휴가종료일 */
+	#infoTable th:nth-child(4), #infoTable td:nth-child(4),
+	#infoTable th:nth-child(5), #infoTable td:nth-child(5),
+	#infoTable th:nth-child(6), #infoTable td:nth-child(6) {
+	    width: 13%;
+	}
+
+	#itemTable th:nth-child(7), #itemTable td:nth-child(7), /* 보존연한 */
+	#itemTable th:nth-child(8), #itemTable td:nth-child(8), /* 비상연락처 */
+	#itemTable th:nth-child(9), #itemTable td:nth-child(9),  /* 참조자 */
+	#infoTable th:nth-child(7), #infoTable td:nth-child(7),
+	#infoTable th:nth-child(8), #infoTable td:nth-child(8),
+	#infoTable th:nth-child(9), #infoTable td:nth-child(9) {
+	    width: 13%;
+	}
+
+	#itemTable th:nth-child(10), #itemTable td:nth-child(10), /* 파일첨부 */
+	#itemTable th:nth-child(11), #itemTable td:nth-child(11), /* 출장내용 */
+	#itemTable th:nth-child(12), #itemTable td:nth-child(12), /* 결재상신 버튼 */
+	#itemTable th:nth-child(10), #itemTable td:nth-child(10),
+	#itemTable th:nth-child(11), #itemTable td:nth-child(11),
+	#itemTable th:nth-child(12), #itemTable td:nth-child(12) {
+	    width: 13%;
+	}
+
+
+	/* 입력 필드의 너비를 일관되게 조정 */
+	#itemTable input[type="text"], #itemTable input[type="date"], #itemTable select,
+	#infoTable input[type="text"], #infoTable input[type="date"], #infoTable select
+		{
+		width: 100%; /* 입력 필드가 테이블 셀의 전체 너비를 차지하도록 설정 */
+		box-sizing: border-box; /* 패딩과 테두리를 요소의 총 너비와 높이에 포함 */
+	}
 </style>
 
 <body>
@@ -138,8 +200,7 @@ html, body {
 		<div class="content-container" STYLE="border: 1px solid red">
 			<div class="left-section">
 				<div class="form-group">
-					<label for="formType">전자결재 양식 선택</label> <select id="formType"
-						class="form-control form-control-sm" onchange="showForm()">
+					<label for="formType">전자결재 양식 선택</label> <select id="formType" class="form-control form-control-sm" onchange="showForm()">
 						<option value="">양식을 선택하세요</option>
 						<option value="form1">출장신청서</option>
 						<option value="form2">휴가신청서</option>
@@ -149,25 +210,49 @@ html, body {
 					</select>
 				</div>
 
+
 				<div class="form-group">
-					<label for="department">부서 선택</label> <select id="department"
-						class="form-control" onchange="loadEmployees()">
-						<option value="">부서를 선택하세요</option>
-						<option value="경영팀">경영팀</option>
-						<option value="개발팀">개발팀</option>
-						<option value="인사팀">인사팀</option>
-						<option value="디자인팀">디자인팀</option>
-						<option value="홍보팀">홍보팀</option>
-					</select>
+				    <label for="department">부서 선택</label>
+				    <select id="select-dept" class="form-control" onchange="loadEmployees()">
+				        <option selected>부서를 선택하세요.</option>
+								<c:if test="${not empty departments }">
+									<c:forEach var="d" items="${departments }">
+										<option value="${d.departmentCode}">${d.departmentTitle}</option>
+									</c:forEach>
+								</c:if>
+				    </select>
 				</div>
+
 				<div class="form-group">
-					<label for="approvers">결재자 선택</label> <select id="approvers"
-						class="form-control" multiple></select>
+					<label for="approver">결재자 선택</label>
+					<div class="d-flex justify-content-between align-items-center">
+						<select id="approver" class="form-control mr-2" style="width: 70%;">
+							<c:if test="${not empty employees}">
+								<option value="">선택하세요</option>
+								<c:forEach var="employee" items="${employees}">
+									<option value="${employee.employeeNo}">${employee.employeeName}</option>
+								</c:forEach>
+							</c:if>
+						</select>
+						<button type="button" class="btn btn-primary" onclick="addApprover();">결재자 추가</button>
+					</div>
 				</div>
+
 				<div class="form-group">
-					<label for="references">참조자 선택</label> <select id="references"
-						class="form-control" multiple></select>
+					<label for="referer">참조자 선택</label>
+					<div class="d-flex justify-content-between align-items-center">
+						<select id="referer" class="form-control mr-2" style="width: 70%;">
+							<c:if test="${not empty employees}">
+								<option value="">선택하세요</option>
+								<c:forEach var="employee" items="${employees}">
+									<option value="${employee.employeeNo}">${employee.employeeName}</option>
+								</c:forEach>
+							</c:if>
+						</select>
+						<button type="button" class="btn btn-primary" onclick="addReferer();">참조자 추가</button>
+					</div>
 				</div>
+				<button type="button" class="btn btn-danger ml-2" onclick="resetApprovers()">초기화</button>
 
 			</div>
 
@@ -177,22 +262,22 @@ html, body {
 					<h5>출장신청서</h5>
 					<form>
 						<div class="approval-line">
-							<div class="approval-box">
-								<h5>기안자</h5>
-								<div class="approval-content">
-									<!-- 부서 제목과 직원 이름을 여기에 넣어야 함 -->
-									<p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
-									<p id="draftEmployee">${loginEmployee.employeeName}</p>
-									<p id="draftDate">오늘날짜를 넣자 default</p>
-								</div>
-							</div>
-							<!-- 중간결재자와 최종결재자는 초기에는 공란 -->
-							<div class="approval-box">
-								<h5>중간결재자</h5>
-							</div>
-							<div class="approval-box">
-								<h5>최종결재자</h5>
-							</div>
+						    <div id="draftApprover" class="approval-box">
+						        <h5 class="approval-title">기안자</h5>
+						        <div class="approval-content">
+						            <p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
+						            <p id="draftEmployee">${loginEmployee.employeeName}</p>
+						            <p id="draftDate">${currentDate}</p>
+						        </div>
+						    </div>
+						    <div id="middleApprover" class="approval-box">
+						        <h5 class="approval-title">중간결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
+						    <div id="finalApprover" class="approval-box">
+						        <h5 class="approval-title">최종결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
 						</div>
 						<form>
 							<div class="form-group">
@@ -202,7 +287,7 @@ html, body {
 								</select>
 							</div>
 
-							<table id="itemTable">
+							<table id="infoTable">
 
 								<tbody>
 									<tr>
@@ -211,7 +296,7 @@ html, body {
 										<th>부서</th>
 										<td>${loginEmployee.departmentCode.departmentTitle}</td>
 										<th>기안일</th>
-										<td><input type="date" class="form-control" readonly></td>
+										<td class="draftDate">${currentDate}</td>
 
 									</tr>
 									<tr>
@@ -221,10 +306,9 @@ html, body {
 									</tr>
 									<tr>
 										<th>출장시작일</th>
-										<td><input type="date" class="form-control"></td>
-										<th>출장종료일</th>
-										<td><input type="date" class="form-control"></td>
-										<th>보존연한</th>
+										<td><input type="date" id="startDate" class="form-control"></td>
+										<th>출장종료일</th><!-- 시작일을 min으로 설정해서 그 이후만 선택가능하게 -->
+										<td><input type="date" id="endDate" class="form-control"></td><th>보존연한</th>
 										<td><select id="retentionPeriod" class="form-control">
 												<option>3 개월</option>
 												<option>6 개월</option>
@@ -244,21 +328,17 @@ html, body {
 								<tfoot>
 									<tr>
 										<th>참조자</th>
-										<td colspan="2"><input type="text" id="addReferer"
-											class="form-control" readonly></td>
-
-										<th>첨부파일</th>
-										<td colspan="2">
+										<td> <input type="text" id="addReferer" class="form-control" readonly></td>
+										<th>파일첨부</th>
+										<td colspan="3">
 											<div class="input-group">
-												<div class="custom-file">
-													<input type="file" id="attachments"
-														class="custom-file-input" multiple> <label
-														class="custom-file-label" for="attachments">파일 선택</label>
-												</div>
-												<div class="input-group-append">
-													<button type="button" class="btn btn-primary"
-														id="attachButton">파일 선택</button>
-												</div>
+											    <div class="custom-file">
+											        <input type="file" class="custom-file-input file-input" multiple>
+											        <label class="custom-file-label">파일 선택</label>
+											    </div>
+											    <div class="input-group-append">
+											        <button type="button" class="btn btn-primary file-select-button">파일 선택</button>
+											    </div>
 											</div>
 										</td>
 									</tr>
@@ -283,22 +363,22 @@ html, body {
 					<h5>휴가신청서</h5>
 					<form>
 						<div class="approval-line">
-							<div class="approval-box">
-								<h5>기안자</h5>
-								<div class="approval-content">
-									<!-- 부서 제목과 직원 이름을 여기에 넣어야 함 -->
-									<p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
-									<p id="draftEmployee">${loginEmployee.employeeName}</p>
-									<p id="draftDate">오늘날짜를 넣자 default</p>
-								</div>
-							</div>
-							<!-- 중간결재자와 최종결재자는 초기에는 공란 -->
-							<div class="approval-box">
-								<h5>중간결재자</h5>
-							</div>
-							<div class="approval-box">
-								<h5>최종결재자</h5>
-							</div>
+						    <div id="draftApprover" class="approval-box">
+						        <h5 class="approval-title">기안자</h5>
+						        <div class="approval-content">
+						            <p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
+						            <p id="draftEmployee">${loginEmployee.employeeName}</p>
+						            <p id="draftDate">${currentDate}</p>
+						        </div>
+						    </div>
+						    <div id="middleApprover" class="approval-box">
+						        <h5 class="approval-title">중간결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
+						    <div id="finalApprover" class="approval-box">
+						        <h5 class="approval-title">최종결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
 						</div>
 						<form>
 							<div class="form-group">
@@ -313,7 +393,7 @@ html, body {
 								</select>
 							</div>
 
-							<table id="itemTable">
+							<table id="infoTable">
 
 								<tbody>
 									<tr>
@@ -322,7 +402,7 @@ html, body {
 										<th>부서</th>
 										<td>${loginEmployee.departmentCode.departmentTitle}</td>
 										<th>기안일</th>
-										<td><input type="date" class="form-control" readonly></td>
+										<td class="draftDate">${currentDate}</td>
 
 									</tr>
 									<tr>
@@ -332,10 +412,9 @@ html, body {
 									</tr>
 									<tr>
 										<th>휴가시작일</th>
-										<td><input type="date" class="form-control"></td>
-										<th>휴가종료일</th>
-										<td><input type="date" class="form-control"></td>
-										<th>보존연한</th>
+										<td><input type="date" id="startDate" class="form-control"></td>
+										<th>휴가종료일</th><!-- 시작일을 min으로 설정해서 그 이후만 선택가능하게 -->
+										<td><input type="date" id="endDate" class="form-control"></td><th>보존연한</th>
 										<td><select id="retentionPeriod" class="form-control">
 												<option>3 개월</option>
 												<option>6 개월</option>
@@ -347,24 +426,21 @@ html, body {
 										<th>비상연락처</th>
 										<td><input type="text" class="form-control"></td>
 										<th>참조자</th>
-										<td colspan="3"><input type="text" id="addReferer"
-											class="form-control" readonly></td>
+										<td colspan="3"><input type="text" id="addReferer" class="form-control" readonly></td>
 									</tr>
 								</tbody>
 								<tfoot>
 									<tr>
-										<th>첨부파일</th>
+										<th>파일첨부</th>
 										<td colspan="5">
 											<div class="input-group">
-												<div class="custom-file">
-													<input type="file" id="attachments"
-														class="custom-file-input" multiple> <label
-														class="custom-file-label" for="attachments">파일 선택</label>
-												</div>
-												<div class="input-group-append">
-													<button type="button" class="btn btn-primary"
-														id="attachButton">파일 선택</button>
-												</div>
+											    <div class="custom-file">
+											        <input type="file" class="custom-file-input file-input" multiple>
+											        <label class="custom-file-label">파일 선택</label>
+											    </div>
+											    <div class="input-group-append">
+											        <button type="button" class="btn btn-primary file-select-button">파일 선택</button>
+											    </div>
 											</div>
 										</td>
 									</tr>
@@ -372,7 +448,7 @@ html, body {
 
 							</table>
 							<div class="form-group mt-3">
-								<label for="details">출장내용</label>
+								<label for="details">휴가내용</label>
 								<textarea id="details" class="form-control" rows="10"></textarea>
 							</div>
 							<div class="d-flex justify-content-center">
@@ -390,22 +466,22 @@ html, body {
 					<h5>초과근무신청서</h5>
 					<form>
 						<div class="approval-line">
-							<div class="approval-box">
-								<h5>기안자</h5>
-								<div class="approval-content">
-									<!-- 부서 제목과 직원 이름을 여기에 넣어야 함 -->
-									<p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
-									<p id="draftEmployee">${loginEmployee.employeeName}</p>
-									<p id="draftDate">오늘날짜를 넣자 default</p>
-								</div>
-							</div>
-							<!-- 중간결재자와 최종결재자는 초기에는 공란 -->
-							<div class="approval-box">
-								<h5>중간결재자</h5>
-							</div>
-							<div class="approval-box">
-								<h5>최종결재자</h5>
-							</div>
+						    <div id="draftApprover" class="approval-box">
+						        <h5 class="approval-title">기안자</h5>
+						        <div class="approval-content">
+						            <p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
+						            <p id="draftEmployee">${loginEmployee.employeeName}</p>
+						            <p id="draftDate">${currentDate}</p>
+						        </div>
+						    </div>
+						    <div id="middleApprover" class="approval-box">
+						        <h5 class="approval-title">중간결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
+						    <div id="finalApprover" class="approval-box">
+						        <h5 class="approval-title">최종결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
 						</div>
 						<form>
 							<div class="form-group">
@@ -415,7 +491,7 @@ html, body {
 								</select>
 							</div>
 
-							<table id="approval-Table">
+							<table id="infoTable">
 
 								<tbody>
 									<tr>
@@ -424,7 +500,7 @@ html, body {
 										<th>부서</th>
 										<td>${loginEmployee.departmentCode.departmentTitle}</td>
 										<th>기안일</th>
-										<td><input type="date" class="form-control" readonly></td>
+										<td class="draftDate">${currentDate}</td>
 
 									</tr>
 									<tr>
@@ -434,10 +510,9 @@ html, body {
 									</tr>
 									<tr>
 										<th>초과근무시작일</th>
-							            <td><input type="datetime-local" class="form-control"></td>
-							            <th>초과근무종료일</th>
-							            <td><input type="datetime-local" class="form-control"></td>
-										<th>보존연한</th>
+										<td><input type="datetime-local" id="form3StartTime" class="form-control"></td>
+										<th>초과근무종료일</th><!-- 시작일을 min으로 설정해서 그 이후만 선택가능하게 -->
+										<td><input type="datetime-local" id="form3EndTime" class="form-control"></td><th>보존연한</th>
 										<td><select id="retentionPeriod" class="form-control">
 												<option>3 개월</option>
 												<option>6 개월</option>
@@ -449,8 +524,7 @@ html, body {
 										<th>비상연락처</th>
 										<td><input type="text" class="form-control"></td>
 										<th>참조자</th>
-										<td colspan="3"><input type="text" id="addReferer"
-											class="form-control" readonly></td>
+										<td colspan="3"><input type="text" id="addReferer" class="form-control" readonly></td>
 									</tr>
 								</tbody>
 							</table>
@@ -473,22 +547,22 @@ html, body {
 					<h5>경비지출신청서</h5>
 					<form>
 						<div class="approval-line">
-							<div class="approval-box">
-								<h5>기안자</h5>
-								<div class="approval-content">
-									<!-- 부서 제목과 직원 이름을 여기에 넣어야 함 -->
-									<p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
-									<p id="draftEmployee">${loginEmployee.employeeName}</p>
-									<p id="draftDate">오늘날짜를 넣자 default</p>
-								</div>
-							</div>
-							<!-- 중간결재자와 최종결재자는 초기에는 공란 -->
-							<div class="approval-box">
-								<h5>중간결재자</h5>
-							</div>
-							<div class="approval-box">
-								<h5>최종결재자</h5>
-							</div>
+						    <div id="draftApprover" class="approval-box">
+						        <h5 class="approval-title">기안자</h5>
+						        <div class="approval-content">
+						            <p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
+						            <p id="draftEmployee">${loginEmployee.employeeName}</p>
+						            <p id="draftDate">${currentDate}</p>
+						        </div>
+						    </div>
+						    <div id="middleApprover" class="approval-box">
+						        <h5 class="approval-title">중간결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
+						    <div id="finalApprover" class="approval-box">
+						        <h5 class="approval-title">최종결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
 						</div>
 						<form>
 							<div class="form-group">
@@ -498,7 +572,7 @@ html, body {
 								</select>
 							</div>
 
-							<table id="itemTable">
+							<table id="infoTable">
 
 								<tbody>
 									<tr>
@@ -507,7 +581,7 @@ html, body {
 										<th>부서</th>
 										<td>${loginEmployee.departmentCode.departmentTitle}</td>
 										<th>기안일</th>
-										<td><input type="date" class="form-control" readonly></td>
+										<td class="draftDate">${currentDate}</td>
 
 									</tr>
 									<tr>
@@ -526,24 +600,21 @@ html, body {
 												<option>3 년</option>
 										</select></td>
 										<th>참조자</th>
-										<td><input type="text" id="addReferer"
-											class="form-control" readonly></td>
+										<td><input type="text" id="addReferer" class="form-control" readonly></td>
 									</tr>
 								</tbody>
 								<tfoot>
 									<tr>
-										<th>첨부파일</th>
+										<th>파일첨부</th>
 										<td colspan="5">
 											<div class="input-group">
-												<div class="custom-file">
-													<input type="file" id="attachments"
-														class="custom-file-input" multiple> <label
-														class="custom-file-label" for="attachments">파일 선택</label>
-												</div>
-												<div class="input-group-append">
-													<button type="button" class="btn btn-primary"
-														id="attachButton">파일 선택</button>
-												</div>
+											    <div class="custom-file">
+											        <input type="file" class="custom-file-input file-input" multiple>
+											        <label class="custom-file-label">파일 선택</label>
+											    </div>
+											    <div class="input-group-append">
+											        <button type="button" class="btn btn-primary file-select-button">파일 선택</button>
+											    </div>
 											</div>
 										</td>
 									</tr>
@@ -568,21 +639,17 @@ html, body {
 										<td><input type="text" class="form-control item-name"></td>
 										<td><input type="text" class="form-control item-spec"></td>
 										<td><input type="text" class="form-control item-unit"></td>
-										<td><input type="number"
-											class="form-control item-quantity"></td>
+										<td><input type="number" class="form-control item-quantity"></td>
 										<td><input type="number" class="form-control item-price"></td>
-										<td><input type="number" class="form-control item-amount"
-											readonly></td>
+										<td><input type="number" class="form-control item-amount" readonly></td>
 										<td><input type="text" class="form-control item-remark"></td>
-										<td><button type="button"
-												class="btn btn-primary btn-add-row">+</button></td>
+										<td><button type="button" class="btn btn-primary btn-add-row">+</button></td>
 									</tr>
 								</tbody>
 								<tfoot>
 									<tr class="table-active">
 										<td colspan="5" class="text-right text-center"><strong>합계</strong></td>
-										<td><input type="number" id="totalAmount" class="form-control form-control-plaintext text-center font-weight-bold"
-											readonly></td>
+										<td><input type="number" id="totalAmount" class="form-control form-control-plaintext text-center font-weight-bold" readonly></td>
 										<td></td>
 										<td></td>
 									</tr>
@@ -607,31 +674,32 @@ html, body {
 					<h5>출퇴근정정신청서</h5>
 					<form>
 						<div class="approval-line">
-							<div class="approval-box">
-								<h5>기안자</h5>
-								<div class="approval-content">
-									<!-- 부서 제목과 직원 이름을 여기에 넣어야 함 -->
-									<p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
-									<p id="draftEmployee">${loginEmployee.employeeName}</p>
-									<p id="draftDate">오늘날짜를 넣자 default</p>
-								</div>
-							</div>
-							<!-- 중간결재자와 최종결재자는 초기에는 공란 -->
-							<div class="approval-box">
-								<h5>중간결재자</h5>
-							</div>
-							<div class="approval-box">
-								<h5>최종결재자</h5>
-							</div>
+						    <div id="draftApprover" class="approval-box">
+						        <h5 class="approval-title">기안자</h5>
+						        <div class="approval-content">
+						            <p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
+						            <p id="draftEmployee">${loginEmployee.employeeName}</p>
+						            <p id="draftDate">${currentDate}</p>
+						        </div>
+						    </div>
+						    <div id="middleApprover" class="approval-box">
+						        <h5 class="approval-title">중간결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
+						    <div id="finalApprover" class="approval-box">
+						        <h5 class="approval-title">최종결재자</h5>
+						        <div class="approval-content"></div>
+						    </div>
 						</div>
 						<form>
 							<div class="form-group">
-								<label for="documentType">문서종류</label> <select id="documentType" class="form-control">
+								<label for="documentType">문서종류</label> <select id="documentType"
+									class="form-control">
 									<option>출퇴근정정신청서</option>
 								</select>
 							</div>
 
-							<table id="itemTable">
+							<table id="infoTable">
 
 								<tbody>
 									<tr>
@@ -640,33 +708,27 @@ html, body {
 										<th>부서</th>
 										<td>${loginEmployee.departmentCode.departmentTitle}</td>
 										<th>기안일</th>
-										<td><input type="date" class="form-control" readonly></td>
+										<td class="draftDate">${currentDate}</td>
 
 									</tr>
 									<tr>
 										<th>제목</th>
-										<td colspan="5"><input type="text" class="form-control"></td>
+										<td colspan="2"><input type="text" class="form-control"></td>
+										<th>참조자</th>
+										<td colspan="2"><input type="text" id="addReferer" class="form-control" readonly></td>
 
 									</tr>
 									<tr>
-										<th>초과근무시작일</th>
-							            <td><input type="datetime-local" class="form-control"></td>
-							            <th>초과근무종료일</th>
-							            <td><input type="datetime-local" class="form-control"></td>
-										<th>보존연한</th>
+										<th>출근일자 및 시간</th>
+										<td><input type="datetime-local" id="form5StartTime" class="form-control"></td>
+										<th>수정일자 및 시간</th><!-- 시작일을 min으로 설정해서 그 이후만 선택가능하게 -->
+										<td><input type="datetime-local" id="form5EndTime" class="form-control"></td><th>보존연한</th>
 										<td><select id="retentionPeriod" class="form-control">
 												<option>3 개월</option>
 												<option>6 개월</option>
 												<option>1 년</option>
 												<option>3 년</option>
 										</select></td>
-									</tr>
-									<tr>
-										<th>비상연락처</th>
-										<td><input type="text" class="form-control"></td>
-										<th>참조자</th>
-										<td colspan="3"><input type="text" id="addReferer"
-											class="form-control" readonly></td>
 									</tr>
 								</tbody>
 							</table>
@@ -683,195 +745,373 @@ html, body {
 					</form>
 				</div>
 			</div>
-
 		</div>
 	</div>
 
 </body>
 
 
-	<script>
+<script>
 
+	//부서 불러오기
+	function loadEmployees() {
+	    var departmentCode = document.getElementById("select-dept").value;
 
-		//문서 양식 나오게 하기
-    	function showForm() {
-			var selectedForm = document.getElementById('formType').value;
-			var forms = document
-					.getElementsByClassName('form-container');
-			for (var i = 0; i < forms.length; i++) {
-				forms[i].style.display = 'none';
-			}
-			if (selectedForm) {
-				document.getElementById(selectedForm).style.display = 'block';
-			}
-		}
-
-		//부서에 해당된 직원들 나타내보자
-		function loadEmployees() {
-		    var department = $('#department').val();
-		    if (department) {
-		        $.ajax({
-		            url: '/getEmployees',
-		            type: 'GET',
-		            data: { department: department },
-		            success: function(data) {
-		                $('#approvers').empty();
-		                $('#references').empty();
-		                data.forEach(function(employee) {
-		                    $('#approvers').append(`<option>${employee.name}</option>`);
-		                    $('#references').append(`<option>${employee.name}</option>`);
-		                });
-		            },
-		            error: function() {
-		                alert('직원 로딩 중 오류가 발생했습니다.');
-		            }
-		        });
-		    } else {
-		        $('#approvers').empty();
-		        $('#references').empty();
-		    }
-		}
-
-
-
-	// 초기화 함수
-	function initializeForm() {
-	    let table = document.getElementById('itemTable');
-	    let tbody = table.querySelector('tbody');
-	    let addButton = table.querySelector('.btn-add-row');
-	    let totalAmountInput = document.getElementById('totalAmount');
-
-	    // 초기 행에 이벤트 리스너 추가
-	    addEventListenersToRow(tbody.querySelector('tr'));
-
-    addButton.addEventListener('click', function() {
-        addTableRow();
-    });
-
-
-    function addTableRow() {
-        let newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td><input type="text" class="form-control item-name"></td>
-            <td><input type="text" class="form-control item-spec"></td>
-            <td><input type="text" class="form-control item-unit"></td>
-            <td><input type="number" class="form-control item-quantity"></td>
-            <td><input type="number" class="form-control item-price"></td>
-            <td><input type="number" class="form-control item-amount" readonly></td>
-            <td><input type="text" class="form-control item-remark"></td>
-            <td><button type="button" class="btn btn-danger btn-remove-row">-</button></td>
-        `;
-
-        tbody.appendChild(newRow);
-        addEventListenersToRow(newRow);
-    }
-
-    function addEventListenersToRow(row) {
-        let quantityInput = row.querySelector('.item-quantity');
-        let priceInput = row.querySelector('.item-price');
-
-        quantityInput.addEventListener('input', updateAmount);
-        priceInput.addEventListener('input', updateAmount);
-    }
-
-    tbody.addEventListener('click', function(event) {
-        if (event.target.classList.contains('btn-remove-row')) {
-            let row = event.target.closest('tr');
-            row.remove();
-            updateTotalAmount();
-        }
-    });
-
-    function updateAmount(event) {
-        let row = event.target.closest('tr');
-        let quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
-        let price = parseFloat(row.querySelector('.item-price').value) || 0;
-        let amount = quantity * price;
-        row.querySelector('.item-amount').value = amount.toFixed(2);
-
-        updateTotalAmount();
-    }
-
-    function updateTotalAmount() {
-        let total = 0;
-        document.querySelectorAll('.item-amount').forEach(function(input) {
-            total += parseFloat(input.value) || 0;
-        });
-        totalAmountInput.value = total.toFixed(2);
-    }
-
-    // 초기 로드 시 한 번 합계를 계산
-	updateTotalAmount();
+	    if (departmentCode) {
+	        $.ajax({
+	            url: '/approval/employees',
+	            type: 'GET',
+	            data: { departmentCode: departmentCode },
+	            success: function(employees) {
+	                updateEmployeeSelects(employees);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("Error loading employees:", error);
+	            }
+	        });
+	    } else {
+	        // 부서가 선택되지 않았을 때 직원 선택 옵션 초기화
+	        updateEmployeeSelects([]);
+	    }
 	}
 
-	document.addEventListener('DOMContentLoaded', initializeForm);
 
+	document.getElementById('formType').addEventListener('change', showForm);
 
+	function updateEmployeeSelects(employees) {
+	    var approverSelect = document.getElementById("approver");
+	    var refererSelect = document.getElementById("referer");
 
-	/* $(document).ready(function() {
-	    // 문서양식 선택 시
-	    $('#formType').change(function() {
-	        // 선택된 문서양식의 값을 가져옴
-	        var selectedForm = $(this).val();
-	        // 여기서 필요에 따라 선택된 양식에 따라 추가적인 처리 가능
+	    // 기존 옵션 제거
+	    approverSelect.innerHTML = '<option value="">선택하세요</option>';
+	    refererSelect.innerHTML = '<option value="">선택하세요</option>';
+
+	    // 새 직원 옵션 추가
+	    employees.forEach(function(employee) {
+	        var optionText = employee.employeeName + ' (' + employee.positionCode.positionTitle + ')';
+	        var option = new Option(optionText, JSON.stringify(employee));
+	        approverSelect.add(option.cloneNode(true));
+	        refererSelect.add(option);
 	    });
+	}
 
-	    // 부서 선택 시
-	    $('#department').change(function() {
-	        var department = $(this).val();
-	        if (department) {
-	            // 부서에 해당하는 직원들을 가져오는 AJAX 요청 (예시에서는 하드코딩)
-	            var employees = [
-	                { name: '직원1' },
-	                { name: '직원2' },
-	                { name: '직원3' }
-	            ];
-	            // 직원 목록을 오른쪽 섹션의 결재자 라인에 추가
-	            appendApprovers(department, employees);
-	        }
-	    });
+	// 직원 선택후 결재선 라인에 추가
+	var middleApprover = null;
+	var finalApprover = null;
+	var referers = [];
 
-	    // 직원 목록을 오른쪽 섹션의 결재자 라인에 추가하는 함수
-	    function appendApprovers(departmentTitle, employees) {
-	        // 기안자 정보 업데이트
-	        $('#draftDepartment').text(departmentTitle);
-	        $('#draftEmployee').text(employees[0].name); // 기안자는 첫 번째 직원으로 설정
+	function addApprover() {
+		  var approverSelect = document.getElementById("approver");
+		  var selectedOption = approverSelect.options[approverSelect.selectedIndex];
 
-	        // 중간결재자와 최종결재자 초기화
-	        $('.approval-line .approval-box:nth-child(n+2)').empty();
+		  if (selectedOption && selectedOption.value) {
+		    try {
+		      var employee = JSON.parse(selectedOption.value);
 
-	        // 선택된 직원 수만큼 approval-box 생성
-	        for (var i = 1; i < employees.length; i++) {
-	            var employeeName = employees[i].name;
-	            var newApproverBox = $('<div class="approval-box">' +
-	                '<h5>중간결재자</h5>' +
-	                '<div class="approval-content">' +
-	                '<p>' + departmentTitle + '</p>' +
-	                '<p>' + employeeName + '</p>' +
-	                '</div>' +
-	                '</div>');
-	            $('.approval-line').append(newApproverBox);
+		      if (!middleApprover) {
+		        middleApprover = employee;
+		        updateAllForms('middleApprover', employee);
+		      } else if (!finalApprover) {
+		        // 중간결재자와 최종결재자가 같으면 안되는 비교
+		        if (employee.employeeNo === middleApprover.employeeNo) {
+		            alert("중간결재자와 최종결재자는 같은 사람일 수 없습니다.");
+		            return;
+		          }
+		        // 중간결재자와 최종결재자의 직급을 비교
+		        if (employee.positionCode.positionCode >= middleApprover.positionCode.positionCode) {
+		          alert("최종결재자의 직급은 중간결재자보다 높거나 같아야 합니다.");
+		          return;
+		        }
+		        finalApprover = employee;
+		        updateAllForms('finalApprover', employee);
+		      } else {
+		        alert("이미 중간결재자와 최종결재자가 모두 선택되었습니다.");
+		      }
+		    } catch (error) {
+		      console.error("Error parsing employee data:", error);
+		    }
+		  }
+		}
+
+	// 기본값으로 'form1' 사용
+	function getCurrentFormId() {
+	    var formType = document.getElementById('formType').value;
+	    return formType ? formType : 'form1';
+	}
+
+
+	function updateAllForms(type, employee) {
+		  var forms = document.getElementsByClassName('form-container');
+		  for (var i = 0; i < forms.length; i++) {
+		    updateApprovalBox(type, employee, forms[i]);
+		  }
+		}
+
+
+	//결재선 라인에 추가버튼 누를때 들어갈 직원
+	function updateApprovalBox(type, employee, form) {
+		  console.log("Updating approval box:", type, "in form:", form.id);
+		  var boxContent = form.querySelector("#" + type + " .approval-content");
+		  console.log("Box content element:", boxContent);
+		  if (boxContent) {
+		    boxContent.innerHTML =
+		      "<p>" + employee.departmentCode.departmentTitle + "</p>" +
+		      "<p>" + employee.employeeName + " " + employee.positionCode.positionTitle + "</p>";
+		    console.log("Updated content:", boxContent.innerHTML);
+		  } else {
+		    console.error("Approval box content not found in form:", form.id, "for type:", type);
+		  }
+	}
+
+
+	//참조자 추가
+	function addReferer() {
+	  var refererSelect = document.getElementById("referer");
+	  var selectedOption = refererSelect.options[refererSelect.selectedIndex];
+
+	  if (selectedOption && selectedOption.value) {
+	    var employee = JSON.parse(selectedOption.value);
+
+	    if (!referers.some(ref => ref.employeeNo === employee.employeeNo)) {
+	      referers.push(employee);
+	      updateReferersInAllForms();
+	    } else {
+	      alert("이미 추가된 참조자입니다.");
+	    }
+	  }
+	}
+
+
+	//참조자 나타내기
+	function updateReferersInAllForms() {
+		console.log("Updating referers in all forms");
+		  var refererString = referers.map(ref => ref.employeeName).join(", ");
+		  var forms = document.getElementsByClassName('form-container');
+
+		  for (var i = 0; i < forms.length; i++) {
+		    var form = forms[i];
+		    var refererInput = form.querySelector("#addReferer");
+		    var refererList = form.querySelector("#refererList");
+
+		    if (refererInput) {
+		      refererInput.value = refererString;
+		    } else if (refererList) {
+		      refererList.innerHTML = refererString;
+		    }
+		  }
+		}
+
+
+	//결재자,참조자 리셋버튼으로 초기화하기
+	function resetApprovers() {
+			console.log("resetApprovers function called");
+	  middleApprover = null;
+	  finalApprover = null;
+	  referers = [];
+
+	  var forms = document.getElementsByClassName('form-container');
+	  for (var i = 0; i < forms.length; i++) {
+	    var form = forms[i];
+	    var middleApproverContent = form.querySelector("#middleApprover .approval-content");
+	    var finalApproverContent = form.querySelector("#finalApprover .approval-content");
+
+	    if (middleApproverContent) middleApproverContent.innerHTML = "";
+	    if (finalApproverContent) finalApproverContent.innerHTML = "";
+	  }
+
+	  // 참조자 필드 초기화
+	  document.getElementById("addReferer").value = "";
+
+	  // 선택된 옵션 초기화
+	  document.getElementById("approver").selectedIndex = 0;
+	  document.getElementById("referer").selectedIndex = 0;
+
+	  console.log("Approvers and referers have been reset.");
+	}
+
+
+
+	//양식 바뀔때 결재자,참조자정보 초기화
+	function showForm() {
+	    var selectedForm = document.getElementById('formType').value;
+	    var forms = document.getElementsByClassName('form-container');
+
+	    // 폼 변경 시 결재자와 참조자 정보 초기화
+	    clearApproversAndReferers();
+
+	    for (var i = 0; i < forms.length; i++) {
+	        forms[i].style.display = 'none';
+	    }
+	    if (selectedForm) {
+	        var currentForm = document.getElementById(selectedForm);
+	        if (currentForm) {
+	            currentForm.style.display = 'block';
+	            updateReferersInAllForms();
 	        }
 	    }
-	}); */
+	}
 
 
-	 document.addEventListener('DOMContentLoaded', function() {
-	        const attachButton = document.getElementById('attachButton');
-	        const fileInput = document.getElementById('attachments');
-	        const fileInputLabel = document.querySelector('.custom-file-label');
+	//양식이 바뀔때마다 결재자 참조자 초기화 시키기
+	function clearApproversAndReferers() {
+	    middleApprover = null;
+	    finalApprover = null;
+	    referers = [];
+	    updateReferersInAllForms();
 
-	        attachButton.addEventListener('click', function() {
-	            fileInput.removeAttribute('disabled'); // 파일 선택 input 활성화
-	            fileInput.click(); // 파일 선택 input을 클릭하여 파일 선택 창 열기
-	        });
+	    // 모든 폼에 대해 결재자 정보 초기화
+	    var forms = document.getElementsByClassName('form-container');
+	    for (var i = 0; i < forms.length; i++) {
+	        var form = forms[i];
+	        var middleApproverContent = form.querySelector("#middleApprover .approval-content");
+	        var finalApproverContent = form.querySelector("#finalApprover .approval-content");
 
-	        fileInput.addEventListener('change', function() {
-	            // 파일이 선택되었을 때, 선택된 파일 이름을 표시
-	            const selectedFiles = Array.from(fileInput.files).map(file => file.name).join(', ');
-	            fileInputLabel.textContent = selectedFiles || '파일 선택';
-	        });
-	    });
+	        if (middleApproverContent) middleApproverContent.innerHTML = "";
+	        if (finalApproverContent) finalApproverContent.innerHTML = "";
+	    }
+
+	    // 참조자 필드 초기화
+	    var refererInput = document.getElementById("addReferer");
+	    if (refererInput) refererInput.value = "";
+
+	    // 선택된 옵션 초기화
+	    var approverSelect = document.getElementById("approver");
+	    var refererSelect = document.getElementById("referer");
+	    if (approverSelect) approverSelect.selectedIndex = 0;
+	    if (refererSelect) refererSelect.selectedIndex = 0;
+
+	    console.log("Approvers and referers have been cleared.");
+	}
+
+	//결재자 정보
+	function updateApproverInfo(form) {
+		  if (middleApprover) {
+		    updateApprovalBox('middleApprover', middleApprover, form);
+		  }
+		  if (finalApprover) {
+		    updateApprovalBox('finalApprover', finalApprover, form);
+		  }
+		}
+
+
+	//파일선택
+	document.querySelectorAll('.file-input').forEach(input => {
+        input.addEventListener('change', function() {
+            // 가장 가까운 부모 요소에서 라벨 찾기
+            const label = this.closest('.input-group').querySelector('.custom-file-label');
+            if (label) {
+                const selectedFiles = Array.from(this.files).map(file => file.name).join(', ');
+                label.textContent = selectedFiles || '파일 선택';
+            }
+        });
+    });
+
+
+	function initializeForms() {
+		  var forms = document.getElementsByClassName('form-container');
+		  for (var i = 0; i < forms.length; i++) {
+		    updateApproverInfo(forms[i]);
+		  }
+		}
+
+		window.onload = function() {
+		  initializeForms();
+		  // 기타 필요한 초기화 함수들...
+		};
+
+
+
+		document.getElementById('formType').addEventListener('change', showForm);
+
+		//초기화 시키는 버튼 이벤트 리스너
+		document.addEventListener('DOMContentLoaded', function() {
+
+			// 초기화 버튼 이벤트
+			var resetButton = document.querySelector('button.btn-danger');
+			if (resetButton) {
+			  resetButton.addEventListener('click', resetApprovers);
+			} else {
+			  console.error("Reset button not found");
+			}
+
+
+			// 양식 변경시 초기화 이벤트
+			var formTypeSelect = document.getElementById('formType');
+			  if (formTypeSelect) {
+			      formTypeSelect.addEventListener('change', showForm);
+			  }
+
+
+			// 참조자 추가시 나타내는 이벤트
+			updateReferersInAllForms();
+
+
+			// 모든 폼의 파일 선택 버튼에 대해 이벤트 리스너 추가
+		    document.querySelectorAll('.file-select-button').forEach(button => {
+		        button.addEventListener('click', function() {
+		            // 가장 가까운 부모 요소에서 파일 입력 찾기
+		            const fileInput = this.closest('.input-group').querySelector('.file-input');
+		            if (fileInput) {
+		                fileInput.click();
+		            }
+		        });
+	   		});
+
+
+		 // 현재 날짜를 YYYY-MM-DD 형식으로 가져오는 함수
+		    function getCurrentDate() {
+		        const now = new Date();
+		        const year = now.getFullYear();
+		        const month = String(now.getMonth() + 1).padStart(2, '0');
+		        const day = String(now.getDate()).padStart(2, '0');
+		        return `${year}-${month}-${day}`;
+		    }
+
+		    // 모든 기안일 필드에 현재 날짜 설정
+		    const draftDateFields = document.querySelectorAll('.draftDate');
+		    const currentDate = getCurrentDate();
+
+		    draftDateFields.forEach(field => {
+		        if (!field.textContent.trim()) {
+		            field.textContent = currentDate;
+		        }
+		    });
+
+	});
+
+		// 날짜 선택시 시작일보다 종료일이 앞서지 않게 선택
+		document.addEventListener('DOMContentLoaded', function() {
+		    const startDate = document.getElementById('startDate');
+		    const endDate = document.getElementById('endDate');
+
+		    // 시작일이 변경될 때마다 종료일의 최소 날짜를 갱신
+		    startDate.addEventListener('change', function() {
+		        endDate.min = startDate.value;
+
+		        // 만약 현재 선택된 종료일이 새로운 시작일보다 이전이라면 종료일을 시작일과 같게 설정
+		        if (endDate.value < startDate.value) {
+		            endDate.value = startDate.value;
+		        }
+		    });
+		});
+
+		$(document).ready(function() {
+		    // 추가 버튼 클릭 시 이벤트 처리
+		    $('.btn-add-row').click(function() {
+		        var newRow = '<tr>' +
+		            '<td><input type="text" class="form-control item-name"></td>' +
+		            '<td><input type="text" class="form-control item-spec"></td>' +
+		            '<td><input type="text" class="form-control item-unit"></td>' +
+		            '<td><input type="number" class="form-control item-quantity"></td>' +
+		            '<td><input type="number" class="form-control item-price"></td>' +
+		            '<td><input type="number" class="form-control item-amount" readonly></td>' +
+		            '<td><input type="text" class="form-control item-remark"></td>' +
+		            '<td><button type="button" class="btn btn-primary btn-add-row">+</button></td>' +
+		            '</tr>';
+
+		        $('#itemTable tbody').append(newRow);
+		    });
+		});
 
 
 
