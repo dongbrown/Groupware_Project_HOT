@@ -1,5 +1,7 @@
 package com.project.hot.employee.model.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +15,7 @@ public class Commuting {
 
 	private int commutingNo;
 	private Employee employeeNo;
-	private String commutingGoWorkTime;
-	private String commutingLeaveWorkTime;
+	private LocalDateTime commutingGoWorkTime;
+	private LocalDateTime commutingLeaveWorkTime;
 	private String commutingStatus;
 }
