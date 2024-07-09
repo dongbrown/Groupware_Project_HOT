@@ -48,16 +48,60 @@
         </div>
         <div class="chat-main ">
             <div class="chat-header">
-                <img src="https://cdn.eroun.net/news/photo/202305/32650_59862_4410.jpg" alt="아이유" class="user-avatar target-avatat IUimg">
-                <div style="width: 500px; margin-left:10px">
-                    <h2 class="chat-user-name">${loginEmployee.employeeName}</h2>
+                <img src="https://cdn.eroun.net/news/photo/202305/32650_59862_4410.jpg" alt="아이유" class="user-avatar target-avatar IUimg">
+                <div style="width: 1000px; margin-left:10px">
+                    <h3 class="chat-user-name">${loginEmployee.employeeName}</h3>
                     <sup class="user-status"></sup>
                     <p class="user-status-message"></p>
                 </div>
-                <div class="chat-actions" style="width: 300px; margin-left: 450px;">
-                	<input type="text" placeholder="Search..." class="search-input">
-                </div>
-                <i class="fas fa-search fa-sm"></i>
+                <div class="make-group-talk">
+	                <label for="make-group-btn" class="make-group-btn">
+	                    <span class="plus-icon">그룹핫톡 생성</span>
+	                </label>
+	                <!-- Button trigger modal -->
+					<button id="make-group-btn" style="display: none;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></button>
+
+					<!-- Modal -->
+					<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					  <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="staticBackdropLabel">HotTalk Group 채팅 생성하기</h5>
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					      </div>
+					      <div class="modal-body" style="display: flex; justify-content: space-around;">
+							<div>
+								<div>
+									<div class="search-bar">
+						                <input class="search-input modal-search" type="text" placeholder="사원명으로 검색하기">
+						                <i class="fas fa-search fa-sm search-icon"></i>
+						            </div>
+								</div>
+								<div class="modal-employee-result" style="overflow: hidden;"></div>
+							</div>
+							<div style="display:flex; flex-direction: column; justify-content: space-evenly; font-size: 25px;">
+								<div class="moveRight" style="border-radius: 100%; background-color: #6c757d; color: white; width: 40px; height: 40px; text-align: center;">
+									<b style="cursor: pointer;">→</b>
+								</div>
+								<div class="moveLeft" style="border-radius: 100%; background-color: #6c757d; color: white; width: 40px; height: 40px; text-align: center;">
+									<b style="cursor: pointer;">←</b>
+								</div>
+							</div>
+							<div>
+								<input class="search-input modal-title" type="text" placeholder="채팅방 제목을 입력하세요.">
+								<div class="modal-additional-employee" style="width: 239px; margin-top: 10px;">
+
+								</div>
+							</div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+					        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CREATE</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+	            </div>
             </div>
             <div class="chat-messages">
                 <!-- 채팅 메세지 출력 -->
