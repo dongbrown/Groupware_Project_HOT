@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
+import com.project.hot.employee.model.dto.Position;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,19 +23,9 @@ public class Approval {
 	 private Date approvalDraftDate;//기안일
 	 private Date approverDate; //결재일
 	 private String status;//상태(진행,완료)
-//	 private Employee employeeNo;//FK
 	 private Employee employeeNo;
-	 private Department departmentTitle;
+	 private Department departmentCode;
 	 private Employee employeeName;
-	 //기안자명, 기안자부서 가져와야된다
-
-
-
-
-
-
-
-
-
+	 private Position positionCode;
 
 }

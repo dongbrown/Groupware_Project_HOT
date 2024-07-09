@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,14 +46,14 @@ public class EmployeeRestController {
 		return service.selectDepartmentList();
 	}
 
-	
+
 	@GetMapping("/commutingList")
 	public Map<String, Object> getCommutingList(
-			Principal principal, 
+			@RequestParam int employeeNo,
 			@RequestParam String month,
 			@RequestParam(defaultValue = "1") int cPage){
 		Map<String, Object> param=new HashMap<>();
-		param.put("employeeNo", principal.getName());
+		param.put("employeeNo", employeeNo);
 		param.put("year", LocalDate.now().getYear());
 		param.put("month", month);
 		param.put("cPage", cPage);
