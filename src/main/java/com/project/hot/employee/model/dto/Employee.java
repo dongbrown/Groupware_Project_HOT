@@ -9,6 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +39,7 @@ import lombok.NoArgsConstructor;
 		private Date employeeResignationDay;
 		private int employeeTotalVacation;
 
+		@JsonIgnore
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities(){
 			Set<GrantedAuthority> authorities = new HashSet<>();
@@ -48,6 +52,7 @@ import lombok.NoArgsConstructor;
 	        if (positionCode != null) {
 	            authorities.add(new SimpleGrantedAuthority(positionCode.getPositionAuthority()));
 	        }
+	        if(authorities.isEmpty()) authorities.add(new SimpleGrantedAuthority("gen"));
 
 	        return authorities;
 		}
@@ -56,22 +61,22 @@ import lombok.NoArgsConstructor;
 		public String getUsername() {
 			return this.employeeId;
 		}
-
+		@JsonIgnore
 		@Override
 		public boolean isAccountNonExpired() {
 			return true;
 		}
-
+		@JsonIgnore
 		@Override
 		public boolean isAccountNonLocked() {
 			return true;
 		}
-
+		@JsonIgnore
 		@Override
 		public boolean isCredentialsNonExpired() {
 			return true;
 		}
-
+		@JsonIgnore
 		@Override
 		public boolean isEnabled() {
 			return employeeResignationDay == null;
