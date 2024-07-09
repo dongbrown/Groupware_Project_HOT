@@ -1,50 +1,11 @@
-//종료 날짜 설정
-//오늘 날짜 생성
-function getTodayDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-// 1년 후 날짜를 가져오는 함수
-      function getOneYearLaterDate() {
-        const today = new Date();
-        const nextYear = new Date(today.setFullYear(today.getFullYear() + 1));
-        const year = nextYear.getFullYear();
-        const month = String(nextYear.getMonth() + 1).padStart(2, '0');
-        const day = String(nextYear.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      }
-
-// 날짜 입력 필드에 오늘 날짜 설정
-  $("#project-end-date").val(getTodayDate());
-  $("#project-end-date").attr('min', getTodayDate());
-  $("#project-end-date").attr('max', getOneYearLaterDate());
-
-
-//통화 표시
-	$('#project-budget').keyup(e=>{
-	    let value = e.target.value;
-	    let value1 = value.replace(/,/g,'');
-	    let result = Number(value1).toLocaleString('ko-KR');
-	    e.target.value=result;
-	});
-
-// 설명  text 크기 카운트
-	$('#floatingTextarea').on('input', function() {
-		let textLength = $(this).val().length;
-		$('#project-contents-count').text(textLength + '/1000');
-	});
-//페이지 불러온느 함수
+		getProjectList(1);
+//페이지 불러오는 함수
 		function getProjectList(cPage) {
 			$('#project-list-table>tbody').html('');
 
 			fetch(path + '/project/projectupdateajax?cPage=' + cPage)
 				.then(response => response.json())
 				.then(data => {
-					console.log(data);
 					makeProjectList(data.projects);
 
 					const $pagebar = createPagination(cPage, data.totalPage, 'getProjectList');
@@ -54,27 +15,26 @@ function getTodayDate() {
 					console.error('요청 실패:', error); // 요청 실패 시 에러 처리
 				});
 		};
-
-		function makeProjectList(projects){
-
-			projects.forEach(p=>{
+		function makeProjectList(projects) {
+			projects.forEach(p => {
 				//tr
-				const $projectList=$('<tr>').addClass('project-choice');
+				const $projectList = $('<tr>').addClass('project-choice');
 				//td
-				const $projectStartDate=$('<td>').text(p.projectStartDate);
-				const $projectNo=$('<td>').text(p.projectNo);
-				const $employeeName=$('<td>').text(p.employeeCode.employeeName);
-				const $projectTitle=$('<td>').text(p.projectTitle);
+				const $EmployeeNo = $('<td>', { id: 'projectEmpNo', text: p.employeeCode.employeeNo, css: { display: 'none' } });
+				const $projectStartDate = $('<td>').text(p.projectStartDate);
+				const $projectNo = $('<td>').text(p.projectNo);
+				const $employeeName = $('<td>').text(p.employeeCode.employeeName);
+				const $projectTitle = $('<td>').text(p.projectTitle);
 
 				//td 진행률
 				const $projectProgress = $('<td>');
 				const $graphContainer = $('<div>', { class: 'graph-container' });
 				const $bar = $('<div>', { class: 'bar', 'data-percentage': p.projectProgress });
-				const $percentageText = $('<div>', { css: { marginTop: '5px', marginLeft: '5px' }, text: p.projectProgress + '%'});
+				const $percentageText = $('<div>', { css: { marginTop: '5px', marginLeft: '5px'}, text: p.projectProgress + '%' });
 
 				//td 삭제 버튼
 				const $deleteButtonCell = $('<td>');
-				const $deleteButton = $('<button>', { class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#projectDeleteModal', text: '삭제'});
+				const $deleteButton = $('<button>', { class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#projectDeleteModal', text: '삭제' });
 
 				//td 진행률
 				$graphContainer.append($bar).append($percentageText);
@@ -82,147 +42,27 @@ function getTodayDate() {
 				//td삭제 버튼
 				$deleteButtonCell.append($deleteButton);
 
-				$projectList.append($projectStartDate).append($projectNo).append($employeeName)
-				.append($projectTitle).append($projectProgress).append($deleteButtonCell).appendTo($('#project-list-table>tbody'));
+				$projectList.append($EmployeeNo).append($projectStartDate).append($projectNo).append($employeeName)
+					.append($projectTitle).append($projectProgress).append($deleteButtonCell).appendTo($('#project-list-table>tbody'));
 
-			})
-		}
-
-//프로젝트 리스트 테이블 만드는 함수
-
-
-//총 인원 추가될때 총인원 값 변환
-	$(document).ready(function() {
-		getProjectList(1);
-
-		const savedItems = $('.saved-item');
-		let checkedTotalCount = 1;
-		savedItems.each(function() {
-			if ($(this).text().includes('사번')) {
-				checkedTotalCount++;
-			}
-		});
-		$("#totalMember").val(checkedTotalCount);
-
-//프로젝트 생성 시 부서 선택하면 우측 상단에 해당 부서 사원  출력 로직
-	$('#select-dept').on('change', function() {
-		const selectedText = $("#select-dept option:selected").val();
-		const inputMember = $("#input-member");
-//선택하세요 선택시 맴버 비워주기
-		if (selectedText === '선택하세요.') {
-			inputMember.text('');
-		} else {
-			inputMember.empty();
-//ajax로 해당 사원 값 가져오기
-			$.ajax({
-				type: 'GET',
-				url: '/project/selectEmpByDept.do',
-				data: { dept: selectedText },
-				dataType: 'json',
-				success: function(emp) {
-					displayEmployees(emp);
-				},
-				error: function() {
-					alert("조회실패");
-				}
 			});
-//ajax success시 실행되는 함수
-			function displayEmployees(emp) {
-				console.log(emp);
-				const inputDept = $('<div>', { id: 'input-member-title' });
-				const inputMemberList = $('<div>', { id: 'input-member-list' });
-				let deptTitle1 = '';
-				emp.forEach((e, i) => {
-					deptTitle1 = `${e.departmentCode.departmentTitle}`;
-				});
-				const inputMemberTitle = $('<div>', { text: deptTitle1, class: 'input-group-text', id: 'input-group-text' });
-				const memberSaveBtn = $('<button>', { id: 'member-save-btn', class: 'btn btn-primary', text: "저장" })
-
-				inputDept.append(inputMemberTitle);
-				inputMember.append(inputDept);
-				inputMember.append(inputMemberList);
-				inputMember.append(memberSaveBtn);
-//반복문으로 사원 출력
-				emp.forEach((e, i) => {
-					let empName = `${e.employeeName}`;
-					let deptTitle = `${e.departmentCode.departmentTitle}`;
-					let empNo = `${e.employeeNo}`;
-
-					const checkboxId = 'flexCheckDefault' + i;
-					const inputMemberWrab = $('<div style="display:flex;">');
-					const inputMemberDetail = $('<input>', { class: 'form-check-input', type: 'checkbox', id: checkboxId });
-					const inputMemberDetailText = $('<label>',
-						{ class: 'form-check-label', for: checkboxId, text: deptTitle + ': ' + empName + ' 사번 / ' + empNo });
-
-// 이미 선택된 항목인지 확인
-					if ($('#saved-members').find('#checked-member-wrab:contains("' + e.employeeNo + '")').length > 0) {
-						inputMemberDetail.prop('checked', true);
-					}
-
-					inputMemberWrab.append(inputMemberDetail).append(inputMemberDetailText).appendTo(inputMemberList);
-				});
-// 저장버튼 누르면 체크된 직원들 추가
-				$('#member-save-btn').on('click', function() {
-					const checkedItems = $('#input-member-list input:checked');
-					const savedMembers = $('#saved-members');
-
-					checkedItems.each(function() {
-						const label = $(this).next('label').text();
-						console.log(label);
-						const totalMember = 0;
-						checkedTotalCount++;
-// 이미 존재하는 항목인지 확인
-						if (savedMembers.find('.saved-item:contains("' + label + '")').length > 0) {
-							checkedTotalCount--;
-							return;
-						}
-						$("#totalMember").val(checkedTotalCount);
-
-
-						const checkedMembersDel = $('<button>', { class: 'btn-close', type: 'button' });
-						const savedItem = $('<div>', { text: label, id: 'checked-member-wrab', class: 'saved-item' });
-						savedItem.append(checkedMembersDel).appendTo(savedMembers);
-					});
-				});
-			}
+// 진행도 애니메이션
+			const bars = document.querySelectorAll('.bar');
+			bars.forEach(bar => {
+				const percentage = bar.getAttribute('data-percentage');
+				setTimeout(() => {
+					bar.style.width = `${percentage}%`;
+				}, 300);// 속도 조절
+			});
 		};
 
-
-		});
-// x 버튼 클릭 시 해당 사원 삭제
-		$(document).on('click', '.btn-close', function() {
-			$(this).closest('.saved-item').remove();
-// 총 인원수 차감 출력
-			checkedTotalCount--;
-			$("#totalMember").val(checkedTotalCount);
-// 삭제된 항목의 체크박스 해제
-			const removedText = $(this).parent().text();
-			$('#input-member-list input:checkbox').each(function() {
-				if ($(this).next('label').text() == removedText) {
-					$(this).prop('checked', false);
-					}
-				});
-			});
-		});
-
-/*프로젝트 목록 자바스크릡트 */
-	$(document).ready(function() {
-		//$("#project-update-window").css('display', 'none');
-// 진행도 애니메이션
-		const bars = document.querySelectorAll('.bar');
-		bars.forEach(bar => {
-			const percentage = bar.getAttribute('data-percentage');
-			setTimeout(() => {
-				bar.style.width = `${percentage}%`;
-			}, 300);// 속도 조절
-		});
-	});
 /*------------------------------------------*/
 
 /*프로젝트 목록중 하나 클릭시 해당 프로젝트 정보와 수정가능한 테이블 표시*/
- 	$(".project-choice").click(e=>{
-		const projectNo = Number(e.target.parentElement.children[1].textContent);
-	    location.assign("/project/selectProjectByNo.do?projectNo="+projectNo);
+	$(document).on('click', '.project-choice', function(e) {
+		const projectNo = Number(e.target.parentElement.children[2].textContent);
+		const empNo = Number($("#projectEmpNo").text());
+	    location.assign("/project/selectProjectByNo.do?projectNo="+projectNo+"&empNo="+empNo);
 
 	  /*  const projectNo = Number(e.target.parentElement.children[1].textContent);
 	    console.log(projectNo);
@@ -281,11 +121,12 @@ function getTodayDate() {
 
 //프로젝트 삭제 버튼
 	const delectProjectBtn=()=>{
-		const projectNo = Number(e.target.parentElement.children[1].textContent);
+		const projectNo = Number(e.target.parentElement.children[2].textContent);
+
 		$.ajax({
 			url:"/project/deleteProject.do",
 			type:"GET",
-			data: { projectNo: projectNo },
+			data: { projectNo: projectNo, empNo: empNo },
 			dataType: 'json',
 			success: function() {
 				alert("삭제되었습니다.");
@@ -307,4 +148,3 @@ function getTodayDate() {
 	    $("#project-list").css('display','block');
 	    $("#project-update-window").css('display','none');//ajax 받아온 값 지워주기
     });*/
-

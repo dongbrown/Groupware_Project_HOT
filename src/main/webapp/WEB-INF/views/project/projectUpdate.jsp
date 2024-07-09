@@ -24,11 +24,11 @@
 
 				<div id="projectListTable" class="table-responsive">
 					<div>
-
+						<div style="height:320px; width:780px;">
 						<table id="project-list-table" class="table text-start align-middle table-bordered table-hover mb-0"
 							style="text-align: center;">
 							<thead>
-								<tr class="text-dark">
+								<tr class="text-dark" style="width:100$;">
 									<th scope="col">날짜</th>
 									<th scope="col">번호</th>
 									<th scope="col">담당자</th>
@@ -38,6 +38,8 @@
 								</tr>
 							</thead>
 							<tbody>
+
+							</tbody>
 								<!-- Modal -->
 								<div class="modal fade" id="projectDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 								  <div class="modal-dialog">
@@ -57,10 +59,11 @@
 								  </div>
 								</div>
 
-							</tbody>
 						</table>
+						</div>
 					</div>
 				</div>
+
 				<br>
 				<!-- 페이징 처리 예정 -->
 				<div class="pagebar-div"></div>
@@ -210,7 +213,9 @@
 	</div>
 </section>
 </div>
-<script>const path='${path}';</script>
+<script>
+const path='${path}';
+</script>
 <script src="${path }/js/project/updateProject.js"></script>
 <script src='${path }/js/common/pagebar.js'></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

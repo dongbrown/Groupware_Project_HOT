@@ -16,14 +16,20 @@
 <section>
 	<div id="project-first-wrap">
 		<div>
-			<div id="project-insert-title">프로젝트 생성</div>
+			<div id="project-insert-title">프로젝트 작업 생성</div>
 		</div>
 		<div style="display: flex; flex-direction: column; align-items:center;">
 			<div style="display: flex; flex-direction: row; justify-content: center; margin-top: 30px;">
 				<div id="project-insert-body">
-					<!-- 프로젝트 이름 -->
+					<!-- 작업 이름 -->
 					<div class="input-group mb-3">
-						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트이름</span>
+						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트 이름</span>
+						<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
+							aria-describedby="inputGroup-sizing-default" disabled>
+					</div>
+					<!-- 작업 이름 -->
+					<div class="input-group mb-3">
+						<span class="input-group-text" id="inputGroup-sizing-default">작업 이름</span>
 						<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default">
 					</div>
@@ -36,7 +42,7 @@
 					</div>
 					<!-- 프로젝트 중요도 체크박스  -->
 					<div class="input-group mb-3">
-						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트중요도</span>
+						<span class="input-group-text" id="inputGroup-sizing-default">작업 중요도</span>
 						<select class="form-select" name="importance" aria-label="Default select example">
 							<option selected>선택하세요.</option>
 							<option value="1" style="color: red;">상</option>
@@ -45,7 +51,7 @@
 						</select>
 					</div>
 					<!-- 프로젝트 설명 -->
-					<p style="font-weight: bolder;">프로젝트 설명</p>
+					<p style="font-weight: bolder;">작업 설명</p>
 					<div id="project-contents" class="form-floating">
 						<textarea class="form-control" name="projectContent" placeholder="Leave a comment here"
 							id="floatingTextarea"></textarea>
@@ -62,42 +68,13 @@
 							</div>
 					</div>
 					<br>
-					<!-- 프로젝트 배정 예산 -->
-					<div class="input-group mb-3">
-						<span class="input-group-text" id="inputGroup-sizing-default">배정예산</span>
-						<input type="text" id="project-budget" class="form-control"
-							aria-label="Sizing example input"
-							aria-describedby="inputGroup-sizing-default" placeholder="입력하세요.">
-					</div>
-					<br>
-					<!--  최대 참여 인원(수)-->
-					<div id="member-list" style="display: flex; flex-direction: row;">
-						<div class="input-group mb-3">
-							<span class="input-group-text" id="inputGroup-sizing-default">총
-								인원</span> <input id="totalMember" type="text" class="form-control"
-								aria-label="Sizing example input"
-								aria-describedby="inputGroup-sizing-default" value="1" disabled>
-						</div>
-
-						<div class="input-group mb-3" style="margin-left: 20px;">
-							<span class="input-group-text" id="inputGroup-sizing-default">부서</span>
-							<select id="select-dept" class="form-select"
-								aria-label="Default select example">
-								<option selected>선택하세요.</option>
-							</select>
-						</div>
-					</div>
-					<!-- 체크한 사원 추가 div -->
-					<div id="saved-members"></div>
 
 				</div>
-				<!-- 사원 조회 생성 -->
-				<div id="input-member"></div>
 			</div>
 			<div style="width:250px;">
 			<button style="margin-bottom: 70px; margin-left:30px;" type="button"
 				class="btn btn-primary" data-bs-toggle="modal"
-				data-bs-target="#updateSelectModal">프로젝트 등록</button>
+				data-bs-target="#updateSelectModal">작업 등록</button>
 				</div>
 		</div>
 
@@ -122,9 +99,4 @@
 	</div>
 </section>
 </div>
-<script>
-	const path="${path}"
-	const empNo ="${loginEmployee.employeeNo }";
-</script>
-<script src="${path }/js/project/insertProject.js"></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

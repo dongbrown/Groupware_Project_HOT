@@ -34,15 +34,12 @@ public class ProjectController {
 	@ResponseBody
 	@GetMapping("/projectupdateajax")
 	public Map<String,Object> projectUpdatePage (@RequestParam(defaultValue = "1") int cPage) {
-		System.out.println(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5)));
 		ObjectMapper mapper=new ObjectMapper();
 		try {
 			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5)));
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5));
 	};
 
@@ -55,8 +52,10 @@ public class ProjectController {
 
 	@ResponseBody
 	@GetMapping("/selectEmpByDept.do")
-	public List<Employee> selectEmpByDept(@RequestParam("dept") String deptCode) {
-	    List<Employee> result = service.selectEmpByDept(Integer.parseInt(deptCode));
+	public List<Employee> selectEmpByDept(@RequestParam("dept") int deptCode,
+											@RequestParam("empNo") int empNo) {
+
+	    List<Employee> result = service.selectEmpByDept(Map.of("deptCode",deptCode,"empNo",empNo));
 	    return result;
 	}
 
@@ -80,9 +79,9 @@ public class ProjectController {
 //	}
 
 	@GetMapping("/selectProjectByNo.do")
-	public String selectProjectByNo(int projectNo,Model m) {
+	public String selectProjectByNo(int projectNo,int empNo, Model m) {
 		Project project = service.selectProjectByNo(projectNo);
-		List<ProjectEmployee> emps = service.selectEmployeetByProjectNo(projectNo);
+		List<ProjectEmployee> emps = service.selectEmployeetByProjectNo(Map.of("projectNo",projectNo,"empNo",empNo));
 		List<Department> depts = service.selectDeptAll();
 		m.addAttribute("project",project);
 		m.addAttribute("emps",emps);
@@ -93,7 +92,7 @@ public class ProjectController {
 	@ResponseBody
 	@GetMapping("/selectEmployeetByProjectNo.do")
 	public List<ProjectEmployee> selectEmployeetByProjectNo(@RequestParam("projectNo") int projectNo){
-		List<ProjectEmployee> result = service.selectEmployeetByProjectNo(projectNo);
+		List<ProjectEmployee> result = service.selectEmployeetByProjectNo(Map.of("projectNo",projectNo,"empNo",1));
 		return result;
 	}
 

@@ -25,7 +25,7 @@
 
 				<div id="workListTable" class="table-responsive">
 					<div>
-
+						<div style="height:320px; width:780px;">
 						<table id="work-list-table" class="table text-start align-middle table-bordered table-hover mb-0"
 							style="text-align: center;">
 							<thead>
@@ -42,6 +42,7 @@
 
 							</tbody>
 						</table>
+						</div>
 					</div>
 				</div>
 				<br>
@@ -71,4 +72,5 @@
 	const empNo ="${loginEmployee.employeeNo }";
 </script>
 <script src="${path }/js/project/insertWork.js"></script>
+<script src='${path }/js/common/pagebar.js'></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

@@ -15,8 +15,8 @@ import com.project.hot.project.model.dto.ProjectEmployee;
 public class ProjectDaoImpl implements ProjectDao {
 
 	@Override
-	public List<Employee> selectEmpByDept(SqlSession session, int deptCode) {
-		return session.selectList("project.selectEmpByDept",deptCode);
+	public List<Employee> selectEmpByDept(SqlSession session, Map<String,Object> param) {
+		return session.selectList("project.selectEmpByDept",param);
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public class ProjectDaoImpl implements ProjectDao {
 	}
 
 	@Override
-	public List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session, int projectNo) {
-		return session.selectList("project.selectEmployeetByProjectNo",projectNo);
+	public List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session, Map<String,Integer> param) {
+		return session.selectList("project.selectEmployeetByProjectNo",param);
 	}
 
 	@Override
