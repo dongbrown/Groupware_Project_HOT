@@ -37,9 +37,64 @@ function getTodayDate() {
 		let textLength = $(this).val().length;
 		$('#project-contents-count').text(textLength + '/1000');
 	});
+//페이지 불러온느 함수
+		function getProjectList(cPage) {
+			$('#project-list-table>tbody').html('');
+
+			fetch(path + '/project/projectupdateajax?cPage=' + cPage)
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					makeProjectList(data.projects);
+
+					const $pagebar = createPagination(cPage, data.totalPage, 'getProjectList');
+					$('.pagebar-div').html('').append($pagebar);
+				})
+				.catch(error => {
+					console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+				});
+		};
+
+		function makeProjectList(projects){
+
+			projects.forEach(p=>{
+				//tr
+				const $projectList=$('<tr>').addClass('project-choice');
+				//td
+				const $projectStartDate=$('<td>').text(p.projectStartDate);
+				const $projectNo=$('<td>').text(p.projectNo);
+				const $employeeName=$('<td>').text(p.employeeCode.employeeName);
+				const $projectTitle=$('<td>').text(p.projectTitle);
+
+				//td 진행률
+				const $projectProgress = $('<td>');
+				const $graphContainer = $('<div>', { class: 'graph-container' });
+				const $bar = $('<div>', { class: 'bar', 'data-percentage': p.projectProgress });
+				const $percentageText = $('<div>', { css: { marginTop: '5px', marginLeft: '5px' }, text: p.projectProgress + '%'});
+
+				//td 삭제 버튼
+				const $deleteButtonCell = $('<td>');
+				const $deleteButton = $('<button>', { class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#projectDeleteModal', text: '삭제'});
+
+				//td 진행률
+				$graphContainer.append($bar).append($percentageText);
+				$projectProgress.append($graphContainer);
+				//td삭제 버튼
+				$deleteButtonCell.append($deleteButton);
+
+				$projectList.append($projectStartDate).append($projectNo).append($employeeName)
+				.append($projectTitle).append($projectProgress).append($deleteButtonCell).appendTo($('#project-list-table>tbody'));
+
+			})
+		}
+
+//프로젝트 리스트 테이블 만드는 함수
+
 
 //총 인원 추가될때 총인원 값 변환
 	$(document).ready(function() {
+		getProjectList(1);
+
 		const savedItems = $('.saved-item');
 		let checkedTotalCount = 1;
 		savedItems.each(function() {
@@ -223,6 +278,24 @@ function getTodayDate() {
 			}
 		})*/
     });
+
+//프로젝트 삭제 버튼
+	const delectProjectBtn=()=>{
+		const projectNo = Number(e.target.parentElement.children[1].textContent);
+		$.ajax({
+			url:"/project/deleteProject.do",
+			type:"GET",
+			data: { projectNo: projectNo },
+			dataType: 'json',
+			success: function() {
+				alert("삭제되었습니다.");
+			},
+			error: function(){
+				alert("삭제 실패");
+			}
+
+		})
+	}
 
 	/*$("#projectUpdateCancle").click(e=>{
 	    const projectNo = e.target.parentElement.children[1].textContent;

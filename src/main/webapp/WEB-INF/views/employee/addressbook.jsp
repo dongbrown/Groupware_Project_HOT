@@ -13,19 +13,10 @@
 	<div class="address-search-div">
 		<form class="address-search-form">
 			<div class="dropdown mb-4 address-department-select-button">
-				<button class="btn btn-primary dropdown-toggle department-menu" type="button"
+				<button class="btn btn-primary dropdown-toggle department-menu-title" type="button"
 					id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="false">부서선택</button>
-				<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-					<c:forEach items="${departments }" var="d">
-						<c:if test="${d.departmentHighCode le 1 }">
-							<a class="dropdown-item" href="#">${d.departmentTitle }</a>
-						</c:if>
-						<c:if test="${d.departmentHighCode gt 1 }">
-							<a class="dropdown-item" href="#">--${d.departmentTitle }</a>
-						</c:if>
-					</c:forEach>
-				</div>
+				<div class="dropdown-menu animated--fade-in department-menu" aria-labelledby="dropdownMenuButton"></div>
 			</div>
 			<div class="input-group">
 				<input type="text" class="form-control border-0 small search-name"

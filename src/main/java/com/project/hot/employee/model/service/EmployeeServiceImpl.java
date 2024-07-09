@@ -42,4 +42,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return dao.selectDepartmentList(session);
 	}
 
+	@Override
+	public Map<String, Object> selectCommutingList(Map<String, Object> param) {
+		Map<String, Object> result=new HashMap<>();
+		result.put("totalPage", Math.ceil((double)dao.countCommutingTotalData(session, param)/10));
+		result.put("commutings", dao.selectCommutingList(session, param));
+		return result;
+	}
+
 }

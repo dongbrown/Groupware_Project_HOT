@@ -13,7 +13,7 @@
 </head>
 <body>
 <!-- 페이지 Wrapper -->
-<div id="wrapper">
+
     <!-- 사이드바 include -->
     <c:import url="/WEB-INF/views/common/sidebar.jsp"/>
 
@@ -25,52 +25,102 @@
             <c:import url="/WEB-INF/views/common/header.jsp"/>
 
             <!-- 페이지 콘텐츠 시작 -->
-            <div class="container-fluid">
+			<div class="container-fluid">
+			    <div class="calendar-legend">
+			        <h1>캘린더</h1> <br>
+			        <div id="calendar2-container">
+			            <div id="calendar2"></div>
+			        </div>
+			        <br><br>
+			        <div class="calendar-section">
+			            <div class="calendar-type toggle-header">
+			                <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
+			                내 캘린더
+			            </div>
+			            <div class="legend-items">
+			                <div class="legend-item">
+			                    <span class="legend-color" style="background-color: red;">여기에 schedule.getColor</span>
+			                    <span>여기에 schedule.getTitle</span>
+			                </div>
+			            </div>
+			        </div>
+			        <div class="calendar-section">
+			            <div class="calendar-type toggle-header">
+			                <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
+			                공유 캘린더
+			            </div>
+			            <div class="legend-items">
+			                <div class="legend-item">
+			                    <span class="legend-color" style="background-color: red;">여기에 schedule.getColor</span>
+			                    <span>여기에 schedule.getTitle</span>
+			                </div>
 
-				<!--@@@@@@ div 위치 조정 필요@@@@@ -->
-            	<div class="calendar-legend">
-                    <h5>2024년 6월</h5>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: red;"></span>
-                        <span>개인 캘린더</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: blue;"></span>
-                        <span>팀 업무 진행</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: green;"></span>
-                        <span>협업 진행</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: yellow;"></span>
-                        <span>OO 프로젝트</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: orange;"></span>
-                        <span>전사일정</span>
-                    </div>
-                </div>
-				<!-- @@@@@@@@@@@@  -->
-
-                <div id="calendar"></div>
-
-                <div id="calendar-container">
-                    <div id="calendar"></div>
-                </div>
+			            </div>
+			        </div>
+			        <div class="calendar-section">
+			            <div class="calendar-type toggle-header">
+			                <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
+			                기타
+			            </div>
+			            <div class="legend-items">
+			                <div class="legend-item">
+			                    <span class="legend-color" style="background-color: pink;"></span>
+			                    <span>전사일정</span>
+			                </div>
+			                <div class="legend-item">
+			                    <span class="legend-color" style="background-color: brown;"></span>
+			                    <span>그룹웨어팀 일정</span>
+			                </div>
+			                <div class="legend-item">
+			                    <span class="legend-color" style="background-color: red;"></span>
+			                    <span>전자결재개인일정</span>
+			                </div>
+			                <div class="legend-item">
+			                    <span class="legend-color" style="background-color: yellow;"></span>
+			                    <span>공지 캘린더</span>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			    <div id="calendar-container">
+			        <div id="calendar"></div>
+			    </div>
+			</div>
 
                 <!-- 일정 추가 모달 -->
                 <div id="scheduleModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h5>일정 추가</h5>
+                        <h5>일정 추가</h5> <br>
                         <form id="addScheduleForm">
-                            <div class="form-group">
-                                <label>타입</label>
-                                <input type="radio" id="scheduleTypeMy" name="scheduleType" value="my" checked>
-                                <label for="scheduleTypeMy">내 캘린더</label>
-                                <input type="radio" id="scheduleTypeShare" name="scheduleType" value="share">
-                                <label for="scheduleTypeShare">공유 캘린더</label>
+                            <div class="form-group schedule-type-group">
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="scheduleTypeMy" name="scheduleType" value="my" checked>
+                                        <label for="scheduleTypeMy">내 캘린더</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="scheduleTypeShare" name="scheduleType" value="share">
+                                        <label for="scheduleTypeShare">공유 캘린더</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="participantSelection" class="form-group" style="display: none;">
+                                <label class="form-label">참석자 선택</label>
+                                <div class="participant-selection-container">
+                                    <div class="department-list">
+                                        <h6>부서 목록</h6>
+                                        <ul id="departmentList"></ul>
+                                    </div>
+                                    <div class="employee-list">
+                                        <h6>사원 목록</h6>
+                                        <ul id="employeeList"></ul>
+                                    </div>
+                                    <div class="selected-employees">
+                                        <h6>선택된 참석자</h6>
+                                        <ul id="selectedEmployeeList"></ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="scheduleTitle">제목</label>
@@ -114,6 +164,7 @@
                     </div>
                 </div>
 
+                <!-- 일정 조회/수정 모달 -->
                 <div id="viewScheduleModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
@@ -126,6 +177,23 @@
                                 <label for="viewScheduleTypeMy">내 캘린더</label>
                                 <input type="radio" id="viewScheduleTypeShare" name="viewScheduleType" value="share">
                                 <label for="viewScheduleTypeShare">공유 캘린더</label>
+                            </div>
+                            <div id="viewParticipantSelection" class="form-group" style="display: none;">
+                                <label class="form-label">참석자 선택</label>
+                                <div class="participant-selection-container">
+                                    <div class="department-list">
+                                        <h6>부서 목록</h6>
+                                        <ul id="viewDepartmentList"></ul>
+                                    </div>
+                                    <div class="employee-list">
+                                        <h6>사원 목록</h6>
+                                        <ul id="viewEmployeeList"></ul>
+                                    </div>
+                                    <div class="selected-employees">
+                                        <h6>선택된 참석자</h6>
+                                        <ul id="viewSelectedEmployeeList"></ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="viewScheduleTitle">제목</label>
@@ -178,8 +246,7 @@
         <c:import url="/WEB-INF/views/common/footer.jsp"/>
     </div>
     <!-- 콘텐츠 Wrapper 끝 -->
-</div>
-<!-- 페이지 Wrapper 끝 -->
+
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

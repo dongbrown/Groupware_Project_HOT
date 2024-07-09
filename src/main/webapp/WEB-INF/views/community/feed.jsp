@@ -57,8 +57,8 @@
 			      <small class="text-muted">${feed.feedEnrollDate}</small>
 			      <c:if test="${loginEmployee.employeeNo eq feed.employeeNo}">
 			        <div class="feed-actions">
-			          <button class="btn btn-sm btn-outline-primary" onclick="updateFeed(${feed.feedNo})">수정</button>
-			          <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
+			        	<button class="btn btn-sm btn-outline-primary" onclick="updateFeed(${feed.feedNo})">수정</button>
+			        	<button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
 			        </div>
 			      </c:if>
 			    </div>

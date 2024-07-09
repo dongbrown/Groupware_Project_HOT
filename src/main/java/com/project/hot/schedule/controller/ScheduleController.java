@@ -34,7 +34,7 @@ public class ScheduleController {
 	private ScheduleService service;
 
 	@GetMapping("/")
-	public String showCalendar() {
+	public String showMyCalendar() {
 		return "schedule/schedule" ;
 	}
 
@@ -87,6 +87,7 @@ public class ScheduleController {
     @PutMapping("/updateSchedule")
     @ResponseBody
     public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
+
         try {
             System.out.println("수정할 일정 정보: " + schedule);
             service.updateSchedule(schedule);
@@ -101,17 +102,67 @@ public class ScheduleController {
     // 일정 삭제 메서드
     @DeleteMapping("/deleteSchedule")
     @ResponseBody
-    public ResponseEntity<String> deleteSchedule(@RequestParam("id") String id) {
+    public ResponseEntity<String> deleteSchedule(@RequestParam("id") int id) {
         try {
-            int deletedCount = service.deleteSchedule(id);
-            if (deletedCount > 0) {
+        	// Schedule, ScheduleEmployee 테이블 데이터 삭제
+            service.deleteSchedule(id);
                 return ResponseEntity.ok("일정이 성공적으로 삭제되었습니다");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 일정을 찾을 수 없습니다");
-            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("일정 삭제 중 오류 발생: " + e.getMessage());
         }
     }
+
+
+    @GetMapping("/selectEmpByDept")
+    @ResponseBody
+    public ResponseEntity<List<Employee>> selectEmpByDept(@RequestParam String deptCode) {
+        try {
+            List<Employee> employees = service.getEmployeesByDepartment(deptCode);
+            return ResponseEntity.ok(employees);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+    //내 캘린더 일정 리스트
+    @GetMapping("/selectMyCalendar")
+    @ResponseBody
+    public ResponseEntity<List<Schedule>> getMySchedule(){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+        try {
+        	List<Schedule> schedules = service.getMySchedule(employeeNo);
+        	return ResponseEntity.ok(schedules);
+        }catch(Exception e) {
+        	e.printStackTrace();
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    //공유 캘린더 일정 리스트
+    @GetMapping("/selectShareCalendar")
+    @ResponseBody
+    public ResponseEntity<List<Schedule>> getShareSchedule(){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+        try {
+        	List<Schedule> schedules = service.getShareSchedule(employeeNo);
+        	return ResponseEntity.ok(schedules);
+        }catch(Exception e) {
+        	e.printStackTrace();
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+
+
+
+
+
 }

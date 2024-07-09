@@ -22,6 +22,7 @@
 		<div id="project-update-window">
 			<div style="display: flex; flex-direction: row; justify-content: center; margin-top: 30px;">
 				<div id="project-update-body">
+				<input style="display:none;" type="text" name="projectNo" value="${project.projectNo }">
 					<!-- 프로젝트 이름 -->
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
@@ -35,7 +36,7 @@
 							aria-label="Sizing example input" value="${project.employeeCode.employeeName }"
 							aria-describedby="inputGroup-sizing-default" disabled>
 					</div>
-					<!-- 프로젝트 중요도 체크박스  -->
+					<!-- 프로젝트 중요도 셀렉트  -->
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트
 							중요도</span> <select id="project-rank" class="form-select"
@@ -95,11 +96,6 @@
 							<select id="select-dept" class="form-select"
 								aria-label="Default select example">
 								<option selected>선택하세요.</option>
-								<c:if test="${not empty depts }">
-									<c:forEach var="d" items="${depts }">
-										<option value="${d.departmentCode}">${d.departmentTitle }</option>
-									</c:forEach>
-								</c:if>
 							</select>
 						</div>
 					</div>
@@ -148,16 +144,18 @@
 	</div>
 </section>
 </div>
+
+
 <script>
+const path='${path}';
 $(document).ready(function() {
 	$("#project-title").val("${project.projectTitle }");
 	$('#project-rank').val("${project.projectRank }");
 	$('#floatingTextarea').text("${project.projectContent }");
 	$('#project-budget').val("${project.projectBudget }");
 	$('#project-end-date').val("${project.projectEndDate }");
-	$('#project-progress').val("${project.projectProgress }");
+	$('#project-progress').val(Number("${project.projectProgress }"));
 	$("#progressResult").text('진행 현황: ${project.projectProgress }%');
-
 	$('#project-progress').on('input', function() {
 		$("#progressResult").text('진행 현황: ' + $(this).val() + '%');
 	});

@@ -36,6 +36,7 @@ public class Project {
 	    private Date projectStartDate;
 	    private Date projectEndDate;
 	    private int projectProgress;
+	    private String projectStatus;
 	    private List<ProjectEmployee> employee;
 
 }

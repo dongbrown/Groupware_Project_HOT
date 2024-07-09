@@ -41,6 +41,10 @@ public class ProjectDaoImpl implements ProjectDao {
 		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
 		return session.selectList("project.selectProjectAll",null,rb);
 	}
+	@Override
+	public int selectProjectAllCount(SqlSession session) {
+		return session.selectOne("project.selectProjectAllCount");
+	}
 
 	@Override
 	public List<Department> selectDeptAll(SqlSession session) {
@@ -64,7 +68,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@Override
 	public int updateProjectDeleteEmp(SqlSession session, int projectNo) {
-		return session.delete("updateProjectDeleteEmp",projectNo);
+		return session.delete("project.updateProjectDeleteEmp",projectNo);
 	}
 
 }

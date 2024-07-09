@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
-<html lang="UTF-8">
+<html lang="en">
 <head>
 
     <meta charset="UTF-8">
@@ -21,7 +21,6 @@
 
     <!-- Custom styles for this template-->
     <link href="${path }/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
-
 </head>
 
 <body class="bg-gradient-primary">
@@ -53,7 +52,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck" >
+                                                <input type="checkbox" class="custom-control-input" id="customCheck" name="remember-me">
                                                 <label class="custom-control-label" for="customCheck">Remember
                                                     Me</label>
                                             </div>
@@ -86,8 +85,7 @@
     <script src="${path }/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="${path }/js/sb-admin-2.min.js"></script>
+    <script src="${path }/js/sb-admin-2.min.js"></script> --%>
 
 </body>
-
 </html>
