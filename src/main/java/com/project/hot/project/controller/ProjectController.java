@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -31,9 +32,17 @@ public class ProjectController {
 	private final ProjectService service;
 
 	@ResponseBody
-	@GetMapping("/projectupdateajaxajax")
+	@GetMapping("/projectupdateajax")
 	public Map<String,Object> projectUpdatePage (@RequestParam(defaultValue = "1") int cPage) {
 		System.out.println(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5)));
+		ObjectMapper mapper=new ObjectMapper();
+		try {
+			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5)));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5));
 	};
 
