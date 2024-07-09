@@ -24,6 +24,10 @@ public interface ScheduleDao {
 
 	List<Employee> getEmployeesByDepartment(String deptCode, SqlSession session);
 
+	List<Schedule> getMySchedule(SqlSession session, int employeeNo);
+
+	List<Schedule> getShareSchedule(SqlSession session, int employeeNo);
+
 
 
 }

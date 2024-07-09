@@ -1,30 +1,39 @@
 package com.project.hot.approval.model.service;
 
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.hot.approval.model.dao.ApprovalDocumentDao;
 import com.project.hot.approval.model.dto.Approval;
-import com.project.hot.approval.model.dto.VacationForm;
+import com.project.hot.employee.model.dto.Department;
+import com.project.hot.employee.model.dto.Employee;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ApprovalDocumentServiceImpl implements ApprovalDocumentService {
 
-    @Autowired
-    private ApprovalDocumentDao approvalDocumentDao;
+
+    private final ApprovalDocumentDao dao;
+    private final SqlSession session;
 
     @Override
     public List<Approval> getAllDocuments() {
-        return approvalDocumentDao.AllDocuments();
+        return dao.AllDocuments(session);
+    }
+
+
+    @Override
+    public List<Employee> getEmployeesByDepartment(String departmentCode) {
+        return dao.getEmployeesByDepartment(session, departmentCode);
     }
 
     @Override
-    public Map<String, Object> inputVacationForm(VacationForm vacationForm) {
-        return approvalDocumentDao.inputVacationForm(vacationForm);
+    public List<Department> selectDepartmentList() {
+        return dao.selectDepartmentList(session);
     }
-
 
 }

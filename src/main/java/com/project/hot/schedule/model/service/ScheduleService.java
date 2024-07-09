@@ -17,4 +17,8 @@ public interface ScheduleService {
 
 	List<Employee> getEmployeesByDepartment(String deptCode);
 
+	List<Schedule> getMySchedule(int employeeNo);
+
+	List<Schedule> getShareSchedule(int employeeNo);
+
 }

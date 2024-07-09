@@ -34,7 +34,7 @@ public class ScheduleController {
 	private ScheduleService service;
 
 	@GetMapping("/")
-	public String showCalendar() {
+	public String showMyCalendar() {
 		return "schedule/schedule" ;
 	}
 
@@ -127,8 +127,37 @@ public class ScheduleController {
     }
 
 
+    //내 캘린더 일정 리스트
+    @GetMapping("/selectMyCalendar")
+    @ResponseBody
+    public ResponseEntity<List<Schedule>> getMySchedule(){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+        try {
+        	List<Schedule> schedules = service.getMySchedule(employeeNo);
+        	return ResponseEntity.ok(schedules);
+        }catch(Exception e) {
+        	e.printStackTrace();
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
-
+    //공유 캘린더 일정 리스트
+    @GetMapping("/selectShareCalendar")
+    @ResponseBody
+    public ResponseEntity<List<Schedule>> getShareSchedule(){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+        try {
+        	List<Schedule> schedules = service.getShareSchedule(employeeNo);
+        	return ResponseEntity.ok(schedules);
+        }catch(Exception e) {
+        	e.printStackTrace();
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
 
 

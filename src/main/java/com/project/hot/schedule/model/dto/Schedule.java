@@ -1,5 +1,7 @@
 package com.project.hot.schedule.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +21,12 @@ public class Schedule {
     private String type;  // scheduleType 대신
     private String start;  // scheduleStartDate 대신
     private String end;  // scheduleEndDate 대신
-    private boolean allDay;  // 필요한 경우 추가
+    private boolean allDay;
+
+    // 공유 대상의 employeeNo 리스트
+    private List<Integer> participants;
+
+
     //project_no 추가해야됨
 
 }
