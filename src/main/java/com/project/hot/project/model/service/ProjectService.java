@@ -12,7 +12,7 @@ public interface ProjectService {
 
 	List<Employee> selectEmpByDept(int deptCode);
 	List<Department> selectDeptAll();
-	List<Project> selectProjectAll(Map<String,Integer> param);
+	Map<String,Object> selectProjectAll(Map<String,Integer> param);
 	Project selectProjectByNo(int projectNo);
 	List<ProjectEmployee> selectEmployeetByProjectNo(int projectNo);
 	int insertProject(Project p);

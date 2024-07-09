@@ -11,4 +11,5 @@ public interface EmployeeService {
 	Employee selectEmployeeById(String id);
 	Map<String, Object> selectEmployeeList(Map<String, Object> param);
 	List<Department> selectDepartmentList();
+	Map<String, Object> selectCommutingList(Map<String, Object> param);
 }

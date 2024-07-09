@@ -1,5 +1,6 @@
 package com.project.hot.project.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,17 +39,16 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public int updateProject(Project p) {
-		int deleteResult = 0;
 		int result = dao.updateProject(session, p);
 		if(result>0) {
-			deleteResult=dao.updateProjectDeleteEmp(session, p.getProjectNo());
+			int deleteResult=dao.updateProjectDeleteEmp(session, p.getProjectNo());
 			if(deleteResult>0) {
 				p.getEmployee().forEach(e -> {
 					dao.insertProjectEmp(session, Map.of("projectNo", p.getProjectNo(), "empNo", e.getEmployeeNo()));
 				});
 			}
 		}
-		return deleteResult;
+		return result;
 	}
 
 	@Override
@@ -58,8 +58,12 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<Project> selectProjectAll(Map<String,Integer> param) {
-		return dao.selectProjectAll(session,param);
+	public Map<String,Object> selectProjectAll(Map<String,Integer> param) {
+		Map<String,Object> result=new HashMap<>();
+		result.put("depts", dao.selectDeptAll(session));
+		result.put("projects", dao.selectProjectAll(session,param));
+		result.put("totalPage",Math.ceil((double)dao.selectProjectAllCount(session)/param.get("numPerpage")));
+		return result;
 	}
 
 	@Override

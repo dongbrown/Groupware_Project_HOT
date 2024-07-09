@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -29,17 +30,20 @@ import lombok.extern.slf4j.Slf4j;
 public class ProjectController {
 
 	private final ProjectService service;
-	private final ObjectMapper mapper;
 
-	@GetMapping("/projectupdate.do")
-	public String projectUpdatePage (@RequestParam(defaultValue = "1") int cPage,
-									@RequestParam(defaultValue = "5") int numPerpage, Department d, Model m) {
+	@ResponseBody
+	@GetMapping("/projectupdateajax")
+	public Map<String,Object> projectUpdatePage (@RequestParam(defaultValue = "1") int cPage) {
+		System.out.println(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5)));
+		ObjectMapper mapper=new ObjectMapper();
+		try {
+			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5)));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		List<Department> depts = service.selectDeptAll();
-		List<Project> projects = service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",numPerpage));
-		m.addAttribute("depts",depts);
-		m.addAttribute("projects",projects);
-		return "project/projectUpdate";
+		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5));
 	};
 
 	@GetMapping("/projectinsert.do")
@@ -102,6 +106,18 @@ public class ProjectController {
 		} catch (Exception e) {
 			log.error("=========프로젝트 등록 중 오류 발생=========", e);
 			return ResponseEntity.badRequest().body("프로젝트 업데이트 실패");
+		}
+	}
+
+	@ResponseBody
+	@PostMapping("/deleteProject.do")
+	public ResponseEntity<String> deleteProject(@RequestBody int projectNo){
+		try {
+			service.deleteProject(projectNo);
+			return ResponseEntity.ok("프로젝트 삭제 성공");
+		} catch (Exception e) {
+			log.error("=========프로젝트 등록 중 오류 발생=========", e);
+			return ResponseEntity.badRequest().body("프로젝트 삭제 실패");
 		}
 	}
 }
