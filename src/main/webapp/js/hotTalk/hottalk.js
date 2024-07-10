@@ -46,6 +46,37 @@ document.addEventListener('DOMContentLoaded', function() {
 		const msg = new CommonMessage("groupHotTalk", loginEmployeeNo).convert();
 		chatServer.send(msg);
 	})
+	// 상태, 상태메세지 모달창
+	/*
+	Target
+	<sup class="user-profile my-status"></sup>
+    <p class="my-status-message"></p>
+	*/
+	// 상태 변경
+	$(".change-status-btn").on('click', function(){
+		const status = $("input[name='emp-change-status']:checked").val();
+		// console.log(status);
+		$("sup.my-status").text(status);
+		// loginEmployeeNo, status 값 넘겨주기 → 서버에서 Update
+		let newStatus = new Object();
+		newStatus.type="change";
+		newStatus.employeeNo = loginEmployeeNo;
+		newStatus.hotTalkStatus = status;
+		chatServer.send(JSON.stringify(newStatus))
+	});
+	// 상태 메세지 변경
+	$(".change-statusMsg-btn").on('click', function(){
+		const statusMsg = $("input[name='emp-change-statusMsg']").val();
+		$("p.my-status-message").text(statusMsg);
+		// loginEmployeeNo, statusMsg 값 넘겨주기 → 서버에서 Update
+		let newStatus = new Object();
+		newStatus.type="change";
+		newStatus.employeeNo = loginEmployeeNo;
+		newStatus.hotTalkStatusMessage = statusMsg;
+		chatServer.send(JSON.stringify(newStatus))
+	})
+
+
 	let allEmployee = "";
 	chatServer.onmessage=(response)=>{
 		const data = JSON.parse(response.data);
@@ -57,6 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			switch(data[0].type){
 				case '사원':
 					data.forEach(d=>{
+						const $employee = document.createElement("div");
+						const $profile = document.createElement("div");
+						const $photo = document.createElement("img");
+						const $name = document.createElement("h5");
+						const $dept = document.createElement("p");
 						if(d.employeeNo==loginEmployeeNo){
 							console.log(d.status);
 							console.log(d.profile);
@@ -65,14 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							const $msg = document.querySelector(".my-status-message");
 							$msg.innerText=d.profile;
 							$status.innerHTML=d.status;
-						}
-						const $employee = document.createElement("div");
-						const $profile = document.createElement("div");
-						const $photo = document.createElement("img");
-						const $name = document.createElement("h5");
-						const $dept = document.createElement("p");
-
-						if(d.employeePhoto==null){
+						} else if(d.employeeNo!=loginEmployeeNo && d.employeePhoto==null){
 							$photo.src="https://img.khan.co.kr/news/2023/01/02/news-p.v1.20230102.1f95577a65fc42a79ae7f990b39e7c21_P1.png";
 							$photo.style.width="53px";
 							$photo.style.height="53px";
@@ -218,7 +247,8 @@ document.addEventListener('DOMContentLoaded', function() {
 							// console.log(members);
 							$(".chat-input").data("memberNo",members);
 							// console.log($(".chat-input").data("memberNo"));
-							// → 모달창에서 추가한 사원들 사번들이 csv 형식으로 출력됨
+							// → 모달창에서 추가한 사원들 사번들이 기존 input 태그에 data속성으로 담고 csv 형식으로 출력
+
 						}
 					})
 
@@ -286,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				const $chattingRoom = $(".chat-messages");
 				$chattingRoom.empty();
 					data.forEach(d => {
-						// console.log(d);
+						console.log(d);
 						if(d.hotTalkIsGroup=='N'){
 							$(".chat-user-name").text(d.contents[0].hotTalkReceiver[0].receiverName);
 							$(".user-status").text(d.contents[0].hotTalkReceiver[0].status);
@@ -304,11 +334,13 @@ document.addEventListener('DOMContentLoaded', function() {
 					  const contents = d.contents;
 					  console.log(contents);
 					  contents.forEach(c => {
-						// console.log(c);
+						console.log(c);
 					    const $chatBox = $("<div>").addClass("chat-message");
+					    if(c.hotTalkContentSender.employeeNo != loginEmployeeNo){
+
+						}
 					    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
 					    $chatBox.append($("<span>").text(c.hotTalkContent));
-
 					    if (c.hotTalkContentSender.employeeNo != loginEmployeeNo) {
 					      $chatBox.addClass("chattingRoom-left-msg");
 					    } else {

@@ -66,3 +66,4 @@ getProjectList(1);
 	    location.assign("/work/insertwork.do?projectNo="+projectNo);
 	});
 
+

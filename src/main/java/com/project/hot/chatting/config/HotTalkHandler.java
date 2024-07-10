@@ -13,6 +13,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
+import com.project.hot.chatting.model.dto.HotTalkStatus;
 import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
@@ -40,42 +41,61 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	private void enterEmployees(WebSocketSession session, CommonMessageDTO msg) {
 		employees.put(msg.getSender(), session);
-		List<ResponseEmployeeDTO> list = service.getHotTalkMemberList();
+		List<ResponseEmployeeDTO> list = service.getHotTalkMemberList(msg.getSender());
 		list.forEach(l->l.setType("사원"));
 		// System.out.println(list);
 		responseListDTO(list);
 	}
 
-	private void privateHotTalkList(WebSocketSession session, CommonMessageDTO msg) {
+	private void privateHotTalkList(CommonMessageDTO msg) {
 		List<ResponseHotTalkListDTO> list = service.getPrivateHotTalkList(msg.getSender());
 		list.forEach(l->l.setType("갠톡"));
 		responseListDTO(list);
 	}
 
-	private void groupHotTalkList(WebSocketSession session, CommonMessageDTO msg) {
+	private void groupHotTalkList(CommonMessageDTO msg) {
 		List<ResponseHotTalkListDTO> list = service.getGroupHotTalkList(msg.getSender());
 		list.forEach(l->l.setType("단톡"));
 		responseListDTO(list);
 	}
-	private void getHotTalkContents(WebSocketSession sessionm, CommonMessageDTO msg) {
+	private void getHotTalkContents(CommonMessageDTO msg) {
 		List<ResponseHotTalkContentDTO> contents = service.getHotTalkContents(msg.getSender(), msg.getHotTalkNo());
 		// System.out.println(contents);
 		contents.forEach(c->{
 			c.setType("open");
 			// System.out.println(c);
 		});
-		System.out.println(contents);
+		// System.out.println(contents);
 		responseListDTO(contents);
+	}
+	private void updateHotTalkStatus(HotTalkStatus status) {
+		int result;
+		if(status.getHotTalkStatus() != null) {
+			result = service.updateHotTalkStatus(status.getEmployeeNo(), status.getHotTalkStatus());
+		} else if(status.getHotTalkStatusMessage() != null){
+			result = service.updateHotTalkStatusMessage(status.getEmployeeNo(), status.getHotTalkStatusMessage());
+		} else {
+			result = 0;
+		}
+		responseMsg(result);
+	}
+
+	private void sendMessage(CommonMessageDTO msg) {
+
 	}
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		CommonMessageDTO msg = mapper.readValue(message.getPayload(), CommonMessageDTO.class);
 		switch(msg.getType()){
 			case "enter" : enterEmployees(session, msg); break;
-			case "privateHotTalk" : privateHotTalkList(session, msg); break;
-			case "groupHotTalk" : groupHotTalkList(session, msg); break;
+			case "privateHotTalk" : privateHotTalkList(msg); break;
+			case "groupHotTalk" : groupHotTalkList(msg); break;
 			// const msg = new CommonMessage("open", sender, "", hotTalkNo, "").convert();로 전달 → 채팅방 내역 조회
-			case "open" : getHotTalkContents(session, msg);
+			case "open" : getHotTalkContents(msg); break;
+			case "change" : HotTalkStatus status = mapper.readValue(message.getPayload(), HotTalkStatus.class);
+							updateHotTalkStatus(status);
+							break;
+			case "msg" : sendMessage(msg); break;
 		}
 	}
 
@@ -92,10 +112,20 @@ public class HotTalkHandler extends TextWebSocketHandler {
 				String message = mapper.writeValueAsString(list);
 				emp.sendMessage(new TextMessage(message));
 			}catch(Exception e){
-				log.debug("responseMessage() 실패");
+				log.debug("responseListDTO() 실패");
 			}
 		}
 	}
 
+	private void responseMsg(int result) {
+		for(Map.Entry<Integer, WebSocketSession> employee : employees.entrySet()) {
+			WebSocketSession emp = employee.getValue();
+			try {
+				emp.sendMessage(new TextMessage(result>0? "success" : "fail"));
+			}catch(Exception e){
+				log.debug("responseMsg() 실패");
+			}
+		}
+	}
 
 }

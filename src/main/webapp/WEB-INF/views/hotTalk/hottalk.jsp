@@ -27,9 +27,59 @@
                 <p class="my-status-message"></p>
               	<div class="dropdown">
 				  <ul class="dropdown-menu">
-				    <li><a class="dropdown-item" href="#">상태 변경</a></li>
-				    <li><a class="dropdown-item" href="#">상태메세지 변경</a></li>
+				    <li>
+				    <!-- <a class="dropdown-item" href="#">상태 변경</a> -->
+				    <!-- Button trigger modal -->
+						<button type="button" class="btn btn-primary dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						  상태 변경
+						</button>
+					</li>
+				    <li>
+						<button type="button" class="btn btn-primary dropdown-item" data-bs-toggle="modal" data-bs-target="#messageModal">
+						  상태 메세지 변경
+						</button>
+					</li>
 				  </ul>
+				</div>
+				<!-- status Modal -->
+				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="exampleModalLabel">접속 상태 변경</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body status-modal">
+				        <input type="radio" name="emp-change-status" value="Online"> Online
+				        <input type="radio" name="emp-change-status" value="Offline"> Offline
+				        <input type="radio" name="emp-change-status" value="Meeting"> Meeting
+				        <input type="radio" name="emp-change-status" value="Lunch"> Lunch
+				        <input type="radio" name="emp-change-status" value="Break Time"> Break Time
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				        <button type="button" class="btn btn-primary change-status-btn" data-bs-dismiss="modal">변경</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!-- statusMessage Modal -->
+				<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="messageModalLabel">상태 메세지 변경</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body status-mesage-modal">
+				        <input class="search-input" type="text" name="emp-change-statusMsg" placeholder="상태메세지를 입력하세요.">
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				        <button type="button" class="btn btn-primary change-statusMsg-btn" data-bs-dismiss="modal">변경</button>
+				      </div>
+				    </div>
+				  </div>
 				</div>
             </div>
             <div class="search-bar">
@@ -108,7 +158,7 @@
             </div>
 
             <div class="chat-input">
-                <input type="text" id="msg" placeholder="Enter Message...">
+                <input class="chat-msg" type="text" id="msg" placeholder="Enter Message...">
                 <div class="file-upload">
 	                <label for="file-input" class="file-upload-btn">
 	                    <span class="plus-icon">+</span>
@@ -116,7 +166,7 @@
 	                <input id="file-input" type="file" style="display: none;">
 	                <span id="file-name"></span>
 	            </div>
-                <button class="send-btn">전송</button>
+                <button class="chat-send-btn">전송</button>
             </div>
         </div>
     </div>
