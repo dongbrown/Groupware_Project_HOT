@@ -63,7 +63,7 @@
 					<div>
 						<div class="input-group mb-3">
 								<label for="date">마감 날짜:
-								  <input type="date" id="project-end-date">
+								  <input style="width:150px; text-align:center;" type="date" id="project-end-date">
 								</label>
 							</div>
 					</div>
@@ -99,4 +99,5 @@
 	</div>
 </section>
 </div>
+<script src="${path }/js/project/insertWorkDetail.js"></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
