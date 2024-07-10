@@ -8,14 +8,14 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.hot.chatting.model.dto.HotTalkStatus;
-import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
+import com.project.hot.chatting.model.dto.ResponseLoginEmployeeDTO;
 @Repository
 public class HotTalkDaoImpl implements HotTalkDao {
 
 	@Override
-	public List<ResponseEmployeeDTO> getHotTalkMemberList(SqlSession session, int empNo) {
+	public List<ResponseLoginEmployeeDTO> getHotTalkMemberList(SqlSession session, int empNo) {
 		return session.selectList("hottalk.getHotTalkMemberList", empNo);
 	}
 

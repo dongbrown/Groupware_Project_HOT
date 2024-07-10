@@ -6,9 +6,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.hot.chatting.model.dao.HotTalkDao;
-import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
+import com.project.hot.chatting.model.dto.ResponseLoginEmployeeDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class HotTalkServiceImpl implements HotTalkService {
 	private final HotTalkDao dao;
 	private final SqlSession session;
 	@Override
-	public List<ResponseEmployeeDTO> getHotTalkMemberList(int empNo) {
+	public List<ResponseLoginEmployeeDTO> getHotTalkMemberList(int empNo) {
 		return dao.getHotTalkMemberList(session, empNo);
 	}
 	@Override
