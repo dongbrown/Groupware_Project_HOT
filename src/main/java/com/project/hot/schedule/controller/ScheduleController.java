@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,12 +34,9 @@ public class ScheduleController {
 	@Autowired
 	private ScheduleService service;
 
-	@GetMapping("/")
-	public String showMyCalendar() {
-		return "schedule/schedule" ;
-	}
 
-	@GetMapping("/schedule")
+
+	@GetMapping("/all")
     @ResponseBody
     public List<Map<String, Object>> getSchedules() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -83,14 +81,21 @@ public class ScheduleController {
 	    }
 	}
 
-	// 일정 수정 메서드
+	// 일정 수정 메서드 (모달 수정, 날짜만 수정)
     @PutMapping("/updateSchedule")
     @ResponseBody
     public ResponseEntity<String> updateSchedule(@RequestBody Schedule schedule) {
 
         try {
             System.out.println("수정할 일정 정보: " + schedule);
-            service.updateSchedule(schedule);
+
+            if(schedule.isUpdatedByDrag()) {
+            	//드래그로 날짜만 수정
+            	service.updateScheduleByDrag(schedule);
+            }else {
+            	//모달로 수정
+            	service.updateSchedule(schedule);
+            }
             return ResponseEntity.ok("일정이 성공적으로 수정되었습니다");
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,36 +131,24 @@ public class ScheduleController {
         }
     }
 
-
-    //내 캘린더 일정 리스트
-    @GetMapping("/selectMyCalendar")
-    @ResponseBody
-    public ResponseEntity<List<Schedule>> getMySchedule(){
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    //내 캘린더/공유 캘린더 따로 가져오기
+    @GetMapping("/")
+    public String showMyCalendar(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
-        try {
-        	List<Schedule> schedules = service.getMySchedule(employeeNo);
-        	return ResponseEntity.ok(schedules);
-        }catch(Exception e) {
-        	e.printStackTrace();
-        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
 
-    //공유 캘린더 일정 리스트
-    @GetMapping("/selectShareCalendar")
-    @ResponseBody
-    public ResponseEntity<List<Schedule>> getShareSchedule(){
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        int employeeNo = loginEmployee.getEmployeeNo();
         try {
-        	List<Schedule> schedules = service.getShareSchedule(employeeNo);
-        	return ResponseEntity.ok(schedules);
-        }catch(Exception e) {
-        	e.printStackTrace();
-        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            List<Schedule> mySchedules = service.getMySchedule(employeeNo);
+            model.addAttribute("mySchedules", mySchedules);
+
+            List<Schedule> sharedSchedules = service.getShareSchedule(employeeNo);
+            model.addAttribute("sharedSchedules", sharedSchedules);
+
+            return "schedule/schedule";
+        } catch(Exception e) {
+            e.printStackTrace();
+            return "error/500";
         }
     }
 

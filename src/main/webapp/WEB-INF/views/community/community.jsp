@@ -79,6 +79,37 @@
                     </div>
                 </div>
             </div>
+            <!-- 커뮤니티 생성 모달  -->
+			<div id="createCommunityModal" class="modal">
+			  <div class="modal-content">
+			    <h2 class="modal-title">커뮤니티 생성</h2>
+			    <form id="createCommunityForm">
+			      <div class="form-group">
+			        <label for="communityTitle">커뮤니티명</label>
+			        <input type="text" id="communityTitle" required>
+			      </div>
+			      <div class="form-group">
+			        <label for="communityIntroduce">소개</label>
+			        <textarea id="communityIntroduce" required></textarea>
+			      </div>
+			      <div class="form-group">
+			        <label>공개 여부</label>
+			        <div class="radio-group">
+			          <label>
+			            <input type="radio" name="communityIsOpen" value="Y" checked> 공개
+			          </label>
+			          <label>
+			            <input type="radio" name="communityIsOpen" value="N"> 비공개
+			          </label>
+			        </div>
+			      </div>
+			      <div class="btn-group">
+			        <button type="submit" class="btn btn-primary">등록</button>
+			        <button type="button" class="btn btn-secondary close-modal" id="close-btn">취소</button>
+			      </div>
+			    </form>
+			  </div>
+			</div>
             <!-- 페이지 콘텐츠 끝 -->
         </div>
         <!-- 메인 콘텐츠 끝 -->

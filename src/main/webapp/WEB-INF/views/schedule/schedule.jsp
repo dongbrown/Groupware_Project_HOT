@@ -27,36 +27,44 @@
             <!-- 페이지 콘텐츠 시작 -->
 			<div class="container-fluid">
 			    <div class="calendar-legend">
-			        <h1>캘린더</h1> <br>
+			        <h1>일정관리</h1> <br>
 			        <div id="calendar2-container">
 			            <div id="calendar2"></div>
 			        </div>
 			        <br><br>
-			        <div class="calendar-section">
-			            <div class="calendar-type toggle-header">
-			                <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
-			                내 캘린더
-			            </div>
-			            <div class="legend-items">
-			                <div class="legend-item">
-			                    <span class="legend-color" style="background-color: red;">여기에 schedule.getColor</span>
-			                    <span>여기에 schedule.getTitle</span>
-			                </div>
-			            </div>
-			        </div>
-			        <div class="calendar-section">
-			            <div class="calendar-type toggle-header">
-			                <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
-			                공유 캘린더
-			            </div>
-			            <div class="legend-items">
-			                <div class="legend-item">
-			                    <span class="legend-color" style="background-color: red;">여기에 schedule.getColor</span>
-			                    <span>여기에 schedule.getTitle</span>
-			                </div>
+			        <!-- 내 캘린더 -->
+					<div class="calendar-section">
+					    <div class="calendar-type toggle-header">
+					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
+					        내 캘린더
+					    </div>
+					    <div class="legend-items">
+					        <c:forEach var="schedule" items="${mySchedules}">
+					            <div class="legend-item">
+									<input type="checkbox" class="schedule-checkbox" data-id="${schedule.id}" checked>
+					                <span>${schedule.title}</span>
+					                <span class="legend-color" style="background-color: ${schedule.color};"></span>
+					            </div>
+					        </c:forEach>
+					    </div>
+					</div>
 
-			            </div>
-			        </div>
+					<!-- 공유 캘린더 -->
+					<div class="calendar-section">
+					    <div class="calendar-type toggle-header">
+					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
+					        공유 캘린더
+					    </div>
+					    <div class="legend-items">
+					        <c:forEach var="schedule" items="${sharedSchedules}">
+					            <div class="legend-item">
+					            	<input type="checkbox" class="schedule-checkbox" data-id="${schedule.id}" checked>
+					                <span>${schedule.title}</span>
+					                <span class="legend-color" style="background-color: ${schedule.color};"></span>
+					            </div>
+					        </c:forEach>
+					    </div>
+					</div>
 			        <div class="calendar-section">
 			            <div class="calendar-type toggle-header">
 			                <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
@@ -68,16 +76,8 @@
 			                    <span>전사일정</span>
 			                </div>
 			                <div class="legend-item">
-			                    <span class="legend-color" style="background-color: brown;"></span>
-			                    <span>그룹웨어팀 일정</span>
-			                </div>
-			                <div class="legend-item">
-			                    <span class="legend-color" style="background-color: red;"></span>
-			                    <span>전자결재개인일정</span>
-			                </div>
-			                <div class="legend-item">
 			                    <span class="legend-color" style="background-color: yellow;"></span>
-			                    <span>공지 캘린더</span>
+			                    <span>공지사항</span>
 			                </div>
 			            </div>
 			        </div>
