@@ -11,9 +11,8 @@
 	<div class="profile-div shadow p-3 mb-5 bg-body rounded-4">
 		<div class="photo-div">
 			<img src="${path }/upload/employee/${loginEmployee.employeePhoto }" class="employee-photo">
-			<form method="POST" enctype="multipart/form-data" action="${path }/employeePhotoUpdate">
-				<button type="submit" class="btn btn-primary photo-change-btn">이미지 변경</button>
-			</form>
+			<input type="file" id="fileInput" name="upFile" accept="image/*" style="display: none;">
+			<button type="submit" class="btn btn-primary photo-change-btn">이미지 변경</button>
 		</div>
 		<div class="info-div">
 			<div class="name-dept">
@@ -32,6 +31,10 @@
 	</div>
 </section>
 </div>
-<script>const path='${path}'; const no=${loginEmployee.employeeNo};</script>
+<script>
+	const path='${path}'; 
+	const no=${loginEmployee.employeeNo};
+	const employeePhoto='${loginEmployee.employeePhoto}';
+</script>
 <script src='${path }/js/employee/profile.js'></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

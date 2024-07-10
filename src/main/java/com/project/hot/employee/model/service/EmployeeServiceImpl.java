@@ -89,4 +89,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return result;
 	}
 
+	@Override
+	public int updateEmployeePhoto(Map<String, Object> param) {
+		return dao.updateEmployeePhoto(session, param);
+	}
+
 }
