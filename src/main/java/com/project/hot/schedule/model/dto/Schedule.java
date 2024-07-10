@@ -1,5 +1,6 @@
 package com.project.hot.schedule.model.dto;
 
+import java.sql.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -19,14 +20,20 @@ public class Schedule {
     private String color;  // scheduleLabel 대신 (색상 코드로 사용)
     private String location;  // schedulePlace 대신
     private String type;  // scheduleType 대신
-    private String start;  // scheduleStartDate 대신
-    private String end;  // scheduleEndDate 대신
+    private Date start;  // scheduleStartDate 대신
+    private Date end;  // scheduleEndDate 대신
     private boolean allDay;
+
+    private boolean updatedByDrag;
 
     // 공유 대상의 employeeNo 리스트
     private List<Integer> participants;
 
-
     //project_no 추가해야됨
+
+    public boolean isUpdatedByDrag() {
+    	return updatedByDrag;
+    }
+
 
 }

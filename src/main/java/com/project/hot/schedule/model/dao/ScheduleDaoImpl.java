@@ -35,6 +35,11 @@ public class ScheduleDaoImpl implements ScheduleDao {
 	}
 
 	@Override
+	public void updateScheduleByDrag(Schedule schedule, SqlSession session) {
+		session.update("schedule.updateScheduleByDrag", schedule);
+	}
+
+	@Override
 	public void updateSchedule(Schedule schedule, SqlSession session) {
 		session.update("schedule.updateSchedule", schedule);
 	}

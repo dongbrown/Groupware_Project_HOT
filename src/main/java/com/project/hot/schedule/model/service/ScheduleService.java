@@ -11,6 +11,8 @@ public interface ScheduleService {
 
 	void addSchedule(Schedule schedule, int employeeNo);
 
+	void updateScheduleByDrag(Schedule schedule);
+
 	void updateSchedule(Schedule schedule);
 
 	void deleteSchedule(int id);

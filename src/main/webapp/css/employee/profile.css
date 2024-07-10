@@ -1,0 +1,48 @@
+/*
+	프로필용 css ~
+*/
+
+.profile-section {
+	display: flex;
+    justify-content: center;
+    height: 87vh;
+    align-items: center;
+}
+
+.profile-div {
+	width: 90%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+}
+
+.photo-div {
+	display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 76%;
+    align-items: center;
+}
+
+.employee-photo {
+	width: 60%;
+    margin-bottom: 3%;
+}
+
+.info-div {
+	height: 76%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    margin-left: 10%;
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.other-info {
+	display: flex;
+    flex-direction: column;
+    height: 90%;
+    justify-content: space-evenly;
+}

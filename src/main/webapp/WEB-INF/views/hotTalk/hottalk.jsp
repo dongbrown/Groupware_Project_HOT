@@ -88,7 +88,7 @@
 								</div>
 							</div>
 							<div>
-								<input class="search-input modal-title" type="text" placeholder="채팅방 제목을 입력하세요.">
+								<input class="search-input modal-hottalk-title" type="text" placeholder="채팅방 제목을 입력하세요.">
 								<div class="modal-additional-employee" style="width: 239px; margin-top: 10px;">
 
 								</div>
@@ -96,7 +96,7 @@
 					      </div>
 					      <div class="modal-footer">
 					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
-					        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">CREATE</button>
+					        <button type="button" class="btn btn-primary create-btn">CREATE</button>
 					      </div>
 					    </div>
 					  </div>

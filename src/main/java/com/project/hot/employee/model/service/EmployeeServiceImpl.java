@@ -1,5 +1,8 @@
 package com.project.hot.employee.model.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +11,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.hot.employee.model.dao.EmployeeDao;
+import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
+import com.project.hot.employee.model.dto.ResponseCommuting;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,7 +51,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public Map<String, Object> selectCommutingList(Map<String, Object> param) {
 		Map<String, Object> result=new HashMap<>();
 		result.put("totalPage", Math.ceil((double)dao.countCommutingTotalData(session, param)/10));
-		result.put("commutings", dao.selectCommutingList(session, param));
+		result.put("commutings", dao.selectCommutingPagingList(session, param));
+
+		//출퇴근 페이지 시간계산
+		ResponseCommuting rc=new ResponseCommuting();
+		List<Commuting> c=dao.selectCommutingList(session, param);
+
+		//오늘 출퇴근시간 저장
+		c.stream().filter(f->f.getCommutingDate().toLocalDate().equals(LocalDateTime.now().toLocalDate())).forEach(e->{
+			if(e.getCommutingGoWorkTime()!=null) rc.setTodayGoWorkTime(e.getCommutingGoWorkTime());
+			if(e.getCommutingLeaveWorkTime()!=null) rc.setTodayLeaveWorkTime(e.getCommutingLeaveWorkTime());
+		});
+
+		//이번달 근무일수 저장
+		rc.setTotalWorkDay((int)c.stream().filter(f->!(f.getCommutingStatus().equals("연차")||f.getCommutingStatus().equals("결근"))).count());
+
+		//총 근무시간, 총 연장근무시간 저장
+		// 연차, 결근인 날 빼고 나머지 상태만 계산
+		// 18시 이후는 연장근무시간에 포함 - 바뀔예정...
+		c.stream().filter(f->!(f.getCommutingStatus().equals("연차")||f.getCommutingStatus().equals("결근"))).forEach(e->{
+			if(e.getCommutingGoWorkTime()!=null&&e.getCommutingLeaveWorkTime()!=null) {
+				rc.setTotalWorkTime(rc.getTotalWorkTime()
+										+ (int)Duration.between(e.getCommutingGoWorkTime(), e.getCommutingLeaveWorkTime()).toMinutes()
+										  / 60);
+				rc.setTotalExWorkTime(rc.getTotalExWorkTime()
+										+ (int)Duration.between(LocalDateTime.of(e.getCommutingLeaveWorkTime().toLocalDate(), LocalTime.of(18, 0)), e.getCommutingLeaveWorkTime()).toMinutes()
+										  / 60);
+			}
+		});
+
+		//지각, 결근, 연차 일 수 저장
+		rc.setTardy((int)c.stream().filter(f->f.getCommutingStatus().equals("지각")).count());
+		rc.setAbsence((int)c.stream().filter(f->f.getCommutingStatus().equals("결근")).count());
+		rc.setAnnual((int)c.stream().filter(f->f.getCommutingStatus().equals("연차")).count());
+
+		result.put("responseCommuting", rc);
 		return result;
 	}
 

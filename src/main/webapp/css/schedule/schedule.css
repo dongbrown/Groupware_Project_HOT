@@ -69,20 +69,68 @@ body {
 .legend-item {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
-    font-size: 14px;
-    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    font-size: 12px;
+    padding: 2px 0;
+}
+
+.legend-item input[type="checkbox"] {
+    margin-right: 5px;
+    width: 14px;
+    height: 14px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid #999;
+    border-radius: 3px;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s;
+    order: 1;
+}
+
+.legend-item input[type="checkbox"]:checked {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.legend-item input[type="checkbox"]:checked::before {
+    content: '\2714';
+    display: block;
+    text-align: center;
+    color: white;
+    font-size: 10px;
+    line-height: 12px;
+}
+
+.legend-item span:not(.legend-color) {
+    flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-left: 5px;
+    margin-right: 5px;
+    order: 2;
 }
 
 .legend-color {
-    width: 15px;
-    height: 15px;
-    margin-right: 10px;
-    border-radius: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
     flex-shrink: 0;
+    order: 3;
+}
+
+/* 내 캘린더와 공유 캘린더 공통 스타일 */
+.calendar-section:first-of-type .legend-item,
+.calendar-section:nth-of-type(2) .legend-item {
+    flex-direction: row;
+}
+
+.calendar-section:first-of-type .legend-color,
+.calendar-section:nth-of-type(2) .legend-color {
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #calendar-container {
@@ -113,11 +161,14 @@ body {
 }
 
 .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
+    color: #aaa !important;
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    padding: 10px !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
 }
 
 .close:hover,
