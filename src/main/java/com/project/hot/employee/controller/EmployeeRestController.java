@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ public class EmployeeRestController {
 
 	private final EmployeeService service;
 
+	// 사원 정보를 담은 리스트 반환
 	@GetMapping("/employeeList")
 	public Map<String, Object> getEmployeeList(
 			@RequestParam(defaultValue = "1") int cPage,
@@ -40,19 +42,20 @@ public class EmployeeRestController {
 		return service.selectEmployeeList(param);
 	}
 
+	// 부서 전체 리스트 반환
 	@GetMapping("/departmentList")
 	public List<Department> selectDepartmentList(){
 		return service.selectDepartmentList();
 	}
 
-	
-	@GetMapping("/commutingList")
+	// 사원 한명 출퇴근 정보 반환
+	@GetMapping("/commuting/{no}")
 	public Map<String, Object> getCommutingList(
-			Principal principal, 
+			@PathVariable(name = "no") int employeeNo,
 			@RequestParam String month,
 			@RequestParam(defaultValue = "1") int cPage){
 		Map<String, Object> param=new HashMap<>();
-		param.put("employeeNo", principal.getName());
+		param.put("employeeNo", employeeNo);
 		param.put("year", LocalDate.now().getYear());
 		param.put("month", month);
 		param.put("cPage", cPage);

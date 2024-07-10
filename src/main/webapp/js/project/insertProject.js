@@ -58,7 +58,7 @@ function getTodayDate() {
 			$.ajax({
 				type: 'GET',
 				url: '/project/selectEmpByDept.do',
-				data: { dept: selectedText },
+				data: { dept: selectedText, empNo:empNo },
 				dataType: 'json',
 				success: function(emp) {
                 	displayEmployees(emp);
@@ -121,8 +121,7 @@ function getTodayDate() {
 
 					const checkedMembersDel = $('<button>', { class: 'btn-close', type: 'button' });
 					const savedItem = $('<div>', { text: label, id: 'checked-member-wrab', class: 'saved-item' });
-					savedItem.append(checkedMembersDel);
-					savedMembers.append(savedItem);
+					savedItem.append(checkedMembersDel).appendTo(savedMembers);
 				});
 			});
 				}
@@ -175,6 +174,10 @@ function getTodayDate() {
 			        employeeNo: empNo
 			    });
 			});
+//프로젝트 생성자(팀장) json 추가 저장
+			projectData.employee.push({
+			        employeeNo: empNo
+			    });
 
 //프로젝트 생성 ajax
 			$.ajax({

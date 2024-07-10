@@ -119,18 +119,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						})
 					});
-					// console.log($option);
-					// Modal 창 Start
-					$(".modal-employee-result").text("");
-					const $modalEmployees = $($option).clone();
-					$modalEmployees.attr("style", "margin-top: 10px; height: 360px;");
-					$modalEmployees.attr("class","modal-employee-box");
-					$(".modal-employee-result").append($modalEmployees);
-					$(document).ready(function() {
+				// console.log($option);
+				// Modal 창 Start
+				$(".modal-employee-result").text("");
+				const $modalEmployees = $($option).clone();
+				$modalEmployees.attr("style", "margin-top: 10px; height: 360px;");
+				$modalEmployees.attr("class","modal-employee-box");
+				$(".modal-employee-result").append($modalEmployees);
+				$(document).ready(function() {
 				    function moveEmployee($element, $from, $to, fromClass, toClass) {
 				        $element.removeClass(fromClass).addClass(toClass);
 				        $from.find($element).remove();
-				        $to.append($element);
+				        $to.prepend($element);
 				    }
 
 				    // 채팅방 생성 더블클릭으로 사원 이동
@@ -193,6 +193,32 @@ document.addEventListener('DOMContentLoaded', function() {
 							$('.modal-employee-result .hotTalkEmployee').each(function(){
 								$(this).show();
 							})
+						}
+					})
+					// 채팅방 생성 버튼 로직
+					$(".create-btn").on('click', function(e){
+						if($(".modal-hottalk-title").val().length==0){
+							// console.log($(".modal-hottalk-title").val());
+							alert("채팅방 제목을 입력해주세요.");
+							return false;
+						} else if($('.modal-additional-employee').children().length<2){
+							// console.log($('modal-additional-employee').children().length);
+							alert("그룹 채팅방의 멤버의 수가 부족합니다.")
+							return false;
+						} else {
+							// console.log($(".modal-hottalk-title").val());
+							$("#staticBackdrop").modal("hide");
+							$(".chat-user-name").text($(".modal-hottalk-title").val());
+							// $(".additionalEmployee").data('employeeno')
+							// : 다중 요소에 추가 가능한 class인 만큼 처음 추가한 사원만 나오는 모습
+							let members = loginEmployeeNo;
+							$(".additionalEmployee").each(function(){
+								 members = members+","+$(this).data('employeeno');
+							})
+							// console.log(members);
+							$(".chat-input").data("memberNo",members);
+							// console.log($(".chat-input").data("memberNo"));
+							// → 모달창에서 추가한 사원들 사번들이 csv 형식으로 출력됨
 						}
 					})
 
@@ -260,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				const $chattingRoom = $(".chat-messages");
 				$chattingRoom.empty();
 					data.forEach(d => {
-						console.log(d);
+						// console.log(d);
 						if(d.hotTalkIsGroup=='N'){
 							$(".chat-user-name").text(d.contents[0].hotTalkReceiver[0].receiverName);
 							$(".user-status").text(d.contents[0].hotTalkReceiver[0].status);
@@ -278,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					  const contents = d.contents;
 					  console.log(contents);
 					  contents.forEach(c => {
-						console.log(c);
+						// console.log(c);
 					    const $chatBox = $("<div>").addClass("chat-message");
 					    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
 					    $chatBox.append($("<span>").text(c.hotTalkContent));
@@ -316,9 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		// console.log(allEmployee);
 		$(".modal-employee-result").append(allEmployee);
 	})
-	function makeGroupHotTalk(leaderNo, membersNo){
 
-	}
 	// 메세지 전송 버튼 클릭 이벤트
 	document.querySelector(".send-btn").addEventListener("click", ()=>{
 		const msg=document.querySelector("#msg").value;

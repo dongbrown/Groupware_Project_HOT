@@ -22,8 +22,8 @@ public class ProjectServiceImpl implements ProjectService {
 	private final SqlSession session;
 
 	@Override
-	public List<Employee> selectEmpByDept(int deptCode) {
-		return dao.selectEmpByDept(session, deptCode);
+	public List<Employee> selectEmpByDept(Map<String,Object> param) {
+		return dao.selectEmpByDept(session, param);
 	}
 
 	@Override
@@ -77,8 +77,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectEmployee> selectEmployeetByProjectNo(int projectNo) {
-		return dao.selectEmployeetByProjectNo(session, projectNo);
+	public List<ProjectEmployee> selectEmployeetByProjectNo(Map<String,Integer> param) {
+		return dao.selectEmployeetByProjectNo(session, param);
 	}
 
 }

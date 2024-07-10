@@ -12,12 +12,12 @@ import com.project.hot.project.model.dto.ProjectEmployee;
 
 public interface ProjectDao {
 
-	List<Employee> selectEmpByDept(SqlSession session,int deptCode);
+	List<Employee> selectEmpByDept(SqlSession session,Map<String,Object> param);
 	List<Department> selectDeptAll(SqlSession session);
 	Project selectProjectByNo(SqlSession session,int projectNo);
 	int selectProjectAllCount(SqlSession session);
 	int insertProject(SqlSession session,Project p);
-	List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session,int projectNo);
+	List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session,Map<String,Integer> param);
 	int insertProjectEmp(SqlSession session,Map<String,Object> param);
 	int updateProject(SqlSession session,Project p);
 	int updateProjectDeleteEmp(SqlSession session,int projectNo);

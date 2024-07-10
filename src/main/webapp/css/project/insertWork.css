@@ -52,6 +52,12 @@ section{
 	width:auto;
 	height:600px;
 	margin-left: 30px;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+}
+.project-choice{
+	cursor:pointer;
 }
 
 #workListTable{
@@ -60,4 +66,19 @@ section{
     justify-content: center;
     align-items: center;
     margin: 0;
+}
+/* 그래프 표시 */
+.graph-container {
+    width: 100%;
+    display: flex;
+}
+
+.bar {
+    width: 0;
+    background-color: #1b35ffe3;
+    margin: 10px 0;
+    border-radius: 100px;
+    overflow: hidden;
+    height: 15px;
+    transition: width 2s ease-in-out;
 }

@@ -10,11 +10,11 @@ import com.project.hot.project.model.dto.ProjectEmployee;
 
 public interface ProjectService {
 
-	List<Employee> selectEmpByDept(int deptCode);
+	List<Employee> selectEmpByDept(Map<String,Object> param);
 	List<Department> selectDeptAll();
 	Map<String,Object> selectProjectAll(Map<String,Integer> param);
 	Project selectProjectByNo(int projectNo);
-	List<ProjectEmployee> selectEmployeetByProjectNo(int projectNo);
+	List<ProjectEmployee> selectEmployeetByProjectNo(Map<String,Integer> param);
 	int insertProject(Project p);
 	int updateProject(Project p);
 	int deleteProject(int projectNo);

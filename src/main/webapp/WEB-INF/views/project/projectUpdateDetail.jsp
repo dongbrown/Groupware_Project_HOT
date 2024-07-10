@@ -148,6 +148,7 @@
 
 <script>
 const path='${path}';
+const empNo ="${project.employeeCode.employeeNo }";
 $(document).ready(function() {
 	$("#project-title").val("${project.projectTitle }");
 	$('#project-rank').val("${project.projectRank }");
