@@ -48,7 +48,12 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
     }
-
+    //드래그로 수정
+    @Override
+	public void updateScheduleByDrag(Schedule schedule) {
+    	dao.updateScheduleByDrag(schedule, session);
+	}
+    //모달로 수정
     @Override
     public void updateSchedule(Schedule schedule) {
         dao.updateSchedule(schedule, session);
@@ -77,4 +82,5 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public List<Schedule> getShareSchedule(int employeeNo) {
 		return dao.getShareSchedule(session, employeeNo);
 	}
+
 }
