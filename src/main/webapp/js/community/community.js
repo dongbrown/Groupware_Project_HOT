@@ -2,15 +2,15 @@ $(document).ready(function() {
     // 모달 관련 변수
     var modal = $("#createCommunityModal");
     var btn = $("#addGroupBtn");
-    var span = $(".close");
+    var closeBtn = $("#close-btn");
 
     // 모달 열기
     btn.click(function() {
         modal.css("display", "block");
     });
 
-    // 모달 닫기 (x 버튼)
-    span.click(function() {
+    // 모달 닫기 (취소 버튼)
+    closeBtn.click(function() {
         modal.css("display", "none");
     });
 
