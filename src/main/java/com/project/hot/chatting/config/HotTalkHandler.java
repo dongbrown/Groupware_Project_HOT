@@ -14,9 +14,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.HotTalkStatus;
-import com.project.hot.chatting.model.dto.ResponseEmployeeDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
+import com.project.hot.chatting.model.dto.ResponseLoginEmployeeDTO;
 import com.project.hot.chatting.model.service.HotTalkService;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	private void enterEmployees(WebSocketSession session, CommonMessageDTO msg) {
 		employees.put(msg.getSender(), session);
-		List<ResponseEmployeeDTO> list = service.getHotTalkMemberList(msg.getSender());
+		List<ResponseLoginEmployeeDTO> list = service.getHotTalkMemberList(msg.getSender());
 		list.forEach(l->l.setType("사원"));
 		// System.out.println(list);
 		responseListDTO(list);

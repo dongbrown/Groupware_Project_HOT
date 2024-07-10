@@ -15,10 +15,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HotTalkMember {
 	private int hotTalkNo;
-	private String employeeName;
-	private String departmentCode;
-	private String employeePhoto;
-	private String hotTalkLeader;
-	private LocalDateTime hotTalkEnterDate;
-	private HotTalkStatus status;
+	private Employee hotTalkMember;
 }

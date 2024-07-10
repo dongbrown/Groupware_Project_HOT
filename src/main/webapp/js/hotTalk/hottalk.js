@@ -87,21 +87,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(data != null && data.length>0){
 			switch(data[0].type){
 				case '사원':
-					data.forEach(d=>{
+					data.forEach((d,i)=>{
+						console.log(d);
 						const $employee = document.createElement("div");
 						const $profile = document.createElement("div");
 						const $photo = document.createElement("img");
 						const $name = document.createElement("h5");
 						const $dept = document.createElement("p");
-						if(d.employeeNo==loginEmployeeNo){
-							console.log(d.status);
-							console.log(d.profile);
+						if(d.sender.employeeNo==loginEmployeeNo){
 							const $status = document.querySelector(".my-status");
-							$status.innerText=d.status;
+							$status.innerText=d.senderStatus.hotTalkStatus;
 							const $msg = document.querySelector(".my-status-message");
-							$msg.innerText=d.profile;
-							$status.innerHTML=d.status;
-						} else if(d.employeeNo!=loginEmployeeNo && d.employeePhoto==null){
+							$msg.innerText=d.senderStatus.hotTalkStatusMessage;
+							// $status.innerHTML=d.status;
+						} else if(d.others[i].receiver.employeePhoto==null){
 							$photo.src="https://img.khan.co.kr/news/2023/01/02/news-p.v1.20230102.1f95577a65fc42a79ae7f990b39e7c21_P1.png";
 							$photo.style.width="53px";
 							$photo.style.height="53px";
@@ -109,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							$photo.style.marginRight="10px";
 							$photo.style.marginLeft="20px";
 						} else {
-							$photo.src=path+"/upload/employee/"+d.employeePhoto;
+							$photo.src=path+"/upload/employee/"+d.others[i].receiver.employeePhoto;
 							$photo.style.width="53px";
 							$photo.style.height="53px";
 							$photo.style.borderRadius="100px";
