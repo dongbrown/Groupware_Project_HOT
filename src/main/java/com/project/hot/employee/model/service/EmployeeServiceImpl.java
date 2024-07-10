@@ -68,7 +68,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		//총 근무시간, 총 연장근무시간 저장
 		// 연차, 결근인 날 빼고 나머지 상태만 계산
-		// 18시 이후는 연장근무시간에 포함
+		// 18시 이후는 연장근무시간에 포함 - 바뀔예정...
 		c.stream().filter(f->!(f.getCommutingStatus().equals("연차")||f.getCommutingStatus().equals("결근"))).forEach(e->{
 			if(e.getCommutingGoWorkTime()!=null&&e.getCommutingLeaveWorkTime()!=null) {
 				rc.setTotalWorkTime(rc.getTotalWorkTime()
