@@ -9,7 +9,7 @@ import lombok.Data;
 public class ResponseCommuting {
 	private LocalDateTime todayGoWorkTime; //오늘 출근시간
 	private LocalDateTime todayLeaveWorkTime; //오늘 퇴근시간
-	private int workDays; //근무 일수
+	private int totalWorkDay; //근무 일수
 	private int totalExWorkTime; //총 연장근무 시간
 	private int totalWorkTime; //총 근무 시간
 	private int tardy; // 지각 횟수

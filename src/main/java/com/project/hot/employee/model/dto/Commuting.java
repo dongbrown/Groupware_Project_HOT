@@ -15,6 +15,7 @@ public class Commuting {
 
 	private int commutingNo;
 	private Employee employeeNo;
+	private LocalDateTime commutingDate;
 	private LocalDateTime commutingGoWorkTime;
 	private LocalDateTime commutingLeaveWorkTime;
 	private String commutingStatus;

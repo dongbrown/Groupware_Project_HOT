@@ -39,7 +39,7 @@
 .commuting-text {
 	display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .commuting-text span {
@@ -66,4 +66,14 @@
 .commuting-table {
 	text-align: center;
 	margin-top: 1%;
+	height: 90%;
+}
+
+.com-table {
+	width: 100%;
+	height: 100%;
+}
+
+.com-table tr{
+	border-bottom: 1px solid #cecece;
 }
