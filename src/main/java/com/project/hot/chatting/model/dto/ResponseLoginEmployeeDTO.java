@@ -19,7 +19,7 @@ public class ResponseLoginEmployeeDTO {
 	private Employee sender;	// 로그인 유저
 	private HotTalkStatus senderStatus;	// 로그인 유저 상태 및 메세지
 	private Department senderDept;
-	private List<ResponseOtherEmployeeDTO> others;
+	private List<ResponseOtherEmployeeDTO> receiver;
 }
 
 
