@@ -12,4 +12,5 @@ public interface EmployeeService {
 	Map<String, Object> selectEmployeeList(Map<String, Object> param);
 	List<Department> selectDepartmentList();
 	Map<String, Object> selectCommutingList(Map<String, Object> param);
+	int updateEmployeePhoto(Map<String, Object> param);
 }

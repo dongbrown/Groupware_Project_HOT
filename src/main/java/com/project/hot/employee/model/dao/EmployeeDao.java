@@ -17,4 +17,5 @@ public interface EmployeeDao {
 	List<Commuting> selectCommutingPagingList(SqlSession session, Map<String, Object> param);
 	int countCommutingTotalData(SqlSession session, Map<String, Object> param);
 	List<Commuting> selectCommutingList(SqlSession session, Map<String, Object> param);
+	int updateEmployeePhoto(SqlSession session, Map<String, Object> param);
 }

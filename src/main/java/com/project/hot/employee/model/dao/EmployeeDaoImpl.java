@@ -52,4 +52,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return session.selectList("employee.selectCommutingList", param);
 	}
 
+	@Override
+	public int updateEmployeePhoto(SqlSession session, Map<String, Object> param) {
+		return session.update("employee.updateEmployeePhoto", param);
+	}
+
+	
 }
