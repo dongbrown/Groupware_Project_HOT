@@ -15,20 +15,24 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.hot.employee.model.dto.Department;
+import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 public class EmployeeRestController {
 
 	private final EmployeeService service;
+	private BCryptPasswordEncoder pwencoder=new BCryptPasswordEncoder();
 
 	// 사원 정보를 담은 리스트 반환
 	@GetMapping("/employeeList")
@@ -122,4 +127,53 @@ public class EmployeeRestController {
 		}
 	}
 
+	@PostMapping("/updateEmployee")
+	public ResponseEntity<String> updateEmployee(@RequestBody RequestEmployee requestEmployee, Principal p) {
+		if(requestEmployee.getEmployeePassword()!=null&&!requestEmployee.getEmployeePassword().equals("")) {
+			String encodedPwd=pwencoder.encode(requestEmployee.getEmployeePassword());
+			requestEmployee.setEmployeePassword(encodedPwd);
+		}
+		if(requestEmployee.getEmployeePhone()!=null&&!requestEmployee.getEmployeePhone().equals("")) {
+			String phone=requestEmployee.getEmployeePhone();
+			if(phone.length()==11) {
+				String formatPhone=String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7));
+				requestEmployee.setEmployeePhone(formatPhone);
+			}else {
+				String formatPhone=String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 6), phone.substring(6));
+				requestEmployee.setEmployeePhone(formatPhone);
+			}
+		}
+		int result=service.updateEmployee(requestEmployee);
+		if(result>0) {
+			//세션에 담긴 로그인 유저 정보 변경해주기
+			UserDetails updatedEmp=service.selectEmployeeById(p.getName());
+			Authentication a=new UsernamePasswordAuthenticationToken(updatedEmp, updatedEmp.getPassword(), updatedEmp.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(a);
+			return ResponseEntity.ok().body("업데이트 성공!");
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패!");
+		}
+	}
+
+	@GetMapping("/attendanceStatus")
+	public boolean checkAttStatus(HttpSession session) {
+		Boolean status=(Boolean)session.getAttribute("attStatus");
+		if(status!=null) {
+			return status;
+		}else {
+			return false;
+		}
+	}
+
+	@PostMapping("/goWork")
+	public String goWork(@RequestParam int no) {
+		Map<String, Object> param=new HashMap<>();
+		param.put("employeeNo", no);
+		int result=service.insertCommuting(param);
+		if(result>0) {
+			return "출근 무사히 성공!";
+		}else {
+			return "출근 실패";
+		}
+	}
 }

@@ -14,6 +14,7 @@ import com.project.hot.employee.model.dao.EmployeeDao;
 import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
+import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.employee.model.dto.ResponseCommuting;
 
 import lombok.RequiredArgsConstructor;
@@ -92,6 +93,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public int updateEmployeePhoto(Map<String, Object> param) {
 		return dao.updateEmployeePhoto(session, param);
+	}
+
+	@Override
+	public int updateEmployee(RequestEmployee requestEmployee) {
+		return dao.updateEmployee(session, requestEmployee);
+	}
+
+	@Override
+	public int insertCommuting(Map<String, Object> param) {
+		//출근 상태 판단
+		if(LocalTime.now().getHour()>=9) {
+			param.put("status", "지각");
+		}else {
+			param.put("status", "정상");
+		}
+		return dao.insertCommuting(session, param);
 	}
 
 }

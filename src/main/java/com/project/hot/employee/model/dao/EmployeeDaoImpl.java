@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
+import com.project.hot.employee.model.dto.RequestEmployee;
 
 @Repository
 public class EmployeeDaoImpl implements EmployeeDao {
@@ -57,5 +58,14 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return session.update("employee.updateEmployeePhoto", param);
 	}
 
-	
+	@Override
+	public int updateEmployee(SqlSession session, RequestEmployee requestEmployee) {
+		return session.update("employee.updateEmployee", requestEmployee);
+	}
+
+	@Override
+	public int insertCommuting(SqlSession session, Map<String, Object> param) {
+		return session.insert("employee.insertCommuting", param);
+	}
+
 }

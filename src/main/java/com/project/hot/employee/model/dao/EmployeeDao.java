@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
+import com.project.hot.employee.model.dto.RequestEmployee;
 
 public interface EmployeeDao {
 	Employee selectEmployeeById(SqlSession session, String id);
@@ -18,4 +19,6 @@ public interface EmployeeDao {
 	int countCommutingTotalData(SqlSession session, Map<String, Object> param);
 	List<Commuting> selectCommutingList(SqlSession session, Map<String, Object> param);
 	int updateEmployeePhoto(SqlSession session, Map<String, Object> param);
+	int updateEmployee(SqlSession session, RequestEmployee requestEmployee);
+	int insertCommuting(SqlSession session, Map<String, Object> param);
 }
