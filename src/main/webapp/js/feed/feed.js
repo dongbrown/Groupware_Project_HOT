@@ -36,7 +36,6 @@ $(document).ready(function() {
 
         if (invitees.length > 0) {
             console.log("Selected invitees:", invitees);
-            // 여기에 초대 로직을 구현합니다.
             alert(invitees.length + "명의 참석자를 초대했습니다.");
             $('#addParticipantModal').hide();
         } else {
@@ -91,6 +90,7 @@ function createFeedHtml(feed) {
     if (isAuthor) {
         actionsHtml = `
             <div class="feed-actions">
+
                 <button class="btn btn-sm btn-outline-primary edit-btn" onclick="showEditForm(${feed.feedNo})">수정</button>
                 <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
             </div>
