@@ -40,6 +40,7 @@ public class ProjectController {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
+		System.out.println("ㅎㅁ~~");
 		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5));
 	};
 
