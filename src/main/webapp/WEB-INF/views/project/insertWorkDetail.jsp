@@ -69,14 +69,17 @@
 					</div>
 					<p style="font-weight: bolder;">첨부파일</p>
 					<div id="project-work-file" class="form-floating">
-						<img id="dragFile" src="https://i.imgur.com/skjgqb0.png" height="100%" width="100%" /> <input type="file" id="fileInput" style="display: none;">
+						<img id="dragFile" src="https://i.imgur.com/skjgqb0.png" height="100%" width="100%" />
 						<button id="fileUploadBtn" type="button" class="btn btn-dark" onclick="document.getElementById('fileInput').click()">파일 업로드</button>
+						 <input type="file" id="fileInput"  multiple>
 					</div>
-					<div id="fileListContainer">123123</div>
+					<!-- 가져온 파일 값 출력 -->
+					<div id="fileListContainer">
+					</div>
 
 				</div>
 			</div>
-			<div style="">
+			<div>
 			<button style="margin-bottom: 40px; margin-top:50px;" type="button"
 				class="btn btn-primary" data-bs-toggle="modal"
 				data-bs-target="#updateSelectModal">작업 등록</button>
