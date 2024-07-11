@@ -9,7 +9,8 @@ $(document).ready(function() {
     });
 
     // 트리 아이템 클릭 이벤트
-    $(document).on('click', '.tree-item', function() {
+    $(document).on('click', '.tree-item', function(e) {
+        e.stopPropagation();
         $(this).toggleClass('selected');
     });
 
@@ -230,44 +231,95 @@ function showAddParticipant() {
 }
 
 function loadOrganizationTree() {
-    // 이 함수에서 서버로부터 조직도 데이터를 가져와 트리 구조를 생성합니다.
-    // 예시 데이터로 대체합니다.
-    const treeData = [
-        { id: 1, name: "김대표 사장", type: "employee" },
-        { id: 2, name: "영업본부", type: "department" },
-        { id: 3, name: "사업본부", type: "department" },
-        { id: 4, name: "개발본부", type: "department" },
-        { id: 5, name: "경영관리본부", type: "department", children: [
-            { id: 6, name: "한상우 전무", type: "employee" },
-            { id: 7, name: "기획팀", type: "team", children: [
-                { id: 8, name: "박현장 부장", type: "employee" },
-                { id: 9, name: "김사원 과장", type: "employee" },
-                { id: 10, name: "김철희 대리", type: "employee" },
-                { id: 11, name: "이기술 대리", type: "employee" },
-                { id: 12, name: "이더리 대리", type: "employee" },
-                { id: 13, name: "전 대리", type: "employee" }
-            ]}
-        ]},
-        { id: 14, name: "재무회계팀", type: "team" },
-        { id: 15, name: "경영관리팀", type: "team" },
-        { id: 16, name: "인사팀", type: "team" },
-        { id: 17, name: "교육TF", type: "team" }
-    ];
+    $.ajax({
+        url: '/api/departmentList',
+        type: 'GET',
+        dataType: 'json',
+        success: function(departments) {
+            const treeData = buildDepartmentTree(departments);
+            const treeHtml = generateTreeHtml(treeData);
+            $('#organizationTree').html(treeHtml);
 
-    const treeHtml = generateTreeHtml(treeData);
-    $('#organizationTree').html(treeHtml);
+            // 부서 클릭 이벤트 추가
+            $('.tree-item[data-type="department"]').click(function(e) {
+                e.stopPropagation();
+                const deptCode = $(this).data('id');
+                const $childrenContainer = $(this).children('ul');
+                if ($childrenContainer.length === 0) {
+                    loadEmployees(deptCode, $(this));
+                } else {
+                    $childrenContainer.toggle();
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('부서 목록 로드 오류:', error);
+            alert('부서 목록을 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function buildDepartmentTree(departments) {
+    const departmentMap = new Map();
+    const rootDepartments = [];
+
+    // 모든 부서를 맵에 추가
+    departments.forEach(dept => {
+        departmentMap.set(dept.departmentCode, {
+            id: dept.departmentCode,
+            name: dept.departmentTitle,
+            type: 'department',
+            children: []
+        });
+    });
+
+    // 부서 계층 구조 생성
+    departments.forEach(dept => {
+        const departmentNode = departmentMap.get(dept.departmentCode);
+        if (dept.departmentHighCode) {
+            const parentDept = departmentMap.get(dept.departmentHighCode);
+            if (parentDept) {
+                parentDept.children.push(departmentNode);
+            }
+        } else {
+            rootDepartments.push(departmentNode);
+        }
+    });
+
+    return rootDepartments;
 }
 
 function generateTreeHtml(items, level = 0) {
     let html = '<ul' + (level === 0 ? ' class="tree-root"' : '') + '>';
     items.forEach(item => {
-        html += '<li class="tree-item" data-id="' + item.id + '" data-type="' + item.type + '">';
+        html += `<li class="tree-item" data-id="${item.id}" data-type="${item.type}">`;
         html += '  '.repeat(level) + item.name;
-        if (item.children) {
+        if (item.children && item.children.length > 0) {
             html += generateTreeHtml(item.children, level + 1);
         }
         html += '</li>';
     });
     html += '</ul>';
     return html;
+}
+
+function loadEmployees(deptCode, $parentElement) {
+    $.ajax({
+        url: '/schedule/selectEmpByDept',
+        type: 'GET',
+        data: { deptCode: deptCode },
+        dataType: 'json',
+        success: function(employees) {
+            const employeesHtml = generateTreeHtml(employees.map(emp => ({
+                id: emp.employeeNo,
+                name: emp.employeeName,
+                type: 'employee'
+            })));
+            $parentElement.append(employeesHtml);
+        },
+        error: function(xhr, status, error) {
+            console.error('사원 목록 로드 오류:', error);
+            alert('사원 목록을 불러오는 중 오류가 발생했습니다.');
+        }
+    });
 }
