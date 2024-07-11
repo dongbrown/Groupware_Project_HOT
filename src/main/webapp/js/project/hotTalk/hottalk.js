@@ -46,37 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		const msg = new CommonMessage("groupHotTalk", loginEmployeeNo).convert();
 		chatServer.send(msg);
 	})
-	// 상태, 상태메세지 모달창
-	/*
-	Target
-	<sup class="user-profile my-status"></sup>
-    <p class="my-status-message"></p>
-	*/
-	// 상태 변경
-	$(".change-status-btn").on('click', function(){
-		const status = $("input[name='emp-change-status']:checked").val();
-		// console.log(status);
-		$("sup.my-status").text(status);
-		// loginEmployeeNo, status 값 넘겨주기 → 서버에서 Update
-		let newStatus = new Object();
-		newStatus.type="change";
-		newStatus.employeeNo = loginEmployeeNo;
-		newStatus.hotTalkStatus = status;
-		chatServer.send(JSON.stringify(newStatus))
-	});
-	// 상태 메세지 변경
-	$(".change-statusMsg-btn").on('click', function(){
-		const statusMsg = $("input[name='emp-change-statusMsg']").val();
-		$("p.my-status-message").text(statusMsg);
-		// loginEmployeeNo, statusMsg 값 넘겨주기 → 서버에서 Update
-		let newStatus = new Object();
-		newStatus.type="change";
-		newStatus.employeeNo = loginEmployeeNo;
-		newStatus.hotTalkStatusMessage = statusMsg;
-		chatServer.send(JSON.stringify(newStatus))
-	})
-
-
 	let allEmployee = "";
 	chatServer.onmessage=(response)=>{
 		const data = JSON.parse(response.data);
@@ -88,18 +57,22 @@ document.addEventListener('DOMContentLoaded', function() {
 			switch(data[0].type){
 				case '사원':
 					data.forEach(d=>{
+						if(d.employeeNo==loginEmployeeNo){
+							console.log(d.status);
+							console.log(d.profile);
+							const $status = document.querySelector(".my-status");
+							$status.innerText=d.status;
+							const $msg = document.querySelector(".my-status-message");
+							$msg.innerText=d.profile;
+							$status.innerHTML=d.status;
+						}
 						const $employee = document.createElement("div");
 						const $profile = document.createElement("div");
 						const $photo = document.createElement("img");
 						const $name = document.createElement("h5");
 						const $dept = document.createElement("p");
-						if(d.receiver.length==0){
-							const $status = document.querySelector(".my-status");
-							$status.innerText=d.senderStatus.hotTalkStatus;
-							const $msg = document.querySelector(".my-status-message");
-							$msg.innerText=d.senderStatus.hotTalkStatusMessage;
-							// $status.innerHTML=d.status;
-						} else if(d.receiver[0].receiver.employeePhoto==null){
+
+						if(d.employeePhoto==null){
 							$photo.src="https://img.khan.co.kr/news/2023/01/02/news-p.v1.20230102.1f95577a65fc42a79ae7f990b39e7c21_P1.png";
 							$photo.style.width="53px";
 							$photo.style.height="53px";
@@ -107,43 +80,41 @@ document.addEventListener('DOMContentLoaded', function() {
 							$photo.style.marginRight="10px";
 							$photo.style.marginLeft="20px";
 						} else {
-							$photo.src=path+"/upload/employee/"+d.receiver[0].receiver.employeePhoto;
+							$photo.src=path+"/upload/employee/"+d.employeePhoto;
 							$photo.style.width="53px";
 							$photo.style.height="53px";
 							$photo.style.borderRadius="100px";
 							$photo.style.marginRight="10px";
 							$photo.style.marginLeft="20px";
 						}
-
-						if(d.receiver.length!=0){
-							// console.log(d.receiver[0]);
-							$name.innerText=d.receiver[0].receiver.employeeName;
-							$dept.innerText=d.receiver[0].receiverDept.departmentTitle+"부";
+						$name.innerText=d.employeeName;
+						$dept.innerText=d.departmentCode;
+						if(d.employeeNo!=loginEmployeeNo){
 							$employee.appendChild($photo);
 							$profile.appendChild($name);
 							$profile.appendChild($dept);
 							$employee.appendChild($profile);
 							$employee.classList.add("hotTalkEmployee");
-							$employee.setAttribute('data-employeeno', d.receiver[0].receiver.employeeNo);
+							$employee.setAttribute('data-employeeno', d.employeeNo);
 							$option.appendChild($employee);
 						}
 						$employee.addEventListener("dblclick",()=>{
 							// 핫톡 사원 눌렀을 때 우측 상단 메세지들 변경 로직 및 채팅창 초기화
 							const $chattingRoom = $(".chat-messages");
 							$chattingRoom.empty();
-							document.querySelector(".chat-user-name").innerText=d.receiver[0].receiver.employeeName;
-							document.querySelector('.user-status').innerText=d.receiver[0].receiverStatus.hotTalkStatus;
+							document.querySelector(".chat-user-name").innerText=d.employeeName;
+							document.querySelector('.user-status').innerText=d.status;
 							// 예외처리 필요(d.profile, d.employeePhoto) → null 일 수도 있음
 							console.log(d);
-							if(d.receiver[0].receiver.employeePhoto!=null){
-								document.querySelector(".target-avatar").src=path+"/upload/employee/"+d.receiver[0].receiver.employeePhoto;
+							if(d.employeePhoto!=null){
+								document.querySelector(".target-avatar").src=path+"/upload/employee/"+d.employeePhoto;
 							} else {
 								document.querySelector(".target-avatar").src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s";
 							}
-							if(d.receiver[0].receiverStatus.hotTalkStatusMessage != null){
-								document.querySelector(".user-status-message").innerText=innerText=d.receiver[0].receiverStatus.hotTalkStatusMessage;
+							if(d.profile != null){
+								document.querySelector(".user-status-message").innerText=d.profile;
 							} else {
-								document.querySelector(".user-status-message").innerText=d.receiver[0].receiverDept.departmentTitle+"부";
+								document.querySelector(".user-status-message").innerText=d.departmentCode;
 							}
 
 						})
@@ -238,7 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
 							// console.log($(".modal-hottalk-title").val());
 							$("#staticBackdrop").modal("hide");
 							$(".chat-user-name").text($(".modal-hottalk-title").val());
-							$(".target-avatar").attr("src","https://cdn.hankyung.com/photo/202212/01.32245693.1.jpg");
 							// $(".additionalEmployee").data('employeeno')
 							// : 다중 요소에 추가 가능한 class인 만큼 처음 추가한 사원만 나오는 모습
 							let members = loginEmployeeNo;
@@ -247,9 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
 							})
 							// console.log(members);
 							$(".chat-input").data("memberNo",members);
-							console.log($(".chat-input").data("memberNo"));
-							// → 모달창에서 추가한 사원들 사번들이 기존 input 태그에 data속성으로 담고 csv 형식으로 출력
-
+							// console.log($(".chat-input").data("memberNo"));
+							// → 모달창에서 추가한 사원들 사번들이 csv 형식으로 출력됨
 						}
 					})
 
@@ -317,43 +286,30 @@ document.addEventListener('DOMContentLoaded', function() {
 				const $chattingRoom = $(".chat-messages");
 				$chattingRoom.empty();
 					data.forEach(d => {
-						const contents = d.contents;
-						console.log(d);
-						console.log(d.contents[0]);
+						// console.log(d);
 						if(d.hotTalkIsGroup=='N'){
-							// 1:1 채팅에서 첫 번째 content의 발신자 == 로그인한 유저인 경우
-							if(contents[0].hotTalkContentSender.hotTalkMember.employeeNo == loginEmployeeNo){
-								// 첫 번째 content의 수신자를 상단에 출력
-								$(".chat-user-name").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeeName);
-								$(".user-status").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatus);
-								$(".user-status-message").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatusMessage);
-								if(d.contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeePhoto!=null){
-									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeePhoto);
-								} else {
-									$(".target-avatar").attr("src","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s");
-								}
-							} else {	// 1:1 채팅에서 첫 번째 content의 발신자 != 로그인한 유저의 경우 → 발신자를 상단에 출력
-								$(".chat-user-name").text(contents[0].hotTalkContentSender.hotTalkMember.employeeName);
-								$(".user-status").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatus);
-								$(".user-status-message").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatusMessage);
-								if(contents[0].hotTalkContentSender.hotTalkMember.employeePhoto!=null){
-									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkReceiver[0].employeePhoto);
-								} else {
-									$(".target-avatar").attr("src","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s");
-								}
+							$(".chat-user-name").text(d.contents[0].hotTalkReceiver[0].receiverName);
+							$(".user-status").text(d.contents[0].hotTalkReceiver[0].status);
+							$(".user-status-message").text(d.contents[0].hotTalkReceiver[0].profile);
+							if(d.contents[0].hotTalkReceiver[0].employeePhoto==null){
+								$(".target-avatar").attr("src","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s");
+							} else {
+								$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkReceiver[0].employeePhoto);
 							}
 						}else{
-							$(".target-avatar").attr("src","https://cdn.hankyung.com/photo/202212/01.32245693.1.jpg");
 							$(".chat-user-name").text(d.hotTalkTitle);
 							$(".user-status").text("개설 날짜 및 시각");
 							$(".user-status-message").text((d.contents[0].hotTalkContentDate).split('T')[0]+" "+(d.contents[0].hotTalkContentDate).split('T')[1]);
 						}
-
+					  const contents = d.contents;
+					  console.log(contents);
 					  contents.forEach(c => {
+						// console.log(c);
 					    const $chatBox = $("<div>").addClass("chat-message");
-					    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
+					    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
 					    $chatBox.append($("<span>").text(c.hotTalkContent));
-					    if (c.hotTalkContentSender.hotTalkMember.employeeNo != loginEmployeeNo) {
+
+					    if (c.hotTalkContentSender.employeeNo != loginEmployeeNo) {
 					      $chatBox.addClass("chattingRoom-left-msg");
 					    } else {
 					      $chatBox.addClass("chattingRoom-right-msg");
