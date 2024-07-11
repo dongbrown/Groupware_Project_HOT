@@ -13,7 +13,15 @@
 <section class="profile-section">
 	<div class="profile-div shadow p-3 mb-5 bg-body rounded-4">
 		<div class="photo-div">
-			<img src="${path }/upload/employee/${loginEmployee.employeePhoto }" class="employee-photo">
+		<c:choose>
+			<c:when test="${ not empty loginEmployee.employeePhoto} ">
+				<img src="${path }/upload/employee/${loginEmployee.employeePhoto }" class="employee-photo">
+
+			</c:when>
+			<c:otherwise>
+				<img src="${path }/images/undraw_profile.svg" class="employee-photo">
+			</c:otherwise>
+		</c:choose>
 			<input type="file" id="fileInput" name="upFile" accept="image/*" style="display: none;">
 			<button type="submit" class="btn btn-primary photo-change-btn">이미지 변경</button>
 		</div>
