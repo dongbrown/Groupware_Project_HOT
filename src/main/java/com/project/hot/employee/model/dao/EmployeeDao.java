@@ -21,4 +21,5 @@ public interface EmployeeDao {
 	int updateEmployeePhoto(SqlSession session, Map<String, Object> param);
 	int updateEmployee(SqlSession session, RequestEmployee requestEmployee);
 	int insertCommuting(SqlSession session, Map<String, Object> param);
+	int updateCommuting(SqlSession session, Map<String, Object> param);
 }

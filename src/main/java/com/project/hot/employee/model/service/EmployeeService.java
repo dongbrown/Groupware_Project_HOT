@@ -18,4 +18,5 @@ public interface EmployeeService {
 	int updateEmployeePhoto(Map<String, Object> param);
 	int updateEmployee(RequestEmployee requestEmployee);
 	int insertCommuting(Map<String, Object> param);
+	int updateCommuting(Map<String, Object> param);
 }
