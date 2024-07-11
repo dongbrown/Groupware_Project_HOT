@@ -23,3 +23,19 @@ function getTodayDate() {
   $("#project-end-date").val(getTodayDate());
   $("#project-end-date").attr('min', getTodayDate());
   $("#project-end-date").attr('max', getOneYearLaterDate());
+
+  document.getElementById("dragFile").addEventListener("click", (e) => {
+	e.target.style.border("3px solid red");
+	})
+
+//파일 첨부에 드래그 시 border 변경
+	document.getElementById("dragFile").addEventListener("dragenter",e=>{
+		document.getElementById("project-work-file").style.border="3.5px dashed #486AB2";
+		document.getElementById("fileUploadBtn").style.opacity=0.5;
+	});
+//파일 첨부에 드래그 아웃 시 border 복구
+	document.getElementById("dragFile").addEventListener("dragleave",e=>{
+		document.getElementById("project-work-file").style.border="3px dashed lightgrey";
+		document.getElementById("fileUploadBtn").style.opacity=1;
+	});
+
