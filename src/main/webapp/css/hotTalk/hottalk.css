@@ -235,7 +235,7 @@ section{
     color: #555;
     margin-left: 10px;
 }
-.send-btn {
+.chat-send-btn {
     background-color: #3498db;
     color: white;
     border: none;
@@ -346,4 +346,9 @@ i{
 .chattingRoom-left-msg {
   align-self: flex-start;
   background-color: #e7f3ff;
+}
+
+.status-modal{
+	display: flex;
+    justify-content: space-around;
 }

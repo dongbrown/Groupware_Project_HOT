@@ -17,6 +17,6 @@ public class HotTalkContent {
 	private int hotTalkNo;
 	private String hotTalkContent;
 	private LocalDateTime hotTalkContentDate;
-	private ResponseEmployeeDTO hotTalkContentSender;
+	private HotTalkMember hotTalkContentSender;
 	private List<HotTalkReceiver> hotTalkReceiver;
 }
