@@ -11,6 +11,10 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,19 +78,20 @@ public class EmployeeRestController {
 	// 사원 이미지 업데이트
 	@PostMapping("/updateEmployeePhoto")
 	public ResponseEntity<String> updateEmployeePhoto(
-			@RequestParam(name="upFile") MultipartFile upFile
+			@RequestParam("upFile") MultipartFile upFile
 			, @RequestParam String employeePhoto //원래 있던 사원 이미지 파일 이름
 			, @RequestParam int no
-			, HttpServletRequest req) {
+			, HttpServletRequest req
+			, Principal p) {
 		if(!upFile.isEmpty()) {
 			String path=req.getServletContext().getRealPath("/upload/employee"); //저장 경로
 			String oriname=upFile.getOriginalFilename(); //원본 이름
 			String ext=oriname.substring(oriname.lastIndexOf(".")); //확장자
-			String rename=no+"_"+LocalDateTime.now().toString()+"_"+UUID.randomUUID().toString()+ext; // 변경 이름
-			
+			String rename=LocalDateTime.now().toLocalDate().toString()+"_"+UUID.randomUUID().toString()+ext; // 변경 이름
+
 			File dir=new File(path);
 			if(!dir.exists()) dir.mkdirs(); //폴더 없으면 생성
-			
+
 			//파일 저장
 			try {
 				upFile.transferTo(new File(path, rename));
@@ -94,10 +99,12 @@ public class EmployeeRestController {
 				if(result>0) {
 					File delFile=new File(path, employeePhoto);
 					delFile.delete();
-					
-					//로그인 유저 정보 
-					
-					return ResponseEntity.ok().body("파일 업로드 성공!");
+
+					//세션에 담긴 로그인 유저 정보 변경해주기
+					UserDetails updatedEmp=service.selectEmployeeById(p.getName());
+					Authentication a=new UsernamePasswordAuthenticationToken(updatedEmp, updatedEmp.getPassword(), updatedEmp.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(a);
+					return ResponseEntity.ok().body("이미지 변경 성공!");
 				}else {
 					File delFile=new File(path, rename);
 					delFile.delete();
@@ -114,5 +121,5 @@ public class EmployeeRestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일을 선택해주세요!");
 		}
 	}
-	
+
 }

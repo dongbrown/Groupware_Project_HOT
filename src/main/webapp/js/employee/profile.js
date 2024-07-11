@@ -8,20 +8,21 @@ $(document).ready(()=>{
 	$('.photo-change-btn').click(e=>{
 		$('#fileInput').click();
 	});
-	
+
 	$('#fileInput').change(e=>{
 		const upFile=e.target.files[0];
 		if(upFile){
 			uploadFile(upFile);
 		}
 	});
-	
+
 	function uploadFile(upFile){
-		const fd=new FormData();
+		let fd=new FormData();
 		fd.append('upFile', upFile);
 		fd.append('employeePhoto', employeePhoto);
-		
-		fetech(path+'/api/updateEmployeePhoto', {
+		fd.append('no', no);
+
+		fetch(path+'/api/updateEmployeePhoto', {
 			method:'POST',
 			body: fd
 		})
@@ -33,6 +34,8 @@ $(document).ready(()=>{
 		})
 		.then(data=>{
 			alert('이미지 변경 성공!');
+			console.log(data);
+			location.reload();
 		})
 		.catch(error=>{
 			alert('이미지 변경 실패!');

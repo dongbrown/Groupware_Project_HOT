@@ -1,0 +1,1 @@
+SELECT * FROM employee WHERE EMPLOYEE_NO = 1000;
