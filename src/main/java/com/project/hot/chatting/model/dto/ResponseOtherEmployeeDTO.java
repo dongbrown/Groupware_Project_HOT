@@ -19,3 +19,4 @@ public class ResponseOtherEmployeeDTO {
 	private HotTalkStatus receiverStatus;	// 로그인 유저를 제외한 전 사원의 상태
 	private Department receiverDept;
 }
+

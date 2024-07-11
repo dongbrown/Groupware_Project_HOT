@@ -1,7 +1,8 @@
 package com.project.hot.chatting.model.dto;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
+import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
 import lombok.AllArgsConstructor;
@@ -15,5 +16,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HotTalkMember {
 	private int hotTalkNo;
+	private String hotTalkLeader;
+	private Timestamp hotTalkEnterDate;
 	private Employee hotTalkMember;
+	private Department department;
+	private HotTalkStatus hotTalkStatus;
 }
