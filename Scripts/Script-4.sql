@@ -1,1 +1,3 @@
 SELECT * FROM employee WHERE EMPLOYEE_NO = 1000;
+SELECT * FROM commuting WHERE EMPLOYEE_NO =1000;
+DELETE FROM commuting WHERE commuting_no=88;

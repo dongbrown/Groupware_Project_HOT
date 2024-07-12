@@ -19,4 +19,5 @@ public interface EmployeeService {
 	int updateEmployee(RequestEmployee requestEmployee);
 	int insertCommuting(Map<String, Object> param);
 	int updateCommuting(Map<String, Object> param);
+	int insertCommutingNoAtt();
 }

@@ -8,8 +8,8 @@
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
 <section>
 	<h2> 메인페이지 </h2>
-	<button class="btn btn-primary btn-go-work">출근</button>
-	<button class="btn btn-danger btn-leave-work">퇴근</button>
+	<button class="btn btn-primary btn-go-work" onclick="goWork()">출근</button>
+	<button class="btn btn-danger btn-leave-work" onclick="leaveWork()">퇴근</button>
 </section>
 </div>
 <script>

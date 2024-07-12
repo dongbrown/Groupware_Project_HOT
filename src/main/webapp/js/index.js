@@ -4,23 +4,16 @@
 
 $(document).ready(()=>{
 	checkAttStatus();
-	
-});
 
-function workTime(){
-	const currHour=new Date().getHours();
-	if(currHour<8||currHour>=15){
-		//8시 전 출근 버튼 비활성화
-		$('.btn-go-work').prop('disabled', true);
-	}
-}
+});
 
 function checkAttStatus(){
 	//오늘 출근 했는지 체크해서 출근 버튼 활성화 여부 판단
+	const currHour=new Date().getHours();
 	fetch(path+'/api/attendanceStatus')
 	.then(response=>response.json())
 	.then(data=>{
-		if(data.status){
+		if(data||(currHour<8||currHour>=15)){
 			//출근한 상태 - 출근버튼 비활성화, 퇴근버튼 활성화
 			$('.btn-go-work').prop('disabled', true);
 			$('.btn-leave-work').prop('disabled', false);
@@ -29,7 +22,6 @@ function checkAttStatus(){
 			$('.btn-go-work').prop('disabled', false);
 			$('.btn-leave-work').prop('disabled', true);
 		}
-		workTime();
 	})
 	.catch(error=>{
 		console.log(error.message);
@@ -38,10 +30,17 @@ function checkAttStatus(){
 
 function goWork(){
 	//출근 버튼 눌러 출근~
-	fetch(path+'/api/goWork')
+	fetch(path+'/api/goWork',{
+		method:'POST',
+		headers:{
+			'Content-Type':'application/json'
+		},
+		body:JSON.stringify({no})
+	})
 	.then(response=>response.text())
 	.then(data=>{
 		console.log(data);
+		location.reload();
 	})
 	.catch(error=>{
 		console.log(error.message);
@@ -50,10 +49,17 @@ function goWork(){
 
 function leaveWork(){
 	//퇴근 버튼을 눌러 퇴근
-	fetch(path+'/api/leaveWork')
+	fetch(path+'/api/leaveWork',{
+		method:'POST',
+		headers:{
+			'Content-Type':'application/json'
+		},
+		body:JSON.stringify({no})
+	})
 	.then(response=>response.text())
 	.then(data=>{
 		console.log(data);
+		location.reload();
 	})
 	.catch(error=>{
 		console.log(error.message);
