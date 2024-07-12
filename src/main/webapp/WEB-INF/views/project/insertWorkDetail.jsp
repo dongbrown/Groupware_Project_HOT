@@ -21,28 +21,48 @@
 		<div style="display: flex; flex-direction: column; align-items:center;">
 			<div style="display: flex; flex-direction: row; justify-content: center; margin-top: 30px;">
 				<div id="project-insert-body">
-					<!-- 작업 이름 -->
+				<!-- 프로젝트 번호 -->
+				<div class="input-group mb-3">
+						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트 번호</span>
+					<c:choose>
+						<c:when test="${not empty project}">
+							<input type="text" class="form-control"  name="projectNo" aria-label="Sizing example input"
+								aria-describedby="inputGroup-sizing-default" value="${project.projectNo}" disabled>
+						</c:when>
+						<c:otherwise>
+							<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
+								aria-describedby="inputGroup-sizing-default" value="선택된 프로젝트가 없습니다." disabled>
+						</c:otherwise>
+					</c:choose>
+					</div>
+					<!-- 프로젝트 이름 -->
 					<div class="input-group mb-3">
-					<c:if>
 						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트 이름</span>
-					</c:if>
-						<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
-							aria-describedby="inputGroup-sizing-default" disabled>
+					<c:choose>
+						<c:when test="${not empty project}">
+							<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
+								aria-describedby="inputGroup-sizing-default" value="${project.projectTitle}" disabled>
+						</c:when>
+						<c:otherwise>
+							<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
+								aria-describedby="inputGroup-sizing-default" value="선택된 프로젝트가 없습니다." disabled>
+						</c:otherwise>
+					</c:choose>
 					</div>
 					<!-- 작업 이름 -->
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">작업 이름</span>
-						<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
+						<input type="text" class="form-control"  name="workTitle" aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default">
 					</div>
-					<!-- 프로젝트 생성자 이름 -->
+					<!-- 작업 생성자 이름 -->
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">작성자</span>
 						<input type="text" class="form-control" name="writer"
 							aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default"  value="${loginEmployee.employeeName }" disabled>
 					</div>
-					<!-- 프로젝트 중요도 체크박스  -->
+					<!-- 작업 중요도 체크박스  -->
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">작업 중요도</span>
 						<select class="form-select" name="importance" aria-label="Default select example">
@@ -52,10 +72,10 @@
 							<option value="3" style="color: green;">하</option>
 						</select>
 					</div>
-					<!-- 프로젝트 설명 -->
+					<!-- 작업 설명 -->
 					<p style="font-weight: bolder;">작업 설명</p>
 					<div id="project-contents" class="form-floating">
-						<textarea class="form-control" name="projectContent" placeholder="Leave a comment here"
+						<textarea class="form-control" name="workContent" placeholder="Leave a comment here"
 							id="floatingTextarea"></textarea>
 						<label for="floatingTextarea">프로젝트 설명</label>
 						<span id="project-contents-count" style="margin-left: auto;">0/1000</span>
@@ -101,7 +121,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-primary" id="insertProjectBtn">등록</button>
+				<button type="button" class="btn btn-primary" id="insertWorktBtn">등록</button>
 					</div>
 				</div>
 			</div>
@@ -109,5 +129,6 @@
 	</div>
 </section>
 </div>
+<script>const empNo = "${loginEmployee.employeeNo}"</script>
 <script src="${path }/js/project/insertWorkDetail.js"></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>

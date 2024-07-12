@@ -33,14 +33,15 @@ public class ProjectController {
 
 	@ResponseBody
 	@GetMapping("/projectupdateajax")
-	public Map<String,Object> projectUpdatePage (@RequestParam(defaultValue = "1") int cPage) {
+	public Map<String,Object> projectUpdatePage (@RequestParam(defaultValue = "1") int cPage,
+													@RequestParam("employeeNo") int employeeNo) {
 		ObjectMapper mapper=new ObjectMapper();
 		try {
-			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5)));
+			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo)));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5));
+		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo));
 	};
 
 	@GetMapping("/projectinsert.do")

@@ -41,7 +41,12 @@ function getTodayDate() {
     $('#floatingTextarea').on('input', function() {
         let textLength = $(this).val().length;
         $('#project-contents-count').text(textLength + '/1000');
+        if(textLength>999){
+			const textResult = $(this).val();
+			$(this).val(String(textResult).substring(0, 1000));
+		}
     });
+
 
 	$(document).ready(function() {
 		let checkedTotalCount = 1;

@@ -25,7 +25,7 @@
 
 				<div id="workListTable" class="table-responsive">
 					<div>
-						<div style="height:320px; width:780px;">
+						<div style="height: auto; width: auto;">
 						<table id="work-list-table" class="table text-start align-middle table-bordered table-hover mb-0"
 							style="text-align: center;">
 							<thead>
@@ -35,7 +35,6 @@
 									<th scope="col">담당자</th>
 									<th scope="col">프로젝트 제목</th>
 									<th scope="col" style="width: 300px;">진행률</th>
-									<th scope="col">삭제</th>
 								</tr>
 							</thead>
 							<tbody>

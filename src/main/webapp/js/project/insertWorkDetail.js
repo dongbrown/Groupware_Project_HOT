@@ -28,7 +28,18 @@ function getTodayDate() {
 
   $dragFile.addEventListener("click", (e) => {
 	e.target.style.border("3px solid red");
-	})
+	});
+
+// 설명  text 크기 카운트
+    $('#floatingTextarea').on('input', function() {
+        let textLength = $(this).val().length;
+        $('#project-contents-count').text(textLength + '/1000');
+        if(textLength>999){
+			const textResult = $(this).val();
+			$(this).val(String(textResult).substring(0, 1000));
+		}
+    });
+
 
 //파일 첨부에 드래그 시 border 변경
 	$dragFile.addEventListener("dragenter", e => {
@@ -98,11 +109,68 @@ function getTodayDate() {
     }
 });
 
-
-
-
 // ondragover 이벤트가 없으면 onDrop 이벤트가 실핻되지 않습니다.
 	$dragFile.ondragover = (e) => {
 		e.preventDefault();
 	}
+
+//ajax - 작업 데이터 생성 처리
+	document.getElementById("insertWorktBtn").addEventListener("click",e=>{
+		const workData={
+			projectNo : document.getElementsByName("projectNo")[0].value,
+			employeeNo : empNo,
+			projectWorktitle : document.getElementsByName("workTitle")[0].value,
+			projectWorkContent : document.getElementsByName("workContent")[0].value,
+			projectWorkEndDate : document.getElementById("project-end-date").value,
+			projectWorkRank : document.getElementsByName("importance")[0].value,
+		};
+//작업 데이터 workData에 저장
+	let attData = new FormData();
+
+	files.forEach((file) => {
+   		attData.append('files', file);
+	});
+	attData.append('employeeNo', empNo);
+	attData.append('projectNo', projectNo);
+
+//첨부 파일에 값 저장
+
+	fetch('/work/insertWorkDetail.do',{
+			method:'POST',
+			headers:{'Content-Type':'application/json'},
+			body:JSON.stringify(workData)
+		})
+		.then(response => {
+			if(!response.ok){
+				throw new Error('서버응답에러');
+			}
+			return response.text();
+		})
+		.then(data => {
+			//작업 정보 저장완료시 작업 자료 저장진행
+			console.log(attData);
+			fetch('/work/insertworkatt.do',{
+				method:'POST',
+				body:attData,
+			})
+			.then(response => {
+			if(!response.ok){
+				throw new Error('서버응답에러');
+			}
+			return response.text();
+			})
+			.then(data => {
+				alert("작업 등록이 완료되었습니다.");
+				console.log(data);
+			})
+			.catch(error => {
+				alert('작업 파일 등록을 실패했습니다.');
+				console.log(error.message);
+			})
+		})
+		.catch(error => {
+			alert('작업 등록을 실패했습니다.');
+			console.log(error.message);
+		})
+	});
 

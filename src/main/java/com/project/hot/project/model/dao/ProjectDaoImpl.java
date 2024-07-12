@@ -41,9 +41,21 @@ public class ProjectDaoImpl implements ProjectDao {
 		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
 		return session.selectList("project.selectProjectAll",null,rb);
 	}
+
+	@Override
+	public List<Project> selectProjectAllByEmpNo(SqlSession session,Map<String,Integer> param) {
+		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
+		return session.selectList("project.selectProjectAllByEmpNo",param,rb);
+	}
+
 	@Override
 	public int selectProjectAllCount(SqlSession session) {
 		return session.selectOne("project.selectProjectAllCount");
+	}
+
+	@Override
+	public int selectProjectAllCountByEmpNo(SqlSession session,Map<String,Integer> param) {
+		return session.selectOne("project.selectProjectAllCountByEmpNo",param);
 	}
 
 	@Override
