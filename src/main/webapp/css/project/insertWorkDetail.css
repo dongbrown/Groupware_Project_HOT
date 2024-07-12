@@ -7,6 +7,25 @@
     font-style: normal;
 }
 
+#project-insert-title{
+    font-weight: bolder;
+    font-size: 25px;
+    color:white;
+    text-shadow: 3px 4px 5px black;
+    margin-right:20px;
+}
+
+#project-first-wrap>div:first-child{
+	width:300px;
+	height:70px;
+	display:flex;
+	justify-content:end;
+	align-items:center;
+	border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    background-color:#4e73df;
+}
+
 section{
 	font-family: 'Pretendard-Regular';
 }
