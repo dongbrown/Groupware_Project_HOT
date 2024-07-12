@@ -9,7 +9,7 @@ public interface CommunityService {
 
 	List<Community> getCommunities(int employeeNo);
 
-	int insertCommunity(Community community, CommunityUser communityUser);
+	void insertCommunity(Community community, CommunityUser communityUser);
 
 	int toggleBookmark(int communityNo, int employeeNo);
 

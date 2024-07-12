@@ -19,8 +19,13 @@ public class CommunityDaoImpl implements CommunityDao {
 	}
 
 	@Override
-	public int insertCommunity(SqlSession session, Community community, CommunityUser cu) {
-		return session.insert("community.insertCommunity", community);
+	public void insertCommunity(SqlSession session, Community community) {
+		session.insert("community.insertCommunity", community);
+	}
+
+	@Override
+	public void insertCommunityUser(SqlSession session, CommunityUser communityUser) {
+		session.insert("community.insertCommunityUser", communityUser);
 	}
 
 	@Override
@@ -35,5 +40,7 @@ public class CommunityDaoImpl implements CommunityDao {
 	public Community getCommunityByNo(SqlSession session, int communityNo) {
 		return session.selectOne("community.getCommunityByNo", communityNo);
 	}
+
+
 
 }

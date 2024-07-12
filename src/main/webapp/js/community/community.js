@@ -40,13 +40,13 @@ $(document).ready(function() {
                 if(response.success) {
                     alert("커뮤니티가 성공적으로 생성되었습니다.");
                     modal.css("display", "none");
-                    location.reload(); // 페이지 새로고침
+                    location.reload();
                 } else {
                     alert("커뮤니티 생성에 실패했습니다: " + response.message);
                 }
             },
             error: function(xhr, status, error) {
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
+                alert("오류 발생");
                 console.error(error);
             }
         });
