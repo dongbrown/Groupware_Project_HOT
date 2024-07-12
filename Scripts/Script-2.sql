@@ -9,3 +9,6 @@ SELECT COUNT(*) FROM COMMUTING
     		  AND 
     		  COMMUTING_GO_WORK_TIME BETWEEN TO_DATE(2024 || '-' || 6 || '-01', 'YYYY-MM-DD')
    			  					     AND LAST_DAY(TO_DATE(2024 || '-' || 6 || '-01', 'YYYY-MM-DD'));
+   			  					     
+   			  					    
+SELECT * FROM COMMUTING WHERE EMPLOYEE_NO=1000 AND TRUNC(COMMUTING_DATE) = TRUNC(SYSDATE);

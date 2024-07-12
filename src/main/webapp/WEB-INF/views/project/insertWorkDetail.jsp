@@ -23,7 +23,9 @@
 				<div id="project-insert-body">
 					<!-- 작업 이름 -->
 					<div class="input-group mb-3">
+					<c:if>
 						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트 이름</span>
+					</c:if>
 						<input type="text" class="form-control"  name="projectTitle" aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default" disabled>
 					</div>
