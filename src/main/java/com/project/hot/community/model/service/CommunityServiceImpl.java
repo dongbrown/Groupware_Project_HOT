@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hot.community.model.dao.CommunityDao;
 import com.project.hot.community.model.dto.Community;
@@ -24,10 +25,12 @@ public class CommunityServiceImpl implements CommunityService {
         return dao.getCommunities(session, employeeNo);
     }
 
-
+    //수정해야됨
+    @Transactional
 	@Override
-	public int insertCommunity(Community community, CommunityUser communityUser) {
-		return dao.insertCommunity(session, community, communityUser);
+	public void insertCommunity(Community community, CommunityUser communityUser) {
+		dao.insertCommunity(session, community);
+    	dao.insertCommunityUser(session, communityUser);
 	}
 
 	@Override

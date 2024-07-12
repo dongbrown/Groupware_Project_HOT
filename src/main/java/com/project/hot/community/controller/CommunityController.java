@@ -70,16 +70,12 @@ public class CommunityController {
             communityUser.setCommunityUserIsAccept("Y");
             communityUser.setCommunityUserBookmark("N");
 
-            int result = communityService.insertCommunity(community, communityUser);
-            if (result > 0) {
-                response.put("success", true);
-                response.put("message", "커뮤니티가 성공적으로 생성되었습니다.");
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("success", false);
-                response.put("message", "커뮤니티 생성에 실패했습니다.");
-                return ResponseEntity.badRequest().body(response);
-            }
+            communityService.insertCommunity(community, communityUser);
+
+            response.put("success", true);
+            response.put("message", "커뮤니티가 성공적으로 생성되었습니다.");
+            return ResponseEntity.ok(response);
+
         } catch (IllegalArgumentException e) {
             response.put("success", false);
             response.put("message", e.getMessage());

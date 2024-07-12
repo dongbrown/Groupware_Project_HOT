@@ -11,10 +11,14 @@ public interface CommunityDao {
 
 	List<Community> getCommunities(SqlSession session, int employeeNo);
 
-	int insertCommunity(SqlSession session, Community community, CommunityUser communityUser);
+	void insertCommunity(SqlSession session, Community community);
+
+	void insertCommunityUser(SqlSession session, CommunityUser communityUser);
 
 	int toggleBookmark(SqlSession session, int communityNo, int employeeNo);
 
 	Community getCommunityByNo(SqlSession session, int communityNo);
+
+
 
 }
