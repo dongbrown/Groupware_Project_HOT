@@ -111,4 +111,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return dao.insertCommuting(session, param);
 	}
 
+	@Override
+	public int updateCommuting(Map<String, Object> param) {
+		// 퇴근 하기
+		return dao.updateCommuting(session, param);
+	}
+
 }

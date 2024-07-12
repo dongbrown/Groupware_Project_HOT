@@ -166,14 +166,30 @@ public class EmployeeRestController {
 	}
 
 	@PostMapping("/goWork")
-	public String goWork(@RequestParam int no) {
+	public String goWork(@RequestParam int no, HttpSession session) {
 		Map<String, Object> param=new HashMap<>();
 		param.put("employeeNo", no);
 		int result=service.insertCommuting(param);
 		if(result>0) {
+			//세션에 출근 한 것 저장하기 - 출근 버튼 활성화 여부 판단용
+			session.setAttribute("attStatus", true);
 			return "출근 무사히 성공!";
 		}else {
 			return "출근 실패";
+		}
+	}
+	
+	@PostMapping("/leaveWork")
+	public String leaveWork(@RequestParam int no, HttpSession session) {
+		Map<String, Object> param=new HashMap<>();
+		param.put("employeeNo", no);
+		int result=service.updateCommuting(param);
+		if(result>0) {
+			//출근 여부 세션값 false로 변경
+			session.setAttribute("attStatus", false);
+			return "퇴근 무사히 성공!";
+		}else {
+			return "퇴근 실패";
 		}
 	}
 }

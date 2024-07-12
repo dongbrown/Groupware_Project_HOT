@@ -3,13 +3,13 @@
 */
 
 $(document).ready(()=>{
-	workTime();
 	checkAttStatus();
+	
 });
 
 function workTime(){
 	const currHour=new Date().getHours();
-	if(currHour<8){
+	if(currHour<8||currHour>=15){
 		//8시 전 출근 버튼 비활성화
 		$('.btn-go-work').prop('disabled', true);
 	}
@@ -29,6 +29,7 @@ function checkAttStatus(){
 			$('.btn-go-work').prop('disabled', false);
 			$('.btn-leave-work').prop('disabled', true);
 		}
+		workTime();
 	})
 	.catch(error=>{
 		console.log(error.message);
@@ -38,6 +39,18 @@ function checkAttStatus(){
 function goWork(){
 	//출근 버튼 눌러 출근~
 	fetch(path+'/api/goWork')
+	.then(response=>response.text())
+	.then(data=>{
+		console.log(data);
+	})
+	.catch(error=>{
+		console.log(error.message);
+	})
+}
+
+function leaveWork(){
+	//퇴근 버튼을 눌러 퇴근
+	fetch(path+'/api/leaveWork')
 	.then(response=>response.text())
 	.then(data=>{
 		console.log(data);
