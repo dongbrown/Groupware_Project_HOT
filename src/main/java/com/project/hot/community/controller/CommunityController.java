@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,12 +51,15 @@ public class CommunityController {
         return "community/community";
     }
 
+
     @PostMapping("/insert")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> insertCommunity(@RequestBody Community community) {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            log.info("Inserting new community: {}", community);
+
             if (community.getCommunityTitle() == null || community.getCommunityTitle().trim().isEmpty()) {
                 throw new IllegalArgumentException("커뮤니티 이름은 필수입니다.");
             }
@@ -64,7 +68,6 @@ public class CommunityController {
             Employee loginEmployee = (Employee) auth.getPrincipal();
             int employeeNo = loginEmployee.getEmployeeNo();
 
-            // CommunityUser 객체 생성 및 설정
             CommunityUser communityUser = new CommunityUser();
             communityUser.setEmployeeNo(employeeNo);
             communityUser.setCommunityUserIsAccept("Y");
@@ -76,16 +79,14 @@ public class CommunityController {
             response.put("message", "커뮤니티가 성공적으로 생성되었습니다.");
             return ResponseEntity.ok(response);
 
-        } catch (IllegalArgumentException e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
-            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
+            log.error("Error occurred while creating community", e);
             response.put("success", false);
             response.put("message", "커뮤니티 생성 중 오류가 발생했습니다: " + e.getMessage());
-            return ResponseEntity.internalServerError().body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
 
     @PostMapping("/toggleBookmark")
     @ResponseBody
