@@ -14,7 +14,7 @@
 	<div class="profile-div shadow p-3 mb-5 bg-body rounded-4">
 		<div class="photo-div">
 		<c:choose>
-			<c:when test="${ not empty loginEmployee.employeePhoto} ">
+			<c:when test="${not empty loginEmployee.employeePhoto}">
 				<img src="${path }/upload/employee/${loginEmployee.employeePhoto }" class="employee-photo">
 
 			</c:when>

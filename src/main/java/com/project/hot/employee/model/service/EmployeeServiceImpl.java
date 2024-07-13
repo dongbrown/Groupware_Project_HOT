@@ -117,4 +117,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return dao.updateCommuting(session, param);
 	}
 
+	@Override
+	public int insertCommutingNoAtt() {
+		return dao.insertCommutingNoAtt(session);
+	}
+
 }

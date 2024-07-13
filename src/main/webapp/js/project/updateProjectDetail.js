@@ -215,9 +215,13 @@ function getTodayDate() {
 	});
 
 // 설명  text 크기 카운트
-	$('#floatingTextarea').on('input', function() {
-		let textLength = $(this).val().length;
-		$('#project-contents-count').text(textLength + '/1000');
-	});
+    $('#floatingTextarea').on('input', function() {
+        let textLength = $(this).val().length;
+        $('#project-contents-count').text(textLength + '/1000');
+        if(textLength>999){
+			const textResult = $(this).val();
+			$(this).val(String(textResult).substring(0, 1000));
+		}
+    });
 
 

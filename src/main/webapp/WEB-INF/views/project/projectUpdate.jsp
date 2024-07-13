@@ -20,52 +20,57 @@
 
 		<div id="project-update-main">
 			<div id="project-list">
-				<p id="proejct-list-title" style="font-weight: bolder; font-size: 20px; margin-top:80px;">프로젝트 목록</p>
+				<div style="display:flex; flex-direction:column; align-items:center;">
+					<p id="proejct-list-title" style="font-weight: bolder; font-size: 20px; margin-top: 80px; height:auto">프로젝트 목록</p>
 
-				<div id="projectListTable" class="table-responsive">
-					<div>
-						<div style="height:320px; width:780px;">
-						<table id="project-list-table" class="table text-start align-middle table-bordered table-hover mb-0"
-							style="text-align: center;">
-							<thead>
-								<tr class="text-dark" style="width:100$;">
-									<th scope="col">날짜</th>
-									<th scope="col">번호</th>
-									<th scope="col">담당자</th>
-									<th scope="col">프로젝트 제목</th>
-									<th scope="col" style="width: 300px;">진행률</th>
-									<th scope="col">삭제</th>
-								</tr>
-							</thead>
-							<tbody>
+					<div id="projectListTable" class="table-responsive">
+						<div>
+							<div style="height: auto; width: auto;">
+								<table id="project-list-table"
+									class="table text-start align-middle table-bordered table-hover mb-0"
+									style="text-align: center;">
+									<thead>
+										<tr class="text-dark" style="width: 100$;">
+											<th scope="col">날짜</th>
+											<th scope="col">번호</th>
+											<th scope="col">담당자</th>
+											<th scope="col">프로젝트 제목</th>
+											<th scope="col" style="width: 300px;">진행률</th>
+											<th scope="col">삭제</th>
+										</tr>
+									</thead>
+									<tbody>
 
-							</tbody>
-								<!-- Modal -->
-								<div class="modal fade" id="projectDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-								  <div class="modal-dialog">
-								    <div class="modal-content">
-								      <div class="modal-header">
-								        <h1 class="modal-title fs-5" id="exampleModalLabel">프로젝트 삭제</h1>
-								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								      </div>
-								      <div class="modal-body">
-								       프로젝트를 정말 삭제하시겠습니까?
-								      </div>
-								      <div class="modal-footer">
-								        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-								        <button type="button" class="btn btn-primary" onclick="delectProjectBtn();">삭제</button>
-								      </div>
-								    </div>
-								  </div>
-								</div>
+									</tbody>
+									<!-- Modal -->
+									<div class="modal fade" id="projectDeleteModal" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h1 class="modal-title fs-5" id="exampleModalLabel">프로젝트
+														삭제</h1>
+													<button type="button" class="btn-close"
+														data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">프로젝트를 정말 삭제하시겠습니까?</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-bs-dismiss="modal">취소</button>
+													<button type="button" class="btn btn-primary"
+														onclick="delectProjectBtn();">삭제</button>
+												</div>
+											</div>
+										</div>
+									</div>
 
-						</table>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
-
 				<br>
-				<!-- 페이징 처리 예정 -->
+				<!-- 페이지 바 -->
 				<div class="pagebar-div"></div>
 			</div>
 
@@ -215,6 +220,7 @@
 </div>
 <script>
 const path='${path}';
+const empNo='${loginEmployee.employeeNo}'
 </script>
 <script src="${path }/js/project/updateProject.js"></script>
 <script src='${path }/js/common/pagebar.js'></script>

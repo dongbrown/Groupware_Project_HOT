@@ -3,7 +3,7 @@ getProjectList(1);
 		function getProjectList(cPage) {
 			$('#work-list-table>tbody').html('');
 
-			fetch(path + '/project/projectupdateajax?cPage=' + cPage)
+			fetch(path + '/project/projectupdateajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects);
@@ -34,18 +34,12 @@ getProjectList(1);
 				const $bar = $('<div>', { class: 'bar', 'data-percentage': p.projectProgress });
 				const $percentageText = $('<div>', { css: { marginTop: '5px', marginLeft: '5px'}, text: p.projectProgress + '%' });
 
-				//td 삭제 버튼
-				const $deleteButtonCell = $('<td>');
-				const $deleteButton = $('<button>', { class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#projectDeleteModal', text: '삭제' });
-
 				//td 진행률
 				$graphContainer.append($bar).append($percentageText);
 				$projectProgress.append($graphContainer);
-				//td삭제 버튼
-				$deleteButtonCell.append($deleteButton);
 
 				$projectList.append($EmployeeNo).append($projectStartDate).append($projectNo).append($employeeName)
-					.append($projectTitle).append($projectProgress).append($deleteButtonCell).appendTo($('#work-list-table>tbody'));
+					.append($projectTitle).append($projectProgress).appendTo($('#work-list-table>tbody'));
 
 			});
 // 진행도 애니메이션
