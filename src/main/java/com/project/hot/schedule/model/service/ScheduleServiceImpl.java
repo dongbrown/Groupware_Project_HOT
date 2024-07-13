@@ -48,6 +48,14 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
     }
+
+    @Override
+    @Transactional
+    public void addCompanySchedule(Schedule schedule) {
+        dao.addCompanySchedule(schedule, session);
+        dao.addScheduleEmployeeAll(session);
+    }
+
     //드래그로 수정
     @Override
 	public void updateScheduleByDrag(Schedule schedule) {
@@ -82,5 +90,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public List<Schedule> getShareSchedule(int employeeNo) {
 		return dao.getShareSchedule(session, employeeNo);
 	}
+
+
 
 }

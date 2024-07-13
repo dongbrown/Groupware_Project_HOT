@@ -70,4 +70,14 @@ public class ScheduleDaoImpl implements ScheduleDao {
 		return session.selectList("schedule.getShareSchedule", employeeNo);
 	}
 
+	@Override
+	public void addCompanySchedule(Schedule schedule, SqlSession session) {
+		session.insert("schedule.addCompanySchedule", schedule);
+	}
+
+	@Override
+	public void addScheduleEmployeeAll(SqlSession session) {
+	    session.insert("schedule.addScheduleEmployeeAll");
+	}
+
 }

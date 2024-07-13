@@ -12,6 +12,9 @@
 <link href="${path}/css/schedule/schedule.css" rel="stylesheet">
 </head>
 <body>
+	<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
+
+
 <!-- 페이지 Wrapper -->
 
     <!-- 사이드바 include -->
@@ -80,6 +83,11 @@
 			                    <span>공지사항</span>
 			                </div>
 			            </div>
+						<div>
+						    <c:if test="${loginEmployee.positionCode.positionCode == 1}">
+						        <button id="addCompanyScheduleBtn" class="btn btn-primary">전사일정 등록</button>
+						    </c:if>
+						</div>
 			        </div>
 			    </div>
 			    <div id="calendar-container">

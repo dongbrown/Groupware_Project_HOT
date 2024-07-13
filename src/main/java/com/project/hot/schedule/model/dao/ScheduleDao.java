@@ -30,4 +30,8 @@ public interface ScheduleDao {
 
 	List<Schedule> getShareSchedule(SqlSession session, int employeeNo);
 
+	void addCompanySchedule(Schedule schedule, SqlSession session);
+
+	void addScheduleEmployeeAll(SqlSession session);
+
 }

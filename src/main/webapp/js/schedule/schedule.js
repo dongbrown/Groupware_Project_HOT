@@ -329,46 +329,46 @@ $(document).ready(function() {
         });
     }
 
-	//  일정 수정 (드래그 + 모달)
-	function updateSchedule(event, isDragUpdate) {
-	    var updatedSchedule = {
-	        id: event.id,
-	        title: event.title,
-	        // 시작 시간: moment 객체인 경우 format() 메서드 사용, 아니면 그대로 사용
-	        start: event.start.format ? event.start.format() : event.start,
-	        // 종료 시간: null이 아닌 경우에만 처리 (위와 동일한 로직)
-	        end: event.end ? (event.end.format ? event.end.format() : event.end) : null,
-	        allDay: event.allDay,  // 종일 일정 여부
-	        updatedByDrag: isDragUpdate  // 드래그로 업데이트 되었는지 여부
-	    };
+	// 일정 수정 (드래그 + 모달)
+    function updateSchedule(event, isDragUpdate) {
+        var updatedSchedule = {
+            id: event.id,
+            title: event.title,
+            // 시작 시간: moment 객체인 경우 format() 메서드 사용, 아니면 그대로 사용
+            start: event.start.format ? event.start.format() : event.start,
+            // 종료 시간: null이 아닌 경우에만 처리 (위와 동일한 로직)
+            end: event.end ? (event.end.format ? event.end.format() : event.end) : null,
+            allDay: event.allDay,  // 종일 일정 여부
+            updatedByDrag: isDragUpdate  // 드래그로 업데이트 되었는지 여부
+        };
 
-	    // 모달을 통한 수정일 경우 (드래그가 아닌 경우) 추가 정보를 포함
-	    if (!isDragUpdate) {
-	        updatedSchedule.location = $('#viewSchedulePlace').val();  // 장소 정보
-	        updatedSchedule.description = $('#viewScheduleContent').val();  // 상세 설명
-	        updatedSchedule.color = $('#viewScheduleColor').val();  // 일정 색상
-	        updatedSchedule.type = $('input[name=viewScheduleType]:checked').val();  // 일정 유형
-	        updatedSchedule.participants = getSelectedParticipants('view');  // 참가자 목록
-	    }
+        // 모달을 통한 수정일 경우 (드래그가 아닌 경우) 추가 정보를 포함
+        if (!isDragUpdate) {
+            updatedSchedule.location = $('#viewSchedulePlace').val();  // 장소 정보
+            updatedSchedule.description = $('#viewScheduleContent').val();  // 상세 설명
+            updatedSchedule.color = $('#viewScheduleColor').val();  // 일정 색상
+            updatedSchedule.type = $('input[name=viewScheduleType]:checked').val();  // 일정 유형
+            updatedSchedule.participants = getSelectedParticipants('view');  // 참가자 목록
+        }
 
-	    // AJAX를 사용하여 서버에 업데이트 요청
-	    $.ajax({
-	        url: '/schedule/updateSchedule',  // 요청 URL
-	        type: 'PUT',  // HTTP 메서드
-	        contentType: 'application/json',  // 요청 데이터 타입
-	        data: JSON.stringify(updatedSchedule),  // 전송할 데이터 (JSON 문자열로 변환)
-	        success: function(response) {  // 요청 성공 시 실행할 콜백 함수
-	            $('#calendar').fullCalendar('refetchEvents');  // 캘린더 이벤트 새로고침
-	            if (!isDragUpdate) {
-	                closeModal('#viewScheduleModal');  // 모달을 통한 수정일 경우 모달 창 닫기
-	            }
-	        },
-	        error: function(xhr, status, error) {  // 요청 실패 시 실행할 콜백 함수
-	            alert('일정 수정 중 오류가 발생했습니다: ' + error);  // 오류 메시지 표시
-	            $('#calendar').fullCalendar('refetchEvents');  // 캘린더 이벤트 새로고침
-	        }
-	    });
-	}
+        // AJAX를 사용하여 서버에 업데이트 요청
+        $.ajax({
+            url: '/schedule/updateSchedule',  // 요청 URL
+            type: 'PUT',  // HTTP 메서드
+            contentType: 'application/json',  // 요청 데이터 타입
+            data: JSON.stringify(updatedSchedule),  // 전송할 데이터 (JSON 문자열로 변환)
+            success: function(response) {  // 요청 성공 시 실행할 콜백 함수
+                $('#calendar').fullCalendar('refetchEvents');  // 캘린더 이벤트 새로고침
+                if (!isDragUpdate) {
+                    closeModal('#viewScheduleModal');  // 모달을 통한 수정일 경우 모달 창 닫기
+                }
+            },
+            error: function(xhr, status, error) {  // 요청 실패 시 실행할 콜백 함수
+                alert('일정 수정 중 오류가 발생했습니다: ' + error);  // 오류 메시지 표시
+                $('#calendar').fullCalendar('refetchEvents');  // 캘린더 이벤트 새로고침
+            }
+        });
+    }
 
     // 캘린더와 사이드바 새로고침
     function refreshCalendarAndSidebar() {
@@ -413,4 +413,47 @@ $(document).ready(function() {
         });
         return event;
     }
+
+    // 전사일정 등록 버튼 클릭 이벤트
+    $("#addCompanyScheduleBtn").click(function() {
+        // 기존 모달을 재사용
+        $("#scheduleModal").find("h5").text("전사일정 등록");
+        $("#addScheduleForm").attr("action", "/schedule/addCompanySchedule");
+
+        // 라디오 버튼 숨기기
+        $(".schedule-type-group").hide();
+
+        // 모달 열기
+        $("#scheduleModal").show();
+    });
+
+    // 폼 제출 이벤트
+    $("#addScheduleForm").submit(function(e) {
+        e.preventDefault();
+        var formData = {
+            title: $("#scheduleTitle").val(),
+            description: $("#scheduleContent").val(),
+            location: $("#schedulePlace").val(),
+            start: $("#scheduleDate").val(),
+            end: $("#scheduleEnd").val(),
+            allDay: $("#scheduleAllDay").is(":checked"),
+            color: $("#scheduleColor").val(),
+            type: $("input[name='scheduleType']:checked").val() || "company" // 전사일정인 경우 'company'로 설정
+        };
+
+        $.ajax({
+            url: $(this).attr("action"), // '/schedule/addSchedule' 또는 '/schedule/addCompanySchedule'
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function(response) {
+                alert("일정이 성공적으로 추가되었습니다.");
+                $("#scheduleModal").hide();
+                $("#calendar").fullCalendar('refetchEvents');
+            },
+            error: function(xhr, status, error) {
+                alert("일정 추가 중 오류가 발생했습니다: " + error);
+            }
+        });
+    });
 });

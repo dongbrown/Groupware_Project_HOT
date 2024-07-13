@@ -152,7 +152,20 @@ public class ScheduleController {
         }
     }
 
-
+	@PostMapping("/addCompanySchedule")
+	@ResponseBody
+	public ResponseEntity<String> addCompanySchedule(@RequestBody Schedule schedule) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    try {
+	        System.out.println("Received schedule: " + schedule);
+	        service.addCompanySchedule(schedule);
+	        return ResponseEntity.ok("일정이 성공적으로 추가되었습니다");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("일정 추가 중 오류 발생: " + e.getMessage());
+	    }
+	}
 
 
 
