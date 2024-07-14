@@ -116,40 +116,23 @@ function getTodayDate() {
 
 //ajax - 작업 데이터 생성 처리
 	document.getElementById("insertWorktBtn").addEventListener("click",e=>{
-		const workData={
-			projectNo : document.getElementsByName("projectNo")[0].value,
-			employeeNo : empNo,
-			projectWorktitle : document.getElementsByName("workTitle")[0].value,
-			projectWorkContent : document.getElementsByName("workContent")[0].value,
-			projectWorkEndDate : document.getElementById("project-end-date").value,
-			projectWorkRank : document.getElementsByName("importance")[0].value,
-		};
-//작업 데이터 workData에 저장
-	let attData = new FormData();
 
+	let attData = new FormData();
+//첨부파일 내용 저장
 	files.forEach((file) => {
    		attData.append('files', file);
+   		attData.append('fileName', file.name);
 	});
-	attData.append('employeeNo', empNo);
-	attData.append('projectNo', projectNo);
+//작업 내용 저장
+	attData.append('projectNo', document.getElementsByName("projectNo")[0].value),
+	attData.append('employeeNo', empNo),
+	attData.append('projectWorkTitle' ,document.getElementsByName("workTitle")[0].value),
+	attData.append('projectWorkContent' ,document.getElementsByName("workContent")[0].value),
+	attData.append('projectWorkEndDate' ,document.getElementById("project-end-date").value),
+	attData.append('projectWorkRank' ,document.getElementsByName("importance")[0].value),
 
 //첨부 파일에 값 저장
-
-	fetch('/work/insertWorkDetail.do',{
-			method:'POST',
-			headers:{'Content-Type':'application/json'},
-			body:JSON.stringify(workData)
-		})
-		.then(response => {
-			if(!response.ok){
-				throw new Error('서버응답에러');
-			}
-			return response.text();
-		})
-		.then(data => {
-			//작업 정보 저장완료시 작업 자료 저장진행
-			console.log(attData);
-			fetch('/work/insertworkatt.do',{
+			fetch('/work/insertWorkDetail.do',{
 				method:'POST',
 				body:attData,
 			})
@@ -167,10 +150,5 @@ function getTodayDate() {
 				alert('작업 파일 등록을 실패했습니다.');
 				console.log(error.message);
 			})
-		})
-		.catch(error => {
-			alert('작업 등록을 실패했습니다.');
-			console.log(error.message);
-		})
 	});
 

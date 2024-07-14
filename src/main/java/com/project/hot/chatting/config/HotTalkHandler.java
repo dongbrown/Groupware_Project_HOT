@@ -1,5 +1,6 @@
 package com.project.hot.chatting.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	Map<Integer, WebSocketSession> employees = new HashMap<>();
 
-
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
@@ -43,30 +43,48 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		employees.put(msg.getSender(), session);
 		List<ResponseLoginEmployeeDTO> list = service.getHotTalkMemberList(msg.getSender());
 		list.forEach(l->l.setType("사원"));
-		// System.out.println(list);
-		responseListDTO(list);
+		session.getAttributes().remove("grouprooms");
+		session.getAttributes().remove("privaterooms");
+		responseListDTO(list, session);
 	}
 
-	private void privateHotTalkList(CommonMessageDTO msg) {
+	private void privateHotTalkList(WebSocketSession session, CommonMessageDTO msg) {
 		List<ResponseHotTalkListDTO> list = service.getPrivateHotTalkList(msg.getSender());
-		list.forEach(l->l.setType("갠톡"));
-		responseListDTO(list);
+		List<Integer> rooms = new ArrayList<>();
+		list.forEach(l->{
+			l.setType("갠톡");
+			rooms.add(l.getHotTalkNo());
+		});
+		session.getAttributes().put("privaterooms", rooms);
+		session.getAttributes().remove("grouprooms");
+		responseListDTO(list, session);
 	}
 
-	private void groupHotTalkList(CommonMessageDTO msg) {
+	private void groupHotTalkList(WebSocketSession session, CommonMessageDTO msg) {
 		List<ResponseHotTalkListDTO> list = service.getGroupHotTalkList(msg.getSender());
-		list.forEach(l->l.setType("단톡"));
-		responseListDTO(list);
+		List<Integer> rooms = new ArrayList<>();
+		list.forEach(l->{
+			l.setType("단톡");
+			rooms.add(l.getHotTalkNo());
+		});
+		session.getAttributes().put("grouprooms", rooms);
+		session.getAttributes().remove("privaterooms");
+		responseListDTO(list, session);
 	}
-	private void getHotTalkContents(CommonMessageDTO msg) {
+	private void getHotTalkContents(WebSocketSession session, CommonMessageDTO msg) {
+
 		List<ResponseHotTalkContentDTO> contents = service.getHotTalkContents(msg.getSender(), msg.getHotTalkNo());
-		// System.out.println(contents);
+//		if(contents.get(0).getHotTalkIsGroup().equals("N")) {
+//			System.out.println("갠톡");
+//		} else if(contents.get(0).getHotTalkIsGroup().equals("Y")) {
+//			System.out.println("단톡");
+//		} else {
+//			System.out.println("ㅋㅋ");
+//		}
 		contents.forEach(c->{
 			c.setType("open");
-			// System.out.println(c);
 		});
-		// System.out.println(contents);
-		responseListDTO(contents);
+		responseListDTO(contents, session);
 	}
 	private void updateHotTalkStatus(HotTalkStatus status) {
 		int result;
@@ -80,44 +98,72 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		responseMsg(result);
 	}
 
-	private void sendMessage(CommonMessageDTO msg) {
+	private void sendMessage(WebSocketSession session, CommonMessageDTO msg) {
+	    // System.out.println(msg.getHotTalkNo() + " " + msg.getMsg() + " " + msg.getSender() + " " + msg.getReceiver() + " " + msg.getEventTime());
+		if(!msg.getReceiver().equals("")) msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
+	    int result = service.insertHotTalkMessage(msg);
 
+	    for (Map.Entry<Integer, WebSocketSession> entry : employees.entrySet()) {
+	        WebSocketSession cEmp = entry.getValue();
+	        List<Integer> privateRooms = (List<Integer>)(cEmp.getAttributes().get("privaterooms"));
+	        List<Integer> groupRooms = (List<Integer>)(cEmp.getAttributes().get("grouprooms"));
+	        try {
+	            msg.setType(result > 0 ? "msgSuccess" : "msgFail");
+	            String message = mapper.writeValueAsString(msg);
+	            if (privateRooms != null && privateRooms.contains(msg.getHotTalkNo())) {
+	                cEmp.sendMessage(new TextMessage(message));
+	            } else if (groupRooms != null && groupRooms.contains(msg.getHotTalkNo())) {
+	            	cEmp.sendMessage(new TextMessage(message));
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		CommonMessageDTO msg = mapper.readValue(message.getPayload(), CommonMessageDTO.class);
 		switch(msg.getType()){
 			case "enter" : enterEmployees(session, msg); break;
-			case "privateHotTalk" : privateHotTalkList(msg); break;
-			case "groupHotTalk" : groupHotTalkList(msg); break;
+			case "privateHotTalk" : privateHotTalkList(session, msg); break;
+			case "groupHotTalk" : groupHotTalkList(session, msg); break;
 			// const msg = new CommonMessage("open", sender, "", hotTalkNo, "").convert();로 전달 → 채팅방 내역 조회
-			case "open" : getHotTalkContents(msg); break;
+			case "open" : getHotTalkContents(session, msg); break;
 			case "change" : HotTalkStatus status = mapper.readValue(message.getPayload(), HotTalkStatus.class);
 							updateHotTalkStatus(status);
 							break;
-			case "msg" : sendMessage(msg); break;
+			case "msg" : sendMessage(session, msg); break;
 		}
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		// TODO Auto-generated method stub
-		super.afterConnectionClosed(session, status);
-	}
-
-	private void responseListDTO(List list) {
+		int employeeNo = 0;
 		for(Map.Entry<Integer, WebSocketSession> employee : employees.entrySet()) {
 			WebSocketSession emp = employee.getValue();
-			try {
-				String message = mapper.writeValueAsString(list);
-				emp.sendMessage(new TextMessage(message));
-			}catch(Exception e){
-				log.debug("responseListDTO() 실패");
+			if(session.equals(emp)) {
+				employeeNo = employee.getKey();
+				break;
+			}
+		}
+		employees.remove(employeeNo);
+	}
+
+	private void responseListDTO(List list, WebSocketSession session) {
+		for(Map.Entry<Integer, WebSocketSession> employee : employees.entrySet()) {
+			WebSocketSession emp = employee.getValue();
+			if(emp.equals(session)) {
+				try {
+					String message = mapper.writeValueAsString(list);
+					emp.sendMessage(new TextMessage(message));
+				}catch(Exception e){
+					log.debug("responseListDTO() 실패");
+				}
 			}
 		}
 	}
 
-	private void responseMsg(int result) {
+	private void responseMsg(int result) {	// 전체에게 보내기
 		for(Map.Entry<Integer, WebSocketSession> employee : employees.entrySet()) {
 			WebSocketSession emp = employee.getValue();
 			try {
@@ -127,5 +173,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			}
 		}
 	}
+
 
 }

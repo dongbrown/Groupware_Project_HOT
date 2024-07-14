@@ -7,6 +7,8 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.chatting.model.dto.CommonMessageDTO;
+import com.project.hot.chatting.model.dto.HotTalkContent;
 import com.project.hot.chatting.model.dto.HotTalkStatus;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
@@ -54,6 +56,16 @@ public class HotTalkDaoImpl implements HotTalkDao {
 		newStatus.setEmployeeNo(employeeNo);
 		newStatus.setHotTalkStatusMessage(statusMsg);
 		return session.update("hottalk.updateHotTalkStatusMessage", newStatus);
+	}
+
+	@Override
+	public int insertMessageSender(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertMessageSender", msg);
+	}
+
+	@Override
+	public int insertMessageReceiver(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertMessageReceiver",msg);
 	}
 
 }
