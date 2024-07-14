@@ -15,12 +15,11 @@ public class Work {
 	private int projectWorkNo;
 	private int projectNo;
 	private int employeeNo;
-	private String projectWorktitle;
+	private String projectWorkTitle;
 	private String projectWorkContent;
 	private int projectWorkRank;
 	private Date projectWorkStartDate;
 	private Date projectWorkEndDate;
 	private int projectWorkProgress;
-	private int projectWorkData;
 	private int projectWorkStatus;
 }
