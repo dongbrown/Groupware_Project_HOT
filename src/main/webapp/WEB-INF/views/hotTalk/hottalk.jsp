@@ -177,7 +177,7 @@
 <script>
 	const path = "${pageContext.request.contextPath}";
 	const loginEmployee = '${loginEmployee}';
-	const loginEmployeeNo= '${loginEmployee.employeeNo}'
+	const loginEmployeeNo= '${loginEmployee.employeeNo}';
 	const loginEmployeeName = '${loginEmployee.employeeName}';
 </script>
 <script type="text/javascript" src="${path }/js/hotTalk/hottalk.js"></script>
