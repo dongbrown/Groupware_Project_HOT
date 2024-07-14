@@ -1,8 +1,10 @@
 package com.project.hot.project.controller;
 
 import java.io.File;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.Work;
 import com.project.hot.project.model.service.ProjectService;
+import com.project.hot.project.model.service.WorkService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,56 +32,72 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class WorkController {
 
-	private final ProjectService service;
+	private final WorkService workService;
+	private final ProjectService projectService;
 
 	@GetMapping("/insertwork.do")
 	public String insertWork (int projectNo,Model m) {
-		Project project = service.selectProjectByNo(projectNo);
+		Project project = projectService.selectProjectByNo(projectNo);
 		m.addAttribute("project",project);
 		 return "project/insertWorkDetail";
 	}
-//작업 정보 저장
-	@ResponseBody
-	@PostMapping("/insertWorkDetail.do")
-	public ResponseEntity<String> insertWorkDetail(@RequestBody Work work){
-		try {
-			//service.insertWorkDetail(work);
-			return ResponseEntity.ok("프로젝트 업데이트 성공");
-		} catch (Exception e) {
-			log.error("=========프로젝트 등록 중 오류 발생=========", e);
-			return ResponseEntity.badRequest().body("프로젝트 업데이트 실패");
-		}
-	}
 //작업 정보 저장 시 포함되어있는 파일 등록/저장
 	@ResponseBody
-	@PostMapping("/insertworkatt.do")
+	@PostMapping("/insertWorkDetail.do")
 	public ResponseEntity<String> insertWorkAtt(
-			@RequestParam("files") List<MultipartFile> workDatas
-			,@RequestParam int employeeNo
-			,@RequestParam int projectNo
-			, HttpServletRequest request){
-		if(!workDatas.isEmpty()) {
-			String path = request.getServletContext().getRealPath("/upload/projectWork");
-			workDatas.forEach(e->{
-				//원본 파일 이름
-				String oriname = e.getOriginalFilename();
-				//상단 파일 확장자명
-				String ext = oriname.substring(oriname.lastIndexOf("."));
-				//변경 이름 설정(날짜 + 랜덤 문자 + 확장자)
-				String rename=LocalDateTime.now().toLocalDate().toString()+"_"+UUID.randomUUID().toString()+ext;
-				//폴더 없으면 생성하는 로직
-				File dir = new File(path);
-				if(!dir.exists()) dir.mkdir();
+	        @RequestParam("files") List<MultipartFile> workDatas,
+	        @RequestParam int projectNo,
+	        @RequestParam int employeeNo,
+	        @RequestParam String projectWorkTitle,
+	        @RequestParam String projectWorkContent,
+	        @RequestParam Date projectWorkEndDate,
+	        @RequestParam int projectWorkRank,
+	        HttpServletRequest request) {
 
-				//첨부파일 저장하기
-				try {
-					e.transferTo(new File(path, rename));
-				}catch(Exception i) {
-					i.printStackTrace();
-				}
-			});
-		}
-		return ResponseEntity.ok("프로젝트 업데이트 성공");
+		//work 객체에 데이터 저장
+		Work workData = new Work();
+		workData.setProjectNo(projectNo);
+		workData.setEmployeeNo(employeeNo);
+		workData.setProjectWorkTitle(projectWorkTitle);
+		workData.setProjectWorkContent(projectWorkContent);
+		workData.setProjectWorkEndDate(projectWorkEndDate);
+		workData.setProjectWorkRank(projectWorkRank);
+		//작업 등록
+		int workResult=workService.insertWorkDetail(workData);
+	    // 파일 저장 위치 변수 저장
+	    String path = request.getServletContext().getRealPath("/upload/projectWork");
+	    File dir = new File(path);
+	    if (!dir.exists()) dir.mkdir();
+
+	    if (!workDatas.isEmpty()) {
+	        for (MultipartFile e : workDatas) {
+	            // 원본 파일 이름
+	            String oriname = e.getOriginalFilename();
+	            // 파일 확장자명
+	            String ext = oriname.substring(oriname.lastIndexOf("."));
+	            // 변경 이름 설정(날짜 + 랜덤 문자 + 확장자)
+	            String rename = LocalDateTime.now().toLocalDate().toString() + "_" + UUID.randomUUID().toString() + ext;
+
+	            // 첨부파일 저장하기
+	            try {
+	                e.transferTo(new File(path, rename));
+	                //작업등록 성공시 첨부파일 테이블에 데이터 저장
+	                if(workResult>0) {
+	                int result = workService.insertWorkAtt(Map.of(
+	                		"projectNo",workData.getProjectNo(),"employeeNo",workData.getEmployeeNo()
+	                		,"fileName",e.getName(),"rename",rename,"projectWorkNo",workData.getProjectWorkNo()));
+	                }else {
+	                	ResponseEntity.badRequest().body("작업 등록 실패");
+	                }
+	            } catch (Exception i) {
+	                i.printStackTrace();
+	                return ResponseEntity.badRequest().body("작업 업데이트 실패: " + i.getMessage());
+	            }
+	        }
+	        return ResponseEntity.ok().body("파일 저장 성공");
+	    } else {
+	        return ResponseEntity.badRequest().body("파일 저장 실패");
+	    }
 	}
 
 
