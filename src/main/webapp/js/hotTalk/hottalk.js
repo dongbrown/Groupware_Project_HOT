@@ -7,12 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // chat-option2 ? 개인 핫톡
     // chat-option3 ? 그룹 핫톡
     const chatOptionDisplay = document.getElementById('chat-option');
+    // 선택된 버튼 활성화
     function setActiveButton(button) {
         chatButtons.forEach(btn => btn.classList.remove('btn-active'));
         button.classList.add('btn-active');
         chatOptionDisplay.textContent = button.textContent;
     }
-    setActiveButton(document.getElementById('chat-option1'));
 	chatButtons.forEach(button => {
         button.addEventListener('click', function() {
             setActiveButton(this);
@@ -37,33 +37,46 @@ document.addEventListener('DOMContentLoaded', function() {
 	chatServer.onopen=(e)=>{
 		// console.log("WebSocket 연결 성공 : ", e);
 		//constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString())
+		setActiveButton(document.getElementById('chat-option1'));
 		const msg = new CommonMessage("enter", loginEmployeeNo).convert()
 		chatServer.send(msg);
 	}
-	$("#chat-option1").click(()=>{
+	// 핫톡 사원 리스트 가져오기
+	function employeeList(){
 		$("#option-result").text("");
+		setActiveButton(document.getElementById('chat-option1'));
 		const msg = new CommonMessage("enter", loginEmployeeNo).convert()
 		chatServer.send(msg);
-	})
-	.0
-
-	$("#chat-option2").click(()=>{
+	}
+	// 개인 채팅방 새로운 내용을 가져오게하기 위한 함수
+	function privateList(){
 		$("#option-result").text("");
+		setActiveButton(document.getElementById('chat-option2'));
 		const msg = new CommonMessage("privateHotTalk", loginEmployeeNo).convert();
 		chatServer.send(msg);
-	})
-
-	$("#chat-option3").click(()=>{
+	}
+	// 그룹 채팅방 새로운 내용을 가져오게하기 위한 함수
+	function groupList(){
 		$("#option-result").text("");
+		setActiveButton(document.getElementById('chat-option3'));
 		const msg = new CommonMessage("groupHotTalk", loginEmployeeNo).convert();
 		chatServer.send(msg);
+	}
+	// 각 버튼 눌렀을 때 함수 호출
+	$("#chat-option1").click(()=>{
+		employeeList();
 	})
-	// 상태, 상태메세지 모달창
-	/*
-	Target
+	$("#chat-option2").click(()=>{
+		privateList();
+	})
+	$("#chat-option3").click(()=>{
+		groupList();
+	})
+/*
+	상태, 상태메세지 모달창
 	<sup class="user-profile my-status"></sup>
     <p class="my-status-message"></p>
-	*/
+*/
 	// 상태 변경
 	$(".change-status-btn").on('click', function(){
 		const status = $("input[name='emp-change-status']:checked").val();
@@ -92,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let allEmployee = "";
 	chatServer.onmessage=(response)=>{
 		const data = JSON.parse(response.data);
-		console.log(data);
+		// console.log(data);
 		const $option = document.querySelector("#option-result");
 		// console.log(data);
 
@@ -342,6 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						// console.log(d);
 						// console.log(d.contents[0].hotTalkNo);
 						if(d.hotTalkIsGroup=='N'){
+							privateList();
 							// 1:1 채팅에서 첫 번째 content의 발신자 == 로그인한 유저인 경우
 							if(contents[0].hotTalkContentSender.hotTalkMember.employeeNo == loginEmployeeNo){
 								receiver=contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeeNo;
@@ -370,7 +384,8 @@ document.addEventListener('DOMContentLoaded', function() {
 								sendMsg(parseInt(loginEmployeeNo), receiver, d.contents[0].hotTalkNo);
 							});
 						}else{
-							console.log(d);
+							// console.log(d);
+							groupList();
 							$(".target-avatar").attr("src","https://cdn.hankyung.com/photo/202212/01.32245693.1.jpg");
 							$(".chat-user-name").text(d.hotTalkTitle);
 							$(".user-status").text("개설 날짜 및 시각");
@@ -394,15 +409,18 @@ document.addEventListener('DOMContentLoaded', function() {
 					    }
 					    $chattingRoom.append($chatBox);
 					  });
-
 				});
+				// 채팅창 오픈 시 가장 하단으로 이동
+				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 				break;
 			}
 		}
 		switch(data.type){
 			case "msgSuccess":
-				console.log(data);
+				// console.log("ㅋㅋ");
+				// console.log(data);
 				openChatRoom(data.sender, data.hotTalkNo);
+				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 			break;
 		}
 	}
@@ -439,10 +457,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			const newMsg = new CommonMessage("msg", sender, receiverNo, hotTalkNo, $(".chat-msg").val()).convert();
 			chatServer.send(newMsg);
 			$(".chat-msg").val("");
-			console.log(newMsg);
 		}
 	}
-
 
 });
 

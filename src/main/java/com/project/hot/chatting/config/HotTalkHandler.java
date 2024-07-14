@@ -43,7 +43,8 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		employees.put(msg.getSender(), session);
 		List<ResponseLoginEmployeeDTO> list = service.getHotTalkMemberList(msg.getSender());
 		list.forEach(l->l.setType("사원"));
-		// System.out.println(list);
+		session.getAttributes().remove("grouprooms");
+		session.getAttributes().remove("privaterooms");
 		responseListDTO(list, session);
 	}
 
@@ -55,6 +56,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			rooms.add(l.getHotTalkNo());
 		});
 		session.getAttributes().put("privaterooms", rooms);
+		session.getAttributes().remove("grouprooms");
 		responseListDTO(list, session);
 	}
 
@@ -66,10 +68,19 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			rooms.add(l.getHotTalkNo());
 		});
 		session.getAttributes().put("grouprooms", rooms);
+		session.getAttributes().remove("privaterooms");
 		responseListDTO(list, session);
 	}
 	private void getHotTalkContents(WebSocketSession session, CommonMessageDTO msg) {
+
 		List<ResponseHotTalkContentDTO> contents = service.getHotTalkContents(msg.getSender(), msg.getHotTalkNo());
+//		if(contents.get(0).getHotTalkIsGroup().equals("N")) {
+//			System.out.println("갠톡");
+//		} else if(contents.get(0).getHotTalkIsGroup().equals("Y")) {
+//			System.out.println("단톡");
+//		} else {
+//			System.out.println("ㅋㅋ");
+//		}
 		contents.forEach(c->{
 			c.setType("open");
 		});
@@ -89,17 +100,20 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	private void sendMessage(WebSocketSession session, CommonMessageDTO msg) {
 	    // System.out.println(msg.getHotTalkNo() + " " + msg.getMsg() + " " + msg.getSender() + " " + msg.getReceiver() + " " + msg.getEventTime());
-	    msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
+		if(!msg.getReceiver().equals("")) msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
 	    int result = service.insertHotTalkMessage(msg);
 
 	    for (Map.Entry<Integer, WebSocketSession> entry : employees.entrySet()) {
 	        WebSocketSession cEmp = entry.getValue();
 	        List<Integer> privateRooms = (List<Integer>)(cEmp.getAttributes().get("privaterooms"));
+	        List<Integer> groupRooms = (List<Integer>)(cEmp.getAttributes().get("grouprooms"));
 	        try {
 	            msg.setType(result > 0 ? "msgSuccess" : "msgFail");
 	            String message = mapper.writeValueAsString(msg);
 	            if (privateRooms != null && privateRooms.contains(msg.getHotTalkNo())) {
 	                cEmp.sendMessage(new TextMessage(message));
+	            } else if (groupRooms != null && groupRooms.contains(msg.getHotTalkNo())) {
+	            	cEmp.sendMessage(new TextMessage(message));
 	            }
 	        } catch (Exception e) {
 	            e.printStackTrace();
