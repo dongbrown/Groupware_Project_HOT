@@ -18,4 +18,8 @@ public class CommonMessageDTO {
 	private int hotTalkNo;
 	private String msg;
 	private LocalDateTime eventTime;
+	private int hotTalkContentNo;
+	private int receiverNo;
 }
+
+
