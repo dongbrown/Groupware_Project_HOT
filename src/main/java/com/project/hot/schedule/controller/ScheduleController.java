@@ -131,7 +131,7 @@ public class ScheduleController {
         }
     }
 
-    //내 캘린더/공유 캘린더 따로 가져오기
+    //내 일정/ 공유 일정/ 전사 일정 따로 가져오기
     @GetMapping("/")
     public String showMyCalendar(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -144,6 +144,10 @@ public class ScheduleController {
 
             List<Schedule> sharedSchedules = service.getShareSchedule(employeeNo);
             model.addAttribute("sharedSchedules", sharedSchedules);
+
+            List<Schedule> companySchedules = service.getCompanySchedule();
+            System.out.println(companySchedules);
+            model.addAttribute("companySchedules", companySchedules);
 
             return "schedule/schedule";
         } catch(Exception e) {

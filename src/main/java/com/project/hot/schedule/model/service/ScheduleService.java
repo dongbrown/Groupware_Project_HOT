@@ -23,6 +23,9 @@ public interface ScheduleService {
 
 	List<Schedule> getShareSchedule(int employeeNo);
 
+	List<Schedule> getCompanySchedule();
+
 	void addCompanySchedule(Schedule schedule);
+
 
 }

@@ -50,26 +50,41 @@
 
             <!-- 피드 목록 -->
             <div id="feed-container">
-
+                <div class="feed-item"> <!-- 예시 피드 항목 -->
+                    <div class="post-header">
+                        <img src="user_icon.png" alt="유저 아이콘">
+                        <div>
+                            <h2>유저 이름</h2>
+                            <p>포스트 내용</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        포스트 본문
+                    </div>
+                    <div class="post-actions">
+                        <button>좋아요</button>
+                        <button>댓글</button>
+                    </div>
+                </div>
             </div>
 
-			<div id="addParticipantModal" class="modal">
-			    <div class="modal-content">
-			        <div class="modal-header">
-			            <h5>초대하기</h5>
-			            <span class="close">&times;</span>
-			        </div>
-			        <div class="modal-body">
-			            <input type="text" id="participantSearch" placeholder="이름/아이디/부서/직위/직책/전화" class="form-control">
-			            <div id="organizationTree">
-			                <!-- 조직도 트리 구조가 여기에 동적으로 추가됩니다 -->
-			            </div>
-			        </div>
-			        <div class="modal-footer">
-			            <button id="inviteButton" class="btn btn-primary">초대</button>
-			        </div>
-			    </div>
-			</div>
+            <div id="addParticipantModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>초대하기</h5>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="participantSearch" placeholder="이름/아이디/부서/직위/직책/전화" class="form-control">
+                        <div id="organizationTree">
+                            <!-- 조직도 트리 여기에! -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="inviteButton" class="btn btn-primary">초대</button>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <!-- 페이지 콘텐츠 끝 -->

@@ -53,7 +53,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     public void addCompanySchedule(Schedule schedule) {
         dao.addCompanySchedule(schedule, session);
-        dao.addScheduleEmployeeAll(session);
     }
 
     //드래그로 수정
@@ -89,6 +88,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public List<Schedule> getShareSchedule(int employeeNo) {
 		return dao.getShareSchedule(session, employeeNo);
+	}
+
+	@Override
+	public List<Schedule> getCompanySchedule() {
+		return dao.getCompanySchedule(session);
 	}
 
 

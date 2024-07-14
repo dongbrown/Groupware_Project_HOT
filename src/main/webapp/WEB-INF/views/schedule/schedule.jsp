@@ -35,11 +35,11 @@
 			            <div id="calendar2"></div>
 			        </div>
 			        <br><br>
-			        <!-- 내 캘린더 -->
+			        <!-- 내 일정 -->
 					<div class="calendar-section">
 					    <div class="calendar-type toggle-header">
 					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
-					        내 캘린더
+					        내 일정
 					    </div>
 					    <div class="legend-items">
 					        <c:forEach var="schedule" items="${mySchedules}">
@@ -52,11 +52,11 @@
 					    </div>
 					</div>
 
-					<!-- 공유 캘린더 -->
+					<!-- 공유 일정 -->
 					<div class="calendar-section">
 					    <div class="calendar-type toggle-header">
 					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
-					        공유 캘린더
+					        공유 일정
 					    </div>
 					    <div class="legend-items">
 					        <c:forEach var="schedule" items="${sharedSchedules}">
@@ -68,34 +68,35 @@
 					        </c:forEach>
 					    </div>
 					</div>
-			        <div class="calendar-section">
-			            <div class="calendar-type toggle-header">
-			                <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
-			                기타
-			            </div>
-			            <div class="legend-items">
-			                <div class="legend-item">
-			                    <span class="legend-color" style="background-color: pink;"></span>
-			                    <span>전사일정</span>
-			                </div>
-			                <div class="legend-item">
-			                    <span class="legend-color" style="background-color: yellow;"></span>
-			                    <span>공지사항</span>
-			                </div>
-			            </div>
-						<div>
-						    <c:if test="${loginEmployee.positionCode.positionCode == 1}">
-						        <button id="addCompanyScheduleBtn" class="btn btn-primary">전사일정 등록</button>
-						    </c:if>
-						</div>
-			        </div>
+					<!-- 전사 일정  -->
+					<div class="calendar-section">
+					    <div class="calendar-type toggle-header">
+					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" />
+					        전사 일정
+					    </div>
+					    <div class="legend-items">
+					        <c:forEach var="schedule" items="${companySchedules}">
+					            <div class="legend-item">
+					                <input type="checkbox" class="schedule-checkbox" data-id="${schedule.id}" data-type="company" checked>
+					                <span>${schedule.title}</span>
+					                <span class="legend-color" style="background-color: ${schedule.color};"></span>
+					            </div>
+					        </c:forEach>
+					    </div>
+					    <div>
+					        <c:if test="${loginEmployee.positionCode.positionCode == 1}">
+					            <button id="addCompanyScheduleBtn" class="btn btn-primary">전사일정 등록</button>
+					        </c:if>
+					    </div>
+					</div>
+
 			    </div>
 			    <div id="calendar-container">
 			        <div id="calendar"></div>
 			    </div>
 			</div>
 
-                <!-- 일정 추가 모달 -->
+                <!-- 일정 추가 모달(내 일정 / 공유 일정) -->
                 <div id="scheduleModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
@@ -171,6 +172,55 @@
                         </form>
                     </div>
                 </div>
+
+                <!-- 전사일정 등록 모달 -->
+				<div id="companyScheduleModal" class="modal">
+				    <div class="modal-content">
+				        <span class="close close-company-modal">&times;</span>
+				        <h5>전사일정 등록</h5>
+				        <form id="addCompanyScheduleForm">
+				            <div class="form-group">
+				                <label for="companyScheduleTitle">제목</label>
+				                <input type="text" class="form-control" id="companyScheduleTitle" required>
+				            </div>
+				            <div class="form-group">
+				                <label for="companySchedulePlace">장소</label>
+				                <input type="text" class="form-control" id="companySchedulePlace" required>
+				            </div>
+				            <div class="form-group">
+				                <label for="companyScheduleContent">내용</label>
+				                <textarea class="form-control" id="companyScheduleContent" required></textarea>
+				            </div>
+				            <div class="form-group">
+				                <label for="companyScheduleDate">시작 날짜</label>
+				                <input type="date" class="form-control" id="companyScheduleDate" required>
+				            </div>
+				            <div class="form-group">
+				                <label for="companyScheduleEnd">종료 날짜</label>
+				                <input type="date" class="form-control" id="companyScheduleEnd">
+				            </div>
+				            <div class="form-check">
+				                <input type="checkbox" class="form-check-input" id="companyScheduleAllDay">
+				                <label class="form-check-label" for="companyScheduleAllDay">종일</label>
+				            </div>
+				            <div class="form-group">
+				                <label for="companyScheduleColor">색상</label>
+				                <input type="hidden" id="companyScheduleColor">
+				                <div class="color-picker">
+				                    <div class="color-option company-color-option" style="background-color: #FF0000;" data-color="#FF0000"></div>
+				                    <div class="color-option company-color-option" style="background-color: #FFA500;" data-color="#FFA500"></div>
+				                    <div class="color-option company-color-option" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
+				                    <div class="color-option company-color-option" style="background-color: #008000;" data-color="#008000"></div>
+				                    <div class="color-option company-color-option" style="background-color: #0000FF;" data-color="#0000FF"></div>
+				                    <div class="color-option company-color-option" style="background-color: #4B0082;" data-color="#4B0082"></div>
+				                    <div class="color-option company-color-option" style="background-color: #EE82EE;" data-color="#EE82EE"></div>
+				                </div>
+				            </div>
+				            <button type="submit" class="btn btn-primary">저장</button>
+				        </form>
+				    </div>
+				</div>
+
 
                 <!-- 일정 조회/수정 모달 -->
                 <div id="viewScheduleModal" class="modal">
@@ -254,7 +304,24 @@
         <c:import url="/WEB-INF/views/common/footer.jsp"/>
     </div>
     <!-- 콘텐츠 Wrapper 끝 -->
+<script>
+    // 전사일정 데이터를 변수로 전달
+    var companySchedules = [
+        <c:forEach items="${companySchedules}" var="schedule" varStatus="status">
+            {
+                id: ${schedule.id},
+                title: "${schedule.title}",
+                start: "${schedule.start}",
+                end: "${schedule.end}",
+                allDay: ${schedule.allDay},
+                color: "${schedule.color}"
+            }<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
 
+    // ceo만 전사 일정 삭제 가능하도록 변수로 js에 전달
+        var isCeo = ${loginEmployee.positionCode.positionCode == 1};
+</script>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

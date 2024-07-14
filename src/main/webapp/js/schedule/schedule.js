@@ -17,10 +17,25 @@ $(document).ready(function() {
                 type: 'GET',
                 dataType: 'json',
                 success: function(events) {
-                    // 체크된 일정만 필터링해서 표시
+                    // 체크된 일정만 필터링해서 표시 (전사일정 포함)
                     var filteredEvents = events.filter(function(event) {
                         return $('.schedule-checkbox[data-id="' + event.id + '"]').is(':checked');
                     });
+                   // 전사일정 추가
+                    companySchedules.forEach(function(schedule) {
+                        if ($('.schedule-checkbox[data-id="' + schedule.id + '"][data-type="company"]').is(':checked')) {
+                            filteredEvents.push({
+                                id: schedule.id,
+                                title: schedule.title,
+                                start: schedule.start,
+                                end: schedule.end,
+                                allDay: schedule.allDay,
+                                color: schedule.color,
+                                type: 'company'
+                            });
+                        }
+                    });
+
                     callback(filteredEvents);
                 }
             });
@@ -89,7 +104,7 @@ $(document).ready(function() {
         }
     });
 
-    // 체크박스 변경 -> 캘린더 이벤트 다시
+    // 체크박스 변경 -> 캘린더 이벤트 다시 불러오기
     $(document).on('change', '.schedule-checkbox', function() {
         $('#calendar').fullCalendar('refetchEvents');
     });
@@ -121,29 +136,56 @@ $(document).ready(function() {
 
     // 일정 조회/수정 모달 열기
     function openViewScheduleModal(event) {
-        $('#viewScheduleModal').css('display', 'block');
-        $('#viewScheduleId').val(event.id);
-        $('#viewScheduleTitle').val(event.title);
-        $('#viewSchedulePlace').val(event.location);
-        $('#viewScheduleContent').val(event.description);
-        $('#viewScheduleStart').val(event.start.format('YYYY-MM-DD'));
-        $('#viewScheduleEnd').val(event.end ? event.end.format('YYYY-MM-DD') : '');
-        $('#viewScheduleEnd').attr('min', event.start.format('YYYY-MM-DD')); // 최소 종료 날짜 설정
-        $('#viewScheduleAllDay').prop('checked', event.allDay);
-        var color = event.color || '#0000FF';
-        $('#viewScheduleColor').val(color);
-        $(`.color-option[data-color="${color}"]`).click();
-        $(`input[name=viewScheduleType][value=${event.type}]`).prop('checked', true);
-        loadDepartments('view');
-        if (event.participants) {
-            loadParticipants(event.participants, 'view');
-        }
-        if (event.type === 'share') {
-            $('#viewParticipantSelection').show();
-        } else {
-            $('#viewParticipantSelection').hide();
-        }
+    $('#viewScheduleModal').css('display', 'block');
+    $('#viewScheduleId').val(event.id);
+    $('#viewScheduleTitle').val(event.title);
+    $('#viewSchedulePlace').val(event.location);
+    $('#viewScheduleContent').val(event.description);
+    $('#viewScheduleStart').val(event.start.format('YYYY-MM-DD'));
+    $('#viewScheduleEnd').val(event.end ? event.end.format('YYYY-MM-DD') : '');
+    $('#viewScheduleEnd').attr('min', event.start.format('YYYY-MM-DD')); // 최소 종료 날짜 설정
+    $('#viewScheduleAllDay').prop('checked', event.allDay);
+
+    var color = event.color || '#0000FF';
+    $('#viewScheduleColor').val(color);
+    $(`.color-option[data-color="${color}"]`).click();
+
+    $(`input[name=viewScheduleType][value=${event.type}]`).prop('checked', true);
+
+    loadDepartments('view');
+    if (event.participants) {
+        loadParticipants(event.participants, 'view');
     }
+
+    // 일정 타입에 따른 UI 조정
+    if (event.type === 'share') {
+        $('#viewParticipantSelection').show();
+    } else {
+        $('#viewParticipantSelection').hide();
+    }
+
+    // 전사일정인 경우 삭제 버튼 표시 여부 결정
+    if (event.type === 'company') {
+        if (isCeo) {
+            $('#deleteScheduleBtn').show();
+        } else {
+            $('#deleteScheduleBtn').hide();
+        }
+    } else {
+        $('#deleteScheduleBtn').show();
+    }
+
+    // 전사일정인 경우 수정 불가능하도록 설정
+    if (event.type === 'company' && !isCeo) {
+        $('#viewScheduleTitle, #viewSchedulePlace, #viewScheduleContent, #viewScheduleStart, #viewScheduleEnd, #viewScheduleAllDay').prop('disabled', true);
+        $('.color-option').css('pointer-events', 'none');
+        $('button[type="submit"]').hide(); // 수정 버튼 숨기기
+    } else {
+        $('#viewScheduleTitle, #viewSchedulePlace, #viewScheduleContent, #viewScheduleStart, #viewScheduleEnd, #viewScheduleAllDay').prop('disabled', false);
+        $('.color-option').css('pointer-events', 'auto');
+        $('button[type="submit"]').show(); // 수정 버튼 표시
+    }
+}
 
     // 모달 닫기 함수
     function closeModal(modalElement) {
@@ -165,6 +207,7 @@ $(document).ready(function() {
     // 일정 추가 폼 제출
     $('#addScheduleForm').submit(function(e) {
         e.preventDefault();
+
         var newSchedule = {
             title: $('#scheduleTitle').val(),
             location: $('#schedulePlace').val(),
@@ -334,38 +377,34 @@ $(document).ready(function() {
         var updatedSchedule = {
             id: event.id,
             title: event.title,
-            // 시작 시간: moment 객체인 경우 format() 메서드 사용, 아니면 그대로 사용
             start: event.start.format ? event.start.format() : event.start,
-            // 종료 시간: null이 아닌 경우에만 처리 (위와 동일한 로직)
             end: event.end ? (event.end.format ? event.end.format() : event.end) : null,
-            allDay: event.allDay,  // 종일 일정 여부
-            updatedByDrag: isDragUpdate  // 드래그로 업데이트 되었는지 여부
+            allDay: event.allDay,
+            updatedByDrag: isDragUpdate
         };
 
-        // 모달을 통한 수정일 경우 (드래그가 아닌 경우) 추가 정보를 포함
         if (!isDragUpdate) {
-            updatedSchedule.location = $('#viewSchedulePlace').val();  // 장소 정보
-            updatedSchedule.description = $('#viewScheduleContent').val();  // 상세 설명
-            updatedSchedule.color = $('#viewScheduleColor').val();  // 일정 색상
-            updatedSchedule.type = $('input[name=viewScheduleType]:checked').val();  // 일정 유형
-            updatedSchedule.participants = getSelectedParticipants('view');  // 참가자 목록
+            updatedSchedule.location = $('#viewSchedulePlace').val();
+            updatedSchedule.description = $('#viewScheduleContent').val();
+            updatedSchedule.color = $('#viewScheduleColor').val();
+            updatedSchedule.type = $('input[name=viewScheduleType]:checked').val();
+            updatedSchedule.participants = getSelectedParticipants('view');
         }
 
-        // AJAX를 사용하여 서버에 업데이트 요청
         $.ajax({
-            url: '/schedule/updateSchedule',  // 요청 URL
-            type: 'PUT',  // HTTP 메서드
-            contentType: 'application/json',  // 요청 데이터 타입
-            data: JSON.stringify(updatedSchedule),  // 전송할 데이터 (JSON 문자열로 변환)
-            success: function(response) {  // 요청 성공 시 실행할 콜백 함수
-                $('#calendar').fullCalendar('refetchEvents');  // 캘린더 이벤트 새로고침
+            url: '/schedule/updateSchedule',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(updatedSchedule),
+            success: function(response) {
+                $('#calendar').fullCalendar('refetchEvents');
                 if (!isDragUpdate) {
-                    closeModal('#viewScheduleModal');  // 모달을 통한 수정일 경우 모달 창 닫기
+                    closeModal('#viewScheduleModal');
                 }
             },
-            error: function(xhr, status, error) {  // 요청 실패 시 실행할 콜백 함수
-                alert('일정 수정 중 오류가 발생했습니다: ' + error);  // 오류 메시지 표시
-                $('#calendar').fullCalendar('refetchEvents');  // 캘린더 이벤트 새로고침
+            error: function(xhr, status, error) {
+                alert('일정 수정 중 오류가 발생했습니다: ' + error);
+                $('#calendar').fullCalendar('refetchEvents');
             }
         });
     }
@@ -380,7 +419,6 @@ $(document).ready(function() {
                 var $html = $(response);
                 $('.calendar-legend').html($html.find('.calendar-legend').html());
                 rebindToggleHeaders();
-                // 체크박스 상태 복원
                 $('.schedule-checkbox').each(function() {
                     var scheduleId = $(this).data('id');
                     var event = getEventById(scheduleId);
@@ -416,44 +454,69 @@ $(document).ready(function() {
 
     // 전사일정 등록 버튼 클릭 이벤트
     $("#addCompanyScheduleBtn").click(function() {
-        // 기존 모달을 재사용
-        $("#scheduleModal").find("h5").text("전사일정 등록");
-        $("#addScheduleForm").attr("action", "/schedule/addCompanySchedule");
-
-        // 라디오 버튼 숨기기
-        $(".schedule-type-group").hide();
-
-        // 모달 열기
-        $("#scheduleModal").show();
+        $("#companyScheduleModal").show();
+        $('.company-color-option').first().click();
     });
 
-    // 폼 제출 이벤트
-    $("#addScheduleForm").submit(function(e) {
+    // 전사일정 모달 닫기
+    $(".close-company-modal").click(function() {
+        $("#companyScheduleModal").hide();
+    });
+
+    // 전사일정 모달 외부 클릭 시 닫기
+    $(window).click(function(event) {
+        if ($(event.target).is("#companyScheduleModal")) {
+            $("#companyScheduleModal").hide();
+        }
+    });
+
+    // 전사일정 폼 제출
+    $("#addCompanyScheduleForm").submit(function(e) {
         e.preventDefault();
         var formData = {
-            title: $("#scheduleTitle").val(),
-            description: $("#scheduleContent").val(),
-            location: $("#schedulePlace").val(),
-            start: $("#scheduleDate").val(),
-            end: $("#scheduleEnd").val(),
-            allDay: $("#scheduleAllDay").is(":checked"),
-            color: $("#scheduleColor").val(),
-            type: $("input[name='scheduleType']:checked").val() || "company" // 전사일정인 경우 'company'로 설정
+            title: $("#companyScheduleTitle").val(),
+            description: $("#companyScheduleContent").val(),
+            location: $("#companySchedulePlace").val(),
+            start: $("#companyScheduleDate").val(),
+            end: $("#companyScheduleEnd").val(),
+            allDay: $("#companyScheduleAllDay").is(":checked"),
+            color: $("#companyScheduleColor").val(),
+            type: "company"
         };
 
         $.ajax({
-            url: $(this).attr("action"), // '/schedule/addSchedule' 또는 '/schedule/addCompanySchedule'
+            url: '/schedule/addCompanySchedule',
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function(response) {
-                alert("일정이 성공적으로 추가되었습니다.");
-                $("#scheduleModal").hide();
-                $("#calendar").fullCalendar('refetchEvents');
+                alert("전사일정이 성공적으로 추가되었습니다.");
+                $("#companyScheduleModal").hide();
+                $('#calendar').fullCalendar('refetchEvents');
+                refreshCalendarAndSidebar();
             },
             error: function(xhr, status, error) {
-                alert("일정 추가 중 오류가 발생했습니다: " + error);
+                alert("전사일정 추가 중 오류가 발생했습니다: " + error);
             }
         });
+    });
+
+    // 전사일정 모달의 색상 선택기
+    $('.company-color-option').click(function() {
+        $(this).siblings().removeClass('selected');
+        $(this).addClass('selected');
+        var color = $(this).data('color');
+        $('#companyScheduleColor').val(color);
+    });
+
+    // 전사일정 모달의 날짜 입력 유효성 검사
+    $('#companyScheduleDate, #companyScheduleEnd').on('change', function() {
+        var startDate = $('#companyScheduleDate').val();
+        var endDate = $('#companyScheduleEnd').val();
+
+        if (startDate && endDate && endDate < startDate) {
+            alert('종료 날짜는 시작 날짜 이후여야 합니다.');
+            $('#companyScheduleEnd').val(startDate);
+        }
     });
 });

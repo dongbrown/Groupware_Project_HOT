@@ -34,6 +34,12 @@ public class ScheduleDaoImpl implements ScheduleDao {
         session.insert("schedule.addScheduleEmployee", se);
 	}
 
+	//전사 일정 추가
+	@Override
+	public void addCompanySchedule(Schedule schedule, SqlSession session) {
+		session.insert("schedule.addCompanySchedule", schedule);
+	}
+
 	@Override
 	public void updateScheduleByDrag(Schedule schedule, SqlSession session) {
 		session.update("schedule.updateScheduleByDrag", schedule);
@@ -71,13 +77,8 @@ public class ScheduleDaoImpl implements ScheduleDao {
 	}
 
 	@Override
-	public void addCompanySchedule(Schedule schedule, SqlSession session) {
-		session.insert("schedule.addCompanySchedule", schedule);
-	}
-
-	@Override
-	public void addScheduleEmployeeAll(SqlSession session) {
-	    session.insert("schedule.addScheduleEmployeeAll");
+	public List<Schedule> getCompanySchedule(SqlSession session) {
+		return session.selectList("schedule.getCompanySchedule");
 	}
 
 }
