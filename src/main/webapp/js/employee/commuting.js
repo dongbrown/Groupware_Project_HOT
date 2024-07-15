@@ -15,7 +15,7 @@ $('.month-select').change(e=>{
 // 출퇴근 정보 가져오기
 function commutingList(cPage){
 	const month=$('.month-select').val();
-	const url=path+'/api/commuting/'+no+'?cPage='+cPage+'&month=' + month;
+	const url=path+'/api/employee/commuting/'+no+'?cPage='+cPage+'&month=' + month;
 	fetch(url)
 	.then(response=>response.json())
 	.then(data=>{

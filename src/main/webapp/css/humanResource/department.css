@@ -1,0 +1,40 @@
+/*
+	부서 관리 페이지 css~
+*/
+
+.department {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.department-div {
+	width: 90%;
+    background-color: white;
+    padding: 3%;
+    height: 87vh;
+}
+
+.dept-btn-div {
+	margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.dept-search-div {
+	display: flex;
+    flex-direction: row;
+}
+
+.department-search-form {
+	display: flex;
+}
+
+.dept-table-div {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dept-table {
+	text-align: center;
+}

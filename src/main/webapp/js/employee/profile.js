@@ -34,7 +34,7 @@ function updateEmployee(){
 			employeePassword:employeePassword
 		};
 
-		fetch(path+'/api/updateEmployee' ,{
+		fetch(path+'/api/employee/updateEmployee' ,{
 			method:'POST',
 			headers:{
 				'Content-Type':'application/json'
@@ -100,7 +100,7 @@ $(document).ready(()=>{
 		fd.append('employeePhoto', employeePhoto);
 		fd.append('no', no);
 
-		fetch(path+'/api/updateEmployeePhoto', {
+		fetch(path+'/api/employee/updateEmployeePhoto', {
 			method:'POST',
 			body: fd
 		})

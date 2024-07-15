@@ -10,7 +10,7 @@ $(document).ready(()=>{
 function checkAttStatus(){
 	//오늘 출근 했는지 체크해서 출근 버튼 활성화 여부 판단
 	const currHour=new Date().getHours();
-	fetch(path+'/api/attendanceStatus')
+	fetch(path+'/api/employee/attendanceStatus')
 	.then(response=>response.json())
 	.then(data=>{
 		if(data||(currHour<8||currHour>=15)){
@@ -30,7 +30,7 @@ function checkAttStatus(){
 
 function goWork(){
 	//출근 버튼 눌러 출근~
-	fetch(path+'/api/goWork',{
+	fetch(path+'/api/employee/goWork',{
 		method:'POST',
 		headers:{
 			'Content-Type':'application/json'
@@ -49,7 +49,7 @@ function goWork(){
 
 function leaveWork(){
 	//퇴근 버튼을 눌러 퇴근
-	fetch(path+'/api/leaveWork',{
+	fetch(path+'/api/employee/leaveWork',{
 		method:'POST',
 		headers:{
 			'Content-Type':'application/json'

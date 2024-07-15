@@ -16,7 +16,7 @@ $(document).ready(() => {
 function getEmployeeList(cPage) {
 	$('.card-div').html('');
 	showLoadingSpinner($('.card-div'));
-	fetch(path + '/api/employeeList?cPage=' + cPage)
+	fetch(path + '/api/employee/employeeList?cPage=' + cPage)
 		.then(response => response.json())
 		.then(data => {
 			makeAddressCard(data.employees);
@@ -33,10 +33,11 @@ function getEmployeeList(cPage) {
 
 //부서 데이터 가져오는 함수
 function getDepartmentList() {
-	fetch(path + '/api/departmentList')
+	fetch(path + '/api/employee/departmentList')
 		.then(response => response.json())
 		.then(data => {
 			const $target=$('.department-menu');
+			$target.append($('<span>').addClass('dropdown-item').text('부서전체').click(changeTitle));
 			data.forEach(d=>{
 				const $departmentTitle=$('<span>').addClass('dropdown-item')
 				.text(d.departmentHighCode<=1?d.departmentTitle:`--${d.departmentTitle}`)
@@ -90,7 +91,7 @@ function searchEmployee(cPage){
 	const title=$('.department-menu-title').text().trim();
 	$('.card-div').html('');
 	showLoadingSpinner($('.card-div'));
-	fetch(`${path}/api/employeeList?cPage=${cPage}&name=${name}&title=${title}`)
+	fetch(`${path}/api/employee/employeeList?cPage=${cPage}&name=${name}&title=${title}`)
 	.then(response=>response.json())
 	.then(data=>{
 		console.log(data);

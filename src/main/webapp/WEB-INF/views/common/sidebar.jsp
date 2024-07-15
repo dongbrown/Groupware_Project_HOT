@@ -208,11 +208,10 @@
                         <a class="collapse-item" href="${path }/employee/addressbook">주소록 조회</a><br>
                         <h6 class="collapse-header">조직도</h6>
                         <a class="collapse-item" href="utilities-color.html">조직도 조회</a>
-                        <a class="collapse-item" href="utilities-border.html">조직도 수정</a>
                     </div>
                 </div>
             </li>
-            <c:if test="${loginEmployee.departmentCode.departmentCode==2 || loginEmployee.departmentCode.departmentCode==1}">
+            <c:if test="${loginEmployee.departmentCode.departmentAuthority eq '100' or loginEmployee.departmentCode.departmentAuthority eq '10'}">
                 <!-- Nav Item - Utilities Collapse Menu -->
 	            <li class="nav-item">
 	                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#human"
