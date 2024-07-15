@@ -12,12 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.Work;
 import com.project.hot.project.model.service.ProjectService;
@@ -41,6 +42,15 @@ public class WorkController {
 		m.addAttribute("project",project);
 		 return "project/insertWorkDetail";
 	}
+
+	@GetMapping("/workupdatedetail.do")
+	public String workUpdate (int workNo,Model m) {
+		Work work = workService.selectWorkByWorkNo(workNo);
+		m.addAttribute("work",work);
+		return "project/workUpdateDetail";
+	}
+
+
 //작업 정보 저장 시 포함되어있는 파일 등록/저장
 	@ResponseBody
 	@PostMapping("/insertWorkDetail.do")
@@ -99,6 +109,20 @@ public class WorkController {
 	        return ResponseEntity.badRequest().body("파일 저장 실패");
 	    }
 	}
+
+	@ResponseBody
+	@GetMapping("/workupdateajax")
+	public Map<String,Object> workUpdatePage(@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam("employeeNo") int employeeNo) {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			mapper.writeValueAsString(
+					workService.selectWorkAll(Map.of("cPage", cPage, "numPerpage", 5, "employeeNo", employeeNo)));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return workService.selectWorkAll(Map.of("cPage", cPage, "numPerpage", 5, "employeeNo", employeeNo));
+	};
 
 
 }

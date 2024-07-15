@@ -1,5 +1,6 @@
 package com.project.hot.project.model.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -24,6 +25,24 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public int insertWorkAtt(Map<String, Object> param) {
 		return dao.insertWorkAtt(session, param);
+	}
+
+	@Override
+	public Map<String,Object> selectWorkAll(Map<String, Integer> param) {
+		Map<String,Object> result=new HashMap<>();
+		if(param.get("employeeNo")==null) {
+			result.put("works", dao.selectWorkAll(session,param));
+			result.put("totalPage",Math.ceil((double)dao.selectworkAllCount(session)/param.get("numPerpage")));
+		}else {
+			result.put("works", dao.selectWorkAllByEmpNo(session,param));
+			result.put("totalPage",Math.ceil((double)dao.selectworkAllCountByEmpNo(session,param)/param.get("numPerpage")));
+		}
+		return result;
+	}
+
+	@Override
+	public Work selectWorkByWorkNo(int workNo) {
+		return dao.selectWorkByWorkNo(session, workNo);
 	}
 
 }
