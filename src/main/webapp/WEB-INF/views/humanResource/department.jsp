@@ -53,6 +53,7 @@
       </div>
       <div class="modal-body">
 		부서 이름 : <input type="text" placeholder="부서 이름 입력" id="newTitle"><br>
+		<p></p><br>
 		상위 부서 선택 :
 		<select class="modal-dept-select" name="departmentHighTitle"></select>
       </div>

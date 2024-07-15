@@ -8,23 +8,83 @@ $(document).ready(() => {
 	getDepartmentList(1);
 });
 
+function updateDepartment(departmentCode){
+	fetch(path+'/api/hr/updateDepartment',{
+		method:'POST',
+		headers:{
+			'Content-Type':'application/json'
+		},
+		body:JSON.stringify(RequestDepartment)
+	})
+	.then(response=>response.text())
+	.then(data => {
+		alert(data);
+		location.reload();
+	})
+	.catch(error => {
+		console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+	});
+}
+
+function deleteDepartment(deptCode){
+	const RequestDepartment={
+		deptCode:deptCode
+	};
+	fetch(path+'/api/hr/deleteDepartment',{
+		method:'POST',
+		headers:{
+			'Content-Type':'application/json'
+		},
+		body:JSON.stringify(RequestDepartment)
+	})
+	.then(response=>response.text())
+	.then(data => {
+		alert(data);
+		location.reload();
+	})
+	.catch(error => {
+		console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+	});
+}
+
+//부서 등록 모달창 부서이름 중복확인 이벤트
+$('#newTitle').keyup(e=>{
+	const newTitle=$(e.target).val();
+	fetch(path+'/api/employee/departmentList')
+		.then(response => response.json())
+		.then(data => {
+			const check=data.some(d=>d.departmentTitle==newTitle);
+				//부서 이름 중복 확인
+				if(check){
+					$(e.target).next().next().text('중복된 부서 이름입니다.').css('color','red');
+				}else{
+					$(e.target).next().next().text('');
+				}
+		})
+		.catch(error => {
+			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+		});
+});
+
+//부서 등록 함수
 function insertDepartment(){
 	const newTitle=$('#newTitle').val(); //새로 생성할 부서 이름
-	const highTitle=$('modal-dept-select').val(); //새로 생성할 부서의 상위부서 이름
-	const newDept={
+	const highCode=$('.modal-dept-select').val(); //새로 생성할 부서의 상위부서 코드
+	const RequestDepartment={
 		newTitle:newTitle,
-		highTitle:highTitle
+		highCode:highCode
 	};
 	fetch(path+'/api/hr/insertDepartment',{
 			method:'POST',
 			headers:{
 				'Content-Type':'application/json'
 			},
-			body:JSON.stringify(newDept)
+			body:JSON.stringify(RequestDepartment)
 		})
 		.then(response=>response.text())
 		.then(data => {
-			console.log(data);
+			alert(data);
+			location.reload();
 		})
 		.catch(error => {
 			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
@@ -51,20 +111,17 @@ function getDepartmentList(cPage) {
 function makeDepartmentTable(departments){
 	$('.dept-table tbody').html('');
 	departments.forEach(d=>{
-		//부서 검색 선택 버튼 만들기
 		const $tr=$('<tr>');
 		const $highTitle=$('<td>').text(d.departmentHighTitle);
 		const $title=$('<td>').text(d.departmentTitle);
 		const $headName=$('<td>').text(d.departmentHeadName);
 		const $count=$('<td>').text(d.totalDepartmentCount);
-		$tr.append($highTitle).append($title).append($headName).append($count);
+		const $btnTd=$('<td>');		
+		const $updateBtn=$('<button>').addClass('btn btn-primary').attr('data-bs-toggle', 'modal').attr('data-bs-target', '#update-modal').text('수정');
+		const $deleteBtn=$('<button>').addClass('btn btn-danger').attr('onclick', `deleteDepartment(${d.departmentCode})`).text('삭제');
+		$btnTd.append($updateBtn).append($deleteBtn);
+		$tr.append($highTitle).append($title).append($headName).append($count).append($btnTd);
 		$('.dept-table tbody').append($tr);
-
-		//부서 생성 모달창 상위 부서 select태그 만들기
-		if(d.departmentHighTitle==null||d.departmentHighTitle=='경영'){
-			const $option=$('<option>').val(d.departmentTitle).text(d.departmentTitle);
-			$('.modal-dept-select').append($option);
-		}
 	});
 };
 
@@ -88,11 +145,18 @@ function makeDepartmentMenu(){
 			const $target=$('.department-menu');
 			$target.append($('<span>').addClass('dropdown-item').text('부서전체').click(searchDepartment));
 			data.forEach(d=>{
+				//부서 드롭다운 메뉴 만들기
 				if(d.departmentHighCode <= 1){
 					const $departmentTitle=$('<span>').addClass('dropdown-item')
-						.text(d.departmentHighCode<=1?d.departmentTitle:`--${d.departmentTitle}`)
+						.text(d.departmentTitle)
 						.click(searchDepartment);
 					$target.append($departmentTitle);
+				}
+				
+				//부서 생성 모달창 상위 부서 select태그 만들기
+				if(d.departmentHighCode==0||d.departmentHighCode==1){
+					const $option=$('<option>').val(d.departmentCode).text(d.departmentTitle);
+					$('.modal-dept-select').append($option);
 				}
 			});
 		})

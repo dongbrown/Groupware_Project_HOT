@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.service.HRService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,8 +35,32 @@ public class HRController {
 	}
 
 	@PostMapping("/insertDepartment")
-	public String insertDepartment() {
-
-		return "";
+	public String insertDepartment(@RequestBody RequestDepartment rd) {
+		int result=service.insertDepartment(rd);
+		if(result>0) {
+			return "부서등록 성공!";
+		}else {
+			return "부서등록 실패!";
+		}
+	}
+	
+	@PostMapping("/updateDepartment")
+	public String updateDepartment(@RequestBody RequestDepartment rd) {
+		int result=service.updateDepartment(rd);
+		if(result>0) {
+			return "부서 수정 성공!";
+		}else {
+			return "부서 수정 실패!";
+		}
+	}
+	
+	@PostMapping("/deleteDepartment")
+	public String deleteDepartment(@RequestBody RequestDepartment rd) {
+		int result=service.deleteDepartment(rd);
+		if(result>0) {
+			return "부서 삭제 성공!";
+		}else {
+			return "부서 삭제 실패!";
+		}
 	}
 }
