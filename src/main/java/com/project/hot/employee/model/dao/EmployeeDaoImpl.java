@@ -74,8 +74,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	}
 
 	@Override
-	public int insertCommutingNoAtt(SqlSession session) {
-		return session.selectOne("employee.commutingProcedure");
+	public int insertCommutingNoAtt(SqlSession session, Map<String, Object> param) {
+		session.selectOne("employee.commutingProcedure", param);
+		return (int)param.get("result");
 	}
 
 }
