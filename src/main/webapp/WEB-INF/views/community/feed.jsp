@@ -8,9 +8,7 @@
 <title>피드</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
-<style>
-<c:import url="${path}/css/feed/feed.css"/>
-</style>
+<link href="${path}/css/feed/feed.css" rel="stylesheet">
 </head>
 <body>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
@@ -75,7 +73,17 @@
                         <span class="close">&times;</span>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="participantSearch" placeholder="이름/아이디/부서/직위/직책/전화" class="form-control">
+                        <select id="departmentSelect" class="form-select mb-3">
+                            <option value="">부서 선택</option>
+                        </select>
+                        <select id="employeeSelect" class="form-select mb-3">
+                            <option value="">사원 선택</option>
+                        </select>
+                        <button id="addParticipantBtn" class="btn btn-secondary mb-3">참석자 추가</button>
+                        <div id="selectedParticipants" class="mb-3">
+                            <h6>선택된 참석자:</h6>
+                            <ul id="participantList"></ul>
+                        </div>
                         <div id="organizationTree">
                             <!-- 조직도 트리 여기에! -->
                         </div>

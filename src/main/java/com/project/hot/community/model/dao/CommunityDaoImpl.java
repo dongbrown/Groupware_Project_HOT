@@ -41,6 +41,14 @@ public class CommunityDaoImpl implements CommunityDao {
 		return session.selectOne("community.getCommunityByNo", communityNo);
 	}
 
+    @Override
+    public int inviteParticipants(SqlSession session, List<Map<String, Object>> participants, int communityNo) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("list", participants);  // "participants" 대신 "list"를 사용
+        paramMap.put("communityNo", communityNo);
+        return session.insert("community.inviteParticipants", paramMap);
+    }
+
 
 
 }

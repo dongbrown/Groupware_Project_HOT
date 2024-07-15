@@ -23,25 +23,50 @@ $(document).ready(function() {
         });
     });
 
-    // 초대 버튼 클릭 이벤트
-    $('#inviteButton').click(function() {
-        const selectedItems = $('.tree-item.selected');
-        const invitees = selectedItems.map(function() {
-            return {
-                id: $(this).data('id'),
-                name: $(this).text().trim(),
-                type: $(this).data('type')
-            };
-        }).get();
-
-        if (invitees.length > 0) {
-            console.log("Selected invitees:", invitees);
-            alert(invitees.length + "명의 참석자를 초대했습니다.");
-            $('#addParticipantModal').hide();
-        } else {
-            alert("초대할 참석자를 선택해주세요.");
-        }
+    // 부서 선택 시 사원 목록 로드
+    $('#departmentSelect').change(function() {
+        loadEmployees($(this).val());
     });
+
+    // 참석자 추가 버튼 클릭 이벤트
+    $('#addParticipantBtn').click(function() {
+        addParticipant();
+    });
+
+	$('#inviteButton').click(function() {
+	    const participants = getSelectedParticipants();
+	    if (participants.length > 0) {
+	        inviteParticipants(participants);
+	    } else {
+	        alert("초대할 참석자를 선택해주세요.");
+	    }
+	});
+
+	function inviteParticipants(participants) {
+	    const communityNo = $("#community-container").data("id");
+	    $.ajax({
+	        url: '/community/feed/invite',
+	        method: 'POST',
+	        contentType: 'application/json',
+	        data: JSON.stringify({
+	            communityNo: communityNo,
+	            participants: participants
+	        }),
+	        success: function(response) {
+	            if (response.success) {
+	                alert(response.message);
+	                $('#addParticipantModal').hide();
+	                // 필요하다면 여기서 참석자 목록을 갱신하는 함수를 호출할 수 있습니다.
+	            } else {
+	                alert('참석자 초대에 실패했습니다: ' + response.message);
+	            }
+	        },
+	        error: function(xhr, status, error) {
+	            console.error('참석자 초대 오류:', error);
+	            alert('참석자 초대 중 오류가 발생했습니다.');
+	        }
+	    });
+	}
 
     // 모달 닫기 기능
     $('.close').click(function() {
@@ -86,19 +111,24 @@ function displayFeeds(feeds) {
 
 function createFeedHtml(feed) {
     const isAuthor = feed.employeeNo === getCurrentEmployeeNo();
-    let actionsHtml = '';
+    let menuHtml = '';
     if (isAuthor) {
-        actionsHtml = `
-            <div class="feed-actions">
-
-                <button class="btn btn-sm btn-outline-primary edit-btn" onclick="showEditForm(${feed.feedNo})">수정</button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
+        menuHtml = `
+            <div class="feed-menu">
+                <img src="/images/menuicon.png" class="menu-icon" onclick="toggleFeedMenu(${feed.feedNo})">
+                <div class="feed-menu-options" id="feedMenu-${feed.feedNo}" style="display:none;">
+                    <button class="btn btn-sm btn-outline-primary edit-btn" onclick="showEditForm(${feed.feedNo})">수정</button><br>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
+                </div>
             </div>
         `;
     }
     return `
         <div class="feed-item" id="feed-${feed.feedNo}">
-            <h5>${feed.employeeName}</h5>
+            <div class="feed-header">
+                <h5>${feed.employeeName}</h5>
+                ${menuHtml}
+            </div>
             <p class="feed-content">${feed.feedContent}</p>
             <div class="edit-form" style="display: none;">
                 <input type="text" class="form-control edit-input" value="${feed.feedContent}">
@@ -106,10 +136,20 @@ function createFeedHtml(feed) {
                 <button class="btn btn-sm btn-secondary cancel-btn" onclick="cancelEdit(${feed.feedNo})">취소</button>
             </div>
             <small class="text-muted">${feed.feedEnrollDate}</small>
-            ${actionsHtml}
         </div>
     `;
 }
+
+//피드 ...(메뉴) 토글
+function toggleFeedMenu(feedNo) {
+    $(`#feedMenu-${feedNo}`).toggle();
+}
+
+$(document).click(function(event) {
+    if (!$(event.target).closest('.feed-menu').length) {
+        $('.feed-menu-options').hide();
+    }
+});
 
 function getCurrentEmployeeNo() {
     // JSP에서 설정한 전역 변수 사용
@@ -227,7 +267,108 @@ function deleteFeed(feedNo) {
 
 function showAddParticipant() {
     $('#addParticipantModal').css('display', 'block');
-    loadOrganizationTree();
+    loadDepartments();
+	loadNonParticipants(); //커뮤니티 가입자가 아닌 사람만 불러오기
+
+}
+
+//커뮤니티 가입자가 아닌 사람만 불러오기
+function loadNonParticipants() {
+    const communityNo = $("#community-container").data("id");
+    $.ajax({
+        url: '/community/feed/nonParticipants',
+        type: 'GET',
+        data: { communityNo: communityNo },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                const nonParticipants = response.nonParticipants;
+                updateEmployeeSelect(nonParticipants);
+            } else {
+                console.error('비참여 사원 목록 로드 실패:', response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('비참여 사원 목록 로드 오류:', error);
+        }
+    });
+}
+
+function loadDepartments() {
+    $.ajax({
+        url: '/api/departmentList',
+        type: 'GET',
+        dataType: 'json',
+        success: function(departments) {
+            const $select = $('#departmentSelect');
+            $select.empty().append('<option value="">부서 선택</option>');
+            departments.forEach(dept => {
+                $select.append(`<option value="${dept.departmentCode}">${dept.departmentTitle}</option>`);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('부서 목록 로드 오류:', error);
+            alert('부서 목록을 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function loadEmployees(deptCode) {
+    $.ajax({
+        url: '/schedule/selectEmpByDept',
+        type: 'GET',
+        data: { deptCode: deptCode },
+        dataType: 'json',
+        success: function(employees) {
+            const $select = $('#employeeSelect');
+            $select.empty().append('<option value="">사원 선택</option>');
+            employees.forEach(emp => {
+                $select.append(`<option value="${emp.employeeNo}">${emp.employeeName}</option>`);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('사원 목록 로드 오류:', error);
+            alert('사원 목록을 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function addParticipant() {
+    const $employeeSelect = $('#employeeSelect');
+    const employeeNo = $employeeSelect.val();
+    const employeeName = $employeeSelect.find('option:selected').text();
+
+    if (!employeeNo) {
+        alert('사원을 선택해주세요.');
+        return;
+    }
+
+   const $participantList = $('#participantList');
+    if ($participantList.find(`li[data-id="${employeeNo}"]`).length === 0) {
+        $participantList.append(`
+            <li data-id="${employeeNo}" class="list-group-item d-flex justify-content-between align-items-center">
+                ${employeeName}
+                <button type="button" class="btn-close remove-participant" aria-label="Close"></button>
+            </li>
+        `);
+    } else {
+        alert('이미 선택된 사원입니다.');
+    }
+}
+
+$(document).on('click', '.remove-participant', function() {
+    $(this).parent().remove();
+});
+
+function getSelectedParticipants() {
+    return $('#participantList li').map(function() {
+        return {
+            id: $(this).data('id'),
+            name: $(this).contents().filter(function() {
+                return this.nodeType === 3;
+            }).text().trim()
+        };
+    }).get();
 }
 
 function loadOrganizationTree() {
@@ -246,7 +387,7 @@ function loadOrganizationTree() {
                 const deptCode = $(this).data('id');
                 const $childrenContainer = $(this).children('ul');
                 if ($childrenContainer.length === 0) {
-                    loadEmployees(deptCode, $(this));
+                    loadEmployeesForTree(deptCode, $(this));
                 } else {
                     $childrenContainer.toggle();
                 }
@@ -303,7 +444,7 @@ function generateTreeHtml(items, level = 0) {
     return html;
 }
 
-function loadEmployees(deptCode, $parentElement) {
+function loadEmployeesForTree(deptCode, $parentElement) {
     $.ajax({
         url: '/schedule/selectEmpByDept',
         type: 'GET',

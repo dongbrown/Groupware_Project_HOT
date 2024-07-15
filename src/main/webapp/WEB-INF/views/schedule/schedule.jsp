@@ -106,11 +106,11 @@
                                 <div class="radio-group">
                                     <div class="radio-item">
                                         <input type="radio" id="scheduleTypeMy" name="scheduleType" value="my" checked>
-                                        <label for="scheduleTypeMy">내 캘린더</label>
+                                        <label for="scheduleTypeMy">내 일정</label>
                                     </div>
                                     <div class="radio-item">
                                         <input type="radio" id="scheduleTypeShare" name="scheduleType" value="share">
-                                        <label for="scheduleTypeShare">공유 캘린더</label>
+                                        <label for="scheduleTypeShare">공유 일정</label>
                                     </div>
                                 </div>
                             </div>
@@ -232,9 +232,9 @@
                             <div class="form-group">
                                 <label>타입</label>
                                 <input type="radio" id="viewScheduleTypeMy" name="viewScheduleType" value="my">
-                                <label for="viewScheduleTypeMy">내 캘린더</label>
+                                <label for="viewScheduleTypeMy">내 일정</label>
                                 <input type="radio" id="viewScheduleTypeShare" name="viewScheduleType" value="share">
-                                <label for="viewScheduleTypeShare">공유 캘린더</label>
+                                <label for="viewScheduleTypeShare">공유 일정</label>
                             </div>
                             <div id="viewParticipantSelection" class="form-group" style="display: none;">
                                 <label class="form-label">참석자 선택</label>
@@ -313,7 +313,7 @@
                 title: "${schedule.title}",
                 start: "${schedule.start}",
                 end: "${schedule.end}",
-                allDay: ${schedule.allDay},
+                allDay: "${schedule.allDay}",
                 color: "${schedule.color}"
             }<c:if test="${!status.last}">,</c:if>
         </c:forEach>

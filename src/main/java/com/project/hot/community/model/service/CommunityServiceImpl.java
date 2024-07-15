@@ -1,6 +1,8 @@
 package com.project.hot.community.model.service;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,4 +44,9 @@ public class CommunityServiceImpl implements CommunityService {
     public Community getCommunityByNo(int communityNo) {
         return dao.getCommunityByNo(session, communityNo);
     }
+
+	@Override
+	public int inviteParticipants(int communityNo, List<Map<String, Object>> participants) {
+		return dao.inviteParticipants(session, participants, communityNo);
+	}
 }
