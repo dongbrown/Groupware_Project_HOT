@@ -407,6 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					    } else {
 					      $chatBox.addClass("chattingRoom-right-msg");
 					    }
+					    $chatBox.addClass("jello-horizontal");
 					    $chattingRoom.append($chatBox);
 					  });
 				});
@@ -417,8 +418,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		switch(data.type){
 			case "msgSuccess":
-				// console.log("ㅋㅋ");
-				// console.log(data);
 				openChatRoom(data.sender, data.hotTalkNo);
 				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 			break;
@@ -448,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	// 메세지 전송 버튼 클릭 이벤트
 	const sendMsg = function(sender, receiverNo, hotTalkNo){
 		if($(".chat-msg").val().length == 0){
-			alert('채팅 내용을 입력하세요.');
+			alert('채팅 내용을 입력하시거나 혹은 첨부파일을 추가하세요.');
 			$(".chat-msg").focus();
 		} else {
 			const $chatBox = $("<div>").addClass("chat-message chattingRoom-right-msg").append($("<sup>").html("<b>"+($(".user-name").text())+"</b> "+getDate()));
@@ -459,6 +458,59 @@ document.addEventListener('DOMContentLoaded', function() {
 			$(".chat-msg").val("");
 		}
 	}
+
+	// 파일 전송 prompt 창 느낌
+	$("#file-input").change((e) =>{
+		const fileName = e.target.files[0].name;
+        Swal.fire({
+            title: 'File('+fileName+') 전송',
+            text: "파일을 전송하시겠습니까?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '전송',
+            cancelButtonText: '취소'
+        }).then((result) => {
+			console.log(result);
+            if (result.isConfirmed) {
+                Swal.fire(
+                    '파일 전송',
+                    '파일을 전송하겠습니다.',
+                    'success'
+                )
+            }
+            sendFile();
+        })
+    });
+	//https://cheonfamily.tistory.com/6
+	function sendFile() {
+	    const fileInput = document.getElementById('file-input');
+	    const file = fileInput.files[0];
+	    if (file) {
+	        const formData = new FormData();
+	        formData.append('file', file);
+
+	        fetch('/hottalk/upload', {
+	            method: 'POST',
+	            body: formData
+	        })
+	        .then(response => response.json())
+	        .then(data => {
+	            // 파일 업로드 성공 후 WebSocket을 통해 파일 정보 전송
+	            sendMessage({
+	                type: 'FILE',
+	                fileName: file.name,
+	                fileUrl: data.fileUrl
+	            });
+	            // 파일 입력 초기화
+	            fileInput.value = '';
+	            document.getElementById('file-name').textContent = '';
+	        })
+	        .catch(error => console.error('Error:', error));
+    }
+}
+
 
 });
 

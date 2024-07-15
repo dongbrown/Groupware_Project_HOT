@@ -18,7 +18,7 @@
 	<div class="chat-container">
         <div class="chat-sidebar">
             <div class="user-profile">
-                <img src="https://cdn.eroun.net/news/photo/202305/32650_59862_4410.jpg" alt="아이유" class="user-avatar IUimg">
+                <img src="${path }/upload/employee/${loginEmployee.employeePhoto}" alt="아이유" class="user-avatar IUimg">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 				    <i class="fas fa-cog"></i>
 			 	</a>
@@ -163,8 +163,9 @@
 	                <label for="file-input" class="file-upload-btn">
 	                    <span class="plus-icon">+</span>
 	                </label>
-	                <input id="file-input" type="file" style="display: none;">
-	                <span id="file-name"></span>
+	                <form method="post" enctype="multipart/form-data">
+	                	<input id="file-input" type="file" style="display: none;">
+	                </form>
 	            </div>
                 <button class="chat-send-btn">전송</button>
             </div>
