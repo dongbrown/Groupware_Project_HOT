@@ -21,5 +21,5 @@ public class Work {
 	private Date projectWorkStartDate;
 	private Date projectWorkEndDate;
 	private int projectWorkProgress;
-	private int projectWorkStatus;
+	private String projectWorkStatus;
 }
