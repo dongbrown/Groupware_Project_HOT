@@ -226,7 +226,7 @@
                 <div id="viewScheduleModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h5>일정 상세/수정</h5>
+                        <h5>일정 상세</h5>
                         <form id="updateScheduleForm">
                             <input type="hidden" id="viewScheduleId">
                             <div class="form-group">

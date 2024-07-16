@@ -1,0 +1,76 @@
+@charset "UTF-8";
+body {
+    font-family: 'GmarketSans', sans-serif;
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+#communityTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#communityTable th, #communityTable td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+#communityTable thead th {
+    background-color: #4e73df;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#communityTable tbody tr:nth-child(even) {
+    background-color: #f8f9fc;
+}
+
+#communityTable tbody tr:hover {
+    background-color: #eaecf4;
+}
+
+.btn-primary {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+.btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2653d4;
+}
+
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+.pagination .page-link {
+    color: #4e73df;
+}
+
+#createCommunityBtn {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+}

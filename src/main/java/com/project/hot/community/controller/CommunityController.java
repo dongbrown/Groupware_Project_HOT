@@ -42,7 +42,6 @@ public class CommunityController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
-        System.out.println(employeeNo);
 
         List<Community> communities = communityService.getCommunities(employeeNo);
         System.out.println(communities);
@@ -143,7 +142,48 @@ public class CommunityController {
         }
     }
 
+    // 공개 커뮤니티 리스트로 이동
+    @GetMapping("/communityList")
+    public String openCommunityList(Model model) {
+    	List<Community> communities = communityService.getCommunityList();
+    	System.out.println(communities);
+    	model.addAttribute("communities", communities);
+    	return "community/communityList";
+    }
 
+    @PostMapping("/join")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> joinCommunity(@RequestParam("communityNo") int communityNo) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Employee loginEmployee = (Employee) auth.getPrincipal();
+            int employeeNo = loginEmployee.getEmployeeNo();
+
+            CommunityUser communityUser = new CommunityUser();
+            communityUser.setEmployeeNo(employeeNo);
+            communityUser.setCommunityNo(communityNo);
+            communityUser.setCommunityUserIsAccept("Y");
+            communityUser.setCommunityUserBookmark("N");
+
+            boolean result = communityService.joinCommunity(communityUser);
+
+            if (result) {
+                response.put("success", true);
+                response.put("message", "커뮤니티에 성공적으로 가입되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "커뮤니티 가입에 실패했습니다.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while joining community", e);
+            response.put("success", false);
+            response.put("message", "커뮤니티 가입 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
 
 
