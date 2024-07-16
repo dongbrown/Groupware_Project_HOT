@@ -13,7 +13,34 @@
 	<div class="employee-div shadow bg-body rounded">
 		<h2>사원 관리</h2>
 		<div class="search-div">
-
+			<div class="mb-1">
+				<select id="keyword">
+					<option>사번</option>
+					<option>이름</option>
+				</select>
+				<input type="text" id="keywordValue">
+			</div>
+			<div>
+				<div class="dropdown mb-1 department-select-button">
+					<button class="btn btn-primary dropdown-toggle department-menu-title" type="button"
+						id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false">부서전체</button>
+					<div class="dropdown-menu animated--fade-in department-menu" aria-labelledby="dropdownMenuButton"></div>
+				</div>
+			</div>
+			<div class="position-checkbox-div">
+				직급 :
+			</div>
+			<div class="mb-1">
+				월급 : <input type="number" id="minSalary"> ~ <input type="number" id="maxSalary">
+			</div>
+			<div class="mb-1">
+				입사일 : <input type="date" id="minHire"> ~ <input type="date" id="minHire">
+			</div>
+			<div class="mb-1">
+				퇴사일 : <input type="date" id="minResign"> ~ <input type="date" id="minResign">
+			</div>
+			<button class="btn btn-danger mb-1">검색하기</button>
 		</div>
 		<div class="table-div">
 			<table class="table emp-table">
