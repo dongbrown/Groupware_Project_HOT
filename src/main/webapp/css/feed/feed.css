@@ -189,13 +189,16 @@ h2, h3 {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 5% auto; /* 상단 여백 줄임 */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 500px;
+    max-width: 600px; /* 최대 너비 증가 */
+    max-height: 80vh; /* 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 추가 */
 }
 
 .close {
@@ -212,18 +215,17 @@ h2, h3 {
 }
 
 #organizationTree {
-    margin-top: 20px;
-    max-height: 300px;
-    overflow-y: auto;
+    max-height: none; /* 최대 높이 제한 제거 */
+    overflow-y: visible; /* 스크롤 제거 */
+}
+
+.tree-root {
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .tree-item {
-    padding: 5px 0;
-    cursor: pointer;
-}
-
-.tree-item:hover {
-    background-color: #f0f0f0;
+    margin: 5px 0;
 }
 
 .selected {
@@ -284,4 +286,80 @@ h2, h3 {
 
 .feed-menu-options button:last-child {
     margin-right: 0; /* 마지막 버튼의 오른쪽 마진 제거 */
+}
+
+.department-name {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.employee-list {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.employee-checkbox {
+    margin-right: 5px;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+#participantList {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+/* 체크박스 스타일 개선 */
+.employee-checkbox {
+    display: none; /* 기본 체크박스 숨김 */
+}
+
+.employee-checkbox + label:before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    vertical-align: middle;
+}
+
+.employee-checkbox:checked + label:before {
+    content: '✔';
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    text-align: center;
+    line-height: 18px;
+}
+
+/* 부서명 호버 효과 */
+.department-name:hover {
+    color: #007bff;
+}
+
+/* 모달 내부 스크롤바 스타일 */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

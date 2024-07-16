@@ -189,8 +189,7 @@
                         <h6 class="collapse-header">커뮤니티 목록</h6>
                         <a class="collapse-item" href="${path }/community/">즐겨찾는 커뮤니티</a>
                         <a class="collapse-item" href="${path }/community/">내 커뮤니티</a>
-                        <a class="collapse-item" href="${path }/oepnCommunity/">공개 커뮤니티</a>
-                    </div>
+						<a class="collapse-item" href="${path}/community/communityList">커뮤니티 리스트</a>                    </div>
                 </div>
             </li>
             <!-- Divider -->

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.project.hot.community.model.dto.Community;
 import com.project.hot.community.model.dto.CommunityUser;
+import com.project.hot.employee.model.dto.Employee;
 
 public interface CommunityService {
 
@@ -17,5 +18,12 @@ public interface CommunityService {
 	Community getCommunityByNo(int communityNo);
 
 	int inviteParticipants(int communityNo, List<Map<String, Object>> participants);
+
+	List<Community> getCommunityList();
+
+	List<Employee> getNonParticipants(int communityNo);
+
+	boolean joinCommunity(CommunityUser communityUser);
+
 
 }

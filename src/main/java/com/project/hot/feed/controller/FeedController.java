@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedController {
 
     private final FeedService service;
-    private final CommunityService cService;
+    private final CommunityService communityService;
 
     @GetMapping("/list")
     @ResponseBody
@@ -173,7 +173,7 @@ public class FeedController {
 //          Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //          Employee loginEmployee = (Employee) auth.getPrincipal();
 
-            int result = cService.inviteParticipants(communityNo, participants);
+            int result = communityService.inviteParticipants(communityNo, participants);
             if (result > 0) {
                 response.put("success", true);
                 response.put("message", participants.size() + "명의 참석자가 성공적으로 초대되었습니다.");
@@ -193,4 +193,27 @@ public class FeedController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
+    //nonParticipants 추가
+    @GetMapping("/nonParticipants")
+    public ResponseEntity<?> getNonParticipants(@RequestParam int communityNo) {
+        try {
+            List<Employee> nonParticipants = communityService.getNonParticipants(communityNo);
+            System.out.println(nonParticipants);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("nonParticipants", nonParticipants);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "비참여 사원 목록을 불러오는 중 오류가 발생했습니다.");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+
+
 }

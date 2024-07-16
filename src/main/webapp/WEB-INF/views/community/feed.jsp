@@ -66,33 +66,27 @@
                 </div>
             </div>
 
-            <div id="addParticipantModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5>초대하기</h5>
-                        <span class="close">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        <select id="departmentSelect" class="form-select mb-3">
-                            <option value="">부서 선택</option>
-                        </select>
-                        <select id="employeeSelect" class="form-select mb-3">
-                            <option value="">사원 선택</option>
-                        </select>
-                        <button id="addParticipantBtn" class="btn btn-secondary mb-3">참석자 추가</button>
-                        <div id="selectedParticipants" class="mb-3">
-                            <h6>선택된 참석자:</h6>
-                            <ul id="participantList"></ul>
-                        </div>
-                        <div id="organizationTree">
-                            <!-- 조직도 트리 여기에! -->
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="inviteButton" class="btn btn-primary">초대</button>
-                    </div>
-                </div>
-            </div>
+			<div id="addParticipantModal" class="modal">
+			    <div class="modal-content">
+			        <div class="modal-header">
+			            <h5>초대하기</h5>
+			            <span class="close">&times;</span>
+			        </div>
+			        <div class="modal-body">
+			            <input type="text" id="participantSearch" class="form-control mb-3" placeholder="이름으로 검색">
+			            <div id="organizationTree">
+			                <!-- 조직도 트리 여기에! -->
+			            </div>
+			            <div id="selectedParticipants" class="mt-3">
+			                <h6>선택된 참석자:</h6>
+			                <ul id="participantList"></ul>
+			            </div>
+			        </div>
+			        <div class="modal-footer">
+			            <button id="inviteButton" class="btn btn-primary">초대</button>
+			        </div>
+			    </div>
+			</div>
 
         </div>
         <!-- 페이지 콘텐츠 끝 -->

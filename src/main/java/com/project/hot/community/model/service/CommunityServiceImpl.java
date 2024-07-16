@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.hot.community.model.dao.CommunityDao;
 import com.project.hot.community.model.dto.Community;
 import com.project.hot.community.model.dto.CommunityUser;
+import com.project.hot.employee.model.dto.Employee;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -49,4 +51,26 @@ public class CommunityServiceImpl implements CommunityService {
 	public int inviteParticipants(int communityNo, List<Map<String, Object>> participants) {
 		return dao.inviteParticipants(session, participants, communityNo);
 	}
+
+	@Override
+	public List<Community> getCommunityList() {
+		return dao.getCommunityList(session);
+	}
+
+	@Override
+	public List<Employee> getNonParticipants(int communityNo) {
+		return dao.getNonParticipants(session, communityNo);
+	}
+
+    @Transactional
+    @Override
+    public boolean joinCommunity(CommunityUser communityUser) {
+        try {
+            int result = dao.joinCommunity(session, communityUser);
+            return result > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
