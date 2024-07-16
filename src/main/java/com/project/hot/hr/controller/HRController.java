@@ -1,17 +1,17 @@
 package com.project.hot.hr.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.hot.employee.model.dto.Employee;
+import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.service.HRService;
@@ -69,8 +69,12 @@ public class HRController {
 	}
 
 	@GetMapping("/getEmployeeList")
-	public Map<String,Object> getEmployeeList(){
+	public Map<String,Object> getEmployeeList(
+			@RequestParam(defaultValue = "1")int cPage
+			, @ModelAttribute SearchEmployeeData sed){
 		Map<String, Object> param=new HashMap<>();
+		param.put("cPage", cPage);
+		param.put("numPerpage", 10);
 		Map<String, Object> result=empService.selectEmployeeList(param);
 		return result;
 	}

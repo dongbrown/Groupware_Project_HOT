@@ -4,8 +4,61 @@
 
 $(document).ready(()=>{
 
+	searchEmployee(1);
 	getDepartmentList();
 })
+
+//사원 검색 데이터 가져오는 함수
+function searchEmployee(cPage){
+	const $form=$('#searchForm').get(0);
+	const fd=new FormData($form);
+	const query=new URLSearchParams();
+	for(const pair of fd.entries()){
+		if(pair[1]!=null&&pair[1]!=''){
+			query.append(pair[0], pair[1]);
+		}
+	}
+	
+	
+	fetch(path+'/api/hr/getEmployeeList?cPage='+cPage+'&'+query.toString())
+		.then(response => response.json())
+		.then(data => {
+			makeEmployeeTable(data.employees);
+			const $pagebar=createPagination(cPage, data.totalPage, 'searchEmployee');
+			$('.pagebar-div').html('').append($pagebar);
+		})
+		.catch(error => {
+			console.error('요청 실패: ', error); // 요청 실패 시 에러 처리
+		});
+}
+
+// 사원 테이블 만드는 함수
+function makeEmployeeTable(employees){
+	$('.emp-table tbody').html('');
+	employees.forEach(e=>{
+		const $tr=$('<tr>');
+		const $empNo=$('<td>').text(e.employeeNo);
+		const $empDept=$('<td>').text(e.departmentCode.departmentTitle);
+		const $empPosition=$('<td>').text(e.positionCode.positionTitle);
+		const $empName=$('<td>').text(e.employeeName);
+		const $empId=$('<td>').text(e.employeeId);
+		const $empPhone=$('<td>').text(e.employeePhone);
+		const $empAddress=$('<td>').text(e.employeeAddress);
+		const $empBirth=$('<td>').text(e.employeeBirthDay);
+		const $empSalary=$('<td>').text(e.employeeSalary);
+		const $empHire=$('<td>').text(e.employeeHireDate);
+		const $empResign=$('<td>').text(e.employeeResignationDay);
+		const $empTotalVacation=$('<td>').text(e.employeeTotalVacation);
+		const $btnTd=$('<td>');
+		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary');
+		const $deleteBtn=$('<button>').text('삭제').addClass('btn btn-danger');
+		$btnTd.append($updateBtn).append($deleteBtn);
+		$tr.append($empNo).append($empDept).append($empPosition).append($empName).append($empId).append($empPhone)
+			.append($empAddress).append($empBirth).append($empSalary).append($empHire).append($empResign).append($empTotalVacation)
+			.append($btnTd);
+		$('.emp-table tbody').append($tr);
+	})
+}
 
 //부서 데이터 가져오는 함수
 function getDepartmentList() {
@@ -22,7 +75,7 @@ function getDepartmentList() {
 			});
 		})
 		.catch(error => {
-			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+			console.error('요청 실패: ', error); // 요청 실패 시 에러 처리
 		});
 }
 

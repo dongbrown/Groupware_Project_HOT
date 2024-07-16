@@ -92,7 +92,7 @@ public class EmployeeRestController {
 			String path=req.getServletContext().getRealPath("/upload/employee"); //저장 경로
 			String oriname=upFile.getOriginalFilename(); //원본 이름
 			String ext=oriname.substring(oriname.lastIndexOf(".")); //확장자
-			String rename=LocalDateTime.now().toLocalDate().toString()+"_"+UUID.randomUUID().toString()+ext; // 변경 이름
+			String rename=LocalDateTime.now().toLocalDate().toString()+"_"+(int)(Math.random()*10000000)+ext; // 변경 이름
 
 			File dir=new File(path);
 			if(!dir.exists()) dir.mkdirs(); //폴더 없으면 생성

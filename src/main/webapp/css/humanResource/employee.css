@@ -12,3 +12,11 @@
     min-height: 87vh;
     padding: 3%;
 }
+
+.table-div {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+}

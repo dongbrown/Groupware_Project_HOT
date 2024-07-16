@@ -20,27 +20,53 @@
 				</select>
 				<input type="text" id="keywordValue">
 			</div>
-			<div>
-				<div class="dropdown mb-1 department-select-button">
-					<button class="btn btn-primary dropdown-toggle department-menu-title" type="button"
-						id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">부서전체</button>
-					<div class="dropdown-menu animated--fade-in department-menu" aria-labelledby="dropdownMenuButton"></div>
+			<form id="searchForm">
+				<div>
+					<div class="dropdown mb-1 department-select-button">
+						<button class="btn btn-primary dropdown-toggle department-menu-title" type="button"
+							id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+							aria-expanded="false" name="dept">부서전체</button>
+						<div class="dropdown-menu animated--fade-in department-menu" aria-labelledby="dropdownMenuButton"></div>
+					</div>
 				</div>
-			</div>
-			<div class="position-checkbox-div">
-				직급 :
-			</div>
-			<div class="mb-1">
-				월급 : <input type="number" id="minSalary"> ~ <input type="number" id="maxSalary">
-			</div>
-			<div class="mb-1">
-				입사일 : <input type="date" id="minHire"> ~ <input type="date" id="minHire">
-			</div>
-			<div class="mb-1">
-				퇴사일 : <input type="date" id="minResign"> ~ <input type="date" id="minResign">
-			</div>
-			<button class="btn btn-danger mb-1">검색하기</button>
+				<div class="position-checkbox-div">
+					직급 :
+					<label for="position1">
+	            		<input type="checkbox" id="position1" name="positions" value="1">
+	            		대표이사
+	        		</label>
+	        		<label for="position2">
+	            		<input type="checkbox" id="position2" name="positions" value="2">
+	            		부장
+	        		</label>
+	        		<label for="position3">
+	            		<input type="checkbox" id="position3" name="positions" value="3">
+	            		차장
+	        		</label>
+	        		<label for="position4">
+	            		<input type="checkbox" id="position4" name="positions" value="4">
+	            		과장
+	        		</label>
+	        		<label for="position5">
+	            		<input type="checkbox" id="position5" name="positions" value="5">
+	            		대리
+	        		</label>
+	        		<label for="position6">
+	            		<input type="checkbox" id="position6" name="positions" value="6">
+	            		사원
+	        		</label>
+				</div>
+				<div class="mb-1">
+					월급 : <input type="number" id="minSalary" name="minSalary"> ~ <input type="number" id="maxSalary" name="maxSalary">
+				</div>
+				<div class="mb-1">
+					입사일 : <input type="date" id="minHire" name="minHire"> ~ <input type="date" id="maxHire" name="maxHire">
+				</div>
+				<div class="mb-1">
+					퇴사일 : <input type="date" id="minResign" name="minResign"> ~ <input type="date" id="maxResign" name="maxResign">
+				</div>
+				<button class="btn btn-danger mb-1" onclick="searchEmployee(1)">검색하기</button>
+			</form>
 		</div>
 		<div class="table-div">
 			<table class="table emp-table">
@@ -58,6 +84,7 @@
 						<th>입사일</th>
 						<th>퇴사일</th>
 						<th>총 휴가일수</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody></tbody>
