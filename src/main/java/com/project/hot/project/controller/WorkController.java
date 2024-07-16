@@ -3,6 +3,7 @@ package com.project.hot.project.controller;
 import java.io.File;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class WorkController {
 
 	private final WorkService workService;
 	private final ProjectService projectService;
+	static private List<Object> fileRenameList;
 
 	@GetMapping("/insertwork.do")
 	public String insertWork (int projectNo,Model m) {
@@ -43,9 +45,14 @@ public class WorkController {
 		 return "project/insertWorkDetail";
 	}
 
+
 	@GetMapping("/workupdatedetail.do")
 	public String workUpdate (int workNo,Model m) {
 		Work work = workService.selectWorkByWorkNo(workNo);
+//		fileRenameList.clear();
+//		work.getProjectAtt().forEach(e->{
+//			fileRenameList.add(e);
+//		});
 		m.addAttribute("work",work);
 		return "project/workUpdateDetail";
 	}
@@ -54,7 +61,7 @@ public class WorkController {
 //작업 정보 저장 시 포함되어있는 파일 등록/저장
 	@ResponseBody
 	@PostMapping("/insertWorkDetail.do")
-	public ResponseEntity<String> insertWorkAtt(
+	public ResponseEntity<String> insertWork(
 	        @RequestParam("files") List<MultipartFile> workDatas,
 	        @RequestParam int projectNo,
 	        @RequestParam int employeeNo,
@@ -95,7 +102,7 @@ public class WorkController {
 	                if(workResult>0) {
 	                int result = workService.insertWorkAtt(Map.of(
 	                		"projectNo",workData.getProjectNo(),"employeeNo",workData.getEmployeeNo()
-	                		,"fileName",e.getName(),"rename",rename,"projectWorkNo",workData.getProjectWorkNo()));
+	                		,"fileName",e.getOriginalFilename(),"rename",rename,"projectWorkNo",workData.getProjectWorkNo()));
 	                }else {
 	                	ResponseEntity.badRequest().body("작업 등록 실패");
 	                }
@@ -123,6 +130,88 @@ public class WorkController {
 		}
 		return workService.selectWorkAll(Map.of("cPage", cPage, "numPerpage", 5, "employeeNo", employeeNo));
 	};
+
+	@ResponseBody
+	@PostMapping("/workupdateajax")
+	public ResponseEntity<String> workUpdate(
+			 	@RequestParam("files") List<MultipartFile> workDatas,
+		        @RequestParam int projectWorkNo,
+		        @RequestParam int projectWorkProgress,
+		        @RequestParam String projectWorkTitle,
+		        @RequestParam String projectWorkContent,
+		        @RequestParam Date projectWorkEndDate,
+		        @RequestParam int projectWorkRank,
+		        @RequestParam List<String> delFileList,
+		        HttpServletRequest request){
+//work 객체에 데이터 저장
+		Work workData = new Work();
+		workData.setProjectWorkNo(projectWorkNo);
+		workData.setProjectWorkProgress(projectWorkProgress);
+		workData.setProjectWorkTitle(projectWorkTitle);
+		workData.setProjectWorkContent(projectWorkContent);
+		workData.setProjectWorkEndDate(projectWorkEndDate);
+		workData.setProjectWorkRank(projectWorkRank);
+
+		System.out.println(delFileList);
+
+//작업 업데이트
+		int workResult=workService.updateWorkDetail(workData);
+// 파일 저장 위치 변수 저장
+	    String path = request.getServletContext().getRealPath("/upload/projectWork");
+//기존 첨부파일 수정 시 삭제한 파일 upload에서 지우는 로직 && DB테이블에서도 지우기
+	    File delFile = new File(path);
+        List<String> delFileNameList = new ArrayList<>();
+        //db에 기존파일 삭제한 파일자료 삭제
+        int attDelFileResult = workService.deleteWorkAtt(delFileNameList);
+        if(attDelFileResult>0){
+	        //projectWork폴더가 존재 확인
+	        if(delFile.exists()) {
+	        	//해당파일에 존재하는 파일들 가져오기
+	        	File[] files=delFile.listFiles();
+	        	//해당파일이 존재하면 실행 로직
+	        	if(files!=null) {
+	        		for(File file : files) {
+	        			//파일안에 가져온 삭제할 rename파일이름이 존재하는지 확인 후 존재하면 해당파일 삭제
+	        			if(file.isFile() && delFileList.contains(file.getName())) {
+	        				file.delete();
+	        			}
+	        		}
+	        	}
+	        }
+        }
+	    File dir = new File(path);
+	    if (!dir.exists()) dir.mkdir();
+
+	    if (!workDatas.isEmpty() && workResult>0) {
+	        for (MultipartFile e : workDatas) {
+	            // 원본 파일 이름
+	            String oriname = e.getOriginalFilename();
+	            // 파일 확장자명
+	            String ext = oriname.substring(oriname.lastIndexOf("."));
+	            // 변경 이름 설정(날짜 + 랜덤 문자 + 확장자)
+	            String rename = LocalDateTime.now().toLocalDate().toString() + "_" + UUID.randomUUID().toString() + ext;
+
+	            // 첨부파일 저장하기
+	            try {
+	                e.transferTo(new File(path, rename));
+	                //작업등록 성공시 첨부파일 테이블에 데이터 저장
+	                if(workResult>0) {
+	                int result = workService.insertWorkAtt(Map.of(
+	                		"projectNo",workData.getProjectNo(),"employeeNo",workData.getEmployeeNo()
+	                		,"fileName",e.getOriginalFilename(),"rename",rename,"projectWorkNo",workData.getProjectWorkNo()));
+	                }else {
+	                	ResponseEntity.badRequest().body("작업 등록 실패");
+	                }
+	            } catch (Exception i) {
+	                i.printStackTrace();
+	                return ResponseEntity.badRequest().body("작업 업데이트 실패: " + i.getMessage());
+	            }
+	        }
+	        return ResponseEntity.ok().body("파일 저장 성공");
+	    } else {
+	        return ResponseEntity.badRequest().body("파일 저장 실패");
+	    }
+	}
 
 
 }

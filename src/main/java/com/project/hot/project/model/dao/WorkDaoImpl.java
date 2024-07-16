@@ -48,4 +48,14 @@ public class WorkDaoImpl implements WorkDao {
 		return session.selectOne("work.selectWorkByWorkNo",workNo);
 	}
 
+	@Override
+	public int updateWorkDetail(SqlSession session, Work work) {
+		return session.update("work.updateWorkDetail",work);
+	}
+
+	@Override
+	public int deleteWorkAtt(SqlSession session, List<String> delAttName) {
+		return session.delete("work.deleteWorkAtt",delAttName);
+	}
+
 }

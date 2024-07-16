@@ -8,6 +8,8 @@ import com.project.hot.project.model.dto.Work;
 public interface WorkService {
 
 	int insertWorkDetail(Work work);
+	int updateWorkDetail(Work work);
+	int deleteWorkAtt(List<String> delAttName);
 	int insertWorkAtt(Map<String,Object> param);
 	Map<String,Object> selectWorkAll(Map<String,Integer> param);
 	Work selectWorkByWorkNo(int workNo);

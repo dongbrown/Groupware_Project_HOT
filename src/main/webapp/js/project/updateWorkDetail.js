@@ -1,4 +1,10 @@
-
+//총 예산 원화 표시
+    $('#project-budget').keyup(e=>{
+        let value = e.target.value;
+        let value1 = value.replace(/,/g,'');
+        let result = Number(value1).toLocaleString('ko-KR');
+        e.target.value=result;
+    });
 //종료 날짜 설정
 //오늘 날짜 생성
 function getTodayDate() {
@@ -23,6 +29,10 @@ function getTodayDate() {
   $("#work-end-date").val(getTodayDate());
   $("#work-end-date").attr('min', getTodayDate());
   $("#work-end-date").attr('max', getOneYearLaterDate());
+ // 예산 날짜 입력 필드에 오늘 날짜 설정
+  $("#budget-end-date").val(getTodayDate());
+  $("#budget-end-date").attr('min', getTodayDate());
+  $("#budget-end-date").attr('max', getOneYearLaterDate());
 
   const $dragFile = document.getElementById("dragFile");
 
@@ -96,7 +106,7 @@ function getTodayDate() {
 
 //추가된 파일 x버튼 누르면 삭제
 	document.addEventListener("click", function(e) {
-    if (e.target.classList.contains("btn-close")) {
+    if (e.target.classList.contains("att")) {
         e.target.closest(".fileListContainer").remove();
         const deleteFile = e.target.previousSibling.textContent;
 		files.forEach((e,i)=>{
@@ -123,3 +133,70 @@ function getTodayDate() {
 			  $('#workUpdateBtn').css('display','block');
 		}
 	});
+
+	var delFileNames = [];
+//업데이트 버튼 클릭시 ajax로 값 송출
+	$(".fileListContainer>.btn-close").click(function(e) {
+// 클릭된 버튼의 부모 요소에서 fileSpan을 찾아 텍스트 가져오기
+
+		const fileName = $(this).closest('.fileListContainer').find('.fileRename').text().trim();
+
+// 이미 리스트에 있는지 확인
+		if (!delFileNames.includes(fileName)) {
+// 리스트에 없으면 추가
+			delFileNames.push(fileName);
+		}
+	console.log("현재 파일 리스트:", delFileNames);
+	});
+
+//최종 작업수정 버튼 클릭 시 ajax로 데이터 송출
+	$('#updateWorkBtn').click(e=>{
+		let updateData = new FormData();
+//첨부파일 내용 저장
+	files.forEach((file) => {
+   		updateData.append('files', file);
+   		updateData.append('fileName', file.name);
+	});
+//작업 내용 저장
+	updateData.append("projectWorkNo", $("input[name='workNo']").val());
+	updateData.append("projectWorkTitle", $("#work-title").val());
+	updateData.append("projectWorkContent", $("#floatingTextarea").val());
+	updateData.append("projectWorkEndDate", $("#work-end-date").val());
+	updateData.append("projectWorkRank", $("#work-rank").val());
+	updateData.append("projectWorkProgress", $("#work-progress").val());
+//기존에 있던 파일 delete할 목록
+	updateData.append("delFileList", delFileNames);
+
+		fetch('/work/workupdateajax',{
+			method:'POST',
+			body:updateData,
+		})
+		.then(response=>{
+			if(!response.ok){
+				throw new Error('서버응답에러');
+			}
+			return response.text();
+		})
+		.then(data=>{
+			alert("작업 업데이트가 완료되었습니다.");
+				location.assign('/');
+				console.log(data);
+		})
+		.catch(error=>{
+			alert('작업 파일 업데이트를 실패했습니다.');
+				console.log(error.message);
+		})
+	})
+
+
+
+
+
+
+
+
+
+
+
+
+

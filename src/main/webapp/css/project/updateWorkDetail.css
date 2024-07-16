@@ -90,3 +90,8 @@ section{
 .fileSpan{
 	margin-right:30px;
 }
+
+#budgetTextarea{
+	height:200px;
+	resize:none;
+}

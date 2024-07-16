@@ -1,6 +1,7 @@
 package com.project.hot.project.model.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -43,6 +44,16 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public Work selectWorkByWorkNo(int workNo) {
 		return dao.selectWorkByWorkNo(session, workNo);
+	}
+
+	@Override
+	public int updateWorkDetail(Work work) {
+		return dao.updateWorkDetail(session, work);
+	}
+
+	@Override
+	public int deleteWorkAtt(List<String> delAttName) {
+		return dao.deleteWorkAtt(session, delAttName);
 	}
 
 }

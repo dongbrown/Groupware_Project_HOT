@@ -10,6 +10,8 @@ import com.project.hot.project.model.dto.Work;
 public interface WorkDao {
 
 	int insertWorkDetail(SqlSession session, Work work);
+	int updateWorkDetail(SqlSession session,Work work);
+	int deleteWorkAtt(SqlSession session,List<String> delAttName);
 	int insertWorkAtt(SqlSession session, Map<String,Object> param);
 	List<Work> selectWorkAllByEmpNo(SqlSession session,Map<String,Integer> param);
 	List<Work> selectWorkAll(SqlSession session,Map<String,Integer> param);
