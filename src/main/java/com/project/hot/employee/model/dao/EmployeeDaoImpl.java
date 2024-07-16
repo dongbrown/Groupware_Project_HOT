@@ -79,4 +79,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return (int)param.get("result");
 	}
 
+	@Override
+	public Commuting selectCommutingByName(SqlSession session, String employeeId) {
+		return session.selectOne("employee.selectCommutingByName", employeeId);
+	}
+
 }

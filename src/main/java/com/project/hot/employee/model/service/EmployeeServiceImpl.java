@@ -129,4 +129,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return (int)param.get("result");
 	}
 
+	@Override
+	public int checkAtt(String employeeId) {
+		// 출퇴근 여부 판단
+		Commuting c=dao.selectCommutingByName(session, employeeId);
+		if(c==null) {
+			//출근 안함
+			return 0;
+		}else if(c.getCommutingGoWorkTime()!=null && c.getCommutingLeaveWorkTime()==null) {
+			//출근함, 퇴근은 안함
+			return 1;
+		}else {
+			//퇴근함
+			return 2;
+		}
+	}
+
 }

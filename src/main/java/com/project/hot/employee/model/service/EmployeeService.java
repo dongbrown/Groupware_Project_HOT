@@ -20,4 +20,5 @@ public interface EmployeeService {
 	int insertCommuting(Map<String, Object> param);
 	int updateCommuting(Map<String, Object> param);
 	int insertCommutingNoAtt();
+	int checkAtt(String employeeId);
 }
