@@ -189,8 +189,7 @@
                         <h6 class="collapse-header">커뮤니티 목록</h6>
                         <a class="collapse-item" href="${path }/community/">즐겨찾는 커뮤니티</a>
                         <a class="collapse-item" href="${path }/community/">내 커뮤니티</a>
-                        <a class="collapse-item" href="${path }/oepnCommunity/">공개 커뮤니티</a>
-                    </div>
+						<a class="collapse-item" href="${path}/community/communityList">커뮤니티 리스트</a>                    </div>
                 </div>
             </li>
             <!-- Divider -->
@@ -224,11 +223,11 @@
 	                    data-parent="#accordionSidebar">
 	                    <div class="bg-white py-2 collapse-inner rounded">
 	                        <h6 class="collapse-header">인사 잘하기</h6>
+	                        <a class="collapse-item" href="${path }/employee">사원 관리</a>
 	                        <a class="collapse-item" href="${path }/department">부서관리</a>
 	                        <a class="collapse-item" href="#">전 사원 근태내역</a>
 	                        <a class="collapse-item" href="#">전 사원 휴가 내역</a>
 	                        <a class="collapse-item" href="#">사원 계정 생성</a>
-	                        <a class="collapse-item" href="#">5</a>
 	                    </div>
 	                </div>
 	            </li>

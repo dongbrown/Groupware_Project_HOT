@@ -1,6 +1,7 @@
 package com.project.hot.feed.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class FeedServiceImpl implements FeedService {
     public int deleteFeed(int feedNo) {
         return dao.deleteFeed(feedNo, session);
     }
+
 
 
 }

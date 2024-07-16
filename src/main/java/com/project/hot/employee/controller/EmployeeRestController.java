@@ -156,23 +156,27 @@ public class EmployeeRestController {
 	}
 
 	@GetMapping("/attendanceStatus")
-	public boolean checkAttStatus(HttpSession session) {
-		Boolean status=(Boolean)session.getAttribute("attStatus");
-		if(status!=null) {
-			return status;
+	public String checkAttStatus(Principal p) {
+		//출퇴근 여부 체크
+		int result=service.checkAtt(p.getName());
+		if(result==0) {
+			//출근 안함
+			return "no";
+		}else if(result==1) {
+			//출근하고 퇴근은 아직 안함
+			return "go";
 		}else {
-			return false;
+			//퇴근함
+			return "leave";
 		}
 	}
 
 	@PostMapping("/goWork")
-	public String goWork(@RequestBody Map<String, Integer> req, HttpSession session) {
+	public String goWork(@RequestBody Map<String, Integer> req) {
 		Map<String, Object> param=new HashMap<>();
 		param.put("employeeNo", req.get("no"));
 		int result=service.insertCommuting(param);
 		if(result>0) {
-			//세션에 출근 한 것 저장하기 - 출근 버튼 활성화 여부 판단용
-			session.setAttribute("attStatus", true);
 			return "출근 무사히 성공!";
 		}else {
 			return "출근 실패";
@@ -180,13 +184,11 @@ public class EmployeeRestController {
 	}
 
 	@PostMapping("/leaveWork")
-	public String leaveWork(@RequestBody Map<String, Integer> req, HttpSession session) {
+	public String leaveWork(@RequestBody Map<String, Integer> req) {
 		Map<String, Object> param=new HashMap<>();
 		param.put("employeeNo", req.get("no"));
 		int result=service.updateCommuting(param);
 		if(result>0) {
-			//출근 여부 세션값 false로 변경
-			session.setAttribute("attStatus", false);
 			return "퇴근 무사히 성공!";
 		}else {
 			return "퇴근 실패";

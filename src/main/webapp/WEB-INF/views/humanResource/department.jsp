@@ -45,20 +45,43 @@
 </section>
 </div>
 <div class="modal" tabindex="-1" id="create-modal">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">부서 생성</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-		부서 이름 : <input type="text" placeholder="부서 이름 입력" id="newTitle"><br>
+		부서 이름 : <input type="text" placeholder="부서 이름 입력" id="newTitle" required><br>
+		<p></p><br>
 		상위 부서 선택 :
-		<select class="modal-dept-select" name="departmentHighTitle"></select>
+		<select class="modal-dept-select" name="departmentHighTitle" id="insertHighTitle"></select>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
         <button type="button" class="btn btn-primary" onclick="insertDepartment()">생성</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" tabindex="-1" id="update-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">부서 수정</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      	<input type="hidden" id="deptCode">
+      	<input type="hidden" id="deptTitle">
+		부서 이름 : <input type="text" placeholder="부서 이름 입력" id="updateTitle" required><br>
+		<p></p><br>
+		상위 부서 선택 :
+		<select class="modal-dept-select" name="departmentHighTitle" id="updateHighTitle"></select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" onclick="updateDepartment()">수정</button>
       </div>
     </div>
   </div>

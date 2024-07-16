@@ -8,9 +8,7 @@
 <title>피드</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
-<style>
-<c:import url="${path}/css/feed/feed.css"/>
-</style>
+<link href="${path}/css/feed/feed.css" rel="stylesheet">
 </head>
 <body>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
@@ -68,23 +66,27 @@
                 </div>
             </div>
 
-            <div id="addParticipantModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5>초대하기</h5>
-                        <span class="close">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" id="participantSearch" placeholder="이름/아이디/부서/직위/직책/전화" class="form-control">
-                        <div id="organizationTree">
-                            <!-- 조직도 트리 여기에! -->
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="inviteButton" class="btn btn-primary">초대</button>
-                    </div>
-                </div>
-            </div>
+			<div id="addParticipantModal" class="modal">
+			    <div class="modal-content">
+			        <div class="modal-header">
+			            <h5>초대하기</h5>
+			            <span class="close">&times;</span>
+			        </div>
+			        <div class="modal-body">
+			            <input type="text" id="participantSearch" class="form-control mb-3" placeholder="이름으로 검색">
+			            <div id="organizationTree">
+			                <!-- 조직도 트리 여기에! -->
+			            </div>
+			            <div id="selectedParticipants" class="mt-3">
+			                <h6>선택된 참석자:</h6>
+			                <ul id="participantList"></ul>
+			            </div>
+			        </div>
+			        <div class="modal-footer">
+			            <button id="inviteButton" class="btn btn-primary">초대</button>
+			        </div>
+			    </div>
+			</div>
 
         </div>
         <!-- 페이지 콘텐츠 끝 -->

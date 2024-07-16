@@ -1,5 +1,7 @@
 package com.project.hot.community.model.dto;
 
+import com.project.hot.employee.model.dto.Employee;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +16,5 @@ public class CommunityUser {
     private int communityNo;
     private String communityUserIsAccept;
     private String communityUserBookmark;
-    private Community community;
+    private Employee employee;
 }

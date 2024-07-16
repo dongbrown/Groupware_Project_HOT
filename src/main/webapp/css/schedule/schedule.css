@@ -121,7 +121,6 @@ body {
     order: 3;
 }
 
-/* 내 캘린더와 공유 캘린더 공통 스타일 */
 .calendar-section:first-of-type .legend-item,
 .calendar-section:nth-of-type(2) .legend-item {
     flex-direction: row;
@@ -150,25 +149,24 @@ body {
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #fff;
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 800px;
+    max-width: 500px;
     max-height: 80vh;
     overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .close {
-    color: #aaa !important;
-    position: absolute !important;
-    right: 0 !important;
-    top: 0 !important;
-    padding: 10px !important;
-    font-size: 28px !important;
-    font-weight: bold !important;
-    cursor: pointer !important;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .close:hover,
@@ -182,9 +180,22 @@ form {
     flex-direction: column;
 }
 
+.modal-content h5 {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
 label {
-    margin-top: 10px;
-    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
     color: #555;
 }
 
@@ -192,25 +203,35 @@ input,
 textarea,
 select {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
+    padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     margin-top: 20px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
 }
 
 .color-picker {
@@ -252,12 +273,12 @@ button:hover {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    gap: 15px;
 }
 
 .radio-item {
     display: flex;
     align-items: center;
-    margin-right: 15px;
 }
 
 .radio-item input[type="radio"] {
@@ -304,7 +325,6 @@ button:hover {
     transform: rotate(180deg);
 }
 
-/* 참석자 선택 영역 스타일 */
 .participant-selection-container {
     display: flex;
     justify-content: space-between;
@@ -368,4 +388,39 @@ button:hover {
 
 .remove-employee:hover {
     color: #cc0000;
+}
+
+/* 일정 등록 모달 스타일 수정 */
+.modal-content .form-group {
+    margin-bottom: 15px;
+}
+
+.modal-content label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="date"],
+.modal-content select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.modal-content input[type="radio"] {
+    margin-right: 5px;
+}
+
+.modal-content .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.modal-content .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
 }
