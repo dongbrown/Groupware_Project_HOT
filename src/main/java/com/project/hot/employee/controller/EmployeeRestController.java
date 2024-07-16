@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/employee")
 public class EmployeeRestController {
 
 	private final EmployeeService service;
@@ -51,7 +51,7 @@ public class EmployeeRestController {
 			@ModelAttribute SearchEmployeeData sd) {
 		Map<String, Object> param=new HashMap<>();
 		if(sd.getTitle()!=null) {
-			param.put("title", sd.getTitle().equals("부서선택")?"":sd.getTitle());
+			param.put("title", sd.getTitle().equals("부서선택")||sd.getTitle().equals("부서전체")?"":sd.getTitle());
 		}
 		param.put("name", sd.getName()==null?"":sd.getName());
 		param.put("cPage", cPage);

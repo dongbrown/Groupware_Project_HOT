@@ -224,4 +224,15 @@ function getTodayDate() {
 		}
     });
 
+//진행 현황 100에 놓으면 작업 완료 버튼 활성화
+    $('#project-progress').on('input change', function() {
+        if ($('#project-progress').val() == 100) {
+            $('#completeProjectBtn').css('display', 'block');
+            $('#projectUpdateBtn').css('display','none');
+        }else{
+			  $('#completeProjectBtn').css('display', 'none');
+			  $('#projectUpdateBtn').css('display','block');
+		}
+	});
+
 

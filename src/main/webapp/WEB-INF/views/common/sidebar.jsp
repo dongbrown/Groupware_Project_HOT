@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <title>HOT Solution</title>
 
@@ -208,31 +209,30 @@
                         <a class="collapse-item" href="${path }/employee/addressbook">주소록 조회</a><br>
                         <h6 class="collapse-header">조직도</h6>
                         <a class="collapse-item" href="utilities-color.html">조직도 조회</a>
-                        <a class="collapse-item" href="utilities-border.html">조직도 수정</a>
                     </div>
                 </div>
             </li>
-            <%-- <c:if test="${loginEmployee.departmentCode==2}">
+            <c:if test="${loginEmployee.departmentCode.departmentAuthority eq '100' or loginEmployee.departmentCode.departmentAuthority eq '10'}">
                 <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#human"
-                    aria-expanded="true" aria-controls="human">
-                    <i class="fas fa-id-card"></i>
-                    <span>인사관리</span>
-                </a>
-                <div id="human" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">인사 잘하기</h6>
-                        <a class="collapse-item" href="utilities-color.html">1</a>
-                        <a class="collapse-item" href="utilities-border.html">2</a>
-                        <a class="collapse-item" href="utilities-animation.html">3</a>
-                        <a class="collapse-item" href="utilities-other.html">4</a>
-                        <a class="collapse-item" href="utilities-other.html">5</a>
-                    </div>
-                </div>
-            </li>
-            </c:if> --%>
+	            <li class="nav-item">
+	                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#human"
+	                    aria-expanded="true" aria-controls="human">
+	                    <i class="fas fa-id-card"></i>
+	                    <span>인사관리</span>
+	                </a>
+	                <div id="human" class="collapse" aria-labelledby="headingUtilities"
+	                    data-parent="#accordionSidebar">
+	                    <div class="bg-white py-2 collapse-inner rounded">
+	                        <h6 class="collapse-header">인사 잘하기</h6>
+	                        <a class="collapse-item" href="${path }/department">부서관리</a>
+	                        <a class="collapse-item" href="#">전 사원 근태내역</a>
+	                        <a class="collapse-item" href="#">전 사원 휴가 내역</a>
+	                        <a class="collapse-item" href="#">사원 계정 생성</a>
+	                        <a class="collapse-item" href="#">5</a>
+	                    </div>
+	                </div>
+	            </li>
+            </c:if>
 
 
             <!-- Divider -->

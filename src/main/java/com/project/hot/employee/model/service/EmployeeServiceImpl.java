@@ -45,11 +45,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public List<Department> selectDepartmentList() {
+		//부서 리스트 가져오기
 		return dao.selectDepartmentList(session);
 	}
 
 	@Override
 	public Map<String, Object> selectCommutingList(Map<String, Object> param) {
+		//출퇴근 내역 가져오기
 		Map<String, Object> result=new HashMap<>();
 		result.put("totalPage", Math.ceil((double)dao.countCommutingTotalData(session, param)/10));
 		result.put("commutings", dao.selectCommutingPagingList(session, param));
@@ -102,6 +104,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public int insertCommuting(Map<String, Object> param) {
+		//출근하기
 		//출근 상태 판단
 		if(LocalTime.now().getHour()>=9) {
 			param.put("status", "지각");
@@ -119,7 +122,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public int insertCommutingNoAtt() {
-		return dao.insertCommutingNoAtt(session);
+		// 오늘 출근 안한 사람들 결근,휴가,출장 상태로 등록
+		Map<String, Object> param=new HashMap<>();
+		param.put("result", 0);
+		dao.insertCommutingNoAtt(session, param);
+		return (int)param.get("result");
 	}
 
 }
