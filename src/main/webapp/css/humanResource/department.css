@@ -12,7 +12,8 @@
 	width: 90%;
     background-color: white;
     padding: 3%;
-    height: 87vh;
+    min-height: 87vh;
+    margin-bottom: 1.5%;
 }
 
 .dept-btn-div {
