@@ -9,6 +9,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
 <link href="${path}/css/feed/feed.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
@@ -26,11 +27,16 @@
         <!-- 페이지 콘텐츠 시작 -->
         <div class="container mt-5" id="community-container" data-id="${communityNo}">
             <div class="header">
-                <h1>${community.communityTitle}</h1>
-                <button onclick="showAddParticipant()">+ 참석자 추가</button>
+                <div class="header-left">
+                    <h1>${community.communityTitle}</h1>
+                    <p class="community-intro">${community.communityIntroduce}</p>
+                </div>
+                <div class="header-right">
+                    <button onclick="showAddParticipant()" class="btn-add-participant">
+                        <i class="fas fa-user-plus"></i> 참석자 추가
+                    </button>
+                </div>
             </div>
-
-            <p>${community.communityIntroduce}</p>
 
             <!-- 피드 작성 폼 -->
             <div class="writeFeed">
@@ -39,7 +45,7 @@
                     <div class="button-container">
                         <input type="file" id="file-upload" style="display: none;" />
                         <button type="button" class="upload-btn" onclick="document.getElementById('file-upload').click();">
-                            <img src="image_icon.png" alt="이미지 업로드" width="20" height="20" />
+                            <i class="fas fa-image"></i>
                         </button>
                         <button type="submit" class="submit-btn">올리기</button>
                     </div>
@@ -48,46 +54,36 @@
 
             <!-- 피드 목록 -->
             <div id="feed-container">
-                <div class="feed-item"> <!-- 예시 피드 항목 -->
-                    <div class="post-header">
-                        <img src="user_icon.png" alt="유저 아이콘">
-                        <div>
-                            <h2>유저 이름</h2>
-                            <p>포스트 내용</p>
+                <!-- 피드 항목들 요기  -->
+            </div>
+
+            <!-- 참석자 추가 모달 -->
+            <div id="addParticipantModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5><i class="fas fa-user-plus"></i> 참석자 초대</h5>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="participantSearch" class="form-control" placeholder="이름으로 검색">
+                        </div>
+                        <div id="organizationTree" class="mt-3">
+                            <!-- 조직도  -->
+                        </div>
+                        <div id="selectedParticipants" class="mt-3">
+                            <h6><i class="fas fa-users"></i> 선택된 참석자</h6>
+                            <ul id="participantList"></ul>
                         </div>
                     </div>
-                    <div class="post-content">
-                        포스트 본문
-                    </div>
-                    <div class="post-actions">
-                        <button>좋아요</button>
-                        <button>댓글</button>
+                    <div class="modal-footer">
+                        <button id="inviteButton" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> 초대하기
+                        </button>
                     </div>
                 </div>
             </div>
-
-			<div id="addParticipantModal" class="modal">
-			    <div class="modal-content">
-			        <div class="modal-header">
-			            <h5>초대하기</h5>
-			            <span class="close">&times;</span>
-			        </div>
-			        <div class="modal-body">
-			            <input type="text" id="participantSearch" class="form-control mb-3" placeholder="이름으로 검색">
-			            <div id="organizationTree">
-			                <!-- 조직도 트리 여기에! -->
-			            </div>
-			            <div id="selectedParticipants" class="mt-3">
-			                <h6>선택된 참석자:</h6>
-			                <ul id="participantList"></ul>
-			            </div>
-			        </div>
-			        <div class="modal-footer">
-			            <button id="inviteButton" class="btn btn-primary">초대</button>
-			        </div>
-			    </div>
-			</div>
-
         </div>
         <!-- 페이지 콘텐츠 끝 -->
     </div>
@@ -99,7 +95,6 @@
 <!-- 콘텐츠 Wrapper 끝 -->
 
 <script>
-// 현재 로그인한 직원 번호를 JavaScript 변수로 설정
 var currentEmployeeNo = ${loginEmployee.employeeNo};
 </script>
 
