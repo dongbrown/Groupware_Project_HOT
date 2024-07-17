@@ -15,8 +15,8 @@
 		<div class="search-div">
 			<div class="mb-1">
 				<select id="keyword">
-					<option>사번</option>
-					<option>이름</option>
+					<option value="1">사번</option>
+					<option value="2">이름</option>
 				</select>
 				<input type="text" id="keywordValue">
 			</div>
@@ -25,7 +25,7 @@
 					<div class="dropdown mb-1 department-select-button">
 						<button class="btn btn-primary dropdown-toggle department-menu-title" type="button"
 							id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-							aria-expanded="false" name="dept">부서전체</button>
+							aria-expanded="false">부서전체</button>
 						<div class="dropdown-menu animated--fade-in department-menu" aria-labelledby="dropdownMenuButton"></div>
 					</div>
 				</div>
@@ -65,7 +65,7 @@
 				<div class="mb-1">
 					퇴사일 : <input type="date" id="minResign" name="minResign"> ~ <input type="date" id="maxResign" name="maxResign">
 				</div>
-				<button class="btn btn-danger mb-1" onclick="searchEmployee(1)">검색하기</button>
+				<button type="button" class="btn btn-danger mb-1" onclick="searchEmployee(1)">검색하기</button>
 			</form>
 		</div>
 		<div class="table-div">

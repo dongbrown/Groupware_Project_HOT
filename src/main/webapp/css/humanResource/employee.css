@@ -10,7 +10,8 @@
 .employee-div {
 	width: 90%;
     min-height: 87vh;
-    padding: 3%;
+    padding: 2%;
+    margin-bottom: 1%;
 }
 
 .table-div {

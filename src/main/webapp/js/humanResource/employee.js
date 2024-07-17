@@ -10,17 +10,41 @@ $(document).ready(()=>{
 
 //사원 검색 데이터 가져오는 함수
 function searchEmployee(cPage){
+
 	const $form=$('#searchForm').get(0);
 	const fd=new FormData($form);
 	const query=new URLSearchParams();
+
+	const keyword=$('#keyword').val();
+	if(keyword == '1'){
+		//사번 검색
+		const no=$('#keywordValue').val();
+		if(no != null && no != ''){
+			query.append("no", no);
+		}
+	}else{
+		//이름 검색
+		const name=$('#keywordValue').val();
+		if(name != null && name != ''){
+			query.append("name", name);
+		}
+	}
+	const title=$('.department-menu-title').text();
+	query.append("title",title);
+
+	query.append("cPage", cPage);
 	for(const pair of fd.entries()){
 		if(pair[1]!=null&&pair[1]!=''){
 			query.append(pair[0], pair[1]);
 		}
 	}
-	
-	
-	fetch(path+'/api/hr/getEmployeeList?cPage='+cPage+'&'+query.toString())
+
+	const reqPath='/api/hr/getEmployeeList';
+	const url = new URL(reqPath, window.location.origin);
+	url.search = query.toString();
+
+
+	fetch(url)
 		.then(response => response.json())
 		.then(data => {
 			makeEmployeeTable(data.employees);

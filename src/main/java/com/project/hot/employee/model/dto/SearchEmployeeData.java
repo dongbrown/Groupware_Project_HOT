@@ -1,6 +1,6 @@
 package com.project.hot.employee.model.dto;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,12 +20,8 @@ public class SearchEmployeeData {
 	private String[] positions;
 	private int minSalary;
 	private int maxSalary;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate minHire;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate maxHire;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate minResign;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate maxResign;
+	private Date minHire;
+	private Date maxHire;
+	private Date minResign;
+	private Date maxResign;
 }

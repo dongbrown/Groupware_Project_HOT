@@ -11,4 +11,5 @@ public interface HRService {
 	int insertDepartment(RequestDepartment rd);
 	int updateDepartment(RequestDepartment rd);
 	int deleteDepartment(RequestDepartment rd);
+	int deleteEmployee(int no);
 }

@@ -73,9 +73,23 @@ public class HRController {
 			@RequestParam(defaultValue = "1")int cPage
 			, @ModelAttribute SearchEmployeeData sed){
 		Map<String, Object> param=new HashMap<>();
+
+		if(sed.getTitle().equals("부서전체")) sed.setTitle(null);
+
 		param.put("cPage", cPage);
 		param.put("numPerpage", 10);
+		param.put("sed", sed);
 		Map<String, Object> result=empService.selectEmployeeList(param);
 		return result;
+	}
+
+	@PostMapping("/deleteEmployee")
+	public String deleteEmployee(@RequestBody int no) {
+		int result=HRService.deleteEmployee(no);
+		if(result>0) {
+			return "삭제 성공!";
+		}else {
+			return "삭제 실패!";
+		}
 	}
 }

@@ -48,12 +48,9 @@ public class EmployeeRestController {
 	public Map<String, Object> getEmployeeList(
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "12") int numPerpage,
-			@ModelAttribute SearchEmployeeData sd) {
+			@ModelAttribute SearchEmployeeData sed) {
 		Map<String, Object> param=new HashMap<>();
-		if(sd.getTitle()!=null) {
-			param.put("title", sd.getTitle().equals("부서선택")||sd.getTitle().equals("부서전체")?"":sd.getTitle());
-		}
-		param.put("name", sd.getName()==null?"":sd.getName());
+		param.put("sed", sed);
 		param.put("cPage", cPage);
 		param.put("numPerpage", numPerpage);
 		return service.selectEmployeeList(param);
