@@ -1,0 +1,14 @@
+/*
+	사원관리 페이지용 css~
+*/
+
+.employee {
+	display: flex;
+    justify-content: center;
+}
+
+.employee-div {
+	width: 90%;
+    min-height: 87vh;
+    padding: 3%;
+}

@@ -109,11 +109,12 @@
 					</div>
 					<div
 						style="display: flex; justify-content: center; align-items: center; margin-top: 30px;">
-						<button style="margin-bottom: 70px;" type="button"
+						<button style="margin:20px;" type="button"
 							class="btn btn-secondary" id="projectUpdateCancle">목록으로</button>
-						<button style="margin-bottom: 70px;" type="button"
+						<button style="margin:20px;" type="button" id="projectUpdateBtn"
 							class="btn btn-primary" data-bs-toggle="modal"
 							data-bs-target="#updateSelectModal">프로젝트 수정</button>
+							<button style=" margin:20px; display:none;" type="button" id="completeProjectBtn" class="btn btn-success">프로젝트 완료</button>
 					</div>
 
 

@@ -1,4 +1,10 @@
-
+//총 예산 원화 표시
+    $('#project-budget').keyup(e=>{
+        let value = e.target.value;
+        let value1 = value.replace(/,/g,'');
+        let result = Number(value1).toLocaleString('ko-KR');
+        e.target.value=result;
+    });
 //종료 날짜 설정
 //오늘 날짜 생성
 function getTodayDate() {
@@ -20,9 +26,13 @@ function getTodayDate() {
       }
 
 // 날짜 입력 필드에 오늘 날짜 설정
-  $("#project-end-date").val(getTodayDate());
-  $("#project-end-date").attr('min', getTodayDate());
-  $("#project-end-date").attr('max', getOneYearLaterDate());
+  $("#work-end-date").val(getTodayDate());
+  $("#work-end-date").attr('min', getTodayDate());
+  $("#work-end-date").attr('max', getOneYearLaterDate());
+ // 예산 날짜 입력 필드에 오늘 날짜 설정
+  $("#budget-end-date").val(getTodayDate());
+  $("#budget-end-date").attr('min', getTodayDate());
+  $("#budget-end-date").attr('max', getOneYearLaterDate());
 
   const $dragFile = document.getElementById("dragFile");
 
@@ -33,7 +43,7 @@ function getTodayDate() {
 // 설명  text 크기 카운트
     $('#floatingTextarea').on('input', function() {
         let textLength = $(this).val().length;
-        $('#project-contents-count').text(textLength + '/1000');
+        $('#work-contents-count').text(textLength + '/1000');
         if(textLength>999){
 			const textResult = $(this).val();
 			$(this).val(String(textResult).substring(0, 1000));
@@ -96,7 +106,7 @@ function getTodayDate() {
 
 //추가된 파일 x버튼 누르면 삭제
 	document.addEventListener("click", function(e) {
-    if (e.target.classList.contains("btn-close")) {
+    if (e.target.classList.contains("att")) {
         e.target.closest(".fileListContainer").remove();
         const deleteFile = e.target.previousSibling.textContent;
 		files.forEach((e,i)=>{
@@ -113,43 +123,80 @@ function getTodayDate() {
 	$dragFile.ondragover = (e) => {
 		e.preventDefault();
 	}
-
-//ajax - 작업 데이터 생성 처리
-	document.getElementById("insertWorktBtn").addEventListener("click",e=>{
-
-	let attData = new FormData();
-//첨부파일 내용 저장
-	files.forEach((file) => {
-   		attData.append('files', file);
-   		attData.append('fileName', file.name);
+//진행 현황 100에 놓으면 작업 완료 버튼 활성화
+    $('#work-progress').on('input change', function() {
+        if ($('#work-progress').val() == 100) {
+            $('#compeleteWorkBtn').css('display', 'block');
+            $('#workUpdateBtn').css('display','none');
+        }else{
+			  $('#compeleteWorkBtn').css('display', 'none');
+			  $('#workUpdateBtn').css('display','block');
+		}
 	});
-//작업 내용 저장
-	attData.append('projectNo', document.getElementsByName("projectNo")[0].value),
-	attData.append('employeeNo', empNo),
-	attData.append('projectWorkTitle' ,document.getElementsByName("workTitle")[0].value),
-	attData.append('projectWorkContent' ,document.getElementsByName("workContent")[0].value),
-	attData.append('projectWorkEndDate' ,document.getElementById("project-end-date").value),
-	attData.append('projectWorkRank' ,document.getElementsByName("importance")[0].value),
 
-//첨부 파일에 값 저장
-			fetch('/work/insertWorkDetail.do',{
-				method:'POST',
-				body:attData,
-			})
-			.then(response => {
+	var delFileNames = [];
+//업데이트 버튼 클릭시 ajax로 값 송출
+	$(".fileListContainer>.btn-close").click(function(e) {
+// 클릭된 버튼의 부모 요소에서 fileSpan을 찾아 텍스트 가져오기
+
+		const fileName = $(this).closest('.fileListContainer').find('.fileRename').text().trim();
+
+// 이미 리스트에 있는지 확인
+		if (!delFileNames.includes(fileName)) {
+// 리스트에 없으면 추가
+			delFileNames.push(fileName);
+		}
+	console.log("현재 파일 리스트:", delFileNames);
+	});
+
+//최종 작업수정 버튼 클릭 시 ajax로 데이터 송출
+	$('#updateWorkBtn').click(e=>{
+		let updateData = new FormData();
+//첨부파일 내용 저장
+			files.forEach((file) => {
+		   		updateData.append('files', file);
+			});
+//작업 내용 저장
+	updateData.append("projectWorkNo", $("input[name='workNo']").val());
+	updateData.append("projectWorkTitle", $("#work-title").val());
+	updateData.append("projectWorkContent", $("#floatingTextarea").val());
+	updateData.append("projectWorkEndDate", $("#work-end-date").val());
+	updateData.append("projectWorkRank", $("#work-rank").val());
+	updateData.append("projectWorkProgress", $("#work-progress").val());
+	updateData.append("employeeNo",empNo);
+//기존에 있던 파일 delete할 목록
+	updateData.append("delFileList", delFileNames);
+
+		fetch('/work/workupdateajax',{
+			method:'POST',
+			body:updateData,
+		})
+		.then(response=>{
 			if(!response.ok){
 				throw new Error('서버응답에러');
 			}
 			return response.text();
-			})
-			.then(data => {
-				alert("작업 등록이 완료되었습니다.");
+		})
+		.then(data=>{
+			alert("작업 업데이트가 완료되었습니다.");
 				location.assign('/');
 				console.log(data);
-			})
-			.catch(error => {
-				alert('작업 파일 등록을 실패했습니다.');
+		})
+		.catch(error=>{
+			alert('작업 파일 업데이트를 실패했습니다.');
 				console.log(error.message);
-			})
-	});
+		})
+	})
+
+
+
+
+
+
+
+
+
+
+
+
 

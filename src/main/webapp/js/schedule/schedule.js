@@ -17,11 +17,11 @@ $(document).ready(function() {
                 type: 'GET',
                 dataType: 'json',
                 success: function(events) {
-                    // 체크된 일정만 필터링해서 표시 (전사일정 포함)
+                    // 체크된 일정만 필터링해서 표시
                     var filteredEvents = events.filter(function(event) {
                         return $('.schedule-checkbox[data-id="' + event.id + '"]').is(':checked');
                     });
-                   // 전사일정 추가
+                    // 전사일정 추가
                     companySchedules.forEach(function(schedule) {
                         if ($('.schedule-checkbox[data-id="' + schedule.id + '"][data-type="company"]').is(':checked')) {
                             filteredEvents.push({
@@ -40,6 +40,11 @@ $(document).ready(function() {
                 }
             });
         },
+        eventRender: function(event, element) {
+            // 시간 표시 제거
+            element.find('.fc-time').remove();
+        },
+
         select: function(start, end) {
             openAddScheduleModal(start, end);
         },
@@ -295,7 +300,7 @@ $(document).ready(function() {
     // 부서 목록 로드
     function loadDepartments(prefix = '') {
         $.ajax({
-            url: '/api/departmentList',
+            url: '/api/employee/departmentList',
             type: 'GET',
             dataType: 'json',
             success: function(departments) {
@@ -330,7 +335,7 @@ $(document).ready(function() {
                 employeeList.empty();
                 if (Array.isArray(employees)) {
                     $.each(employees, function(index, emp) {
-                        employeeList.append(`<li data-emp-no="${emp.employeeNo}">${emp.employeeName} (${emp.position})</li>`);
+                        employeeList.append(`<li data-emp-no="${emp.employeeNo}">${emp.employeeName} (${emp.positionCode})</li>`);
                     });
                 } else {
                     console.error('Employees data is not an array:', employees);

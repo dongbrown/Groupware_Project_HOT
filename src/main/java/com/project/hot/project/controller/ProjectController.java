@@ -44,6 +44,13 @@ public class ProjectController {
 		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo));
 	};
 
+	@GetMapping("/projectListAll.do")
+	public String projectListAll (@RequestParam(defaultValue = "1") int cPage,
+									@RequestParam("employeeNo") int employeeNo, Model m) {
+		//List<Project> projectListAll = service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo));
+		return "project/projectListAll";
+	}
+
 	@GetMapping("/projectinsert.do")
 	public String projectInsertPage (Department d,Model m) {
 		List<Department> depts = service.selectDeptAll();

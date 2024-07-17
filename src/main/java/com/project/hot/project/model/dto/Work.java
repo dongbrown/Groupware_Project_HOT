@@ -1,6 +1,7 @@
 package com.project.hot.project.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,5 +22,6 @@ public class Work {
 	private Date projectWorkStartDate;
 	private Date projectWorkEndDate;
 	private int projectWorkProgress;
-	private int projectWorkStatus;
+	private String projectWorkStatus;
+	private List<ProjectAttachment> projectAtt;
 }
