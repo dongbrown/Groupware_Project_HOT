@@ -14,6 +14,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
+import com.project.hot.chatting.model.dto.HotTalkAtt;
 import com.project.hot.chatting.model.dto.HotTalkStatus;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
@@ -100,15 +101,17 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	private void sendMessage(WebSocketSession session, CommonMessageDTO msg) {
 	    // System.out.println(msg.getHotTalkNo() + " " + msg.getMsg() + " " + msg.getSender() + " " + msg.getReceiver() + " " + msg.getEventTime());
-		if(!msg.getReceiver().equals("")) msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
-	    int result = service.insertHotTalkMessage(msg);
+		if(!(msg.getReceiver().equals("") || msg.getType().equals("file"))) msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
+
+		int result = service.insertHotTalkMessage(msg);
 
 	    for (Map.Entry<Integer, WebSocketSession> entry : employees.entrySet()) {
 	        WebSocketSession cEmp = entry.getValue();
 	        List<Integer> privateRooms = (List<Integer>)(cEmp.getAttributes().get("privaterooms"));
 	        List<Integer> groupRooms = (List<Integer>)(cEmp.getAttributes().get("grouprooms"));
 	        try {
-	            msg.setType(result > 0 ? "msgSuccess" : "msgFail");
+	        	if(!msg.getType().equals("file")) msg.setType(result > 0 ? "msgSuccess" : "msgFail");
+	        	
 	            String message = mapper.writeValueAsString(msg);
 	            if (privateRooms != null && privateRooms.contains(msg.getHotTalkNo())) {
 	                cEmp.sendMessage(new TextMessage(message));
@@ -133,6 +136,15 @@ public class HotTalkHandler extends TextWebSocketHandler {
 							updateHotTalkStatus(status);
 							break;
 			case "msg" : sendMessage(session, msg); break;
+			case "file" : HotTalkAtt upFile = mapper.readValue(message.getPayload(), HotTalkAtt.class);
+						  CommonMessageDTO fileMsg = CommonMessageDTO.builder().type("file")
+								  											   .hotTalkNo(upFile.getHotTalkNo())
+								  											   .msg(upFile.getHotTalkOriginalFilename())
+								  											   .sender(upFile.getHotTalkAttSender())
+								  											   .receiver(upFile.getHotTalkRenamedFilename())
+								  											   .build();
+						  sendMessage(session, fileMsg);
+						  break;
 		}
 	}
 

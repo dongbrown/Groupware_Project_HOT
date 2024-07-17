@@ -164,7 +164,8 @@
 	                    <span class="plus-icon">+</span>
 	                </label>
 	                <form method="post" enctype="multipart/form-data">
-	                	<input id="file-input" type="file" style="display: none;">
+	                	<input id="room-no" name="thisRoomNo" type="hidden"/>
+	                	<input id="file-input" name="hotTalkFile" type="file" style="display: none;">
 	                </form>
 	            </div>
                 <button class="chat-send-btn">전송</button>
