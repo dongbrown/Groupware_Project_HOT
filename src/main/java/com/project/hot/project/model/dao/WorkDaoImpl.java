@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.Work;
 @Repository
 public class WorkDaoImpl implements WorkDao {
@@ -56,6 +57,17 @@ public class WorkDaoImpl implements WorkDao {
 	@Override
 	public int deleteWorkAtt(SqlSession session, List<String> delAttName) {
 		return session.delete("work.deleteWorkAtt",delAttName);
+	}
+
+	@Override
+	public List<Project> selectProjectAll(SqlSession session, Map<String, Integer> param) {
+		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
+		return session.selectList("work.selectProjectAll",param.get("employeeNo"),rb);
+	}
+
+	@Override
+	public int selectProjectAllCount(SqlSession session, Map<String, Integer> param) {
+		return session.selectOne("work.selectProjectAllCount",param.get("employeeNo"));
 	}
 
 }

@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.hot.project.model.dao.WorkDao;
+import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.Work;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,15 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public int deleteWorkAtt(List<String> delAttName) {
 		return dao.deleteWorkAtt(session, delAttName);
+	}
+
+	@Override
+	public Map<String,Object> selectProjectAll(Map<String, Integer> param) {
+		Map<String,Object> result=new HashMap<>();
+		result.put("projects",dao.selectProjectAll(session, param));
+		result.put("totalPage",Math.ceil((double)dao.selectProjectAllCount(session, param)/param.get("numPerpage")));
+		return result;
+
 	}
 
 }
