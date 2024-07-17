@@ -41,8 +41,8 @@
 		</div>
 	</div>
 </section>
-<div class="modal" tabindex="-1" id="update-modal">
-  <div class="modal-dialog">
+<div class="modal fade" tabindex="-1" id="update-modal">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">사원 정보 수정</h5>

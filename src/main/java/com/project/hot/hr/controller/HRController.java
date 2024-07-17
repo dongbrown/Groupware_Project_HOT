@@ -92,4 +92,14 @@ public class HRController {
 			return "삭제 실패!";
 		}
 	}
+
+//	@PostMapping("/updateEmployee")
+//	public String updateEmployee(@RequestBody ) {
+//		int result=HRService.updateEmployee();
+//		if(result>0) {
+//			return "삭제 성공!";
+//		}else {
+//			return "삭제 실패!";
+//		}
+//	}
 }

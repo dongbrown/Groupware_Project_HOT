@@ -91,7 +91,7 @@ function makeEmployeeTable(employees){
 		const $empResign=$('<td>').text(e.employeeResignationDay);
 		const $empTotalVacation=$('<td>').text(e.employeeTotalVacation);
 		const $btnTd=$('<td>');
-		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary');
+		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary').attr('data-bs-toggle', 'modal').attr('data-bs-target', '#update-modal');
 		const $deleteBtn=$('<button>').text('삭제').addClass('btn btn-danger').attr('onclick', 'deleteEmployee(event)');
 		$btnTd.append($updateBtn).append($deleteBtn);
 		$tr.append($empNo).append($empDept).append($empPosition).append($empName).append($empId).append($empPhone)

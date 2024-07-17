@@ -94,6 +94,29 @@
 	</div>
 </section>
 </div>
+<div class="modal fade" tabindex="-1" id="update-modal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">사원 정보 수정</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				이름 : <input type="text" placeholder="이름"><br>
+				부서 : <select></select><br>
+				직급 : <select></select><br>
+				월급 : <input type="number" placeholder="월급"><br>
+				입사일 : <input type="date"><br>
+				퇴사일 : <input type="date"><br>
+				총 휴가일수 : <input type="number" placeholder="월급"><br>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-primary" onclick="updateEmployee()">수정하기</button>
+			</div>
+		</div>
+	</div>
+</div>
 <script>const path='${path}';</script>
 <script src='${path }/js/humanResource/employee.js'></script>
 <script src='${path }/js/common/pagebar.js'></script>
