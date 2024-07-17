@@ -8,6 +8,23 @@ $(document).ready(()=>{
 	getDepartmentList();
 })
 
+//사원 삭제 함수
+function deleteEmployee(e){
+	const no=$(e.target).parent().siblings().first().text();
+	fetch(path+'/api/hr/deleteEmployee',{
+		method:"POST",
+		headers: {
+      		"Content-Type": "application/json",
+    	},
+		body:JSON.stringify(no)
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+}
+
 //사원 검색 데이터 가져오는 함수
 function searchEmployee(cPage){
 
@@ -75,7 +92,7 @@ function makeEmployeeTable(employees){
 		const $empTotalVacation=$('<td>').text(e.employeeTotalVacation);
 		const $btnTd=$('<td>');
 		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary');
-		const $deleteBtn=$('<button>').text('삭제').addClass('btn btn-danger');
+		const $deleteBtn=$('<button>').text('삭제').addClass('btn btn-danger').attr('onclick', 'deleteEmployee(event)');
 		$btnTd.append($updateBtn).append($deleteBtn);
 		$tr.append($empNo).append($empDept).append($empPosition).append($empName).append($empId).append($empPhone)
 			.append($empAddress).append($empBirth).append($empSalary).append($empHire).append($empResign).append($empTotalVacation)
