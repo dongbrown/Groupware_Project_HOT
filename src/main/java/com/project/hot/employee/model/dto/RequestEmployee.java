@@ -21,7 +21,8 @@ public class RequestEmployee {
 	private String employeePassword;
 	private String employeeId;
 	private String employeeAddress;
-	private int employeeSalary;
+	private int employeeSalary;	
+	private Date employeeHireDate;
 	private Date employeeResignationDay;
 	private int employeeTotalVacation;
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.dto.ResponseDepartment;
 
@@ -14,5 +15,6 @@ public interface HRDao {
 	int insertDepartment(SqlSession session, RequestDepartment rd);
 	int updateDepartment(SqlSession session, RequestDepartment rd);
 	int deleteDepartment(SqlSession session, RequestDepartment rd);
+	int updateEmployee(SqlSession session, RequestEmployee rd);
 	int deleteEmployee(SqlSession session, int no);
 }
