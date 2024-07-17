@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		const msg = new CommonMessage("groupHotTalk", loginEmployeeNo).convert();
 		chatServer.send(msg);
 	}
+
+
 	// 각 버튼 눌렀을 때 함수 호출
 	$("#chat-option1").click(()=>{
 		employeeList();
@@ -349,7 +351,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					/*$(".chat-send-btn").click(()=>{
 						sendMsg(loginEmployeeNo, "", data[0].hotTalkNo);
 					});*/
-					data.forEach(d => {
+					// 해당 방 번호 저장
+					$("#room-no").val(data[0].hotTalkNo);
+					// console.log(data);
+					// console.log($("#room-no").val());
+					data.forEach((d,i) => {
 						let receiver;
 						const contents = d.contents;
 						// console.log(d);
@@ -398,27 +404,73 @@ document.addEventListener('DOMContentLoaded', function() {
 							});
 						}
 						// sendBtnHandle=function(){sendMsg(loginEmployeeNo, receiver, d.contents[0].hotTalkNo);}
-					  contents.forEach(c => {
-					    const $chatBox = $("<div>").addClass("chat-message");
-					    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
-					    $chatBox.append($("<span>").text(c.hotTalkContent));
-					    if (c.hotTalkContentSender.hotTalkMember.employeeNo != loginEmployeeNo) {
-					      $chatBox.addClass("chattingRoom-left-msg");
-					    } else {
-					      $chatBox.addClass("chattingRoom-right-msg");
-					    }
-					    $chatBox.addClass("jello-horizontal");
-					    $chattingRoom.append($chatBox);
-					  });
+						data[i].attachments.forEach((a,n)=>{
+							const c = contents[n];
+							// console.log(a.hotTalkRenamedFilename==null);
+							// console.log(a.hotTalkRenamedFilename+"//"+c.hotTalkContent)
+								if(a.hotTalkRenamedFilename==null){
+								    const $chatBox = $("<div>").addClass("chat-message");
+								    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
+								    $chatBox.append($("<span>").text(c.hotTalkContent));
+								    if (c.hotTalkContentSender.hotTalkMember.employeeNo != loginEmployeeNo) {
+								      $chatBox.addClass("chattingRoom-left-msg");
+								    } else {
+								      $chatBox.addClass("chattingRoom-right-msg");
+								    }
+									$chattingRoom.append($chatBox);
+								} else if(c.hotTalkContent==a.hotTalkOriginalFilename){
+									if(isImageFile(a.hotTalkOriginalFilename)){
+										const $chatBox = $("<div>").addClass("chat-message");
+										// File 다운로드 a 태그 생성
+										const $fileDownload = $("<a>").attr("href", path+"/hottalk/download?hotTalkOriginalFilename="+a.hotTalkOriginalFilename+"&hotTalkRenamedFilename="+a.hotTalkRenamedFilename);
+										const $previewImg = $("<img>").attr("src", path+"/upload/hottalk/"+a.hotTalkRenamedFilename).addClass("preview-img")
+										$fileDownload.append($previewImg);
+										$chatBox.append($fileDownload);
+									    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
+										$chatBox.append($("<span>").text(c.hotTalkContent));
+									    if (c.hotTalkContentSender.hotTalkMember.employeeNo != loginEmployeeNo) {
+									      $chatBox.addClass("chattingRoom-left-msg");
+									    } else {
+									      $chatBox.addClass("chattingRoom-right-msg");
+									    }
+									    $chatBox.addClass("jello-horizontal");
+									    $chattingRoom.append($chatBox);
+									} else {
+										// 이미지 파일이 아닌 파일 출력
+										const $chatBox = $("<div>").addClass("chat-message");
+										const $fileDownload = $("<a>").attr("href", path+"/hottalk/download?hotTalkOriginalFilename="+a.hotTalkOriginalFilename+"&hotTalkRenamedFilename="+a.hotTalkRenamedFilename);
+										const $previewImg = $("<img>").attr("src", path+"/images/hotTalk/FileIcon.png").addClass("fileIcon")
+										$fileDownload.append($previewImg);
+										$chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
+										$chatBox.append($fileDownload).append($("<span>").text(c.hotTalkContent));
+									    if (c.hotTalkContentSender.hotTalkMember.employeeNo != loginEmployeeNo) {
+									      $chatBox.addClass("chattingRoom-left-msg");
+									    } else {
+									      $chatBox.addClass("chattingRoom-right-msg");
+									    }
+									    $chatBox.addClass("jello-horizontal");
+									    $chattingRoom.append($chatBox);
+									}
+
+								}
+
+							// 채팅창 오픈 시 가장 하단으로 이동
+							setTimeout(() => {
+							    $(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
+							}, 100);
+						});
 				});
-				// 채팅창 오픈 시 가장 하단으로 이동
-				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 				break;
 			}
 		}
+
 		switch(data.type){
 			case "msgSuccess":
 				openChatRoom(data.sender, data.hotTalkNo);
+
+			break;
+			case "file":
+				openChatRoom(data.sender, data.hotTalkNo);	// openChatRoom 함수 → 파일 일 경우 분기처리 필요
 				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 			break;
 		}
@@ -430,6 +482,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	// Error 발생 시
 	chatServer.onerror = (error) =>{
 		console.log("WebSocket 연결 에러 : ",error);
+	}
+
+	function writeFile(type, originalFilename, renamedFilename){
+		if(type=="img"){
+			// originalFilename 에 originalFilename().substring(originalFilename().lastIndexOf("."))의 결과가 jpg, png 등 이미지 일때
+			// 이미지 미리보기 출력
+			const $imgBox = $("<img>").attr("src", path+"/upload/hottalk/"+renamedFilename);
+			const $chatBox = $("<div>").addClass("chat-message chattingRoom-right-msg").append($imgBox).append($("<sup>").html("<b>"+($(".user-name").text())+"</b> "+getDate()));
+			$chatBox.append($("<span>").text($(".chat-msg").val()));
+			$(".chat-msg").val("");
+		} else {
+			const $chatBox = $("<div>").addClass("chat-message chattingRoom-right-msg").append($imgBox).append($("<sup>").html("<b>"+($(".user-name").text())+"</b> "+getDate()));
+			$chatBox.append($("<span>").text($(".chat-msg").val()));
+			$(".chat-msg").val("");
+		}
 	}
 
 	function openChatRoom(sender, hotTalkNo){
@@ -447,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	// 메세지 전송 버튼 클릭 이벤트
 	const sendMsg = function(sender, receiverNo, hotTalkNo){
 		if($(".chat-msg").val().length == 0){
-			alert('채팅 내용을 입력하시거나 혹은 첨부파일을 추가하세요.');
+			alert('채팅 내용을 입력하세요.');
 			$(".chat-msg").focus();
 		} else {
 			const $chatBox = $("<div>").addClass("chat-message chattingRoom-right-msg").append($("<sup>").html("<b>"+($(".user-name").text())+"</b> "+getDate()));
@@ -458,97 +525,131 @@ document.addEventListener('DOMContentLoaded', function() {
 			$(".chat-msg").val("");
 		}
 	}
+	const imageRegex = /\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg|jfif)$/i;
 
-	// 파일 전송 prompt 창 느낌
-	$("#file-input").change((e) =>{
-		const fileName = e.target.files[0].name;
-        Swal.fire({
-            title: 'File('+fileName+') 전송',
-            text: "파일을 전송하시겠습니까?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '전송',
-            cancelButtonText: '취소'
-        }).then((result) => {
-			console.log(result);
-            if (result.isConfirmed) {
-                Swal.fire(
-                    '파일 전송',
-                    '파일을 전송하겠습니다.',
-                    'success'
-                )
-            }
-            sendFile();
-        })
-    });
-	//https://cheonfamily.tistory.com/6
-	function sendFile() {
+	function isImageFile(filename) {
+	    return imageRegex.test(filename);
+	}
+
+	// 파일 선택 함수 → https://sweetalert2.github.io/
+	function handleFileSelect() {
 	    const fileInput = document.getElementById('file-input');
 	    const file = fileInput.files[0];
 	    if (file) {
-	        const formData = new FormData();
-	        formData.append('file', file);
+	        Swal.fire({
+	            title: `File(${file.name}) 전송`,
+	            text: "파일을 전송하시겠습니까?",
+	            icon: 'question',
+	            showCancelButton: true,
+	            confirmButtonColor: '#3085d6',
+	            cancelButtonColor: '#d33',
+	            confirmButtonText: '전송',
+	            cancelButtonText: '취소'
+	        }).then((result) => {
+	            if (result.isConfirmed) {
+	                Swal.fire(
+	                    '파일 전송',
+	                    '파일을 전송하겠습니다.',
+	                    'success'
+	                );
+	                sendFile(file);
+	            } else {
+	                // 취소 시 파일 입력 필드 초기화
+	                fileInput.value = '';
+	            }
+	        });
+	    }
+	}
 
-	        fetch('/hottalk/upload', {
-	            method: 'POST',
-	            body: formData
-	        })
-	        .then(response => response.json())
-	        .then(data => {
+	// 파일 전송 함수
+	function sendFile(file) {
+		const thisRoom = document.querySelector("#room-no").value;
+	    const formData = new FormData();
+	    formData.append('file', file);
+		formData.append('hotTalkNo', thisRoom);
+		formData.append('hotTalkAttSender', loginEmployeeNo);
+	    $.ajax({
+	        type: "POST",
+	        enctype: 'multipart/form-data',
+	        url: path+'/hottalk/upload',	// Ajax통신으로 File 저장
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        cache: false,
+	        success: function (data) {
+				$(".chat-msg").val(file.name);
 	            // 파일 업로드 성공 후 WebSocket을 통해 파일 정보 전송
-	            sendMessage({
-	                type: 'FILE',
-	                fileName: file.name,
-	                fileUrl: data.fileUrl
-	            });
+	            let upFile = new Object();
+	            upFile.type="file";
+	            upFile.hotTalkNo=thisRoom;
+	            upFile.hotTalkOriginalFilename=data.hotTalkOriginalFilename;
+	            upFile.hotTalkRenamedFilename=data.hotTalkRenamedFilename;
+	            upFile.hotTalkAttSender=data.hotTalkAttSender;
+	            // console.log(upFile);
+
+	            chatServer.send(JSON.stringify(upFile));
+				$(".chat-msg").val("");
 	            // 파일 입력 초기화
-	            fileInput.value = '';
-	            document.getElementById('file-name').textContent = '';
-	        })
-	        .catch(error => console.error('Error:', error));
-    }
-}
+	            document.getElementById('file-input').value = '';
+
+	            Swal.fire(
+	                '성공',
+	                '파일이 성공적으로 업로드되었습니다.',
+	                'success'
+	            );
+	        },
+	        error: function (e) {
+	            console.error('Error:', e);
+	            Swal.fire(
+	                '오류',
+	                '파일 전송 중 오류가 발생했습니다.',
+	                'error'
+	            );
+	        }
+	    });
+	}
+
+	// 이벤트 리스너 설정
+	$(document).ready(function() {
+	    $('#file-input').on('change', handleFileSelect);
+	});
 
 
+	class CommonMessage{
+		constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString()){
+			this.type=type;
+			this.sender=sender;
+			this.receiver=receiver;
+			this.hotTalkNo=hotTalkNo;
+			this.msg=msg;
+			this.eventTime=eventTime;
+		}
+		convert(){
+			return JSON.stringify(this);
+		}
+	}
+	class Employee{
+		constructor(type="사원", employeeNo="", employeeName="", departmentCode="", employeePhoto=""){
+			this.type=type;
+			this.employeeNo=employeeNo;
+			this.employeeName=employeeName;
+			this.departmentCode=departmentCode;
+			this.employeePhoto=employeePhoto;
+		}
+		convert(){
+			return JSON.stringify(this);
+		}
+	}
+	class HotTalkList{
+		constructor(type="핫톡",hotTalkIsgroup="", hotTalkTitle="", hotTalkNo="", hotTalkContent=""){
+			this.type=type;
+			this.hotTalkIsgroup=hotTalkIsgroup;
+			this.hotTalkTitle=hotTalkTitle;
+			this.hotTalkNo=hotTalkNo;
+			this.hotTalkContent=hotTalkContent;
+		}
+		convert(){
+			return JSON.stringify(this);
+		}
+	}
 });
-
-
-class CommonMessage{
-	constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString()){
-		this.type=type;
-		this.sender=sender;
-		this.receiver=receiver;
-		this.hotTalkNo=hotTalkNo;
-		this.msg=msg;
-		this.eventTime=eventTime;
-	}
-	convert(){
-		return JSON.stringify(this);
-	}
-}
-class Employee{
-	constructor(type="사원", employeeNo="", employeeName="", departmentCode="", employeePhoto=""){
-		this.type=type;
-		this.employeeNo=employeeNo;
-		this.employeeName=employeeName;
-		this.departmentCode=departmentCode;
-		this.employeePhoto=employeePhoto;
-	}
-	convert(){
-		return JSON.stringify(this);
-	}
-}
-class HotTalkList{
-	constructor(type="핫톡",hotTalkIsgroup="", hotTalkTitle="", hotTalkNo="", hotTalkContent=""){
-		this.type=type;
-		this.hotTalkIsgroup=hotTalkIsgroup;
-		this.hotTalkTitle=hotTalkTitle;
-		this.hotTalkNo=hotTalkNo;
-		this.hotTalkContent=hotTalkContent;
-	}
-	convert(){
-		return JSON.stringify(this);
-	}
-}

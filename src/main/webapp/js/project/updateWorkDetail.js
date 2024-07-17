@@ -153,10 +153,9 @@ function getTodayDate() {
 	$('#updateWorkBtn').click(e=>{
 		let updateData = new FormData();
 //첨부파일 내용 저장
-	files.forEach((file) => {
-   		updateData.append('files', file);
-   		updateData.append('fileName', file.name);
-	});
+			files.forEach((file) => {
+		   		updateData.append('files', file);
+			});
 //작업 내용 저장
 	updateData.append("projectWorkNo", $("input[name='workNo']").val());
 	updateData.append("projectWorkTitle", $("#work-title").val());
@@ -164,6 +163,7 @@ function getTodayDate() {
 	updateData.append("projectWorkEndDate", $("#work-end-date").val());
 	updateData.append("projectWorkRank", $("#work-rank").val());
 	updateData.append("projectWorkProgress", $("#work-progress").val());
+	updateData.append("employeeNo",empNo);
 //기존에 있던 파일 delete할 목록
 	updateData.append("delFileList", delFileNames);
 

@@ -194,7 +194,6 @@ public class FeedController {
         }
     }
 
-    //nonParticipants 추가
     @GetMapping("/nonParticipants")
     public ResponseEntity<?> getNonParticipants(@RequestParam int communityNo) {
         try {

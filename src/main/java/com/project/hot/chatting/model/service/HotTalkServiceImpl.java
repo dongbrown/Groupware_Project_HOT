@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hot.chatting.model.dao.HotTalkDao;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
+import com.project.hot.chatting.model.dto.HotTalkAtt;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
 import com.project.hot.chatting.model.dto.ResponseLoginEmployeeDTO;
@@ -71,6 +72,10 @@ public class HotTalkServiceImpl implements HotTalkService {
 	        throw new ChattingException("채팅 내용 저장 실패 : " + e.getMessage());
 	    }
 	    return result;
+	}
+	@Override
+	public int insertHotTalkAtt(HotTalkAtt hotTalkAtt) {
+		return dao.insertHotTalkAtt(session, hotTalkAtt);
 	}
 
 }

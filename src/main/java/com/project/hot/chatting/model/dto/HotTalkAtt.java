@@ -14,4 +14,5 @@ public class HotTalkAtt {
 	private int hotTalkNo;
 	private String hotTalkOriginalFilename;
 	private String hotTalkRenamedFilename;
+	private int hotTalkAttSender;
 }

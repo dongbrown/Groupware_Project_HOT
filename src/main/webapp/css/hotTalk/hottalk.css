@@ -418,3 +418,25 @@ i{
 	display: flex;
     justify-content: space-around;
 }
+.preview-img{
+	width: 200px;
+	height: 200xp;
+	object-fit: cover;
+	margin-bottom: 20px;
+	cursor: pointer;
+}
+.fileIcon{
+	width: 50px;
+	height: 50xp;
+	object-fit: cover;
+	margin-bottom: 20px;
+	cursor: pointer;
+}
+.preview-img:hover{
+	width: 400px;
+	heignt: 400xp;
+}
+.fileIcon:hover{
+	width: 100px;
+	height: 100xp;
+}
