@@ -76,7 +76,7 @@
 					</div>
 					<!-- 가져온 파일 값 출력 -->
 					<div id="fileListContainer">
-						<c:if test="${not empty work.projectAtt }">
+						<c:if test="${work.projectAtt[0].attNo != ''}">
 							<c:forEach items="${work.projectAtt }" var="att">
 								<div class="fileListContainer">
 									<span class="fileSpan"><c:out value="${att.attOriginalname }"/> </span>
@@ -121,10 +121,8 @@
 </section>
 </div>
 <script>
-$(document).ready(function() {
 const path='${path}';
 const empNo ="${work.employeeNo }";
-});
  $(document).ready(function() {
 	$("#work-title").val("${work.projectWorkTitle }");
 	$('#work-rank').val("${work.projectWorkRank }");
