@@ -3,7 +3,7 @@ getProjectList(1);
 		function getProjectList(cPage) {
 			$('#work-list-table>tbody').html('');
 
-			fetch(path + '/project/projectupdateajax?cPage=' + cPage+'&employeeNo='+empNo)
+			fetch(path + '/work/projectupdateajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects);

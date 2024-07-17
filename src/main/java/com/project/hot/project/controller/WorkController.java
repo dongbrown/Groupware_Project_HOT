@@ -42,6 +42,19 @@ public class WorkController {
 	private final ProjectService projectService;
 	static private List<Object> fileRenameList;
 
+	@ResponseBody
+	@GetMapping("/projectupdateajax")
+	public Map<String,Object> projectUpdatePage (@RequestParam(defaultValue = "1") int cPage,
+													@RequestParam("employeeNo") int employeeNo) {
+		ObjectMapper mapper=new ObjectMapper();
+		try {
+			mapper.writeValueAsString(workService.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo)));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return workService.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo));
+	};
+
 	@GetMapping("/insertwork.do")
 	public String insertWork (int projectNo,Model m) {
 		Project project = projectService.selectProjectByNo(projectNo);
