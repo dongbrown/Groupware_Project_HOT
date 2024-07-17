@@ -46,6 +46,7 @@ public class WorkController {
 	public String insertWork (int projectNo,Model m) {
 		Project project = projectService.selectProjectByNo(projectNo);
 		m.addAttribute("project",project);
+		System.out.println(project);
 		 return "project/insertWorkDetail";
 	}
 
