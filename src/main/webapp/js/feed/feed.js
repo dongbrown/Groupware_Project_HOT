@@ -33,19 +33,67 @@ $(document).ready(function() {
         });
     });
 
-    // 체크박스 클릭 이벤트 수정
     $(document).on('click', '.employee-checkbox', function(e) {
-        e.stopPropagation(); // 이벤트 버블링 방지
+        e.stopPropagation();
         updateSelectedParticipants();
     });
 
-    // 부서 클릭 이벤트 수정
-    $(document).on('click', '.tree-item[data-type="department"]', function(e) {
+    $(document).on('click', '.department-name', function(e) {
         e.stopPropagation();
-        const $childrenContainer = $(this).children('ul.employee-list');
-        $childrenContainer.toggle();
+        $(this).siblings('ul').toggle();
+    });
+
+    $('#file-upload').change(function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#image-preview').attr('src', e.target.result).show();
+            }
+            reader.readAsDataURL(file);
+        }
     });
 });
+
+function submitFeed() {
+    const feedContent = $("#feedContent").val().trim();
+    if (feedContent === "") {
+        alert("내용을 입력해주세요.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("feedContent", feedContent);
+    formData.append("communityNo", $("#community-container").data("id"));
+
+    const fileInput = document.getElementById('file-upload');
+    if (fileInput.files.length > 0) {
+        formData.append("file", fileInput.files[0]);
+    }
+
+    $.ajax({
+        url: '/community/feed/insert',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                alert("피드가 성공적으로 작성되었습니다.");
+                $("#feedContent").val("");
+                $("#file-upload").val("");
+                $("#image-preview").hide();
+                loadFeeds();
+            } else {
+                alert("피드 작성에 실패했습니다: " + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('피드 작성 오류:', error);
+            alert("피드 작성 중 오류가 발생했습니다.");
+        }
+    });
+}
 
 function loadFeeds() {
     const communityNo = $("#community-container").data("id");
@@ -83,12 +131,18 @@ function createFeedHtml(feed) {
             <div class="feed-menu">
                 <img src="/images/menuicon.png" class="menu-icon" onclick="toggleFeedMenu(${feed.feedNo})">
                 <div class="feed-menu-options" id="feedMenu-${feed.feedNo}" style="display:none;">
-                    <button class="btn btn-sm btn-outline-primary edit-btn" onclick="showEditForm(${feed.feedNo})">수정</button><br>
+                    <button class="btn btn-sm btn-outline-primary edit-btn" onclick="showEditForm(${feed.feedNo})">수정</button>
                     <button class="btn btn-sm btn-outline-danger" onclick="deleteFeed(${feed.feedNo})">삭제</button>
                 </div>
             </div>
         `;
     }
+
+    let imageHtml = '';
+    if (feed.hasImage) {
+        imageHtml = `<img src="/community/feed/image/${feed.feedNo}" alt="Feed Image" class="img-fluid mt-2">`;
+    }
+
     return `
         <div class="feed-item" id="feed-${feed.feedNo}">
             <div class="feed-header">
@@ -96,12 +150,28 @@ function createFeedHtml(feed) {
                 ${menuHtml}
             </div>
             <p class="feed-content">${feed.feedContent}</p>
+            ${imageHtml}
             <div class="edit-form" style="display: none;">
                 <input type="text" class="form-control edit-input" value="${feed.feedContent}">
                 <button class="btn btn-sm btn-primary save-btn" onclick="updateFeed(${feed.feedNo})">저장</button>
                 <button class="btn btn-sm btn-secondary cancel-btn" onclick="cancelEdit(${feed.feedNo})">취소</button>
             </div>
             <small class="text-muted">${feed.feedEnrollDate}</small>
+            <div class="feed-actions">
+                <button class="btn btn-sm btn-outline-primary like-btn" onclick="likeFeed(${feed.feedNo})">
+                    <i class="far fa-thumbs-up"></i> 좋아요 <span class="like-count">${feed.likeCount || 0}</span>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary comment-btn" onclick="toggleComments(${feed.feedNo})">
+                    <i class="far fa-comment"></i> 댓글 <span class="comment-count">${feed.commentCount || 0}</span>
+                </button>
+            </div>
+            <div class="comments-section" style="display: none;">
+                <div class="comments-list"></div>
+                <div class="comment-form">
+                    <input type="text" class="form-control comment-input" placeholder="댓글을 입력하세요...">
+                    <button class="btn btn-sm btn-primary submit-comment" onclick="submitComment(${feed.feedNo})">작성</button>
+                </div>
+            </div>
         </div>
     `;
 }
@@ -112,47 +182,6 @@ function toggleFeedMenu(feedNo) {
 
 function getCurrentEmployeeNo() {
     return currentEmployeeNo;
-}
-
-function submitFeed() {
-    const communityNo = $("#community-container").data("id");
-    const feedContent = $("#feedContent").val().trim();
-    const fileInput = $("#file-upload")[0];
-    const file = fileInput.files[0];
-
-    if (!feedContent) {
-        alert('피드 내용을 입력해주세요.');
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('feedContent', feedContent);
-    formData.append('communityNo', communityNo);
-    if (file) {
-        formData.append('file', file);
-    }
-
-    $.ajax({
-        url: '/community/feed/insert',
-        method: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if (response.success) {
-                alert('피드가 성공적으로 작성되었습니다.');
-                $("#feedContent").val('');
-                fileInput.value = '';
-                loadFeeds();
-            } else {
-                alert('피드 작성에 실패했습니다: ' + response.message);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('피드 작성 오류:', error);
-            alert('피드 작성 중 오류가 발생했습니다.');
-        }
-    });
 }
 
 function showEditForm(feedNo) {
@@ -228,6 +257,22 @@ function showAddParticipant() {
     loadNonParticipants();
 }
 
+function loadDepartments() {
+    $.ajax({
+        url: '/api/employee/departmentList',
+        type: 'GET',
+        dataType: 'json',
+        success: function(departments) {
+            const treeHtml = generateDepartmentTreeHtml(departments);
+            $('#organizationTree').html(treeHtml);
+        },
+        error: function(xhr, status, error) {
+            console.error('부서 목록 로드 오류:', error);
+            alert('부서 목록을 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
+
 function loadNonParticipants() {
     const communityNo = $("#community-container").data("id");
     $.ajax({
@@ -237,9 +282,9 @@ function loadNonParticipants() {
         dataType: 'json',
         success: function(response) {
             if (response.success) {
-                const nonParticipants = response.nonParticipants;
-                const treeData = buildEmployeeTree(nonParticipants);
-                const treeHtml = generateTreeHtml(treeData);
+                const employees = response.nonParticipants;
+                const groupedEmployees = groupEmployeesByDepartment(employees);
+                const treeHtml = generateTreeHtml(groupedEmployees);
                 $('#organizationTree').html(treeHtml);
             } else {
                 console.error('비참여 사원 목록 로드 실패:', response.message);
@@ -253,46 +298,42 @@ function loadNonParticipants() {
     });
 }
 
-function buildEmployeeTree(employees) {
-    const departmentMap = new Map();
-
+function groupEmployeesByDepartment(employees) {
+    const departments = {};
     employees.forEach(emp => {
-        if (!departmentMap.has(emp.departmentCode)) {
-            departmentMap.set(emp.departmentCode, {
-                id: emp.departmentCode,
-                name: emp.departmentTitle,
-                type: 'department',
-                children: []
-            });
+        const deptCode = emp.departmentCode.departmentCode;
+        if (!departments[deptCode]) {
+            departments[deptCode] = {
+                departmentCode: deptCode,
+                departmentTitle: emp.departmentCode.departmentTitle,
+                employees: []
+            };
         }
-
-        const dept = departmentMap.get(emp.departmentCode);
-        dept.children.push({
-            id: emp.employeeNo,
-            name: emp.employeeName,
-            type: 'employee'
-        });
+        departments[deptCode].employees.push(emp);
     });
-
-    return Array.from(departmentMap.values());
+    return Object.values(departments);
 }
 
-function generateTreeHtml(items, level = 0) {
-    let html = '<ul' + (level === 0 ? ' class="tree-root"' : '') + '>';
-    items.forEach(item => {
-        html += `<li class="tree-item" data-id="${item.id}" data-type="${item.type}">`;
-        if (item.type === 'department') {
-            html += `<span class="department-name">${'  '.repeat(level)}${item.name}</span>`;
-            if (item.children && item.children.length > 0) {
-                html += generateTreeHtml(item.children, level + 1);
-            }
-        } else {
-            html += `<label>
-                <input type="checkbox" class="employee-checkbox" id="emp-${item.id}" value="${item.id}">
-                ${item.name}
-            </label>`;
-        }
-        html += '</li>';
+function generateTreeHtml(departments) {
+    let html = '<ul class="tree-root">';
+    departments.forEach(dept => {
+        html += `
+            <li class="tree-item" data-id="${dept.departmentCode}" data-type="department">
+                <span class="department-name">${dept.departmentTitle}</span>
+                <ul class="employee-list">
+        `;
+        dept.employees.forEach(emp => {
+            html += `
+                <li class="tree-item" data-id="${emp.employeeNo}" data-type="employee">
+                    <label>
+                        <input type="checkbox" class="employee-checkbox" id="emp-${emp.employeeNo}"
+                               value="${emp.employeeNo}" data-name="${emp.employeeName}">
+                        ${emp.employeeName}
+                    </label>
+                </li>
+            `;
+        });
+        html += '</ul></li>';
     });
     html += '</ul>';
     return html;
@@ -304,10 +345,11 @@ function updateSelectedParticipants() {
 
     $('.employee-checkbox:checked').each(function() {
         const empId = $(this).val();
-        const empName = $(this).closest('label').text().trim();
+        const empName = $(this).data('name');
+        const deptName = $(this).closest('.employee-list').siblings('.department-name').text();
         $participantList.append(`
             <li data-id="${empId}" class="list-group-item d-flex justify-content-between align-items-center">
-                ${empName}
+                ${empName} <small class="text-muted">(${deptName})</small>
                 <button type="button" class="btn-close remove-participant" aria-label="Close"></button>
             </li>
         `);
@@ -322,9 +364,12 @@ $(document).on('click', '.remove-participant', function() {
 
 function getSelectedParticipants() {
     return $('.employee-checkbox:checked').map(function() {
+        const $employee = $(this);
+        const deptName = $employee.closest('.employee-list').siblings('.department-name').text();
         return {
-            id: $(this).val(),
-            name: $(this).closest('label').text().trim()
+            id: $employee.val(),
+            name: $employee.data('name'),
+            department: deptName
         };
     }).get();
 }
@@ -355,8 +400,149 @@ function inviteParticipants(participants) {
     });
 }
 
+
+function likeFeed(feedNo) {
+    $.ajax({
+        url: '/community/feed/like',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ feedNo: feedNo }),
+        success: function(response) {
+            if (response.success) {
+                const likeButton = $(`#feed-${feedNo} .like-btn`);
+                const likeCount = likeButton.find('.like-count');
+                likeCount.text(parseInt(likeCount.text()) + 1);
+                likeButton.addClass('liked');
+            } else {
+                alert('좋아요 실패: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('좋아요 오류:', error);
+            alert('좋아요 처리 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function toggleComments(feedNo) {
+    const commentsSection = $(`#feed-${feedNo} .comments-section`);
+    if (commentsSection.is(':visible')) {
+        commentsSection.hide();
+    } else {
+        loadComments(feedNo);
+        commentsSection.show();
+    }
+}
+
+function loadComments(feedNo) {
+    $.ajax({
+        url: '/community/feed/comments',
+        method: 'GET',
+        data: { feedNo: feedNo },
+        success: function(response) {
+            if (response.success) {
+                displayComments(feedNo, response.comments);
+            } else {
+                alert('댓글을 불러오는 데 실패했습니다: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('댓글 불러오기 오류:', error);
+            alert('댓글을 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function displayComments(feedNo, comments) {
+    const commentsList = $(`#feed-${feedNo} .comments-list`);
+    commentsList.empty();
+    comments.forEach(comment => {
+        commentsList.append(`
+            <div class="comment">
+                <strong>${comment.employeeName}</strong>
+                <p>${comment.commentContent}</p>
+                <small class="text-muted">${comment.commentDate}</small>
+            </div>
+        `);
+    });
+}
+
+function submitComment(feedNo) {
+    const commentInput = $(`#feed-${feedNo} .comment-input`);
+    const commentContent = commentInput.val().trim();
+    if (commentContent === '') {
+        alert('댓글 내용을 입력해주세요.');
+        return;
+    }
+
+    $.ajax({
+        url: '/community/feed/comment',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ feedNo: feedNo, commentContent: commentContent }),
+        success: function(response) {
+            if (response.success) {
+                commentInput.val('');
+                loadComments(feedNo);
+                updateCommentCount(feedNo, 1);
+            } else {
+                alert('댓글 작성에 실패했습니다: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('댓글 작성 오류:', error);
+            alert('댓글 작성 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function updateCommentCount(feedNo, increment) {
+    const commentButton = $(`#feed-${feedNo} .comment-btn`);
+    const commentCount = commentButton.find('.comment-count');
+    commentCount.text(parseInt(commentCount.text()) + increment);
+}
+
 $(document).click(function(event) {
     if (!$(event.target).closest('.feed-menu').length) {
         $('.feed-menu-options').hide();
     }
+});
+
+// 유틸리티 함수
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString('ko-KR', options);
+}
+
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+// 이미지 미리보기 함수
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#image-preview').attr('src', e.target.result).show();
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// 초기화 함수
+function initializeFeed() {
+    loadFeeds();
+    $('#file-upload').on('change', function() {
+        previewImage(this);
+    });
+}
+
+// 문서 로드 완료 시 초기화 함수 호출
+$(document).ready(function() {
+    initializeFeed();
 });

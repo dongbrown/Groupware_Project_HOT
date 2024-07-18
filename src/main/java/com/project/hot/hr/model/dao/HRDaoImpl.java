@@ -40,4 +40,9 @@ public class HRDaoImpl implements HRDao {
 		return session.delete("hr.deleteDepartment", rd);
 	}
 
+	@Override
+	public int deleteEmployee(SqlSession session, int no) {
+		return session.delete("hr.deleteEmployee", no);
+	}
+
 }

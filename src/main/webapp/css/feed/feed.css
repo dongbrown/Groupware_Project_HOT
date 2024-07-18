@@ -1,43 +1,53 @@
 @charset "UTF-8";
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'GmarketSans', 'Arial', sans-serif;
     background-color: #f0f2f5;
     margin: 0;
     padding: 0;
     color: #1c1e21;
 }
 
-/* 컨테이너 너비 증가 */
 #community-container {
     max-width: 1000px;
     margin: 0 auto;
     padding: 1rem;
 }
 
-.feed-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
-
-.feed-actions button {
-    margin-left: 10px;
-}
-
 .header {
     background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
+    padding: 1.5rem;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1rem;
+    border-radius: 8px;
+    border-left: 5px solid #1877f2;
+}
+
+.header-left {
+    flex-grow: 1;
+    padding-right: 1rem;
+}
+
+.header-right {
+    flex-shrink: 0;
 }
 
 .header h1 {
-    margin: 0;
+    margin: 0 0 0.5rem 0;
     color: #1877f2;
+    font-size: 1.8rem;
+}
+
+.community-intro {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e4e6eb;
 }
 
 .header button {
@@ -48,29 +58,21 @@ body {
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
 }
 
-h2, h3 {
-    color: #1c1e21;
+.header button:hover {
+    background-color: #166fe5;
 }
 
-/* 스터디 소개 스타일 */
-.intro {
-    background-color: white;
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem 0;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-/* 게시물 작성 폼 스타일 */
 .writeFeed, .feed-item {
     background-color: white;
     border-radius: 8px;
     padding: 1rem;
     margin: 1rem 0;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    width: 100%; /* 컨테이너의 전체 너비를 사용 */
+    width: 100%;
 }
 
 .writeFeed textarea {
@@ -80,6 +82,7 @@ h2, h3 {
     padding: 0.5rem;
     margin-bottom: 1rem;
     resize: vertical;
+    font-family: inherit;
 }
 
 .button-container {
@@ -94,6 +97,11 @@ h2, h3 {
     padding: 0.5rem;
     border-radius: 50%;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #d8dadf;
 }
 
 .submit-btn {
@@ -104,77 +112,179 @@ h2, h3 {
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-/* 피드 컨테이너 스타일 */
+.submit-btn:hover {
+    background-color: #166fe5;
+}
+
 #feed-container {
-    width: 100%; /* 컨테이너의 전체 너비를 사용 */
+    width: 100%;
     margin: 0 auto;
-    padding: 1rem 0; /* 좌우 패딩 제거 */
+    padding: 1rem 0;
 }
 
-/* 개별 게시물 스타일 */
-.post {
-    background-color: white;
-    border-radius: 8px;
-    padding: 1rem;
+.feed-item {
+    position: relative;
     margin-bottom: 1rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.post-header {
+.feed-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 0.5rem;
 }
 
-.post-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 0.5rem;
+.feed-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #050505;
 }
 
-.post-content {
+.feed-menu {
+    position: relative;
+}
+
+.menu-icon {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.menu-icon:hover {
+    opacity: 1;
+}
+
+.feed-menu-options {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    z-index: 1000;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feed-menu-options button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.feed-menu-options button:hover {
+    background-color: #f0f2f5;
+}
+
+.feed-content {
     margin-bottom: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #050505;
 }
 
-.post-image {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
-}
-
-.post-actions {
+.feed-actions {
     display: flex;
     justify-content: space-between;
+    margin-top: 1rem;
     border-top: 1px solid #dddfe2;
     padding-top: 0.5rem;
 }
 
-.post-actions button {
-    background: none;
+.feed-actions button {
+    flex: 1;
+    margin: 0 0.25rem;
+    padding: 0.5rem;
     border: none;
+    background-color: transparent;
     color: #65676b;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feed-actions button:hover {
+    background-color: #f0f2f5;
+}
+
+.feed-actions button i {
+    margin-right: 0.5rem;
+}
+
+.feed-actions button.liked {
+    color: #1877f2;
+}
+
+.comments-section {
+    margin-top: 1rem;
+    border-top: 1px solid #dddfe2;
+    padding-top: 1rem;
+}
+
+.comment {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f0f2f5;
+    border-radius: 4px;
+}
+
+.comment strong {
+    font-weight: bold;
+    color: #050505;
+}
+
+.comment p {
+    margin: 0.25rem 0;
+    color: #050505;
+}
+
+.comment small {
+    color: #65676b;
+}
+
+.comment-form {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.comment-input {
+    flex: 1;
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #dddfe2;
+    border-radius: 20px;
+    font-family: inherit;
+}
+
+.submit-comment {
+    white-space: nowrap;
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 1024px) {
-    #community-container {
-        max-width: 90%;
-    }
-}
-
-@media (max-width: 600px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .header button {
-        margin-top: 1rem;
-    }
+.submit-comment:hover {
+    background-color: #166fe5;
 }
 
 .modal {
@@ -189,16 +299,17 @@ h2, h3 {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-
 .modal-content {
     background-color: #fefefe;
-    margin: 5% auto; /* 상단 여백 줄임 */
+    margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 600px; /* 최대 너비 증가 */
-    max-height: 80vh; /* 최대 높이 설정 */
-    overflow-y: auto; /* 세로 스크롤 추가 */
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .close {
@@ -206,17 +317,18 @@ h2, h3 {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.close:hover, .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+.close:hover {
+    color: #000;
 }
 
 #organizationTree {
-    max-height: none; /* 최대 높이 제한 제거 */
-    overflow-y: visible; /* 스크롤 제거 */
+    margin-top: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .tree-root {
@@ -226,71 +338,13 @@ h2, h3 {
 
 .tree-item {
     margin: 5px 0;
-}
-
-.selected {
-    background-color: #e0e0e0;
-}
-
-#participantList {
-    list-style-type: none;
-    padding: 0;
-}
-
-#participantList li {
-    margin-bottom: 5px;
-}
-
-.btn-close {
-    font-size: 0.8rem;
-}
-
-.feed-item {
-    position: relative;
-}
-
-.feed-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.feed-menu {
-    position: relative;
-}
-
-.menu-icon {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-}
-
-.feed-menu-options {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-    z-index: 1000;
-    white-space: nowrap; /* 버튼들이 한 줄에 나오도록 설정 */
-}
-
-.feed-menu-options button {
-    display: inline-block; /* 인라인 블록으로 변경 */
-    width: auto; /* 너비를 자동으로 설정 */
-    text-align: center; /* 텍스트 중앙 정렬 */
-    margin-right: 5px; /* 버튼 사이의 간격 */
-}
-
-.feed-menu-options button:last-child {
-    margin-right: 0; /* 마지막 버튼의 오른쪽 마진 제거 */
+    padding-left: 20px;
 }
 
 .department-name {
     cursor: pointer;
     font-weight: bold;
+    color: #1877f2;
 }
 
 .employee-list {
@@ -302,64 +356,195 @@ h2, h3 {
     margin-right: 5px;
 }
 
-label {
-    display: inline-block;
-    margin-bottom: 0;
-    cursor: pointer;
-}
-
 #participantList {
     max-height: 150px;
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
     margin-top: 10px;
+    border-radius: 4px;
 }
 
-/* 체크박스 스타일 개선 */
-.employee-checkbox {
-    display: none; /* 기본 체크박스 숨김 */
+#participantList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
 }
 
-.employee-checkbox + label:before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    vertical-align: middle;
+.btn-close {
+    background-color: transparent;
+    border: none;
+    color: #65676b;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    line-height: 1;
 }
 
-.employee-checkbox:checked + label:before {
-    content: '✔';
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    text-align: center;
-    line-height: 18px;
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-left {
+        padding-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    .header-right {
+        align-self: flex-start;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .community-intro {
+        font-size: 0.9rem;
+    }
+
+    .header button {
+        width: 100%;
+    }
+
+    .feed-actions {
+        flex-direction: column;
+    }
+
+    .feed-actions button {
+        margin: 0.25rem 0;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 2% auto;
+    }
 }
 
-/* 부서명 호버 효과 */
-.department-name:hover {
-    color: #007bff;
+#selectedParticipants h6 {
+    color: #1877f2;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
-/* 모달 내부 스크롤바 스타일 */
-.modal-content::-webkit-scrollbar {
+#participantList {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #f0f2f5;
+}
+
+#participantList::-webkit-scrollbar {
     width: 8px;
 }
 
-.modal-content::-webkit-scrollbar-track {
+#participantList::-webkit-scrollbar-track {
     background: #f1f1f1;
+    border-radius: 4px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
+#participantList::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 4px;
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
+#participantList::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+#participantList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+#participantList li:last-child {
+    margin-bottom: 0;
+}
+
+#participantList li:hover {
+    background-color: #f7f8fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#participantList li .participant-info {
+    display: flex;
+    align-items: center;
+}
+
+#participantList li .participant-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #1877f2;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+#participantList li .participant-name {
+    font-weight: 500;
+    color: #1c1e21;
+}
+
+#participantList li .participant-dept {
+    font-size: 0.85em;
+    color: #65676b;
+    margin-left: 5px;
+}
+
+#participantList li .btn-close {
+    background-color: transparent;
+    border: none;
+    color: #65676b;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    line-height: 1;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+#participantList li .btn-close:hover {
+    background-color: #e4e6eb;
+    color: #1c1e21;
+}
+
+@media (max-width: 768px) {
+    #participantList {
+        max-height: 150px;
+    }
+
+    #participantList li {
+        padding: 8px;
+    }
+
+    #participantList li .participant-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9em;
+    }
+
+    #participantList li .participant-name {
+        font-size: 0.9em;
+    }
+
+    #participantList li .participant-dept {
+        font-size: 0.75em;
+    }
 }

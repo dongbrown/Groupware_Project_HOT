@@ -38,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Map<String, Object> selectEmployeeList(Map<String, Object> param) {
 		Map<String, Object> result=new HashMap<>();
-		result.put("totalPage", Math.ceil((double)dao.countEmployeeTotalData(session, param)/12));
+		result.put("totalPage", Math.ceil((double)dao.countEmployeeTotalData(session, param)/(int)param.get("numPerpage")));
 		result.put("employees", dao.selectEmployeeList(session, param));
 		return result;
 	}

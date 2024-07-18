@@ -50,4 +50,9 @@ public class HRServiceImpl implements HRService {
 		return hrDao.deleteDepartment(session, rd);
 	}
 
+	@Override
+	public int deleteEmployee(int no) {
+		return hrDao.deleteEmployee(session, no);
+	}
+
 }
