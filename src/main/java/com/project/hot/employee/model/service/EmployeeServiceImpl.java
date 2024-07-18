@@ -145,4 +145,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
+	@Override
+	public List<String> selectAllEmployeeId() {
+		return dao.selectAllEmployeeId(session);
+	}
+
 }

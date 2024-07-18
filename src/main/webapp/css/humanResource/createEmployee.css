@@ -1,0 +1,26 @@
+/*
+	사원 생성 페이지용 css~
+*/
+
+.createEmployee {
+	display: flex;
+    justify-content: center;
+}
+
+.createEmployee-div {
+	width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2%;
+}
+
+.create-div {
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-div *{
+	margin-bottom:17px;
+}

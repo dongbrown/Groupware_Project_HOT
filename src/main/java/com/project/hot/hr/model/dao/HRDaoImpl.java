@@ -51,4 +51,9 @@ public class HRDaoImpl implements HRDao {
 		return session.update("employee.updateEmployee", re);
 	}
 
+	@Override
+	public int insertEmployee(SqlSession session, RequestEmployee re) {
+		return session.insert("hr.insertEmployee", re);
+	}
+
 }

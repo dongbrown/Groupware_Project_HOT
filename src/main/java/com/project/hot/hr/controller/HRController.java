@@ -1,8 +1,10 @@
 package com.project.hot.hr.controller;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,7 @@ public class HRController {
 
 	private final HRService HRService;
 	private final EmployeeService empService;
+	private BCryptPasswordEncoder pwencoder=new BCryptPasswordEncoder();
 
 	@GetMapping("/departmentList")
 	public Map<String, Object> selectDepartmentForHR(
@@ -101,6 +104,47 @@ public class HRController {
 			return "수정 성공!";
 		}else {
 			return "수정 실패!";
+		}
+	}
+
+	@PostMapping("/insertEmployee")
+	public String insertEmployee(@ModelAttribute RequestEmployee re) {
+		//패스워드 암호화
+		String encodedPwd=pwencoder.encode(re.getEmployeePassword());
+		re.setEmployeePassword(encodedPwd);
+
+		//생년월일 저장
+		String ssn=re.getEmployeeSsn();
+		if(ssn.charAt(7)=='1'||ssn.charAt(7)=='2') {
+			//1900년대 출생자
+			String birth="19" + ssn.substring(0, 2) + "-" + ssn.substring(2, 4) + "-" + ssn.substring(4, 6);
+			re.setEmployeeBirthDay(Date.valueOf(birth));
+		}else {
+			//2000년대 출생자
+			String birth="20" + ssn.substring(0, 2) + "-" + ssn.substring(2, 4) + "-" + ssn.substring(4, 6);
+			re.setEmployeeBirthDay(Date.valueOf(birth));
+		}
+
+		//주민번호 암호화
+		String encodedSsn=pwencoder.encode(re.getEmployeeSsn());
+		re.setEmployeeSsn(encodedSsn);
+
+		//핸드폰번호에 '-' 붙이기
+		String phone=re.getEmployeePhone();
+		if(phone.length()==11) {
+			String formatPhone=String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7));
+			re.setEmployeePhone(formatPhone);
+		}else {
+			String formatPhone=String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 6), phone.substring(6));
+			re.setEmployeePhone(formatPhone);
+		}
+
+		int result=HRService.insertEmployee(re);
+
+		if(result>0) {
+			return "생성 성공!";
+		}else {
+			return "생성 실패!";
 		}
 	}
 }

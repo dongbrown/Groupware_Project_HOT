@@ -84,4 +84,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return session.selectOne("employee.selectCommutingByName", employeeId);
 	}
 
+	@Override
+	public List<String> selectAllEmployeeId(SqlSession session) {
+		return session.selectList("employee.selectAllEmployeeId");
+	}
+
 }

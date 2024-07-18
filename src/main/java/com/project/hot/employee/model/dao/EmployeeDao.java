@@ -24,4 +24,5 @@ public interface EmployeeDao {
 	int updateCommuting(SqlSession session, Map<String, Object> param);
 	int insertCommutingNoAtt(SqlSession session, Map<String, Object> param);
 	Commuting selectCommutingByName(SqlSession session, String employeeId);
+	List<String> selectAllEmployeeId(SqlSession session);
 }

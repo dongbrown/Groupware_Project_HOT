@@ -60,5 +60,10 @@ public class HRServiceImpl implements HRService {
 	public int updateEmployee(RequestEmployee re) {
 		return hrDao.updateEmployee(session, re);
 	}
- 
+
+	@Override
+	public int insertEmployee(RequestEmployee re) {
+		return hrDao.insertEmployee(session, re);
+	}
+
 }
