@@ -1,6 +1,7 @@
 package com.project.hot.chatting.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.hot.chatting.model.dao.HotTalkDao;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.HotTalkAtt;
+import com.project.hot.chatting.model.dto.HotTalkMember;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
 import com.project.hot.chatting.model.dto.ResponseLoginEmployeeDTO;
@@ -76,6 +78,14 @@ public class HotTalkServiceImpl implements HotTalkService {
 	@Override
 	public int insertHotTalkAtt(HotTalkAtt hotTalkAtt) {
 		return dao.insertHotTalkAtt(session, hotTalkAtt);
+	}
+	@Override
+	public int getHotTalkNo(Map<String, Integer> param) {
+		return dao.getHotTalkNo(session, param);
+	}
+	@Override
+	public HotTalkMember selectMember(int employeeNo) {
+		return dao.selectMember(session, employeeNo);
 	}
 
 }
