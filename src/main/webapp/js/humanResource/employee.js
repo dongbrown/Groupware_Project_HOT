@@ -11,17 +11,22 @@ $(document).ready(()=>{
 //수정버튼 눌러 수정
 function updateEmployee(){
 	const $form=$('#updateEmp').get(0);
+	if(!$form.checkValidity()){
+		alert('값을 입력해주세요!');
+		return;
+	}
 	const fd=new FormData($form);
-	
+
+
 	fetch(path+'/api/hr/updateEmployee',{
 		method:"POST",
-		headers: {
-      		"Content-Type": "application/json",
-    	},
-		body:JSON.stringify(no)
+		body:fd
 	})
 	.then(response=>response.text())
-	.update000000aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
 }
 
 //수정 버튼 누를 시 직원의 정보 모달창에 띄우기
@@ -34,7 +39,7 @@ $(document).on('click', '.updateBtn', e=>{
 	const hire=$(e.target).parent().siblings().eq(9).text();
 	const resign=$(e.target).parent().siblings().eq(10).text();
 	const vacation=$(e.target).parent().siblings().eq(11).text();
-	
+
 	$('input[name=employeeNo]').val(no);
 	$('select[name=departmentCode]').children().each((i,e)=>{
 		$(e).attr('selected', $(e).text()==dept?true:false);
@@ -156,7 +161,7 @@ function getDepartmentList() {
 				.text(d.departmentHighCode<=1?d.departmentTitle:`--${d.departmentTitle}`)
 				.click(changeTitle);
 				$target.append($departmentTitle);
-				
+
 				//사원 수정 모달창의 부서 select태그에 option태그 생성
 				const $deptOp=$('<option>').attr('value', d.departmentCode).text(d.departmentTitle)
 								.attr('disabled', d.departmentHighCode<=1);

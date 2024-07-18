@@ -1,8 +1,11 @@
 package com.project.hot.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.project.hot.common.converter.StringToSqlDateConverter;
 
 @Configuration
 public class WebMVCConfig implements WebMvcConfigurer{
@@ -21,6 +24,13 @@ public class WebMVCConfig implements WebMvcConfigurer{
 		registry.addViewController("/department").setViewName("humanResource/department");
 		registry.addViewController("/employee").setViewName("humanResource/employee");
 	}
+
+	@Override
+	public void addFormatters(FormatterRegistry registry) {
+		registry.addConverter(new StringToSqlDateConverter());
+	}
+
+
 
 //	@Bean
 //	HandlerExceptionResolver hadleException() {

@@ -103,11 +103,11 @@
 			</div>
 			<div class="modal-body">
 				<form id="updateEmp">
-					<input type="hidden" name="employeeNo">
-					이름 : <input type="text" name="employeeName" placeholder="이름"><br><br>
-					부서 : <select id="modalDept" name="departmentCode"></select><br><br>
-					직급 : 
-					<select id="modalPosition" name="positionCode">
+					<input type="hidden" name="employeeNo" required>
+					이름 : <input type="text" name="employeeName" placeholder="이름" required><br><br>
+					부서 : <select id="modalDept" name="departmentCode" required></select><br><br>
+					직급 :
+					<select id="modalPosition" name="positionCode" required>
 						<option value='1'>대표이사</option>
 						<option value='2'>부장</option>
 						<option value='3'>차장</option>
@@ -115,10 +115,10 @@
 						<option value='5'>대리</option>
 						<option value='6'>사원</option>
 					</select><br><br>
-					월급 : <input type="number" name="employeeSalary" placeholder="월급"><br><br>
-					입사일 : <input type="date" name="employeeHireDate"><br><br>
+					월급 : <input type="number" name="employeeSalary" placeholder="월급" required><br><br>
+					입사일 : <input type="date" name="employeeHireDate" required><br><br>
 					퇴사일 : <input type="date" name="employeeResignationDay"><br><br>
-					총 휴가일수 : <input type="number" placeholder="월급" name="employeeTotalVacation"><br><br>
+					총 휴가일수 : <input type="number" placeholder="총 휴가일수" name="employeeTotalVacation" required><br><br>
 				</form>
 			</div>
 			<div class="modal-footer">

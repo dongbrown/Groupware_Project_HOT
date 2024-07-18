@@ -15,6 +15,6 @@ public interface HRDao {
 	int insertDepartment(SqlSession session, RequestDepartment rd);
 	int updateDepartment(SqlSession session, RequestDepartment rd);
 	int deleteDepartment(SqlSession session, RequestDepartment rd);
-	int updateEmployee(SqlSession session, RequestEmployee rd);
+	int updateEmployee(SqlSession session, RequestEmployee re);
 	int deleteEmployee(SqlSession session, int no);
 }

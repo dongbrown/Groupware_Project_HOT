@@ -95,7 +95,7 @@ public class HRController {
 	}
 
 	@PostMapping("/updateEmployee")
-	public String updateEmployee(@RequestBody RequestEmployee re) {
+	public String updateEmployee(@ModelAttribute RequestEmployee re) {
 		int result=HRService.updateEmployee(re);
 		if(result>0) {
 			return "수정 성공!";
