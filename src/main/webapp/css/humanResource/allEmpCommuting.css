@@ -1,0 +1,26 @@
+/*
+	전 사원 관리 페이지용 css~
+*/
+
+.allEmpCommuting {
+	display: flex;
+	justify-content: center;
+}
+
+.allEmpCommuting-div {
+	width: 90%;
+    min-height: 87vh;
+    padding: 2%;
+    margin-bottom: 1%;
+}
+
+.search-div {
+	margin-bottom: 1%;
+    margin-top: 3%;
+    width: 50%;
+}
+
+.search-form {
+	display: flex;
+    align-items: center;
+}
