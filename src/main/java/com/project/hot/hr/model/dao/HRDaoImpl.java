@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.dto.ResponseDepartment;
 
@@ -43,6 +44,11 @@ public class HRDaoImpl implements HRDao {
 	@Override
 	public int deleteEmployee(SqlSession session, int no) {
 		return session.delete("hr.deleteEmployee", no);
+	}
+
+	@Override
+	public int updateEmployee(SqlSession session, RequestEmployee re) {
+		return session.update("employee.updateEmployee", re);
 	}
 
 }

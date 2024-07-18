@@ -8,6 +8,52 @@ $(document).ready(()=>{
 	getDepartmentList();
 })
 
+//수정버튼 눌러 수정
+function updateEmployee(){
+	const $form=$('#updateEmp').get(0);
+	if(!$form.checkValidity()){
+		alert('값을 입력해주세요!');
+		return;
+	}
+	const fd=new FormData($form);
+
+
+	fetch(path+'/api/hr/updateEmployee',{
+		method:"POST",
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+}
+
+//수정 버튼 누를 시 직원의 정보 모달창에 띄우기
+$(document).on('click', '.updateBtn', e=>{
+	const no=$(e.target).parent().siblings().eq(0).text();
+	const dept=$(e.target).parent().siblings().eq(1).text();
+	const position=$(e.target).parent().siblings().eq(2).text();
+	const name=$(e.target).parent().siblings().eq(3).text();
+	const salary=$(e.target).parent().siblings().eq(8).text();
+	const hire=$(e.target).parent().siblings().eq(9).text();
+	const resign=$(e.target).parent().siblings().eq(10).text();
+	const vacation=$(e.target).parent().siblings().eq(11).text();
+
+	$('input[name=employeeNo]').val(no);
+	$('select[name=departmentCode]').children().each((i,e)=>{
+		$(e).attr('selected', $(e).text()==dept?true:false);
+	});
+	$('select[name=positionCode]').children().each((i,e)=>{
+		$(e).attr('selected', $(e).text()==position?true:false);
+	});
+	$('input[name=employeeName]').val(name);
+	$('input[name=employeeSalary]').val(salary);
+	$('input[name=employeeHireDate]').val(hire);
+	$('input[name=employeeResignationDay]').val(resign);
+	$('input[name=employeeTotalVacation]').val(vacation);
+});
+
 //사원 삭제 함수
 function deleteEmployee(e){
 	const no=$(e.target).parent().siblings().first().text();
@@ -91,7 +137,8 @@ function makeEmployeeTable(employees){
 		const $empResign=$('<td>').text(e.employeeResignationDay);
 		const $empTotalVacation=$('<td>').text(e.employeeTotalVacation);
 		const $btnTd=$('<td>');
-		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary').attr('data-bs-toggle', 'modal').attr('data-bs-target', '#update-modal');
+		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary').attr('data-bs-toggle', 'modal')
+						.attr('data-bs-target', '#update-modal').addClass('updateBtn');
 		const $deleteBtn=$('<button>').text('삭제').addClass('btn btn-danger').attr('onclick', 'deleteEmployee(event)');
 		$btnTd.append($updateBtn).append($deleteBtn);
 		$tr.append($empNo).append($empDept).append($empPosition).append($empName).append($empId).append($empPhone)
@@ -109,10 +156,16 @@ function getDepartmentList() {
 			const $target=$('.department-menu');
 			$target.append($('<span>').addClass('dropdown-item').text('부서전체').click(changeTitle));
 			data.forEach(d=>{
+				//검색창 드롭다운 메뉴에 append
 				const $departmentTitle=$('<span>').addClass('dropdown-item')
 				.text(d.departmentHighCode<=1?d.departmentTitle:`--${d.departmentTitle}`)
 				.click(changeTitle);
 				$target.append($departmentTitle);
+
+				//사원 수정 모달창의 부서 select태그에 option태그 생성
+				const $deptOp=$('<option>').attr('value', d.departmentCode).text(d.departmentTitle)
+								.attr('disabled', d.departmentHighCode<=1);
+				$('#modalDept').append($deptOp);
 			});
 		})
 		.catch(error => {

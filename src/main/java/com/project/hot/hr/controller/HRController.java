@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
 import com.project.hot.hr.model.dto.RequestDepartment;
@@ -93,13 +94,13 @@ public class HRController {
 		}
 	}
 
-//	@PostMapping("/updateEmployee")
-//	public String updateEmployee(@RequestBody ) {
-//		int result=HRService.updateEmployee();
-//		if(result>0) {
-//			return "삭제 성공!";
-//		}else {
-//			return "삭제 실패!";
-//		}
-//	}
+	@PostMapping("/updateEmployee")
+	public String updateEmployee(@ModelAttribute RequestEmployee re) {
+		int result=HRService.updateEmployee(re);
+		if(result>0) {
+			return "수정 성공!";
+		}else {
+			return "수정 실패!";
+		}
+	}
 }

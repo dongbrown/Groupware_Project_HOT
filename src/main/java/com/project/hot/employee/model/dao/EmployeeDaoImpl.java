@@ -39,7 +39,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	//테이블용 페이징 처리된 출퇴근 리스트
 	@Override
 	public List<Commuting> selectCommutingPagingList(SqlSession session, Map<String, Object> param) {
-		return session.selectList("employee.selectCommutingPagingList", param,
+		return session.selectList("employee.selectCommutingList", param,
 				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
 	}
 
