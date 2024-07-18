@@ -36,7 +36,7 @@ function createPagination(cPage, totalPages, fn){
 	}
 
 	//다음 버튼 만들기
-	const $nextLi=$('<li>').addClass(`paginate_button page-item ${cPage==totalPages?'disabled':'next'}`);
+	const $nextLi=$('<li>').addClass(`paginate_button page-item ${cPage==totalPages||totalPages==0?'disabled':'next'}`);
 	const $nextA=$('<button>').addClass(`page-link `).attr('tabindex', '0')
 	.attr('onclick', `${endPage>=totalPages?`${fn}(${endPage})`:`${fn}(${nextPage})`}`).text('다음');
 

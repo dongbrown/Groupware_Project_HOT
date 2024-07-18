@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.hot.employee.model.dao.EmployeeDao;
+import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.hr.model.dao.HRDao;
 import com.project.hot.hr.model.dto.RequestDepartment;
 
@@ -50,4 +51,14 @@ public class HRServiceImpl implements HRService {
 		return hrDao.deleteDepartment(session, rd);
 	}
 
+	@Override
+	public int deleteEmployee(int no) {
+		return hrDao.deleteEmployee(session, no);
+	}
+
+	@Override
+	public int updateEmployee(RequestEmployee re) {
+		return hrDao.updateEmployee(session, re);
+	}
+ 
 }

@@ -48,12 +48,9 @@ public class EmployeeRestController {
 	public Map<String, Object> getEmployeeList(
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "12") int numPerpage,
-			@ModelAttribute SearchEmployeeData sd) {
+			@ModelAttribute SearchEmployeeData sed) {
 		Map<String, Object> param=new HashMap<>();
-		if(sd.getTitle()!=null) {
-			param.put("title", sd.getTitle().equals("부서선택")||sd.getTitle().equals("부서전체")?"":sd.getTitle());
-		}
-		param.put("name", sd.getName()==null?"":sd.getName());
+		param.put("sed", sed);
 		param.put("cPage", cPage);
 		param.put("numPerpage", numPerpage);
 		return service.selectEmployeeList(param);
@@ -92,7 +89,7 @@ public class EmployeeRestController {
 			String path=req.getServletContext().getRealPath("/upload/employee"); //저장 경로
 			String oriname=upFile.getOriginalFilename(); //원본 이름
 			String ext=oriname.substring(oriname.lastIndexOf(".")); //확장자
-			String rename=LocalDateTime.now().toLocalDate().toString()+"_"+UUID.randomUUID().toString()+ext; // 변경 이름
+			String rename=LocalDateTime.now().toLocalDate().toString()+"_"+(int)(Math.random()*10000000)+ext; // 변경 이름
 
 			File dir=new File(path);
 			if(!dir.exists()) dir.mkdirs(); //폴더 없으면 생성

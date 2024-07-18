@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.Work;
 
 public interface WorkDao {
@@ -18,5 +19,6 @@ public interface WorkDao {
 	int selectworkAllCountByEmpNo(SqlSession session,Map<String,Integer> param);
 	int selectworkAllCount(SqlSession session);
 	Work selectWorkByWorkNo(SqlSession session,int workNo);
-
+	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
+	int selectProjectAllCount(SqlSession session,Map<String,Integer> param);
 }

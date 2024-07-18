@@ -144,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
 						}
 
 						if(d.receiver.length!=0){
-							// console.log(d.receiver[0]);
 							$name.innerText=d.receiver[0].receiver.employeeName;
 							$dept.innerText=d.receiver[0].receiverDept.departmentTitle+"부";
 							$employee.appendChild($photo);
@@ -156,25 +155,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 							$option.appendChild($employee);
 						}
-						$employee.addEventListener("dblclick",()=>{
-							// 핫톡 사원 눌렀을 때 우측 상단 메세지들 변경 로직 및 채팅창 초기화
-							const $chattingRoom = $(".chat-messages");
-							$chattingRoom.empty();
-							document.querySelector(".chat-user-name").innerText=d.receiver[0].receiver.employeeName;
-							document.querySelector('.user-status').innerText=d.receiver[0].receiverStatus.hotTalkStatus;
-							// 예외처리 필요(d.profile, d.employeePhoto) → null 일 수도 있음
-							// console.log(d);
-							if(d.receiver[0].receiver.employeePhoto!=null){
-								document.querySelector(".target-avatar").src=path+"/upload/employee/"+d.receiver[0].receiver.employeePhoto;
-							} else {
-								document.querySelector(".target-avatar").src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s";
-							}
-							if(d.receiver[0].receiverStatus.hotTalkStatusMessage != null){
-								document.querySelector(".user-status-message").innerText=innerText=d.receiver[0].receiverStatus.hotTalkStatusMessage;
-							} else {
-								document.querySelector(".user-status-message").innerText=d.receiver[0].receiverDept.departmentTitle+"부";
-							}
-
+						$employee.addEventListener("dblclick",(e)=>{
+							const clickedEmployeeNo = e.target.getAttribute("data-employeeno");
+							console.log(clickedEmployeeNo);
+							console.log(loginEmployeeNo);
+							const checkChattingHistory = new CommonMessage("check", loginEmployeeNo, clickedEmployeeNo).convert();
+							chatServer.send(checkChattingHistory);
 						})
 					});
 				// console.log($option);
@@ -285,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}); break;
 				case '갠톡':
 					data.forEach(d=>{
-						// console.log(d);
+						console.log(d);
 						const $chattingroom = document.createElement("div");
 						const $hotTalkTitle = document.createElement("h5");
 						$hotTalkTitle.innerText=d.hotTalkTitle;
@@ -353,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					});*/
 					// 해당 방 번호 저장
 					$("#room-no").val(data[0].hotTalkNo);
-					// console.log(data);
+					console.log(data);
 					// console.log($("#room-no").val());
 					data.forEach((d,i) => {
 						let receiver;
@@ -370,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								$(".user-status").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatus);
 								$(".user-status-message").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatusMessage);
 								if(d.contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeePhoto!=null){
+									// console.log(data);
 									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeePhoto);
 								} else {
 									$(".target-avatar").attr("src","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s");
@@ -380,7 +367,8 @@ document.addEventListener('DOMContentLoaded', function() {
 								$(".user-status").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatus);
 							$(".user-status-message").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatusMessage);
 								if(contents[0].hotTalkContentSender.hotTalkMember.employeePhoto!=null){
-									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkReceiver[0].employeePhoto);
+									console.log(d);
+									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkContentSender.hotTalkMember.employeePhoto);
 								} else {
 									$(".target-avatar").attr("src","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s");
 								}
@@ -461,6 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						});
 				});
 				break;
+
 			}
 		}
 
@@ -472,6 +461,26 @@ document.addEventListener('DOMContentLoaded', function() {
 			case "file":
 				openChatRoom(data.sender, data.hotTalkNo);	// openChatRoom 함수 → 파일 일 경우 분기처리 필요
 				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
+			break;
+			case "nohistory":
+				const target = JSON.parse(data.msg);
+				// 핫톡 사원 눌렀을 때 우측 상단 메세지들 변경 로직 및 채팅창 초기화
+				const $chattingRoom = $(".chat-messages");
+				$chattingRoom.empty();
+				document.querySelector(".chat-user-name").innerText=target.hotTalkMember.employeeName;
+				document.querySelector('.user-status').innerText=target.hotTalkStatus.hotTalkStatus;
+				console.log(target);
+				if(target.hotTalkMember.employeePhoto!=null){
+					document.querySelector(".target-avatar").src=path+"/upload/employee/"+target.hotTalkMember.employeePhoto;
+				} else {
+					document.querySelector(".target-avatar").src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s";
+				}
+				if(target.hotTalkStatus.hotTalkStatusMessage != null){
+					document.querySelector(".user-status-message").innerText=innerText=target.hotTalkStatus.hotTalkStatusMessage;
+				} else {
+					document.querySelector(".user-status-message").innerText=target.department.departmentTitle+"부";
+				}
+				// 채팅 내용 전송 시 채팅방 생성 로직 구현 필요(기존 이벤트 삭제 후 채팅방 생성 → 채팅방 번호 기준으로 채팅 Content Insert)
 			break;
 		}
 	}
@@ -525,8 +534,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			$(".chat-msg").val("");
 		}
 	}
+	// img 파일 미리보기를 위한 정규표현식
 	const imageRegex = /\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg|jfif)$/i;
-
+	// 이미지 파일인지 확인 함수
 	function isImageFile(filename) {
 	    return imageRegex.test(filename);
 	}

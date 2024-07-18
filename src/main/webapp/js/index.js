@@ -13,12 +13,16 @@ function checkAttStatus(){
 	fetch(path+'/api/employee/attendanceStatus')
 	.then(response=>response.text())
 	.then(data=>{
-		if(data=='go'||(currHour<8||currHour>=15)){
+		if(data=='go'){
 			//출근한 상태, 퇴근은 안함 - 출근버튼 비활성화, 퇴근버튼 활성화
 			$('.btn-go-work').prop('disabled', true);
 			$('.btn-leave-work').prop('disabled', false);
 		}else if(data=='leave'){
 			//퇴근 한 상태 - 출근버튼 비활성화, 퇴근버튼 비활성화
+			$('.btn-go-work').prop('disabled', true);
+			$('.btn-leave-work').prop('disabled', true);
+		}else if(currHour<=8||currHour>=15){
+			//8시 이전, 15시 이후 출근 버튼 비활성화
 			$('.btn-go-work').prop('disabled', true);
 			$('.btn-leave-work').prop('disabled', true);
 		}else{

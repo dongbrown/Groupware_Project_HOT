@@ -206,7 +206,7 @@ function getTodayDate() {
 
 	//부서 데이터 가져오는 함수
 	function getDepartmentList() {
-		fetch(path + '/api/departmentList')
+		fetch(path + '/api/employee/departmentList')
 			.then(response => response.json())
 			.then(data => {
 				const $target = $('#select-dept');

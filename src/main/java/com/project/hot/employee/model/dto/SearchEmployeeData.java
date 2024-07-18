@@ -1,6 +1,8 @@
 package com.project.hot.employee.model.dto;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +20,8 @@ public class SearchEmployeeData {
 	private String[] positions;
 	private int minSalary;
 	private int maxSalary;
-	private LocalDateTime minHire;
-	private LocalDateTime maxHire;
-	private LocalDateTime minResign;
-	private LocalDateTime maxResign;
+	private Date minHire;
+	private Date maxHire;
+	private Date minResign;
+	private Date maxResign;
 }
