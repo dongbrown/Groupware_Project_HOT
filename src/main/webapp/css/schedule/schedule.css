@@ -242,10 +242,16 @@ body {
     font-size: 0.8em;
 }
 
-#calendar2 .fc-center h2 {
+#calendar2  {
     font-size: 1.2em;
     margin: 0;
 }
+.fc-center h2{
+	font-size: 3.0em;  /* 메인 캘린더 헤더 크기 증가 */
+    font-weight: bold;
+    color: #333;
+}
+
 
 #calendar2 .fc-button {
     padding: 0.2em 0.6em;
@@ -254,6 +260,23 @@ body {
 #calendar2 .fc-day-header {
     font-size: 0.9em;
     padding: 0.2em 0;
+}
+
+
+
+#calendar2 .fc-center h2 {
+    font-size: 1.2em;
+}
+
+/* 이전/다음 버튼 스타일 */
+.fc-button-group button {
+    background-color: #f8f9fa;
+    border-color: #ddd;
+    color: #333;
+}
+
+.fc-button-group button:hover {
+    background-color: #e9ecef;
 }
 
 
@@ -385,15 +408,59 @@ body {
     max-width: 1200px;
     margin: 0 auto;
 }
-
+/* 기존 스타일 */
 .fc-event {
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* 왼쪽 정렬로 변경 */
+    text-align: left; /* 왼쪽 정렬로 변경 */
 }
 
-.fc-day-grid-event .fc-content {
+.fc-event-inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.fc-event-title {
+    padding: 2px 5px; /* 상하 여백 추가 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1; /* 남는 공간을 모두 차지하도록 설정 */
+    min-width: 0; /* flexbox에서 텍스트가 줄어들 수 있도록 설정 */
+}
+
+/* 일정 길이에 따른 스타일 조정 */
+.fc-event.short .fc-event-title {
+    justify-content: center; /* 짧은 일정은 중앙 정렬 */
+}
+
+.fc-event.medium .fc-event-title {
+    justify-content: flex-start; /* 중간 길이 일정은 왼쪽 정렬 */
+    padding-left: 10px; /* 왼쪽 여백 추가 */
+}
+
+.fc-event.long .fc-event-title {
+    justify-content: space-between; /* 긴 일정은 양쪽 정렬 */
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* 일정 높이 조정 */
+.fc-event {
+    min-height: 22px; /* 최소 높이 설정 */
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .fc-event-title {
+        font-size: 0.9em; /* 모바일에서 글자 크기 줄임 */
+    }
+
+    .fc-event {
+        min-height: 20px; /* 모바일에서 최소 높이 줄임 */
+    }
 }
 
 /* 반응형 디자인을 위한 미디어 쿼리 */

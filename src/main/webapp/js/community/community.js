@@ -52,10 +52,13 @@ $(document).ready(function() {
         });
     });
 
-    // 북마크 토글
-    $(".star").click(function(e) {
+
+    // 즐겨찾기 토글
+    $(document).on('click', '.star', function(e) {
         e.stopPropagation(); // 이벤트 버블링 방지
-        var communityNo = $(this).data('community-no');
+        var $star = $(this);
+        var communityNo = $star.data('community-no');
+        var $community = $star.closest('.group');
 
         $.ajax({
             url: '/community/toggleBookmark',
@@ -63,7 +66,19 @@ $(document).ready(function() {
             data: { communityNo: communityNo },
             success: function(response) {
                 if(response.success) {
-                    location.reload(); // 페이지 새로고침
+                    $star.toggleClass('active');
+                    if (response.bookmarked) {
+                        $star.text('★');
+                        // 즐겨찾기에 추가
+                        var $favoritesSection = $('#bookmarkedCommunities');
+                        if ($favoritesSection.find('[data-community-no="' + communityNo + '"]').length === 0) {
+                            $favoritesSection.append($community.clone());
+                        }
+                    } else {
+                        $star.text('☆');
+                        // 즐겨찾기에서 제거
+                        $('#bookmarkedCommunities').find('[data-community-no="' + communityNo + '"]').remove();
+                    }
                 } else {
                     alert(response.message);
                 }

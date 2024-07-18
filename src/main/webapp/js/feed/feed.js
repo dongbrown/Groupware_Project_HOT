@@ -115,6 +115,24 @@ function loadFeeds() {
     });
 }
 
+function withdrawCommunity() {
+    const communityNo = $("#community-container").data("id");
+    $.ajax({
+        type: 'DELETE',
+        url: '/community/feed/withdrawCommunity',
+        contentType: 'application/json', // JSON 형식으로 보냄
+        data: JSON.stringify({ id: communityNo }),
+        success: function(response) {
+            alert('커뮤니티를 탈퇴하였습니다.');
+            location.href = '/community/';
+        },
+        error: function(xhr, status, error) {
+            console.log('커뮤니티 탈퇴 오류:', error);
+            alert('커뮤니티 탈퇴 중 오류가 발생했습니다.');
+        }
+    });
+}
+
 function displayFeeds(feeds) {
     const container = $("#feed-container");
     container.empty();

@@ -130,7 +130,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">메일 조회</h6>
-                        <a class="collapse-item" href="utilities-color.html">전체 메일</a>
+                        <a class="collapse-item" href="${path }/email/">전체 메일</a>
                         <a class="collapse-item" href="utilities-border.html">받은 메일함</a>
                         <a class="collapse-item" href="utilities-animation.html">내게 쓴 메일함</a>
                         <a class="collapse-item" href="utilities-other.html">보낸 메일함</a>

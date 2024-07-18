@@ -51,7 +51,16 @@
                                     <tr>
                                         <td>${community.communityNo}</td>
                                         <td>
-                                            ${community.communityTitle}
+                                            <c:choose>
+                                                <c:when test="${community.communityIsOpen ne 'N'}">
+                                                    <a href="${pageContext.request.contextPath}/community/feed/list?communityNo=${community.communityNo}">
+                                                        ${community.communityTitle}
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${community.communityTitle}
+                                                </c:otherwise>
+                                            </c:choose>
                                             <c:if test="${community.communityIsOpen eq 'N'}">
                                                 <img src="${pageContext.request.contextPath}/images/lock.png" alt="비공개" style="width: 16px; height: 16px; margin-left: 5px;">
                                             </c:if>

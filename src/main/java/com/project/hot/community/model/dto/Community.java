@@ -15,4 +15,9 @@ public class Community {
     private String communityIntroduce;
     private String communityIsOpen;
     private List<CommunityUser> members;
+    private String employeePhotos;
+    private List<String> employeePhotoList;
+
+
+
 }

@@ -73,4 +73,25 @@ public class CommunityServiceImpl implements CommunityService {
             return false;
         }
     }
+
+    @Override
+    public void deleteCommunityUser(int communityNo, int employeeNo) {
+        try {
+
+            int result = dao.deleteCommunityUser(session, communityNo, employeeNo);
+            if (result == 0) {
+                throw new Exception("삭제된 레코드가 없습니다.");
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Community> getCommunitiesWithEmployeePhotos() {
+    	Community result = dao.getCommunitiesWithEmployeePhotos(session).get(0);
+    	System.out.println(result);
+        return dao.getCommunitiesWithEmployeePhotos(session);
+    }
+
 }

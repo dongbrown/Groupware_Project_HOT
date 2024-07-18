@@ -61,4 +61,17 @@ public class CommunityDaoImpl implements CommunityDao {
 	public int joinCommunity(SqlSession session, CommunityUser communityUser) {
 		return session.insert("community.joinCommunity", communityUser);
 	}
+
+	@Override
+	public int deleteCommunityUser(SqlSession session, int communityNo, int employeeNo) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("communityNo", communityNo);
+	    params.put("employeeNo", employeeNo);
+	    return session.delete("community.deleteCommunityUser", params);
+	}
+
+	 public List<Community> getCommunitiesWithEmployeePhotos(SqlSession session) {
+	        return session.selectList("community.getCommunitiesWithEmployeePhotos");
+	 }
+
 }

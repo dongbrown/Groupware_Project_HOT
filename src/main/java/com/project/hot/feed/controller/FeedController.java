@@ -195,7 +195,7 @@ public class FeedController {
     }
 
     @GetMapping("/nonParticipants")
-    public ResponseEntity<?> getNonParticipants(@RequestParam int communityNo) {
+    public ResponseEntity<Map<String, Object>> getNonParticipants(@RequestParam int communityNo) {
         try {
             List<Employee> nonParticipants = communityService.getNonParticipants(communityNo);
             System.out.println(nonParticipants);
@@ -212,6 +212,25 @@ public class FeedController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+    @DeleteMapping("/withdrawCommunity")
+    @ResponseBody
+    public ResponseEntity<String> withdrawCommunity(@RequestBody Map<String, Integer> params) {
+        try {
+            int communityNo = params.get("id");
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Employee loginEmployee = (Employee) auth.getPrincipal();
+            int employeeNo = loginEmployee.getEmployeeNo();
+            communityService.deleteCommunityUser(communityNo, employeeNo);
+            return ResponseEntity.ok("커뮤니티 탈퇴 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("커뮤니티 탈퇴 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+
+
 
 
 
