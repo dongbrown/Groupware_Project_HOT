@@ -15,7 +15,9 @@
 		<h2>사원 계정 생성</h2>
 		<div class="create-div">
 			<form id="createForm">
-				아이디 : <input type="text" placeholder="아이디" name="employeeId" required><p style="color:red;"></p><br>
+				<div class="id-div mb-0">
+					아이디 : <input type="text" placeholder="아이디" name="employeeId" style="margin-left:5px;" required><p style="color:red;font-size:0.9rem"></p>
+				</div>
 				비밀번호 : <input type="text" name="employeePassword" value="1234" readonly style="background-color: lightgray;"><br>
 				부서 : <select name="departmentCode" required></select><br>
 				직급 :
@@ -32,7 +34,7 @@
 				휴대폰 번호 : <input type="text" placeholder="핸드폰번호 입력, '-'빼고 입력하세요 " name="employeePhone" required><br>
 				주소 :
 					<input type="button" onclick="sample2_execDaumPostcode()" value="주소 찾기"><br>
-					<input type="text" id="address" placeholder="주소" style="width: 300px;" name="employeeAddress" required><br>
+					<input type="text" id="address" placeholder="주소" style="width: 300px;" name="employeeAddress" readonly required><br>
 					<input type="text" id="detailAddress" placeholder="상세주소" style="width: 300px;"><br>
 				월급 : <input type="number" name="employeeSalary" placeholder="월급" required><br>
 				입사일 : <input type="date" name="employeeHireDate" required><br>

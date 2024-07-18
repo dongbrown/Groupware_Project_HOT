@@ -19,15 +19,19 @@ function createEmployee(){
 	const fd=new FormData($form);
 
 	//아이디 중복 확인
-
+	if($('input[name=employeeId]').next().text() !== ''){
+		alert('중복된 아이디 값입니다!');
+		return;
+	}
+	
 	//아이디 4글자 이상 확인
-	if(fd.get('employeeId').length()<4){
+	if(fd.get('employeeId').length<4){
 		alert('아이디는 4글자 이상!');
 		return;
 	}
 
 	//패스워드 4글자 이상 확인
-	if(fd.get('employeePassword').length()<4){
+	if(fd.get('employeePassword').length<4){
 		alert('비밀번호는 4글자 이상!');
 		return;
 	}
@@ -40,8 +44,8 @@ function createEmployee(){
 	}
 
 	//주민번호 합치기
-	const preSsn=fd.get('preSsn'); //주민번호 앞자리
-	const postSsn=fd.get('postSsn'); //주민번호 뒷자리
+	const preSsn=fd.get('preSsn').trim(); //주민번호 앞자리
+	const postSsn=fd.get('postSsn').trim(); //주민번호 뒷자리
 	const ssn=preSsn+'-'+postSsn;
 
 	//주민번호 옳바른지 확인
@@ -61,7 +65,7 @@ function createEmployee(){
 
 	//주소에 상세주소 합치기
 	let address=fd.get('employeeAddress');
-	address+=' '+$('#detailAddress').val();
+	address+=' '+$('#detailAddress').val().trim();
 	fd.set('employeeAddress', address);
 
 	fetch(path+'/api/hr/insertEmployee',{
