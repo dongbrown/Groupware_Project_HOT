@@ -25,7 +25,7 @@ function updateEmployee(){
 	.then(response=>response.text())
 	.then(data=>{
 		alert(data);
-		location.reload();
+		searchEmployee(1);
 	})
 }
 
@@ -67,7 +67,7 @@ function deleteEmployee(e){
 	.then(response=>response.text())
 	.then(data=>{
 		alert(data);
-		location.reload();
+		searchEmployee(1);
 	})
 }
 
@@ -134,10 +134,10 @@ function makeEmployeeTable(employees){
 		const $empBirth=$('<td>').text(e.employeeBirthDay);
 		const $empSalary=$('<td>').text(e.employeeSalary);
 		const $empHire=$('<td>').text(e.employeeHireDate);
-		const $empResign=$('<td>').text(e.employeeResignationDay);
+		const $empResign=$('<td>').text(e.employeeResignationDay==null?'-':e.employeeResignationDay);
 		const $empTotalVacation=$('<td>').text(e.employeeTotalVacation);
 		const $btnTd=$('<td>');
-		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary').attr('data-bs-toggle', 'modal')
+		const $updateBtn=$('<button>').text('수정').addClass('btn btn-primary mr-1').attr('data-bs-toggle', 'modal')
 						.attr('data-bs-target', '#update-modal').addClass('updateBtn');
 		const $deleteBtn=$('<button>').text('삭제').addClass('btn btn-danger').attr('onclick', 'deleteEmployee(event)');
 		$btnTd.append($updateBtn).append($deleteBtn);

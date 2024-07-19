@@ -39,3 +39,7 @@
 .dept-table {
 	text-align: center;
 }
+
+.dept-table td {
+	vertical-align: middle;
+}

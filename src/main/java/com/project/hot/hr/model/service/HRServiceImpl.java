@@ -1,6 +1,8 @@
 package com.project.hot.hr.model.service;
 
+import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.project.hot.employee.model.dao.EmployeeDao;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.hr.model.dao.HRDao;
+import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
+import com.project.hot.hr.model.dto.ResponseCommuting;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,5 +64,37 @@ public class HRServiceImpl implements HRService {
 	public int updateEmployee(RequestEmployee re) {
 		return hrDao.updateEmployee(session, re);
 	}
- 
+
+	@Override
+	public int insertEmployee(RequestEmployee re) {
+		return hrDao.insertEmployee(session, re);
+	}
+
+	@Override
+	public Map<String, Object> selectAllEmpCommuting(Map<String, Object> param) {
+		Map<String, Object> result=new HashMap<>();
+		result.put("totalPage", Math.ceil((double)hrDao.countAllEmpCommuting(session, (RequestCommuting)param.get("rc"))/15));
+		List<ResponseCommuting> rc=hrDao.selectAllEmpCommuting(session, param);
+
+		//총 근무 시간 계산
+		rc.forEach(e->{
+			if(e.getCommutingGoWorkTime()!=null && e.getCommutingLeaveWorkTime()!=null) {
+				e.setTotalWorkTime((int)Duration.between(e.getCommutingGoWorkTime(), e.getCommutingLeaveWorkTime()).toMinutes() / 60);
+			}
+		});
+
+		result.put("commutings", rc);
+		return result;
+	}
+
+	@Override
+	public int deleteCommuting(int no) {
+		return hrDao.deleteCommuting(session, no);
+	}
+
+	@Override
+	public int updateCommuting(RequestCommuting rc) {
+		return hrDao.updateCommuting(session, rc);
+	}
+
 }

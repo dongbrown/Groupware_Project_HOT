@@ -223,11 +223,11 @@
 	                    data-parent="#accordionSidebar">
 	                    <div class="bg-white py-2 collapse-inner rounded">
 	                        <h6 class="collapse-header">인사 잘하기</h6>
-	                        <a class="collapse-item" href="${path }/employee">사원 관리</a>
-	                        <a class="collapse-item" href="${path }/department">부서관리</a>
-	                        <a class="collapse-item" href="#">전 사원 근태내역</a>
+	                        <a class="collapse-item" href="${path }/hr/employee">사원 관리</a>
+	                        <a class="collapse-item" href="${path }/hr/department">부서관리</a>
+	                        <a class="collapse-item" href="${path }/hr/allEmpCommuting">전 사원 근태내역</a>
 	                        <a class="collapse-item" href="#">전 사원 휴가 내역</a>
-	                        <a class="collapse-item" href="#">사원 계정 생성</a>
+	                        <a class="collapse-item" href="${path }/hr/createEmployee">사원 계정 생성</a>
 	                    </div>
 	                </div>
 	            </li>
