@@ -88,10 +88,8 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public List<Community> getCommunitiesWithEmployeePhotos() {
-    	Community result = dao.getCommunitiesWithEmployeePhotos(session).get(0);
-    	System.out.println(result);
-        return dao.getCommunitiesWithEmployeePhotos(session);
+    public List<Community> getCommunitiesWithEmployeePhotos(int employeeNo) {
+        return dao.getCommunitiesWithEmployeePhotos(session, employeeNo);
     }
 
 }
