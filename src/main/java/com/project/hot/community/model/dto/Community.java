@@ -15,7 +15,7 @@ public class Community {
     private String communityIntroduce;
     private String communityIsOpen;
     private List<CommunityUser> members;
-    private String employeePhotos;
+    private String employeePhotos; //배열로 들어옴
     private List<String> employeePhotoList;
 
 
