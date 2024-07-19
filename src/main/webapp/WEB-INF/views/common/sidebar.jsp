@@ -172,7 +172,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">핫톡</h6>
                         <a class="collapse-item" href="${path }/hottalk">HotTalk</a>
-                        <a class="collapse-item" href="utilities-animation.html">환경설정</a>
                     </div>
                 </div>
             </li>

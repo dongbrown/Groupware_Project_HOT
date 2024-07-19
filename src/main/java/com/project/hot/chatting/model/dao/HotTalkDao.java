@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.HotTalkAtt;
+import com.project.hot.chatting.model.dto.HotTalkContent;
 import com.project.hot.chatting.model.dto.HotTalkMember;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
@@ -30,5 +31,6 @@ public interface HotTalkDao {
 	int insertNewChatRoomReceiver(SqlSession session, CommonMessageDTO msg);
 	int getGroupTalkNo(SqlSession session, CommonMessageDTO msg);
 
-
+	// SSE
+	List<HotTalkContent> selectMyMessage(SqlSession session, int employeeNo);
 }

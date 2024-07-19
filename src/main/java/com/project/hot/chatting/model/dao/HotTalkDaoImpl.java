@@ -112,4 +112,9 @@ public class HotTalkDaoImpl implements HotTalkDao {
 		return session.selectOne("hottalk.getGroupTalkNo", msg);
 	}
 
+	@Override
+	public List<HotTalkContent> selectMyMessage(SqlSession session, int employeeNo) {
+		return session.selectList("hottalk.selectMyMessage", employeeNo);
+	}
+
 }
