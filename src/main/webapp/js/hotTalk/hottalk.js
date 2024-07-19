@@ -164,6 +164,21 @@ document.addEventListener('DOMContentLoaded', function() {
 						})
 					});
 				// console.log($option);
+				    $('.search-bar>.search-input').on('keyup', function(){
+						if($(this).val().length>1){
+							$('#option-result .hotTalkEmployee h5').each(function(){
+								if($(this).text().match($('.search-bar>.search-input').val())){
+									$(this).parent().parent().show();
+								} else {
+									$(this).parent().parent().hide();
+								}
+							})
+						} else {
+							$('#option-result .hotTalkEmployee').each(function(){
+								$(this).show();
+							})
+						}
+					})
 				// Modal 창 Start
 				$(".modal-employee-result").text("");
 				const $modalEmployees = $($option).clone();
@@ -546,6 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		// console.log(allEmployee);
 		$(".modal-employee-result").append(allEmployee);
 	})
+
 
 	// 메세지 전송 버튼 클릭 이벤트
 	const sendMsg = function(sender, receiverNo, hotTalkNo){

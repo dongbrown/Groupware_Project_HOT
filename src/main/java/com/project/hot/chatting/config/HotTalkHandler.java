@@ -153,8 +153,10 @@ public class HotTalkHandler extends TextWebSocketHandler {
 								  											   .build();
 						  sendMessage(session, fileMsg);
 						  break;
-			case "check" : int receiverNo = Integer.parseInt(msg.getReceiver());
-						   msg.setReceiverNo(receiverNo);
+			case "check" : if(!(msg.getReceiver()==null||msg.getReceiver().isEmpty())) {
+						   		int receiverNo = Integer.parseInt(msg.getReceiver());
+						   		msg.setReceiverNo(receiverNo);
+						   }
 						   int hotTalkNo = checkChattingHistory(msg.getSender(), msg.getReceiverNo());
 						   responseMsg(msg, hotTalkNo, session);
 						   // 채팅방 더블클릭한 사람, 더블클릭 당한사람 사번 전달해서 실행한 결과(HOT_TALK_NO) 전달
