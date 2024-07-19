@@ -102,7 +102,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 	private void sendMessage(WebSocketSession session, CommonMessageDTO msg) {
 	    // System.out.println(msg.getHotTalkNo() + " " + msg.getMsg() + " " + msg.getSender() + " " + msg.getReceiver() + " " + msg.getEventTime());
 		if(!(msg.getReceiver().equals("") || msg.getType().equals("file"))) msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
-
+		System.out.println(msg);
 		int result = service.insertHotTalkMessage(msg);
 
 	    for (Map.Entry<Integer, WebSocketSession> entry : employees.entrySet()) {
@@ -145,6 +145,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 							break;
 			case "msg" : sendMessage(session, msg); break;
 			case "file" : HotTalkAtt upFile = mapper.readValue(message.getPayload(), HotTalkAtt.class);
+							System.out.println(upFile);
 						  CommonMessageDTO fileMsg = CommonMessageDTO.builder().type("file")
 								  											   .hotTalkNo(upFile.getHotTalkNo())
 								  											   .msg(upFile.getHotTalkOriginalFilename())

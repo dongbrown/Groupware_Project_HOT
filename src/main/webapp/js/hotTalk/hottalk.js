@@ -399,7 +399,6 @@ document.addEventListener('DOMContentLoaded', function() {
 								$(".user-status").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatus);
 								$(".user-status-message").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatusMessage);
 								if(contents[0].hotTalkContentSender.hotTalkMember.employeePhoto!=null){
-									console.log(d);
 									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkContentSender.hotTalkMember.employeePhoto);
 								} else {
 									$(".target-avatar").attr("src","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s");
@@ -407,10 +406,10 @@ document.addEventListener('DOMContentLoaded', function() {
 							}
 							$(".chat-send-btn").click(()=>{
 								// console.log(loginEmployeeNo, receiver, d.contents[0].hotTalkNo, $(".chat-msg").val());
-								sendMsg(parseInt(loginEmployeeNo), receiver, d.contents[0].hotTalkNo);
+								sendMsg(loginEmployeeNo, receiver, d.contents[0].hotTalkNo);
 							});
 						}else{
-							// console.log(d);
+							console.log(d);
 							groupList();
 							$(".target-avatar").attr("src","https://cdn.hankyung.com/photo/202212/01.32245693.1.jpg");
 							$(".chat-user-name").text(d.hotTalkTitle);

@@ -1,6 +1,5 @@
 package com.project.hot.chatting.model.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,13 +57,9 @@ public class HotTalkServiceImpl implements HotTalkService {
 	public int insertHotTalkMessage(CommonMessageDTO msg) {
 	    int result;
 	    try {
-	       // log.info("발신자 정보 저장 시도: " + msg);
 	        result = dao.insertMessageSender(session, msg);
-	       // log.info("발신자 정보 저장 결과: " + result);
 	        if (result > 0) {
-	           // log.info("수신자 정보 저장 시도: " + msg);
 	            result = dao.insertMessageReceiver(session, msg);
-	           // log.info("수신자 정보 저장 결과: " + result);
 	            if (result == 0) {
 	                throw new ChattingException("수신자 정보 저장 실패");
 	            }
@@ -72,13 +67,13 @@ public class HotTalkServiceImpl implements HotTalkService {
 	            throw new ChattingException("발신자 정보 저장 실패");
 	        }
 	    } catch (RuntimeException e) {
-	       // log.error("채팅 내용 저장 중 오류 발생: " + e.getMessage(), e);
 	        throw new ChattingException("채팅 내용 저장 실패 : " + e.getMessage());
 	    }
 	    return result;
 	}
 	@Override
 	public int insertHotTalkAtt(HotTalkAtt hotTalkAtt) {
+		System.out.println(hotTalkAtt);
 		return dao.insertHotTalkAtt(session, hotTalkAtt);
 	}
 	@Override
@@ -143,7 +138,4 @@ public class HotTalkServiceImpl implements HotTalkService {
 	    return dao.getHotTalkNo(session, param);
 	}
 
-	private int getGroupTalkNo(CommonMessageDTO msg) {
-		return dao.getGroupTalkNo(session, msg);
-	}
 }
