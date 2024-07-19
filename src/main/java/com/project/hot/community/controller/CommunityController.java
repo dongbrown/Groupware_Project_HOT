@@ -185,8 +185,9 @@ public class CommunityController {
     public String showCommunity(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
 
-        List<Community> communities = communityService.getCommunitiesWithEmployeePhotos();
+        List<Community> communities = communityService.getCommunitiesWithEmployeePhotos(employeeNo);
 
         // employeePhotos 문자열을 리스트로 변환
         for (Community community : communities) {

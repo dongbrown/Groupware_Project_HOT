@@ -27,7 +27,7 @@ public interface CommunityService {
 
 	void deleteCommunityUser(int communityNo, int employeeNo);
 
-	List<Community> getCommunitiesWithEmployeePhotos();
+	List<Community> getCommunitiesWithEmployeePhotos(int employeeNo);
 
 
 }

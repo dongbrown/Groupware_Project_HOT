@@ -31,7 +31,7 @@ public interface CommunityDao {
 
 	int deleteCommunityUser(SqlSession session, int communityNo, int employeeNo);
 
-    List<Community> getCommunitiesWithEmployeePhotos(SqlSession session);
+    List<Community> getCommunitiesWithEmployeePhotos(SqlSession session, int employeeNo);
 
 
 

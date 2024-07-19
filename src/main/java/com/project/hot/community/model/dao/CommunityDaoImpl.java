@@ -70,8 +70,8 @@ public class CommunityDaoImpl implements CommunityDao {
 	    return session.delete("community.deleteCommunityUser", params);
 	}
 
-	 public List<Community> getCommunitiesWithEmployeePhotos(SqlSession session) {
-	        return session.selectList("community.getCommunitiesWithEmployeePhotos");
+	 public List<Community> getCommunitiesWithEmployeePhotos(SqlSession session, int employeeNo) {
+	        return session.selectList("community.getCommunitiesWithEmployeePhotos", employeeNo);
 	 }
 
 }
