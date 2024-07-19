@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.hot.employee.model.dao.EmployeeDao;
+import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.hr.model.dao.HRDao;
 import com.project.hot.hr.model.dto.RequestCommuting;
@@ -95,6 +96,11 @@ public class HRServiceImpl implements HRService {
 	@Override
 	public int updateCommuting(RequestCommuting rc) {
 		return hrDao.updateCommuting(session, rc);
+	}
+
+	@Override
+	public List<Employee> selectAllEmp() {
+		return hrDao.selectAllEmp(session);
 	}
 
 }

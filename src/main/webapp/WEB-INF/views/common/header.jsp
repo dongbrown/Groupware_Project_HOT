@@ -193,15 +193,15 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="${path }/profile">
+                                <a class="dropdown-item" href="${path }/employee/profile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     프로필
                                 </a>
-                                <a class="dropdown-item" href="${path }/vacation">
+                                <a class="dropdown-item" href="${path }/employee/vacation">
                                     <i class="fas fa-plane fa-sm fa-fw mr-2 text-gray-400"></i>
                                     휴가
                                 </a>
-                                <a class="dropdown-item" href="${path }/commuting">
+                                <a class="dropdown-item" href="${path }/employee/commuting">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     출퇴근 기록
                                 </a>
