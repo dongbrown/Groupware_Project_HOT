@@ -44,11 +44,17 @@ public class ProjectController {
 		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo));
 	};
 
-	@GetMapping("/projectListAll.do")
-	public String projectListAll (@RequestParam(defaultValue = "1") int cPage,
-									@RequestParam("employeeNo") int employeeNo, Model m) {
-		//List<Project> projectListAll = service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo));
-		return "project/projectListAll";
+	@ResponseBody
+	@GetMapping("/projectlistallajax")
+	public Map<String,Object> projectListAll (@RequestParam(defaultValue = "1") int cPage
+												,@RequestParam int employeeNo) {
+		ObjectMapper mapper=new ObjectMapper();
+		try {
+			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo)));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
 	}
 
 	@GetMapping("/projectinsert.do")
@@ -79,6 +85,18 @@ public class ProjectController {
 		}
 	}
 
+	@ResponseBody
+	@PostMapping("/updateProject.do")
+	public ResponseEntity<String> updateProject(@RequestBody Project projectData){
+		try {
+			service.updateProject(projectData);
+			return ResponseEntity.ok("프로젝트 업데이트 성공");
+		} catch (Exception e) {
+			log.error("=========프로젝트 업데이트 중 오류 발생=========", e);
+			return ResponseEntity.badRequest().body("프로젝트 업데이트 실패");
+		}
+	}
+
 //	@ResponseBody
 //	@GetMapping("/selectProjectByNo.do")
 //	public Project selectProjectByNo(@RequestParam("projectNo") int projectNo) {
@@ -104,17 +122,6 @@ public class ProjectController {
 		return result;
 	}
 
-	@ResponseBody
-	@PostMapping("/updateProject.do")
-	public ResponseEntity<String> updateProject(@RequestBody Project projectData){
-		try {
-			service.updateProject(projectData);
-			return ResponseEntity.ok("프로젝트 업데이트 성공");
-		} catch (Exception e) {
-			log.error("=========프로젝트 등록 중 오류 발생=========", e);
-			return ResponseEntity.badRequest().body("프로젝트 업데이트 실패");
-		}
-	}
 
 	@ResponseBody
 	@PostMapping("/deleteProject.do")
@@ -126,5 +133,31 @@ public class ProjectController {
 			log.error("=========프로젝트 등록 중 오류 발생=========", e);
 			return ResponseEntity.badRequest().body("프로젝트 삭제 실패");
 		}
+	}
+
+	@ResponseBody
+	@PostMapping("/requestProject.do")
+	public ResponseEntity<String> insertRequestJoinProject(@RequestBody Map<String, Integer> requestData){
+		try {
+			service.requestJoinProject(requestData);
+			return ResponseEntity.ok("프로젝트 참여 요청 성공");
+		} catch (Exception e) {
+			log.error("=========프로젝트 참여 요청 중 오류 발생=========", e);
+			return ResponseEntity.badRequest().body("프로젝트 참여 요청 실패");
+		}
+	}
+
+	@ResponseBody
+	@PostMapping("/requestProjectlistallajax")
+	public Map<String,Object> requestProjectlistall(@RequestParam(defaultValue = "1") int cPage
+														,@RequestParam int employeeNo){
+		ObjectMapper mapper=new ObjectMapper();
+		try {
+			mapper.writeValueAsString(service.requestProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo)));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return service.requestProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
+
 	}
 }

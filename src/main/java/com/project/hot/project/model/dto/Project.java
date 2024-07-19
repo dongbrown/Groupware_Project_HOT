@@ -37,6 +37,9 @@ public class Project {
 	    private Date projectEndDate;
 	    private int projectProgress;
 	    private String projectStatus;
+	    private String memberPhotos;
+	    private String memberEmployeeNos;
 	    private List<ProjectEmployee> employee;
+	    private RequestProject requestProject;
 
 }

@@ -9,6 +9,7 @@ import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.ProjectEmployee;
+import com.project.hot.project.model.dto.RequestProject;
 
 public interface ProjectDao {
 
@@ -18,9 +19,12 @@ public interface ProjectDao {
 	int selectProjectAllCount(SqlSession session);
 	int insertProject(SqlSession session,Project p);
 	List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session,Map<String,Integer> param);
+	int requestJoinProject(SqlSession session,Map<String,Integer> param);
+	List<Project> requestProjectlistall(SqlSession session,Map<String,Integer> param);
+	int requestProjectlistallCount(SqlSession session,Map<String,Integer> param);
 	int insertProjectEmp(SqlSession session,Map<String,Object> param);
 	int updateProject(SqlSession session,Project p);
-	int updateProjectDeleteEmp(SqlSession session,int projectNo);
+	int updateProjectDeleteEmp(SqlSession session,Map<String,Integer> param);
 	int deleteProject(SqlSession session,int projectNo);
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
 	List<Project> selectProjectAllByEmpNo(SqlSession session, Map<String, Integer> param);

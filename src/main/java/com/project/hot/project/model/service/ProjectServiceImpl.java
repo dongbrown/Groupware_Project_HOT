@@ -12,6 +12,7 @@ import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.project.model.dao.ProjectDao;
 import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.ProjectEmployee;
+import com.project.hot.project.model.dto.RequestProject;
 
 import lombok.RequiredArgsConstructor;
 @Service
@@ -41,7 +42,8 @@ public class ProjectServiceImpl implements ProjectService {
 	public int updateProject(Project p) {
 		int result = dao.updateProject(session, p);
 		if(result>0) {
-			int deleteResult=dao.updateProjectDeleteEmp(session, p.getProjectNo());
+			int deleteResult=dao.updateProjectDeleteEmp(session, Map.of("projectNo",p.getProjectNo(),"employeeNo",p.getEmployeeNo()));
+			System.out.println("지워질 항목 : "+p.getEmployeeNo());
 			if(deleteResult>0) {
 				p.getEmployee().forEach(e -> {
 					dao.insertProjectEmp(session, Map.of("projectNo", p.getProjectNo(), "empNo", e.getEmployeeNo()));
@@ -60,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Map<String,Object> selectProjectAll(Map<String,Integer> param) {
 		Map<String,Object> result=new HashMap<>();
-		if(param.get("employeeNo")==null) {
+		if(param.get("employeeNo")==0) {
 			result.put("depts", dao.selectDeptAll(session));
 			result.put("projects", dao.selectProjectAll(session,param));
 			result.put("totalPage",Math.ceil((double)dao.selectProjectAllCount(session)/param.get("numPerpage")));
@@ -68,6 +70,7 @@ public class ProjectServiceImpl implements ProjectService {
 			result.put("depts", dao.selectDeptAll(session));
 			result.put("projects", dao.selectProjectAllByEmpNo(session,param));
 			result.put("totalPage",Math.ceil((double)dao.selectProjectAllCountByEmpNo(session,param)/param.get("numPerpage")));
+
 		}
 		return result;
 	}
@@ -85,6 +88,19 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<ProjectEmployee> selectEmployeetByProjectNo(Map<String,Integer> param) {
 		return dao.selectEmployeetByProjectNo(session, param);
+	}
+
+	@Override
+	public int requestJoinProject(Map<String, Integer> param) {
+		return dao.requestJoinProject(session, param);
+	}
+
+	@Override
+	public Map<String,Object> requestProjectlistall(Map<String, Integer> param) {
+		Map<String,Object> result=new HashMap<>();
+		result.put("projects", dao.requestProjectlistall(session, param));
+		result.put("totalPage",Math.ceil((double)dao.requestProjectlistallCount(session,param)/param.get("numPerpage")));
+		return result;
 	}
 
 }

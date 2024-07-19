@@ -7,6 +7,7 @@ import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.ProjectEmployee;
+import com.project.hot.project.model.dto.RequestProject;
 
 public interface ProjectService {
 
@@ -15,6 +16,8 @@ public interface ProjectService {
 	Map<String,Object> selectProjectAll(Map<String,Integer> param);
 	Project selectProjectByNo(int projectNo);
 	List<ProjectEmployee> selectEmployeetByProjectNo(Map<String,Integer> param);
+	int requestJoinProject(Map<String,Integer> param);
+	Map<String,Object> requestProjectlistall(Map<String,Integer> param);
 	int insertProject(Project p);
 	int updateProject(Project p);
 	int deleteProject(int projectNo);

@@ -8,6 +8,7 @@
 //프로젝트 입력 내용 json 저장
 			const projectData = {
 				projectNo: $('input[name="projectNo"]').val(),
+				employeeNo: $('input[name="employeeNo"]').val(),
 				projectTitle: $('input[name="projectTitle"]').val(),
 				projectRank: Number($('#project-rank').val()),
 				projectContent: $('#floatingTextarea').val(),

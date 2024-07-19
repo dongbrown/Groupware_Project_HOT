@@ -23,6 +23,7 @@
 			<div style="display: flex; flex-direction: row; justify-content: center; margin-top: 30px;">
 				<div id="project-update-body">
 				<input style="display:none;" type="text" name="projectNo" value="${project.projectNo }">
+				<input style="display:none;" type="text" name="employeeNo" value="${project.employeeNo }">
 					<!-- 프로젝트 이름 -->
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">프로젝트

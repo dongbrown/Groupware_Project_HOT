@@ -11,6 +11,7 @@ import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.ProjectEmployee;
+import com.project.hot.project.model.dto.RequestProject;
 @Repository
 public class ProjectDaoImpl implements ProjectDao {
 
@@ -39,7 +40,8 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param) {
 		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
-		return session.selectList("project.selectProjectAll",null,rb);
+		List<Project> result=session.selectList("project.selectProjectAll",null,rb);
+		return result;
 	}
 
 	@Override
@@ -79,8 +81,24 @@ public class ProjectDaoImpl implements ProjectDao {
 	}
 
 	@Override
-	public int updateProjectDeleteEmp(SqlSession session, int projectNo) {
-		return session.delete("project.updateProjectDeleteEmp",projectNo);
+	public int updateProjectDeleteEmp(SqlSession session, Map<String,Integer>param) {
+		return session.delete("project.updateProjectDeleteEmp",param);
+	}
+
+	@Override
+	public int requestJoinProject(SqlSession session, Map<String, Integer> param) {
+		return session.insert("project.requestJoinProject",param);
+	}
+
+	@Override
+	public List<Project> requestProjectlistall(SqlSession session, Map<String, Integer> param) {
+		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
+		return session.selectList("project.requestProjectlistall",param.get("employeeNo"),rb);
+	}
+
+	@Override
+	public int requestProjectlistallCount(SqlSession session, Map<String, Integer> param) {
+		return session.selectOne("project.requestProjectlistall",param.get("employeeNo"));
 	}
 
 }
