@@ -98,7 +98,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@Override
 	public int requestProjectlistallCount(SqlSession session, Map<String, Integer> param) {
-		return session.selectOne("project.requestProjectlistall",param.get("employeeNo"));
+		return session.selectOne("project.requestProjectlistallCount",param.get("employeeNo"));
 	}
 
 }
