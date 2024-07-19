@@ -24,4 +24,11 @@ public interface HotTalkDao {
 	int insertHotTalkAtt(SqlSession session, HotTalkAtt hotTalkAtt);
 	int getHotTalkNo(SqlSession session, Map<String, Integer> param);
 	HotTalkMember selectMember(SqlSession session, int employeeNo);
+	int insertNewChatRoom(SqlSession session, CommonMessageDTO msg);
+	int insertNewChatRoomMember(SqlSession session, CommonMessageDTO msg);
+	int insertNewChatRoomContents(SqlSession session, CommonMessageDTO msg);
+	int insertNewChatRoomReceiver(SqlSession session, CommonMessageDTO msg);
+	int getGroupTalkNo(SqlSession session, CommonMessageDTO msg);
+
+
 }

@@ -157,8 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						}
 						$employee.addEventListener("dblclick",(e)=>{
 							const clickedEmployeeNo = e.target.getAttribute("data-employeeno");
-							console.log(clickedEmployeeNo);
-							console.log(loginEmployeeNo);
+							// console.log(clickedEmployeeNo);
+							// console.log(loginEmployeeNo);
 							const checkChattingHistory = new CommonMessage("check", loginEmployeeNo, clickedEmployeeNo).convert();
 							chatServer.send(checkChattingHistory);
 						})
@@ -254,17 +254,28 @@ document.addEventListener('DOMContentLoaded', function() {
 							$("#staticBackdrop").modal("hide");
 							$(".chat-user-name").text($(".modal-hottalk-title").val());
 							$(".target-avatar").attr("src","https://cdn.hankyung.com/photo/202212/01.32245693.1.jpg");
-							// $(".additionalEmployee").data('employeeno')
 							// : 다중 요소에 추가 가능한 class인 만큼 처음 추가한 사원만 나오는 모습
-							let members = loginEmployeeNo;
+							let members = '';
 							$(".additionalEmployee").each(function(){
-								 members = members+","+$(this).data('employeeno');
+							    members += $(this).data('employeeno') + ',';
 							})
-							// console.log(members);
-							$(".chat-input").data("memberNo",members);
-							// console.log($(".chat-input").data("memberNo"));
-							// → 모달창에서 추가한 사원들 사번들이 기존 input 태그에 data속성으로 담고 csv 형식으로 출력
+							members = members.slice(0, -1); // 마지막 쉼표 제거
+							console.log(members);
+							$(".chat-send-btn").off("click");
+							$(".chat-send-btn").click(()=>{
+							const newMsg = $(".chat-msg").val().trim();
+								if(newMsg.length!=0){
+									 const newChatRoom = new CommonMessage("createChat", loginEmployeeNo, members, "", newMsg,"", $(".chat-user-name").text());
+									 chatServer.send(newChatRoom.convert());
+								} else {
+									Swal.fire({
+									  icon: "error",
+									  title: "메세지 미입력",
+									  text: "채팅방 생성을 위하여 메세지를 입력해주세요."
+									});
+								}
 
+							})
 						}
 					})
 
@@ -274,7 +285,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						console.log(d);
 						const $chattingroom = document.createElement("div");
 						const $hotTalkTitle = document.createElement("h5");
-						$hotTalkTitle.innerText=d.hotTalkTitle;
+						if(loginEmployeeNo==d.receiverNo) $hotTalkTitle.innerText=d.receiverName;
+						else $hotTalkTitle.innerText = d.senderName;
 						const $name = document.createElement("h6");
 						const $content = document.createElement("p");
 						$content.innerText=d.hotTalkContent.hotTalkContent;
@@ -350,11 +362,16 @@ document.addEventListener('DOMContentLoaded', function() {
 							privateList();
 							// 1:1 채팅에서 첫 번째 content의 발신자 == 로그인한 유저인 경우
 							if(contents[0].hotTalkContentSender.hotTalkMember.employeeNo == loginEmployeeNo){
-								receiver=contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeeNo;
-								// 첫 번째 content의 수신자를 상단에 출력
 								$(".chat-user-name").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeeName);
-								$(".user-status").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatus);
-								$(".user-status-message").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatusMessage);
+								if(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus != null){
+									receiver=contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeeNo;
+									// 첫 번째 content의 수신자를 상단에 출력
+									$(".user-status").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatus);
+									$(".user-status-message").text(contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkStatus.hotTalkStatusMessage);
+								} else {
+									$(".user-status").text("Online");
+									$(".user-status-message").text("");
+								}
 								if(d.contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeePhoto!=null){
 									// console.log(data);
 									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeePhoto);
@@ -365,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								receiver=contents[0].hotTalkContentSender.hotTalkMember.employeeNo;
 								$(".chat-user-name").text(contents[0].hotTalkContentSender.hotTalkMember.employeeName);
 								$(".user-status").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatus);
-							$(".user-status-message").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatusMessage);
+								$(".user-status-message").text(contents[0].hotTalkContentSender.hotTalkStatus.hotTalkStatusMessage);
 								if(contents[0].hotTalkContentSender.hotTalkMember.employeePhoto!=null){
 									console.log(d);
 									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkContentSender.hotTalkMember.employeePhoto);
@@ -427,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										// 이미지 파일이 아닌 파일 출력
 										const $chatBox = $("<div>").addClass("chat-message");
 										const $fileDownload = $("<a>").attr("href", path+"/hottalk/download?hotTalkOriginalFilename="+a.hotTalkOriginalFilename+"&hotTalkRenamedFilename="+a.hotTalkRenamedFilename);
-										const $previewImg = $("<img>").attr("src", path+"/images/hotTalk/FileIcon.png").addClass("fileIcon")
+										const $previewImg = $("<img>").attr("src", path+"/images/hottalk/FileIcon.png").addClass("fileIcon")
 										$fileDownload.append($previewImg);
 										$chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
 										$chatBox.append($fileDownload).append($("<span>").text(c.hotTalkContent));
@@ -449,7 +466,11 @@ document.addEventListener('DOMContentLoaded', function() {
 						});
 				});
 				break;
-
+				case "new":
+					console.log(data);
+					openChatRoom(data.sender, data.hotTalkNo);
+					$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
+				break;
 			}
 		}
 
@@ -464,12 +485,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			break;
 			case "nohistory":
 				const target = JSON.parse(data.msg);
+				console.log(target);
 				// 핫톡 사원 눌렀을 때 우측 상단 메세지들 변경 로직 및 채팅창 초기화
 				const $chattingRoom = $(".chat-messages");
 				$chattingRoom.empty();
 				document.querySelector(".chat-user-name").innerText=target.hotTalkMember.employeeName;
 				document.querySelector('.user-status').innerText=target.hotTalkStatus.hotTalkStatus;
-				console.log(target);
 				if(target.hotTalkMember.employeePhoto!=null){
 					document.querySelector(".target-avatar").src=path+"/upload/employee/"+target.hotTalkMember.employeePhoto;
 				} else {
@@ -481,6 +502,27 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.querySelector(".user-status-message").innerText=target.department.departmentTitle+"부";
 				}
 				// 채팅 내용 전송 시 채팅방 생성 로직 구현 필요(기존 이벤트 삭제 후 채팅방 생성 → 채팅방 번호 기준으로 채팅 Content Insert)
+				$(".chat-send-btn").off("click");
+				$(".chat-send-btn").click(()=>{
+					const newMsg = $(".chat-msg").val();
+					if(newMsg.length!=0){
+						 const newChatRoom = new CommonMessage("createChat", loginEmployeeNo, target.hotTalkMember.employeeNo, "", newMsg);
+						 chatServer.send(newChatRoom.convert());
+					} else {
+						Swal.fire({
+						  icon: "error",
+						  title: "메세지 미입력",
+						  text: "채팅방 생성을 위하여 메세지를 입력해주세요."
+						});
+					}
+
+				})
+			break;
+			case "new":
+				console.log(data);
+				openChatRoom(data.sender, data.hotTalkNo);
+				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
+				$(".chat-msg").val("");
 			break;
 		}
 	}
@@ -491,21 +533,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	// Error 발생 시
 	chatServer.onerror = (error) =>{
 		console.log("WebSocket 연결 에러 : ",error);
-	}
-
-	function writeFile(type, originalFilename, renamedFilename){
-		if(type=="img"){
-			// originalFilename 에 originalFilename().substring(originalFilename().lastIndexOf("."))의 결과가 jpg, png 등 이미지 일때
-			// 이미지 미리보기 출력
-			const $imgBox = $("<img>").attr("src", path+"/upload/hottalk/"+renamedFilename);
-			const $chatBox = $("<div>").addClass("chat-message chattingRoom-right-msg").append($imgBox).append($("<sup>").html("<b>"+($(".user-name").text())+"</b> "+getDate()));
-			$chatBox.append($("<span>").text($(".chat-msg").val()));
-			$(".chat-msg").val("");
-		} else {
-			const $chatBox = $("<div>").addClass("chat-message chattingRoom-right-msg").append($imgBox).append($("<sup>").html("<b>"+($(".user-name").text())+"</b> "+getDate()));
-			$chatBox.append($("<span>").text($(".chat-msg").val()));
-			$(".chat-msg").val("");
-		}
 	}
 
 	function openChatRoom(sender, hotTalkNo){
@@ -522,8 +549,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// 메세지 전송 버튼 클릭 이벤트
 	const sendMsg = function(sender, receiverNo, hotTalkNo){
-		if($(".chat-msg").val().length == 0){
-			alert('채팅 내용을 입력하세요.');
+		if($(".chat-msg").val().trim().length == 0){
+			Swal.fire({
+				icon: "error",
+				title: "메세지 미입력",
+				text: "메세지를 입력해주세요."
+			});
 			$(".chat-msg").focus();
 		} else {
 			const $chatBox = $("<div>").addClass("chat-message chattingRoom-right-msg").append($("<sup>").html("<b>"+($(".user-name").text())+"</b> "+getDate()));
@@ -626,13 +657,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	class CommonMessage{
-		constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString()){
+		constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString(), title=""){
 			this.type=type;
 			this.sender=sender;
 			this.receiver=receiver;
 			this.hotTalkNo=hotTalkNo;
 			this.msg=msg;
 			this.eventTime=eventTime;
+			this.title=title;
 		}
 		convert(){
 			return JSON.stringify(this);

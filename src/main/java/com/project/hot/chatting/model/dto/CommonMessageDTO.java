@@ -1,6 +1,7 @@
 package com.project.hot.chatting.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,8 @@ public class CommonMessageDTO {
 	private LocalDateTime eventTime;
 	private int hotTalkContentNo;
 	private int receiverNo;
+	private String title;
+	private List<Integer> receivers;
 }
 
 

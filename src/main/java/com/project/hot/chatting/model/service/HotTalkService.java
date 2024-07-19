@@ -21,4 +21,5 @@ public interface HotTalkService {
 	int insertHotTalkAtt(HotTalkAtt hotTalkAtt);
 	int getHotTalkNo(Map<String, Integer> param);
 	HotTalkMember selectMember(int employeeNo);
+	int insertNewChatRoom(CommonMessageDTO msg);
 }
