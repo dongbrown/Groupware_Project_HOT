@@ -1,6 +1,7 @@
 package com.project.hot.hr.model.dto;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RequestCommuting {
 	private Date searchDate;
-	private String departmentTitle;
+	private int departmentCode;
 	private String status;
 	private String employeeName;
+	private LocalDateTime goTime;
+	private LocalDateTime leaveTime;
+	private int commutingNo;
 }

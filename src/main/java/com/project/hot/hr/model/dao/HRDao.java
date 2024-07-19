@@ -6,7 +6,9 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.project.hot.employee.model.dto.RequestEmployee;
+import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
+import com.project.hot.hr.model.dto.ResponseCommuting;
 import com.project.hot.hr.model.dto.ResponseDepartment;
 
 public interface HRDao {
@@ -18,4 +20,8 @@ public interface HRDao {
 	int updateEmployee(SqlSession session, RequestEmployee re);
 	int insertEmployee(SqlSession session, RequestEmployee re);
 	int deleteEmployee(SqlSession session, int no);
+	int countAllEmpCommuting(SqlSession session, RequestCommuting rc);
+	List<ResponseCommuting> selectAllEmpCommuting(SqlSession session, Map<String, Object> param);
+	int deleteCommuting(SqlSession session, int no);
+	int updateCommuting(SqlSession session, RequestCommuting rc);
 }

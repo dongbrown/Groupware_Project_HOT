@@ -1,6 +1,8 @@
 package com.project.hot.hr.controller;
 
 import java.sql.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
+import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.service.HRService;
 
@@ -145,6 +148,47 @@ public class HRController {
 			return "생성 성공!";
 		}else {
 			return "생성 실패!";
+		}
+	}
+
+	@GetMapping("/selectAllEmpCommuting")
+	public Map<String, Object> searchEmpCommuting(@ModelAttribute RequestCommuting rc, @RequestParam int cPage){
+		Map<String, Object> param=new HashMap<>();
+		param.put("cPage", cPage);
+		param.put("numPerpage", 15);
+		param.put("rc", rc);
+		Map<String, Object> result=HRService.selectAllEmpCommuting(param);
+		return result;
+	}
+
+	@PostMapping("/deleteCommuting")
+	public String deleteCommuting(@RequestBody int no) {
+		int result=HRService.deleteCommuting(no);
+		if(result>0) {
+			return "삭제 성공!";
+		}else {
+			return "삭제 실패!";
+		}
+	}
+
+	@PostMapping("/updateCommuting")
+	public String updateCommuting(@RequestBody RequestCommuting rc) {
+		//한국시간으로 변환
+		if(rc.getGoTime()!=null) {
+			ZonedDateTime utc=rc.getGoTime().atZone(ZoneId.of("UTC"));
+			ZonedDateTime kst=utc.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+			rc.setGoTime(kst.toLocalDateTime());
+		}
+		if(rc.getLeaveTime()!=null) {
+			ZonedDateTime utc=rc.getLeaveTime().atZone(ZoneId.of("UTC"));
+			ZonedDateTime kst=utc.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+			rc.setLeaveTime(kst.toLocalDateTime());
+		}
+		int result=HRService.updateCommuting(rc);
+		if(result>0) {
+			return "수정 성공!";
+		}else {
+			return "수정 실패!";
 		}
 	}
 }

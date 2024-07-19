@@ -32,7 +32,7 @@ function updateDepartment(departmentCode){
 		.then(response=>response.text())
 		.then(data => {
 			alert(data);
-			location.reload();
+			getDepartmentList(1);
 		})
 		.catch(error => {
 			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
@@ -73,7 +73,7 @@ function deleteDepartment(deptCode){
 	.then(response=>response.text())
 	.then(data => {
 		alert(data);
-		location.reload();
+		getDepartmentList(1);
 	})
 	.catch(error => {
 		console.error('요청 실패:', error); // 요청 실패 시 에러 처리
@@ -129,7 +129,7 @@ function insertDepartment(){
 			.then(response=>response.text())
 			.then(data => {
 				alert(data);
-				location.reload();
+				getDepartmentList(1);
 			})
 			.catch(error => {
 				console.error('요청 실패:', error); // 요청 실패 시 에러 처리
@@ -165,7 +165,7 @@ function makeDepartmentTable(departments){
 		const $headName=$('<td>').text(d.departmentHeadName);
 		const $count=$('<td>').text(d.totalDepartmentCount);
 		const $btnTd=$('<td>');
-		const $updateBtn=$('<button>').addClass('btn btn-primary').attr('data-bs-toggle', 'modal')
+		const $updateBtn=$('<button>').addClass('btn btn-primary mr-1').attr('data-bs-toggle', 'modal')
 							.attr('data-bs-target', '#update-modal').attr('id','updateModal')
 							.attr('data-dept-code', d.departmentCode).text('수정');
 		const $deleteBtn=$('<button>').addClass('btn btn-danger').attr('onclick', `deleteDepartment(${d.departmentCode})`).text('삭제');

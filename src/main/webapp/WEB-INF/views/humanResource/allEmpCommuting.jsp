@@ -14,8 +14,11 @@
 		<div class="search-div">
 			<form id="searchForm" class="search-form">
 				<input type="date" name="searchDate" class="mr-1">
-				<select id="department" name="departmentCode" class="mr-1"></select>
+				<select id="department" name="departmentCode" class="mr-1">
+					<option value="0">부서 전체</option>
+				</select>
 				<select id="status" name="status" class="mr-1">
+					<option value="">전체</option>
 					<option value="정상">정상</option>
 					<option value="결근">결근</option>
 					<option value="지각">지각</option>
@@ -24,10 +27,10 @@
 					<option value="반차">반차</option>
 				</select>
                 <div class="input-group">
-                    <input type="text" name="name" class="form-control bg-light border-0 small" placeholder="이름 검색"
+                    <input type="text" name="employeeName" class="form-control bg-light border-0 small" placeholder="이름 검색"
                         aria-label="Search" aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">
+                        <button class="btn btn-primary" type="button" onclick="searchEmpCommuting(1)">
                             <i class="fas fa-search fa-sm"></i>
                         </button>
                     </div>
@@ -35,7 +38,7 @@
 			</form>
 		</div>
 		<div class="table-div">
-			<table class="com-table">
+			<table class="table com-table">
 				<thead class="table-dark">
 					<tr>
 						<th>근무 일자</th>
@@ -54,9 +57,40 @@
 				<tbody></tbody>
 			</table>
 		</div>
-		<div class="pagebar-div"></div>
+		<div class="pagebar-div mt-3"></div>
 	</div>
 </section>
+</div>
+<div class="modal fade" tabindex="-1" id="update-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">출퇴근 수정</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      	<input type="hidden" id="modalCommutingNo">
+		<p>사번 : <span id="modalEmpNo"></span></p>
+		<p><span id="modalEmpDept"></span> <span id="modalEmpName"></span> <span id="modalEmpPosition"></span></p>
+		<p>날짜 : <span id="modalComDate"></span></p>
+		출근 시간 : <input type="time" id="modalGoTime"><br>
+		퇴근 시간 : <input type="time" id="modalLeaveTime"><br>
+		근무 상태 :
+		<select id="modalStatus">
+			<option value="정상">정상</option>
+			<option value="결근">결근</option>
+			<option value="지각">지각</option>
+			<option value="출장">출장</option>
+			<option value="연차">연차</option>
+			<option value="반차">반차</option>
+		</select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" onclick="updateCommuting()">수정</button>
+      </div>
+    </div>
+  </div>
 </div>
 <script>const path='${path}';</script>
 <script src='${path }/js/humanResource/allEmpCommuting.js'></script>

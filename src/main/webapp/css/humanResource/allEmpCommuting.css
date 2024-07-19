@@ -24,3 +24,17 @@
 	display: flex;
     align-items: center;
 }
+
+.com-table {
+	width: 100%;
+    text-align: center;
+}
+
+.com-table td {
+ 	vertical-align: middle;
+ }
+
+.pagebar-div {
+	display: flex;
+    justify-content: center;
+}

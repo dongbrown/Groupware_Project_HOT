@@ -21,3 +21,6 @@
     text-align: center;
     font-size: 14px;
 }
+.emp-table td {
+	vertical-align: middle;
+}
