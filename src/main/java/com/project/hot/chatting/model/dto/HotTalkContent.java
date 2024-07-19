@@ -19,4 +19,5 @@ public class HotTalkContent {
 	private LocalDateTime hotTalkContentDate;
 	private HotTalkMember hotTalkContentSender;
 	private List<HotTalkReceiver> hotTalkReceiver;
+	private int noReadCount;
 }

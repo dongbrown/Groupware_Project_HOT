@@ -210,7 +210,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			}
 		}
 		employees.remove(employeeNo);
-		System.out.println("셔터내려");
 	}
 
 	private void responseListDTO(List list, WebSocketSession session) {
