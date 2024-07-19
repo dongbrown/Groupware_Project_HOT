@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.HotTalkAtt;
 import com.project.hot.chatting.model.dto.HotTalkContent;
+import com.project.hot.chatting.model.dto.HotTalkMember;
 import com.project.hot.chatting.model.dto.HotTalkStatus;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
@@ -72,6 +73,43 @@ public class HotTalkDaoImpl implements HotTalkDao {
 	@Override
 	public int insertHotTalkAtt(SqlSession session, HotTalkAtt hotTalkAtt) {
 		return session.insert("hottalk.insertHotTalkAtt", hotTalkAtt);
+	}
+
+	@Override
+	public int getHotTalkNo(SqlSession session, Map<String, Integer> param) {
+		int result=0;
+		if(session.selectOne("hottalk.getHotTalkNo", param)!=null) result = session.selectOne("hottalk.getHotTalkNo", param);
+		return result>0?result:0;
+	}
+
+	@Override
+	public HotTalkMember selectMember(SqlSession session, int employeeNo) {
+		return session.selectOne("hottalk.selectMember", employeeNo);
+	}
+
+	@Override
+	public int insertNewChatRoom(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoom", msg);
+	}
+
+	@Override
+	public int insertNewChatRoomMember(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoomMember", msg);
+	}
+
+	@Override
+	public int insertNewChatRoomContents(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoomContents", msg);
+	}
+
+	@Override
+	public int insertNewChatRoomReceiver(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoomReceiver", msg);
+	}
+
+	@Override
+	public int getGroupTalkNo(SqlSession session, CommonMessageDTO msg) {
+		return session.selectOne("hottalk.getGroupTalkNo", msg);
 	}
 
 }

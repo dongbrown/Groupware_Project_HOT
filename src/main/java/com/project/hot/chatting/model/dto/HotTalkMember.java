@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class HotTalkMember {
+	// private String type;
 	private int hotTalkNo;
 	private String hotTalkLeader;
 	private Timestamp hotTalkEnterDate;

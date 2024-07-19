@@ -25,5 +25,9 @@ public interface CommunityService {
 
 	boolean joinCommunity(CommunityUser communityUser);
 
+	void deleteCommunityUser(int communityNo, int employeeNo);
+
+	List<Community> getCommunitiesWithEmployeePhotos(int employeeNo);
+
 
 }

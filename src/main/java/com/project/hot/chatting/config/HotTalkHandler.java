@@ -1,6 +1,7 @@
 package com.project.hot.chatting.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.HotTalkAtt;
+import com.project.hot.chatting.model.dto.HotTalkMember;
 import com.project.hot.chatting.model.dto.HotTalkStatus;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
@@ -73,7 +75,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		responseListDTO(list, session);
 	}
 	private void getHotTalkContents(WebSocketSession session, CommonMessageDTO msg) {
-
 		List<ResponseHotTalkContentDTO> contents = service.getHotTalkContents(msg.getSender(), msg.getHotTalkNo());
 //		if(contents.get(0).getHotTalkIsGroup().equals("N")) {
 //			System.out.println("갠톡");
@@ -96,13 +97,12 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		} else {
 			result = 0;
 		}
-		responseMsg(result);
 	}
 
 	private void sendMessage(WebSocketSession session, CommonMessageDTO msg) {
 	    // System.out.println(msg.getHotTalkNo() + " " + msg.getMsg() + " " + msg.getSender() + " " + msg.getReceiver() + " " + msg.getEventTime());
 		if(!(msg.getReceiver().equals("") || msg.getType().equals("file"))) msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
-
+		System.out.println(msg);
 		int result = service.insertHotTalkMessage(msg);
 
 	    for (Map.Entry<Integer, WebSocketSession> entry : employees.entrySet()) {
@@ -111,7 +111,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 	        List<Integer> groupRooms = (List<Integer>)(cEmp.getAttributes().get("grouprooms"));
 	        try {
 	        	if(!msg.getType().equals("file")) msg.setType(result > 0 ? "msgSuccess" : "msgFail");
-	        	
+
 	            String message = mapper.writeValueAsString(msg);
 	            if (privateRooms != null && privateRooms.contains(msg.getHotTalkNo())) {
 	                cEmp.sendMessage(new TextMessage(message));
@@ -122,6 +122,14 @@ public class HotTalkHandler extends TextWebSocketHandler {
 	            e.printStackTrace();
 	        }
 	    }
+	}
+	public int checkChattingHistory(int sender, int receiver) {
+		int result = 0;
+		Map<String, Integer> param = new HashMap<>();
+		param.put("clickedNo", receiver);
+		param.put("loginEmployeeNo", sender);
+		result = service.getHotTalkNo(param);
+		return result;
 	}
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -137,6 +145,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 							break;
 			case "msg" : sendMessage(session, msg); break;
 			case "file" : HotTalkAtt upFile = mapper.readValue(message.getPayload(), HotTalkAtt.class);
+							System.out.println(upFile);
 						  CommonMessageDTO fileMsg = CommonMessageDTO.builder().type("file")
 								  											   .hotTalkNo(upFile.getHotTalkNo())
 								  											   .msg(upFile.getHotTalkOriginalFilename())
@@ -145,7 +154,49 @@ public class HotTalkHandler extends TextWebSocketHandler {
 								  											   .build();
 						  sendMessage(session, fileMsg);
 						  break;
+			case "check" : if(!(msg.getReceiver()==null||msg.getReceiver().isEmpty())) {
+						   		int receiverNo = Integer.parseInt(msg.getReceiver());
+						   		msg.setReceiverNo(receiverNo);
+						   }
+						   int hotTalkNo = checkChattingHistory(msg.getSender(), msg.getReceiverNo());
+						   responseMsg(msg, hotTalkNo, session);
+						   // 채팅방 더블클릭한 사람, 더블클릭 당한사람 사번 전달해서 실행한 결과(HOT_TALK_NO) 전달
+						   break;
+			case "createChat" : createPrivateChatRoom(session, msg);
 		}
+	}
+
+	public void createPrivateChatRoom(WebSocketSession session, CommonMessageDTO msg) {
+		List<String> receivers = Arrays.asList(msg.getReceiver().split(","));
+		System.out.println("168번 째 줄 : "+receivers);
+		List<Integer> receiversNo = new ArrayList<>();
+		receivers.forEach(e->{
+			int receiverNo = Integer.parseInt(e);
+			receiversNo.add(receiverNo);
+		});
+		msg.setReceivers(receiversNo);
+		int hotTalkNo = service.insertNewChatRoom(msg);
+		CommonMessageDTO result = CommonMessageDTO.builder().type("new")
+															.hotTalkNo(hotTalkNo)
+															.sender(msg.getSender())
+															.receivers(msg.getReceivers())
+															.build();
+		try {
+			String resultMsg = mapper.writeValueAsString(result);
+			for(Map.Entry<Integer, WebSocketSession> employee:employees.entrySet()) {
+		        int empNo = employee.getKey();
+				if(receiversNo.contains(empNo)) {
+					WebSocketSession emp = employees.get(empNo);
+					System.out.println(resultMsg);
+					emp.sendMessage(new TextMessage(resultMsg));
+				} else {
+					WebSocketSession sender = employees.get(msg.getSender());
+					sender.sendMessage(new TextMessage(resultMsg));
+				}
+	        }
+		} catch(Exception e) {
+        	log.debug("createPrivateChatRoom() 메소드 실행 에러");
+        }
 	}
 
 	@Override
@@ -159,6 +210,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			}
 		}
 		employees.remove(employeeNo);
+		System.out.println("셔터내려");
 	}
 
 	private void responseListDTO(List list, WebSocketSession session) {
@@ -174,12 +226,22 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			}
 		}
 	}
-
-	private void responseMsg(int result) {	// 전체에게 보내기
+	// 사원 더블클릭 시 개인 카톡 중 대화 이력이 있는 방이 있으면 해당 방 정보를 가져오고 아닐 경우 nohistory response
+	private void responseMsg(CommonMessageDTO msg, int result, WebSocketSession session) {
 		for(Map.Entry<Integer, WebSocketSession> employee : employees.entrySet()) {
 			WebSocketSession emp = employee.getValue();
 			try {
-				emp.sendMessage(new TextMessage(result>0? "success" : "fail"));
+				if(session.equals(emp) && result>0) {
+					msg.setHotTalkNo(result);
+					getHotTalkContents(session, msg);
+				} else if(session.equals(emp)) {
+					HotTalkMember target = service.selectMember(msg.getReceiverNo());
+					CommonMessageDTO noHistory = new CommonMessageDTO();
+					noHistory.setType("nohistory");
+					noHistory.setMsg(mapper.writeValueAsString(target));
+					String nohistory = mapper.writeValueAsString(noHistory);
+					emp.sendMessage(new TextMessage(nohistory));
+				}
 			}catch(Exception e){
 				log.debug("responseMsg() 실패");
 			}

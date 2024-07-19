@@ -35,6 +35,9 @@
                     <button onclick="showAddParticipant()" class="btn-add-participant">
                         <i class="fas fa-user-plus"></i> 참석자 추가
                     </button>
+                    <button onclick="withdrawCommunity()" class="">
+                    	탈퇴
+                    </button>
                 </div>
             </div>
 

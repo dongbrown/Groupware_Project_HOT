@@ -1,6 +1,8 @@
 package com.project.hot.community.controller;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,18 +39,18 @@ public class CommunityController {
     private final CommunityService communityService;
     private final FeedService feedService;
 
-    @GetMapping("/")
-    public String showCommunity(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        int employeeNo = loginEmployee.getEmployeeNo();
-
-        List<Community> communities = communityService.getCommunities(employeeNo);
-        System.out.println(communities);
-        model.addAttribute("communities", communities);
-        model.addAttribute("loginEmployee", loginEmployee);
-        return "community/community";
-    }
+//    @GetMapping("/")
+//    public String showCommunity(Model model) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        Employee loginEmployee = (Employee) auth.getPrincipal();
+//        int employeeNo = loginEmployee.getEmployeeNo();
+//
+//        List<Community> communities = communityService.getCommunities(employeeNo);
+//        System.out.println(communities);
+//        model.addAttribute("communities", communities);
+//        model.addAttribute("loginEmployee", loginEmployee);
+//        return "community/community";
+//    }
 
 
     @PostMapping("/insert")
@@ -90,23 +92,17 @@ public class CommunityController {
     @PostMapping("/toggleBookmark")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> toggleBookmark(@RequestParam("communityNo") int communityNo) {
-        System.out.println("Received communityNo: " + communityNo); // 디버깅용 로그
         Map<String, Object> response = new HashMap<>();
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             Employee loginEmployee = (Employee) auth.getPrincipal();
             int employeeNo = loginEmployee.getEmployeeNo();
 
-            int result = communityService.toggleBookmark(communityNo, employeeNo);
-            if (result > 0) {
-                response.put("success", true);
-                response.put("message", "북마크 상태가 변경되었습니다.");
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("success", false);
-                response.put("message", "북마크 상태 변경에 실패했습니다.");
-                return ResponseEntity.badRequest().body(response);
-            }
+            int newBookmarkState = communityService.toggleBookmark(communityNo, employeeNo);
+            response.put("success", true);
+            response.put("bookmarked", newBookmarkState);
+            response.put("message", "북마크 상태가 변경되었습니다.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "북마크 상태 변경 중 오류가 발생했습니다: " + e.getMessage());
@@ -185,7 +181,28 @@ public class CommunityController {
         }
     }
 
+    @GetMapping("/")
+    public String showCommunity(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
 
+        List<Community> communities = communityService.getCommunitiesWithEmployeePhotos(employeeNo);
+
+        // employeePhotos 문자열을 리스트로 변환
+        for (Community community : communities) {
+            if (community.getEmployeePhotos() != null) {
+                List<String> photoList = Arrays.asList(community.getEmployeePhotos().split(","));
+                community.setEmployeePhotoList(photoList);
+            } else {
+                community.setEmployeePhotoList(new ArrayList<>());
+            }
+        }
+
+        model.addAttribute("communities", communities);
+        model.addAttribute("loginEmployee", loginEmployee);
+        return "community/community";
+    }
 
 
 }

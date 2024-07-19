@@ -29,5 +29,10 @@ public interface CommunityDao {
 
 	int joinCommunity(SqlSession session, CommunityUser communityUser);
 
+	int deleteCommunityUser(SqlSession session, int communityNo, int employeeNo);
+
+    List<Community> getCommunitiesWithEmployeePhotos(SqlSession session, int employeeNo);
+
+
 
 }

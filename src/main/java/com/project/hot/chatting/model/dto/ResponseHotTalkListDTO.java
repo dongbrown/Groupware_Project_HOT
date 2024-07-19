@@ -18,5 +18,8 @@ public class ResponseHotTalkListDTO {
 	private int hotTalkNo;
 	private HotTalkContent hotTalkContent;
 	private Timestamp hotTalkContentDate;
-	private String sender;
+	private int senderNo;
+	private int receiverNo;
+	private String senderName;
+	private String receiverName;
 }

@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 		private Date employeeBirthDay;
 		private String employeeSsn;
 		private Date employeeHireDate;
-		private int employeeSalary;
+		private long employeeSalary;
 		private String employeePhoto;
 		private Date employeeResignationDay;
 		private int employeeTotalVacation;

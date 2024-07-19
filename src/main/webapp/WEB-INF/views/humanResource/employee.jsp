@@ -102,13 +102,24 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				이름 : <input type="text" placeholder="이름"><br>
-				부서 : <select></select><br>
-				직급 : <select></select><br>
-				월급 : <input type="number" placeholder="월급"><br>
-				입사일 : <input type="date"><br>
-				퇴사일 : <input type="date"><br>
-				총 휴가일수 : <input type="number" placeholder="월급"><br>
+				<form id="updateEmp">
+					<input type="hidden" name="employeeNo" required>
+					이름 : <input type="text" name="employeeName" placeholder="이름" required><br><br>
+					부서 : <select id="modalDept" name="departmentCode" required></select><br><br>
+					직급 :
+					<select id="modalPosition" name="positionCode" required>
+						<option value='1'>대표이사</option>
+						<option value='2'>부장</option>
+						<option value='3'>차장</option>
+						<option value='4'>과장</option>
+						<option value='5'>대리</option>
+						<option value='6'>사원</option>
+					</select><br><br>
+					월급 : <input type="number" name="employeeSalary" placeholder="월급" required><br><br>
+					입사일 : <input type="date" name="employeeHireDate" required><br><br>
+					퇴사일 : <input type="date" name="employeeResignationDay"><br><br>
+					총 휴가일수 : <input type="number" placeholder="총 휴가일수" name="employeeTotalVacation" required><br><br>
+				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>

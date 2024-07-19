@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.hot.community.model.service.CommunityService;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.feed.model.dto.Feed;
+import com.project.hot.feed.model.dto.FeedComment;
 import com.project.hot.feed.model.service.FeedService;
 
 import lombok.RequiredArgsConstructor;
@@ -195,7 +196,7 @@ public class FeedController {
     }
 
     @GetMapping("/nonParticipants")
-    public ResponseEntity<?> getNonParticipants(@RequestParam int communityNo) {
+    public ResponseEntity<Map<String, Object>> getNonParticipants(@RequestParam int communityNo) {
         try {
             List<Employee> nonParticipants = communityService.getNonParticipants(communityNo);
             System.out.println(nonParticipants);
@@ -212,6 +213,90 @@ public class FeedController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+    @DeleteMapping("/withdrawCommunity")
+    @ResponseBody
+    public ResponseEntity<String> withdrawCommunity(@RequestBody Map<String, Integer> params) {
+        try {
+            int communityNo = params.get("id");
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Employee loginEmployee = (Employee) auth.getPrincipal();
+            int employeeNo = loginEmployee.getEmployeeNo();
+            communityService.deleteCommunityUser(communityNo, employeeNo);
+            return ResponseEntity.ok("커뮤니티 탈퇴 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("커뮤니티 탈퇴 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/like")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> likeFeed(@RequestBody Map<String, Integer> payload) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            int feedNo = payload.get("feedNo");
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Employee loginEmployee = (Employee) auth.getPrincipal();
+            int employeeNo = loginEmployee.getEmployeeNo();
+
+            boolean result = service.toggleLike(feedNo, employeeNo);
+            response.put("success", true);
+            response.put("liked", result);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("피드 좋아요 처리 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "좋아요 처리 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @GetMapping("/comments")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getComments(@RequestParam int feedNo) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<FeedComment> comments = service.getComments(feedNo);
+            response.put("success", true);
+            response.put("comments", comments);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("댓글 목록 조회 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "댓글 목록을 불러오는 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    @PostMapping("/comment")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> addComment(@RequestBody FeedComment comment) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Employee loginEmployee = (Employee) auth.getPrincipal();
+            comment.setEmployeeNo(loginEmployee.getEmployeeNo());
+
+            int result = service.addComment(comment);
+            if (result > 0) {
+                response.put("success", true);
+                response.put("message", "댓글이 성공적으로 추가되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "댓글 추가에 실패했습니다.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            log.error("댓글 추가 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "댓글 추가 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+
 
 
 

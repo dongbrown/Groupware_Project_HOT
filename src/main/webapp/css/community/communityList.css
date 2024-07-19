@@ -1,20 +1,56 @@
 @charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 body {
-    font-family: 'GmarketSans', sans-serif;
+    font-family: 'Poppins', 'GmarketSans', sans-serif;
+    background-color: #f8f9fc;
+    color: #333;
 }
 
 .container-fluid {
-    padding: 20px;
+    padding: 40px;
+}
+
+.page-header {
+    margin-bottom: 30px;
+    border-bottom: 2px solid #4e73df;
+    padding-bottom: 15px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
 }
 
 .card {
     border: none;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    border-radius: 10px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15);
 }
 
 .card-header {
-    background-color: #f8f9fc;
+    background-color: #fff;
     border-bottom: 1px solid #e3e6f0;
+    padding: 1.25rem;
+}
+
+.card-header h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #4e73df;
 }
 
 .table-responsive {
@@ -27,16 +63,22 @@ body {
     border-spacing: 0;
 }
 
-#communityTable th, #communityTable td {
-    padding: 12px;
+#communityTable th,
+#communityTable td {
+    padding: 15px;
     vertical-align: middle;
 }
 
 #communityTable thead th {
     background-color: #4e73df;
     color: white;
-    font-weight: bold;
+    font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#communityTable tbody tr {
+    transition: all 0.2s ease;
 }
 
 #communityTable tbody tr:nth-child(even) {
@@ -45,6 +87,18 @@ body {
 
 #communityTable tbody tr:hover {
     background-color: #eaecf4;
+}
+
+.btn {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
 }
 
 .btn-primary {
@@ -57,8 +111,48 @@ body {
     border-color: #2653d4;
 }
 
+.btn-warning {
+    background-color: #f6c23e;
+    border-color: #f6c23e;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: #f4b619;
+    border-color: #f4b30d;
+}
+
+.btn-secondary {
+    background-color: #858796;
+    border-color: #858796;
+}
+
+.btn-secondary:hover {
+    background-color: #717384;
+    border-color: #6b6d7d;
+}
+
+.community-title a {
+    color: #4e73df;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.community-title a:hover {
+    color: #2e59d9;
+    text-decoration: underline;
+}
+
+img.lock-icon {
+    width: 16px !important;
+    height: 16px !important;
+    margin-left: 5px !important;
+    vertical-align: middle !important;
+}
+
 .pagination {
-    margin-top: 20px;
+    margin-top: 30px;
+    justify-content: center;
 }
 
 .pagination .page-item.active .page-link {
@@ -73,4 +167,33 @@ body {
 #createCommunityBtn {
     font-size: 0.9rem;
     padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 20px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .page-header p {
+        font-size: 1rem;
+    }
+
+    #communityTable th,
+    #communityTable td {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+    }
 }

@@ -126,10 +126,14 @@ public class EmployeeRestController {
 
 	@PostMapping("/updateEmployee")
 	public ResponseEntity<String> updateEmployee(@RequestBody RequestEmployee requestEmployee, Principal p) {
+
+		//패스워드 암호화
 		if(requestEmployee.getEmployeePassword()!=null&&!requestEmployee.getEmployeePassword().equals("")) {
 			String encodedPwd=pwencoder.encode(requestEmployee.getEmployeePassword());
 			requestEmployee.setEmployeePassword(encodedPwd);
 		}
+
+		//핸드폰번호에 '-' 붙이기
 		if(requestEmployee.getEmployeePhone()!=null&&!requestEmployee.getEmployeePhone().equals("")) {
 			String phone=requestEmployee.getEmployeePhone();
 			if(phone.length()==11) {
@@ -189,6 +193,16 @@ public class EmployeeRestController {
 			return "퇴근 무사히 성공!";
 		}else {
 			return "퇴근 실패";
+		}
+	}
+
+	@GetMapping("/selectAllEmployeeId")
+	public boolean selectAllEmployeeId(@RequestParam String id) {
+		List<String> empIds=service.selectAllEmployeeId();
+		if(empIds.stream().anyMatch(e->e.equals(id))) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 }
