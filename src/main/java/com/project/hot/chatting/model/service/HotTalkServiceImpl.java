@@ -1,5 +1,7 @@
 package com.project.hot.chatting.model.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,9 +85,65 @@ public class HotTalkServiceImpl implements HotTalkService {
 	public int getHotTalkNo(Map<String, Integer> param) {
 		return dao.getHotTalkNo(session, param);
 	}
+
 	@Override
 	public HotTalkMember selectMember(int employeeNo) {
 		return dao.selectMember(session, employeeNo);
 	}
+	@Override
+	@Transactional
+	public int insertNewChatRoom(CommonMessageDTO msg) {
+	    try {
+	        insertChatRoom(msg);
+	        insertChatRoomMember(msg);
+	        insertChatRoomContents(msg);
+	        insertChatRoomReceiver(msg);
+	        if(msg.getReceivers().size()>=2) {
+	        	return msg.getHotTalkNo();
+	        } else {
+	        	return getPrivateTalkNo(msg.getSender(), msg.getReceiver());
+	        }
+	    } catch (Exception e) {
+	        throw new ChattingException("채팅방 생성 실패: " + e.getMessage());
+	    }
+	}
 
+	private void insertChatRoom(CommonMessageDTO msg) {
+	    int result = dao.insertNewChatRoom(session, msg);
+	    if (result <= 0) {
+	        throw new ChattingException("채팅방 생성 실패");
+	    }
+	}
+
+	private void insertChatRoomMember(CommonMessageDTO msg) {
+	    int result = dao.insertNewChatRoomMember(session, msg);
+	    if (result <= 0) {
+	        throw new ChattingException("채팅방 멤버 추가 실패");
+	    }
+	}
+
+	private void insertChatRoomContents(CommonMessageDTO msg) {
+	    int result = dao.insertNewChatRoomContents(session, msg);
+	    if (result <= 0) {
+	        throw new ChattingException("채팅방 내용 추가 실패");
+	    }
+	}
+
+	private void insertChatRoomReceiver(CommonMessageDTO msg) {
+	    int result = dao.insertNewChatRoomReceiver(session, msg);
+	    if (result <= 0) {
+	        throw new ChattingException("채팅방 수신자 추가 실패");
+	    }
+	}
+
+	private int getPrivateTalkNo(int sender, String receiver) {
+	    Map<String, Integer> param = new HashMap<>();
+	    param.put("clickedNo", Integer.parseInt(receiver));
+	    param.put("loginEmployeeNo", sender);
+	    return dao.getHotTalkNo(session, param);
+	}
+
+	private int getGroupTalkNo(CommonMessageDTO msg) {
+		return dao.getGroupTalkNo(session, msg);
+	}
 }

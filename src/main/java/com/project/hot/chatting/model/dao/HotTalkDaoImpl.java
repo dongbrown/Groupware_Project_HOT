@@ -87,4 +87,29 @@ public class HotTalkDaoImpl implements HotTalkDao {
 		return session.selectOne("hottalk.selectMember", employeeNo);
 	}
 
+	@Override
+	public int insertNewChatRoom(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoom", msg);
+	}
+
+	@Override
+	public int insertNewChatRoomMember(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoomMember", msg);
+	}
+
+	@Override
+	public int insertNewChatRoomContents(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoomContents", msg);
+	}
+
+	@Override
+	public int insertNewChatRoomReceiver(SqlSession session, CommonMessageDTO msg) {
+		return session.insert("hottalk.insertNewChatRoomReceiver", msg);
+	}
+
+	@Override
+	public int getGroupTalkNo(SqlSession session, CommonMessageDTO msg) {
+		return session.selectOne("hottalk.getGroupTalkNo", msg);
+	}
+
 }

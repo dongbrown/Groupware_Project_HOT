@@ -1,6 +1,7 @@
 package com.project.hot.chatting.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		responseListDTO(list, session);
 	}
 	private void getHotTalkContents(WebSocketSession session, CommonMessageDTO msg) {
-
 		List<ResponseHotTalkContentDTO> contents = service.getHotTalkContents(msg.getSender(), msg.getHotTalkNo());
 //		if(contents.get(0).getHotTalkIsGroup().equals("N")) {
 //			System.out.println("갠톡");
@@ -159,7 +159,41 @@ public class HotTalkHandler extends TextWebSocketHandler {
 						   responseMsg(msg, hotTalkNo, session);
 						   // 채팅방 더블클릭한 사람, 더블클릭 당한사람 사번 전달해서 실행한 결과(HOT_TALK_NO) 전달
 						   break;
+			case "createChat" : createPrivateChatRoom(session, msg);
 		}
+	}
+
+	public void createPrivateChatRoom(WebSocketSession session, CommonMessageDTO msg) {
+		List<String> receivers = Arrays.asList(msg.getReceiver().split(","));
+		System.out.println("168번 째 줄 : "+receivers);
+		List<Integer> receiversNo = new ArrayList<>();
+		receivers.forEach(e->{
+			int receiverNo = Integer.parseInt(e);
+			receiversNo.add(receiverNo);
+		});
+		msg.setReceivers(receiversNo);
+		int hotTalkNo = service.insertNewChatRoom(msg);
+		CommonMessageDTO result = CommonMessageDTO.builder().type("new")
+															.hotTalkNo(hotTalkNo)
+															.sender(msg.getSender())
+															.receivers(msg.getReceivers())
+															.build();
+		try {
+			String resultMsg = mapper.writeValueAsString(result);
+			for(Map.Entry<Integer, WebSocketSession> employee:employees.entrySet()) {
+		        int empNo = employee.getKey();
+				if(receiversNo.contains(empNo)) {
+					WebSocketSession emp = employees.get(empNo);
+					System.out.println(resultMsg);
+					emp.sendMessage(new TextMessage(resultMsg));
+				} else {
+					WebSocketSession sender = employees.get(msg.getSender());
+					sender.sendMessage(new TextMessage(resultMsg));
+				}
+	        }
+		} catch(Exception e) {
+        	log.debug("createPrivateChatRoom() 메소드 실행 에러");
+        }
 	}
 
 	@Override
@@ -173,6 +207,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			}
 		}
 		employees.remove(employeeNo);
+		System.out.println("셔터내려");
 	}
 
 	private void responseListDTO(List list, WebSocketSession session) {
