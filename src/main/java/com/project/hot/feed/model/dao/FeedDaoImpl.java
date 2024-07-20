@@ -1,13 +1,21 @@
 package com.project.hot.feed.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.project.hot.feed.model.dto.Feed;
 import com.project.hot.feed.model.dto.FeedComment;
 import com.project.hot.feed.model.dto.FeedLike;
 
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
 @Repository
 public class FeedDaoImpl implements FeedDao {
 
@@ -33,17 +41,31 @@ public class FeedDaoImpl implements FeedDao {
 
     @Override
     public FeedLike getFeedLike(int feedNo, int employeeNo, SqlSession session) {
-        return session.selectOne("feed.getFeedLike", new FeedLike(0, employeeNo, feedNo));
+        Map<String, Object> params = new HashMap<>();
+        params.put("feedNo", feedNo);
+        params.put("employeeNo", employeeNo);
+
+        log.debug("Executing getFeedLike with params: {}", params);
+        FeedLike result = session.selectOne("feed.getFeedLike", params);
+        log.debug("getFeedLike result: {}", result);
+
+        return result;
     }
 
     @Override
     public void insertFeedLike(int feedNo, int employeeNo, SqlSession session) {
-        session.insert("feed.insertFeedLike", new FeedLike(0, employeeNo, feedNo));
+        Map<String, Object> params = new HashMap<>();
+        params.put("feedNo", feedNo);
+        params.put("employeeNo", employeeNo);
+        session.insert("feed.insertFeedLike", params);
     }
 
     @Override
     public void deleteFeedLike(int feedNo, int employeeNo, SqlSession session) {
-        session.delete("feed.deleteFeedLike", new FeedLike(0, employeeNo, feedNo));
+        Map<String, Object> params = new HashMap<>();
+        params.put("feedNo", feedNo);
+        params.put("employeeNo", employeeNo);
+        session.delete("feed.deleteFeedLike", params);
     }
 
     @Override

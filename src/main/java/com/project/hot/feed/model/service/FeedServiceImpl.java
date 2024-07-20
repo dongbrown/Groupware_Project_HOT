@@ -46,16 +46,22 @@ public class FeedServiceImpl implements FeedService {
     @Override
     @Transactional
     public boolean toggleLike(int feedNo, int employeeNo) {
-        FeedLike like = dao.getFeedLike(feedNo, employeeNo, session);
-        if (like == null) {
-            dao.insertFeedLike(feedNo, employeeNo, session);
-            return true;
-        } else {
-            dao.deleteFeedLike(feedNo, employeeNo, session);
-            return false;
+        try {
+            FeedLike existingLike = dao.getFeedLike(feedNo, employeeNo, session);
+            System.out.println(existingLike);
+            if (existingLike == null) {
+                // 좋아요가 없는 경우 추가
+                dao.insertFeedLike(feedNo, employeeNo, session);
+                return true; // 좋아요 추가됨
+            } else {
+                // 좋아요가 이미 있는 경우 삭제
+                dao.deleteFeedLike(feedNo, employeeNo, session);
+                return false; // 좋아요 삭제됨
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("좋아요 처리 중 오류가 발생했습니다.", e);
         }
     }
-
     @Override
     public List<FeedComment> getComments(int feedNo) {
         return dao.getComments(feedNo, session);
