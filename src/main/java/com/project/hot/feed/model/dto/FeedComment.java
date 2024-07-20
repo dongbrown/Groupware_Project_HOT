@@ -1,6 +1,6 @@
 package com.project.hot.feed.model.dto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +15,10 @@ public class FeedComment {
 
 	private int feedCommentNo;
 	private String feedCommentContent;
-	private Date feedCommentEnrolldate;
+	private LocalDateTime feedCommentEnrolldate;
+
 	private int feedNo;
 	private int employeeNo;
-	private int commentParentNo;
-
+	private int feedCommentParentNo;
+	private String employeeName;
 }

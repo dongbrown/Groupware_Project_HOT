@@ -53,6 +53,13 @@ $(document).ready(function() {
             reader.readAsDataURL(file);
         }
     });
+
+    // 좋아요 버튼 클릭 이벤트 리스너
+    $(document).on('click', '.like-btn', function(e) {
+        e.preventDefault();
+        const feedNo = $(this).closest('.feed-item').data('feed-no');
+        likeFeed(feedNo);
+    });
 });
 
 function submitFeed() {
@@ -120,7 +127,7 @@ function withdrawCommunity() {
     $.ajax({
         type: 'DELETE',
         url: '/community/feed/withdrawCommunity',
-        contentType: 'application/json', // JSON 형식으로 보냄
+        contentType: 'application/json',
         data: JSON.stringify({ id: communityNo }),
         success: function(response) {
             alert('커뮤니티를 탈퇴하였습니다.');
@@ -161,8 +168,10 @@ function createFeedHtml(feed) {
         imageHtml = `<img src="/community/feed/image/${feed.feedNo}" alt="Feed Image" class="img-fluid mt-2">`;
     }
 
+    const likedClass = feed.isLiked ? 'liked' : '';
+
     return `
-        <div class="feed-item" id="feed-${feed.feedNo}">
+        <div class="feed-item" id="feed-${feed.feedNo}" data-feed-no="${feed.feedNo}">
             <div class="feed-header">
                 <h5>${feed.employeeName}</h5>
                 ${menuHtml}
@@ -176,11 +185,11 @@ function createFeedHtml(feed) {
             </div>
             <small class="text-muted">${feed.feedEnrollDate}</small>
             <div class="feed-actions">
-                <button class="btn btn-sm btn-outline-primary like-btn" onclick="likeFeed(${feed.feedNo})">
-                    <i class="far fa-thumbs-up"></i> 좋아요 <span class="like-count">${feed.likeCount || 0}</span>
+                <button class="btn btn-sm btn-outline-primary like-btn ${likedClass}">
+                    <i class="far fa-thumbs-up"></i>  <span class="like-count">${feed.likeCount || 0}</span>
                 </button>
                 <button class="btn btn-sm btn-outline-secondary comment-btn" onclick="toggleComments(${feed.feedNo})">
-                    <i class="far fa-comment"></i> 댓글 <span class="comment-count">${feed.commentCount || 0}</span>
+                    <i class="far fa-comment"></i> <span class="comment-count">${feed.commentCount || 0}</span>
                 </button>
             </div>
             <div class="comments-section" style="display: none;">
@@ -356,7 +365,6 @@ function generateTreeHtml(departments) {
     html += '</ul>';
     return html;
 }
-
 function updateSelectedParticipants() {
     const $participantList = $('#participantList');
     $participantList.empty();
@@ -418,8 +426,16 @@ function inviteParticipants(participants) {
     });
 }
 
-
 function likeFeed(feedNo) {
+    const likeButton = $(`#feed-${feedNo} .like-btn`);
+
+    // 이미 처리 중인 경우 추가 클릭 방지
+    if (likeButton.data('processing')) {
+        return;
+    }
+
+    likeButton.data('processing', true);
+
     $.ajax({
         url: '/community/feed/like',
         method: 'POST',
@@ -427,17 +443,26 @@ function likeFeed(feedNo) {
         data: JSON.stringify({ feedNo: feedNo }),
         success: function(response) {
             if (response.success) {
-                const likeButton = $(`#feed-${feedNo} .like-btn`);
                 const likeCount = likeButton.find('.like-count');
-                likeCount.text(parseInt(likeCount.text()) + 1);
-                likeButton.addClass('liked');
+                const currentCount = parseInt(likeCount.text());
+                if (response.liked) {
+                    // 좋아요 추가
+                    likeCount.text(currentCount + 1);
+                    likeButton.addClass('liked');
+                } else {
+                    // 좋아요 취소
+                    likeCount.text(Math.max(0, currentCount - 1));
+                    likeButton.removeClass('liked');
+                }
             } else {
-                alert('좋아요 실패: ' + response.message);
+                console.error('좋아요 처리 실패:', response.message);
             }
         },
         error: function(xhr, status, error) {
             console.error('좋아요 오류:', error);
-            alert('좋아요 처리 중 오류가 발생했습니다.');
+        },
+        complete: function() {
+            likeButton.data('processing', false);
         }
     });
 }
@@ -474,14 +499,83 @@ function loadComments(feedNo) {
 function displayComments(feedNo, comments) {
     const commentsList = $(`#feed-${feedNo} .comments-list`);
     commentsList.empty();
-    comments.forEach(comment => {
-        commentsList.append(`
-            <div class="comment">
-                <strong>${comment.employeeName}</strong>
-                <p>${comment.commentContent}</p>
-                <small class="text-muted">${comment.commentDate}</small>
-            </div>
-        `);
+
+    // 댓글을 부모 댓글과 답글로 분류
+    const parentComments = comments.filter(comment => comment.feedCommentParentNo === 0);
+    const childComments = comments.filter(comment => comment.feedCommentParentNo !== 0);
+
+    parentComments.forEach(comment => {
+        const commentHtml = createCommentHtml(comment, feedNo);
+        commentsList.append(commentHtml);
+
+        // 해당 부모 댓글의 답글들을 찾아 표시
+        const replies = childComments.filter(reply => reply.feedCommentParentNo === comment.feedCommentNo);
+        if (replies.length > 0) {
+            const repliesList = $('<div class="replies-list ml-4"></div>');
+            replies.forEach(reply => {
+                repliesList.append(createCommentHtml(reply, feedNo, true));
+            });
+            commentsList.append(repliesList);
+        }
+    });
+}
+
+function createCommentHtml(comment, feedNo, isReply = false) {
+    const formattedDate = formatDate(comment.feedCommentEnrolldate);
+    const replyButton = !isReply ?
+        `<button class="btn btn-sm btn-outline-secondary reply-btn" onclick="showReplyForm(${feedNo}, ${comment.feedCommentNo})">답글</button>` : '';
+
+    //XSS방지(escapeHtml) : 사용자 입력 데이터(이름, 콘텐츠 등)를 안전하게 처리
+
+    return `
+        <div class="comment" data-comment-id="${comment.feedCommentNo}">
+            <strong>${escapeHtml(comment.employeeName)}</strong>
+            <p>${escapeHtml(comment.feedCommentContent)}</p>
+            <small class="text-muted">${formattedDate}</small>
+            ${replyButton}
+            ${!isReply ? `
+                <div class="reply-form" style="display:none;">
+                    <input type="text" class="form-control reply-input" placeholder="답글을 입력하세요...">
+                    <button class="btn btn-sm btn-primary submit-reply" onclick="submitReply(${feedNo}, ${comment.feedCommentNo})">답글 작성</button>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+function showReplyForm(feedNo, commentNo) {
+    $(`#feed-${feedNo} .comment[data-comment-id="${commentNo}"] .reply-form`).toggle();
+}
+
+function submitReply(feedNo, parentCommentNo) {
+    const replyInput = $(`#feed-${feedNo} .comment[data-comment-id="${parentCommentNo}"] .reply-input`);
+    const replyContent = replyInput.val().trim();
+    if (replyContent === '') {
+        alert('답글 내용을 입력해주세요.');
+        return;
+    }
+
+    $.ajax({
+        url: '/community/feed/comment',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            feedNo: feedNo,
+            feedCommentContent: replyContent,
+            feedCommentParentNo: parentCommentNo
+        }),
+        success: function(response) {
+            if (response.success) {
+                replyInput.val('');
+                loadComments(feedNo);
+            } else {
+                alert('답글 작성에 실패했습니다: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('답글 작성 오류:', error);
+            alert('답글 작성 중 오류가 발생했습니다.');
+        }
     });
 }
 
@@ -497,7 +591,11 @@ function submitComment(feedNo) {
         url: '/community/feed/comment',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ feedNo: feedNo, commentContent: commentContent }),
+        data: JSON.stringify({
+            feedNo: feedNo,
+            feedCommentContent: commentContent,
+            feedCommentParentNo: 0 //최상위 댓글 = 0
+        }),
         success: function(response) {
             if (response.success) {
                 commentInput.val('');
@@ -526,10 +624,18 @@ $(document).click(function(event) {
     }
 });
 
-// 유틸리티 함수
+// 댓글 시간 형식
 function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString('ko-KR', options);
+    const date = new Date(dateString);
+    return date.toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
 }
 
 function escapeHtml(unsafe) {

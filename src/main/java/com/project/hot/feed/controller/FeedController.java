@@ -252,12 +252,27 @@ public class FeedController {
         }
     }
 
+    //댓글 가져오기
     @GetMapping("/comments")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getComments(@RequestParam int feedNo) {
         Map<String, Object> response = new HashMap<>();
         try {
             List<FeedComment> comments = service.getComments(feedNo);
+
+            // 댓글을 정렬: 부모 댓글 먼저, 그 다음에 각 부모 댓글의 답글이 오도록
+            comments.sort((c1, c2) -> {
+                if (c1.getFeedCommentParentNo() == 0 && c2.getFeedCommentParentNo() == 0) {
+                    return Integer.compare(c1.getFeedCommentNo(), c2.getFeedCommentNo());
+                } else if (c1.getFeedCommentParentNo() == 0) {
+                    return -1;
+                } else if (c2.getFeedCommentParentNo() == 0) {
+                    return 1;
+                } else {
+                    return Integer.compare(c1.getFeedCommentNo(), c2.getFeedCommentNo());
+                }
+            });
+
             response.put("success", true);
             response.put("comments", comments);
             return ResponseEntity.ok(response);
@@ -269,6 +284,8 @@ public class FeedController {
         }
     }
 
+
+    //댓글 저장
     @PostMapping("/comment")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> addComment(@RequestBody FeedComment comment) {
