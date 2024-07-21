@@ -266,6 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							return false;
 						} else {
 							// console.log($(".modal-hottalk-title").val());
+							$(".chat-messages").text("");
 							$("#staticBackdrop").modal("hide");
 							$(".chat-user-name").text($(".modal-hottalk-title").val());
 							$(".target-avatar").attr("src","https://cdn.hankyung.com/photo/202212/01.32245693.1.jpg");
@@ -278,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							console.log(members);
 							$(".chat-send-btn").off("click");
 							$(".chat-send-btn").click(()=>{
-							const newMsg = $(".chat-msg").val().trim();
+								const newMsg = $(".chat-msg").val().trim();
 								if(newMsg.length!=0){
 									 const newChatRoom = new CommonMessage("createChat", loginEmployeeNo, members, "", newMsg,"", $(".chat-user-name").text());
 									 chatServer.send(newChatRoom.convert());

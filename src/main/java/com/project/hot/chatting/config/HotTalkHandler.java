@@ -168,7 +168,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	public void createPrivateChatRoom(WebSocketSession session, CommonMessageDTO msg) {
 		List<String> receivers = Arrays.asList(msg.getReceiver().split(","));
-		System.out.println("168번 째 줄 : "+receivers);
 		List<Integer> receiversNo = new ArrayList<>();
 		receivers.forEach(e->{
 			int receiverNo = Integer.parseInt(e);
