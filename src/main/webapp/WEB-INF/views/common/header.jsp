@@ -69,42 +69,8 @@
                                 <span class="hottalk-no badge badge-danger badge-counter"></span>
                             </a>
                             <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <div class="hottalk-notify dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    HotTalk
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-comment text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="hottalk-date small text-gray-500"></div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-comment text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="hottalk-date small text-gray-500"></div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-comment text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="hottalk-date small text-gray-500"></div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="${path }/hottalk">HotTalk 이동</a>
                             </div>
                         </li>
 
