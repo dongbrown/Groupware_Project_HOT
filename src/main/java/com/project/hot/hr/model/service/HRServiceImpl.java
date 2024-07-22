@@ -113,7 +113,7 @@ public class HRServiceImpl implements HRService {
 		//최상위 부서
 		employees.stream().filter(f->f.getDepartmentCode().getDepartmentHighCode()==0).forEach(e->{
 			result.setId(e.getEmployeeName());
-			result.setOptions(op);
+			//result.setOptions(op);
 			result.setData(new OrgContent().builder()
 					.url(e.getEmployeePhoto()).name(e.getEmployeeName())
 					.pos(e.getPositionCode().getPositionTitle())
@@ -128,13 +128,13 @@ public class HRServiceImpl implements HRService {
 					result.setChildren(new ArrayList<OrgData>());
 					result.getChildren().add(new OrgData().builder()
 									.id(d.getDepartmentTitle())
-									.options(op)
+									//.options(op)
 									.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 									.build());
 				}else {
 					result.getChildren().add(new OrgData().builder()
 							.id(d.getDepartmentTitle())
-							.options(op)
+							//.options(op)
 							.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 							.build());
 				}
@@ -144,13 +144,13 @@ public class HRServiceImpl implements HRService {
 						e.setChildren(new ArrayList<OrgData>());
 						e.getChildren().add(new OrgData().builder()
 										.id(d.getDepartmentTitle())
-										.options(op)
+										//.options(op)
 										.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 										.build());
 					}else {
 						e.getChildren().add(new OrgData().builder()
 								.id(d.getDepartmentTitle())
-								.options(op)
+								//.options(op)
 								.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 								.build());
 					}
@@ -165,7 +165,7 @@ public class HRServiceImpl implements HRService {
 						od.setChildren(new ArrayList<OrgData>());
 						od.getChildren().add(new OrgData().builder()
 										.id(e.getEmployeeName())
-										.options(op)
+										//.options(op)
 										.data(new OrgContent().builder()
 												.name(e.getEmployeeName())
 												.pos(e.getPositionCode().getPositionTitle())
@@ -193,7 +193,7 @@ public class HRServiceImpl implements HRService {
 							.pos(e.getPositionCode().getPositionTitle())
 							.dept(e.getDepartmentCode().getDepartmentTitle())
 							.build())
-					.options(op)
+					//.options(op)
 					.build());
 		}else {
 			insertChildren(od.getChildren().get(0),e);
