@@ -114,8 +114,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">캘린더</h6>
-                        <a class="collapse-item" href="${path }/schedule/">내 캘린더</a>
-                        <a class="collapse-item" href="${path }/schedule/">공유 캘린더</a>
+                        <a class="collapse-item" href="${path }/schedule/">내 일정 / 공유 일정</a>
+<%--                         <a class="collapse-item" href="${path }/schedule/">공유 캘린더</a> --%>
                     </div>
                 </div>
             </li>
@@ -130,13 +130,13 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">메일 조회</h6>
-                        <a class="collapse-item" href="${path }/email/">전체 메일</a>
-                        <a class="collapse-item" href="utilities-border.html">받은 메일함</a>
-                        <a class="collapse-item" href="utilities-animation.html">내게 쓴 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">보낸 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">중요 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">임시 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">휴지통</a><br>
+                        <%-- <a class="collapse-item" href="${path }/email/">전체 메일</a> --%>
+                        <a class="collapse-item" href="${path }/email/">받은 메일함</a>
+                        <a class="collapse-item" href="${path }/email/">내게 쓴 메일함</a>
+                        <a class="collapse-item" href="${path }/email/">보낸 메일함</a>
+                        <a class="collapse-item" href="${path }/email/">중요 메일함</a>
+                        <a class="collapse-item" href="${path }/email/">임시 메일함</a>
+                        <a class="collapse-item" href="${path }/email/">휴지통</a><br>
                         <h6 class="collapse-header">메일 발송</h6>
                         <a class="collapse-item" href="utilities-other.html">메일 발송</a>
                         <a class="collapse-item" href="utilities-other.html">내게 쓰기</a>
@@ -186,8 +186,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">커뮤니티 목록</h6>
-                        <a class="collapse-item" href="${path }/community/">즐겨찾는 커뮤니티</a>
                         <a class="collapse-item" href="${path }/community/">내 커뮤니티</a>
+                        <%-- <a class="collapse-item" href="${path }/community/">내 커뮤니티</a> --%>
 						<a class="collapse-item" href="${path}/community/communityList">커뮤니티 리스트</a>                    </div>
                 </div>
             </li>
