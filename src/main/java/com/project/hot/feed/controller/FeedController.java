@@ -231,18 +231,17 @@ public class FeedController {
     }
 
     @PostMapping("/like")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> likeFeed(@RequestBody Map<String, Integer> payload) {
+    public ResponseEntity<Map<String, Object>> toggleLike(@RequestBody Map<String, Integer> params) {
         Map<String, Object> response = new HashMap<>();
         try {
-            int feedNo = payload.get("feedNo");
+            int feedNo = params.get("feedNo");
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             Employee loginEmployee = (Employee) auth.getPrincipal();
             int employeeNo = loginEmployee.getEmployeeNo();
 
-            boolean result = service.toggleLike(feedNo, employeeNo);
+            boolean isLiked = service.toggleLike(feedNo, employeeNo);
             response.put("success", true);
-            response.put("liked", result);
+            response.put("liked", isLiked);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("피드 좋아요 처리 중 오류 발생", e);
@@ -286,7 +285,7 @@ public class FeedController {
 
 
     //댓글 저장
-    @PostMapping("/comment")
+    @PostMapping("/comment/add")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> addComment(@RequestBody FeedComment comment) {
         Map<String, Object> response = new HashMap<>();
@@ -314,7 +313,50 @@ public class FeedController {
     }
 
 
+    @PutMapping("/comment/update")
+    public ResponseEntity<Map<String, Object>> updateComment(@RequestBody FeedComment comment) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            int result = service.updateComment(comment);
+            if (result > 0) {
+                response.put("success", true);
+                response.put("message", "댓글이 성공적으로 수정되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "댓글 수정에 실패했습니다.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            log.error("댓글 수정 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "댓글 수정 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 
-
-
+    @DeleteMapping("/comment/delete")
+    public ResponseEntity<Map<String, Object>> deleteComment(@RequestBody Map<String, Integer> params) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            int feedCommentNo = params.get("feedCommentNo");
+            int result = service.deleteComment(feedCommentNo);
+            if (result > 0) {
+                response.put("success", true);
+                response.put("message", "댓글이 성공적으로 삭제되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "댓글 삭제에 실패했습니다.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            log.error("댓글 삭제 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "댓글 삭제 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 }
+
+

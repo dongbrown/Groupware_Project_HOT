@@ -48,20 +48,23 @@ public class FeedServiceImpl implements FeedService {
     public boolean toggleLike(int feedNo, int employeeNo) {
         try {
             FeedLike existingLike = dao.getFeedLike(feedNo, employeeNo, session);
-            System.out.println(existingLike);
-            if (existingLike == null) {
-                // 좋아요가 없는 경우 추가
-                dao.insertFeedLike(feedNo, employeeNo, session);
-                return true; // 좋아요 추가됨
+            System.out.println(feedNo + employeeNo); //feedNo가 null
+            System.out.println(existingLike); //
+            if (existingLike != null) {
+                // 좋아요가 이미 존재하면 삭제
+                int result = dao.deleteFeedLike(feedNo, employeeNo, session);
+                return result > 0 ? false : true; // 삭제 성공 시 false 반환 (좋아요 취소됨)
             } else {
-                // 좋아요가 이미 있는 경우 삭제
-                dao.deleteFeedLike(feedNo, employeeNo, session);
-                return false; // 좋아요 삭제됨
+                // 좋아요가 없으면 추가
+                int result = dao.insertFeedLike(feedNo, employeeNo, session);
+                return result > 0 ? true : false; // 추가 성공 시 true 반환 (좋아요 추가됨)
             }
         } catch (Exception e) {
-            throw new RuntimeException("좋아요 처리 중 오류가 발생했습니다.", e);
+            e.printStackTrace();
+            throw new RuntimeException("좋아요 토글 중 오류 발생", e);
         }
     }
+
     @Override
     public List<FeedComment> getComments(int feedNo) {
         return dao.getComments(feedNo, session);
@@ -72,4 +75,14 @@ public class FeedServiceImpl implements FeedService {
     public int addComment(FeedComment comment) {
         return dao.insertComment(comment, session);
     }
+
+	@Override
+	public int updateComment(FeedComment comment) {
+		return dao.updateComment(comment, session);
+	}
+
+	@Override
+	public int deleteComment(int feedCommentNo) {
+		return dao.deleteComment(feedCommentNo, session);
+	}
 }

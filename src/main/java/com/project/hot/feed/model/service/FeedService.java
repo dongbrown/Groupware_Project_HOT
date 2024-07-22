@@ -15,4 +15,6 @@ public interface FeedService {
     boolean toggleLike(int feedNo, int employeeNo);
     List<FeedComment> getComments(int feedNo);
     int addComment(FeedComment comment);
+	int updateComment(FeedComment comment);
+	int deleteComment(int feedCommentNo);
 }

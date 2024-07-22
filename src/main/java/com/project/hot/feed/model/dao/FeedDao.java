@@ -13,8 +13,10 @@ public interface FeedDao {
     int updateFeed(Feed feed, SqlSession session);
     int deleteFeed(int feedNo, SqlSession session);
     FeedLike getFeedLike(int feedNo, int employeeNo, SqlSession session);
-    void insertFeedLike(int feedNo, int employeeNo, SqlSession session);
-    void deleteFeedLike(int feedNo, int employeeNo, SqlSession session);
+    int insertFeedLike(int feedNo, int employeeNo, SqlSession session);
+    int deleteFeedLike(int feedNo, int employeeNo, SqlSession session);
     List<FeedComment> getComments(int feedNo, SqlSession session);
     int insertComment(FeedComment comment, SqlSession session);
+	int updateComment(FeedComment comment, SqlSession session);
+	int deleteComment(int feedCommentNo, SqlSession session);
 }
