@@ -261,13 +261,24 @@ public class FeedController {
 
             // 댓글을 정렬: 부모 댓글 먼저, 그 다음에 각 부모 댓글의 답글이 오도록
             comments.sort((c1, c2) -> {
+                // 두 댓글 모두 부모 댓글인 경우
                 if (c1.getFeedCommentParentNo() == 0 && c2.getFeedCommentParentNo() == 0) {
+                    // 댓글 번호를 기준으로 오름차순 정렬
                     return Integer.compare(c1.getFeedCommentNo(), c2.getFeedCommentNo());
-                } else if (c1.getFeedCommentParentNo() == 0) {
+                } 
+                // c1만 부모 댓글인 경우
+                else if (c1.getFeedCommentParentNo() == 0) {
+                    // c1을 c2보다 앞에 위치시킴
                     return -1;
-                } else if (c2.getFeedCommentParentNo() == 0) {
+                } 
+                // c2만 부모 댓글인 경우
+                else if (c2.getFeedCommentParentNo() == 0) {
+                    // c2를 c1보다 앞에 위치시킴
                     return 1;
-                } else {
+                } 
+                // 두 댓글 모두 답글인 경우
+                else {
+                    // 댓글 번호를 기준으로 오름차순 정렬
                     return Integer.compare(c1.getFeedCommentNo(), c2.getFeedCommentNo());
                 }
             });
