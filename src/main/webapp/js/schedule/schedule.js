@@ -1,4 +1,4 @@
-$(document).ready(function() {
+	$(document).ready(function() {
     // 체크박스 이벤트 바인딩
     rebindCheckboxEvents();
     // 메인 캘린더 초기화
@@ -97,34 +97,6 @@ $(document).ready(function() {
             alert('종료 날짜는 시작 날짜 이후여야 합니다.');
             $(this).val(startDate);
         }
-    });
-
-    // 작은 캘린더 초기화 (월 선택용)
-    var calendar2 = $('#calendar2').fullCalendar({
-        header: {
-            left: 'prev',
-            center: 'title',
-            right: 'next'
-        },
-        titleFormat: 'MMMM',
-        defaultView: 'month',
-        height: 'auto',
-        selectable: false,
-        selectHelper: false,
-        editable: false,
-        eventLimit: false,
-        events: [], // 빈 배열로 설정하여 일정을 표시하지 않음
-        dayClick: function(date) {
-            // 메인 캘린더의 날짜를 클릭한 날짜로 이동
-            $('#calendar').fullCalendar('gotoDate', date);
-        },
-        viewRender: function(view, element) {
-            // 헤더 타이틀 형식 변경
-            var title = moment(view.start).format('M월');
-            element.find('.fc-center h2').text(title);
-        },
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
     });
 
     // 메인 캘린더의 월 이름도 변경
@@ -361,8 +333,9 @@ $(document).ready(function() {
         });
     }
 
+    // 부서 선택 시
 
-// 부서 선택 시 사원 목록 로드
+	// 부서 선택 시 사원 목록 로드
     $(document).on('click', '#departmentList li, #viewDepartmentList li', function() {
         const deptCode = $(this).data('dept-code');
         const prefix = $(this).closest('#viewDepartmentList').length ? 'view' : '';

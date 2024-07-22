@@ -52,13 +52,13 @@ $(document).ready(function() {
         });
     });
 
-
-    // 즐겨찾기 토글
+    // 즐겨찾기 토글 (이벤트 위임 사용)
     $(document).on('click', '.star', function(e) {
         e.stopPropagation(); // 이벤트 버블링 방지
         var $star = $(this);
         var communityNo = $star.data('community-no');
         var $community = $star.closest('.group');
+        var isInBookmarkedSection = $community.parent().attr('id') === 'bookmarkedCommunities';
 
         $.ajax({
             url: '/community/toggleBookmark',
@@ -66,19 +66,7 @@ $(document).ready(function() {
             data: { communityNo: communityNo },
             success: function(response) {
                 if(response.success) {
-                    $star.toggleClass('active');
-                    if (response.bookmarked) {
-                        $star.text('★');
-                        // 즐겨찾기에 추가
-                        var $favoritesSection = $('#bookmarkedCommunities');
-                        if ($favoritesSection.find('[data-community-no="' + communityNo + '"]').length === 0) {
-                            $favoritesSection.append($community.clone());
-                        }
-                    } else {
-                        $star.text('☆');
-                        // 즐겨찾기에서 제거
-                        $('#bookmarkedCommunities').find('[data-community-no="' + communityNo + '"]').remove();
-                    }
+                    updateBookmarkStatus(communityNo, response.bookmarked, isInBookmarkedSection);
                 } else {
                     alert(response.message);
                 }
@@ -89,11 +77,72 @@ $(document).ready(function() {
         });
     });
 
+    // 북마크 상태 업데이트 함수
+    function updateBookmarkStatus(communityNo, isBookmarked, isInBookmarkedSection) {
+        var $bookmarkedSection = $('#bookmarkedCommunities');
+        var $myCommunitySection = $('.group-container').not('#bookmarkedCommunities');
+
+        var $communityInBookmarked = $bookmarkedSection.find('.group[data-community-no="' + communityNo + '"]');
+        var $communityInMyCommunity = $myCommunitySection.find('.group[data-community-no="' + communityNo + '"]');
+
+        if (isBookmarked) {
+            // 즐겨찾기에 추가
+            if ($communityInBookmarked.length === 0) {
+                var $clonedCommunity = $communityInMyCommunity.clone(true);
+                $clonedCommunity.find('.star').addClass('active').text('★');
+                $bookmarkedSection.append($clonedCommunity);
+            }
+            $communityInMyCommunity.find('.star').addClass('active').text('★');
+        } else {
+            // 즐겨찾기에서 제거
+            $communityInBookmarked.remove();
+            $communityInMyCommunity.find('.star').removeClass('active').text('☆');
+
+            // 즐겨찾는 커뮤니티 섹션에서 즐겨찾기 해제한 경우
+            if (isInBookmarkedSection) {
+                $communityInBookmarked.fadeOut(300, function() {
+                    $(this).remove();
+                    updateBookmarkedSectionStatus();
+                });
+            }
+        }
+
+        // 즐겨찾기 섹션 상태 업데이트
+        updateBookmarkedSectionStatus();
+    }
+
+    // 즐겨찾기 섹션 상태 업데이트 함수
+    function updateBookmarkedSectionStatus() {
+        var $bookmarkedSection = $('#bookmarkedCommunities');
+        if ($bookmarkedSection.children('.group').length === 0) {
+            if ($bookmarkedSection.find('p').length === 0) {
+                $bookmarkedSection.append('<p>즐겨찾는 커뮤니티가 없습니다.</p>');
+            }
+        } else {
+            $bookmarkedSection.find('> p').remove();
+        }
+    }
+
     // 커뮤니티 클릭 이벤트 (피드 페이지로 이동)
-    $(".group").click(function(e) {
+    $(document).on('click', '.group', function(e) {
         if (!$(e.target).hasClass('star')) {
             var communityNo = $(this).data('community-no');
             window.location.href = '/community/feed?communityNo=' + communityNo;
         }
     });
+
+    // 페이지 로드 시 즐겨찾기 상태 초기화
+    function initializeBookmarkStatus() {
+        $('.star').each(function() {
+            var $star = $(this);
+            var isBookmarked = $star.hasClass('active');
+            $star.text(isBookmarked ? '★' : '☆');
+        });
+
+        // 즐겨찾기 섹션 상태 업데이트
+        updateBookmarkedSectionStatus();
+    }
+
+    // 페이지 로드 시 초기화 함수 호출
+    initializeBookmarkStatus();
 });

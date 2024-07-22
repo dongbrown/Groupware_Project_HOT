@@ -20,4 +20,5 @@ public class EmailReceiver {
 	private String emailReceiverIsRead;
 	private String emailReceiverIsDelete;
 	private String emailReceiverIsImportant;
+	private int emailCategoryNo;
 }

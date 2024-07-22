@@ -44,28 +44,23 @@ public class FeedDaoImpl implements FeedDao {
         Map<String, Object> params = new HashMap<>();
         params.put("feedNo", feedNo);
         params.put("employeeNo", employeeNo);
-
-        log.debug("Executing getFeedLike with params: {}", params);
-        FeedLike result = session.selectOne("feed.getFeedLike", params);
-        log.debug("getFeedLike result: {}", result);
-
-        return result;
+        return session.selectOne("feed.getFeedLike", params);
     }
 
     @Override
-    public void insertFeedLike(int feedNo, int employeeNo, SqlSession session) {
+    public int insertFeedLike(int feedNo, int employeeNo, SqlSession session) {
         Map<String, Object> params = new HashMap<>();
         params.put("feedNo", feedNo);
         params.put("employeeNo", employeeNo);
-        session.insert("feed.insertFeedLike", params);
+        return session.insert("feed.insertFeedLike", params);
     }
 
     @Override
-    public void deleteFeedLike(int feedNo, int employeeNo, SqlSession session) {
+    public int deleteFeedLike(int feedNo, int employeeNo, SqlSession session) {
         Map<String, Object> params = new HashMap<>();
         params.put("feedNo", feedNo);
         params.put("employeeNo", employeeNo);
-        session.delete("feed.deleteFeedLike", params);
+        return session.delete("feed.deleteFeedLike", params);
     }
 
     @Override
@@ -76,5 +71,15 @@ public class FeedDaoImpl implements FeedDao {
     @Override
     public int insertComment(FeedComment comment, SqlSession session) {
         return session.insert("feed.insertComment", comment);
+    }
+
+    @Override
+    public int updateComment(FeedComment comment, SqlSession session) {
+        return session.update("feed.updateComment", comment);
+    }
+
+    @Override
+    public int deleteComment(int feedCommentNo, SqlSession session) {
+        return session.delete("feed.deleteComment", feedCommentNo);
     }
 }
