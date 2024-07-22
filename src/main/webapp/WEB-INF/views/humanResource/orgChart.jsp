@@ -8,8 +8,10 @@
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
 <link href="${path }/css/humanResource/orgChart.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.jsdelivr.net/npm/apextree"></script>
-<section>
-	<div id="svg-tree"></div>
+<section class="org-section">
+	<div class="org-div">
+		<div id="svg-tree"></div>
+	</div>
 </section>
 </div>
 <script>const path='${path}';</script>

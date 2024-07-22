@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
+import com.project.hot.hr.model.dto.OrgData;
 import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.service.HRService;
@@ -194,8 +193,8 @@ public class HRController {
 		}
 	}
 
-	@GetMapping("/selectAllEmployee")
-	public List<Employee> selectAllEmployee(){
-		return HRService.selectAllEmp();
+	@GetMapping("/selectOrgData")
+	public OrgData selectDeptAndEmployee(){
+		return HRService.selectOrgData();
 	}
 }
