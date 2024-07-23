@@ -14,11 +14,17 @@ import lombok.NoArgsConstructor;
 public class EmailReceiver {
 
 	private int emailReceiverNo;
-	private Email emailNo;
+	private int emailNo;
+
 	private Employee employee;
+
 	private int emailReceiverCategory;
 	private String emailReceiverIsRead;
 	private String emailReceiverIsDelete;
 	private String emailReceiverIsImportant;
 	private int emailCategoryNo;
+
+	public String getEmail() {
+        return employee != null ? employee.getEmployeeId() + "@hot.com" : null;
+	}
 }

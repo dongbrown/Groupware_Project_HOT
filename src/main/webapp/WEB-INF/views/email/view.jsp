@@ -9,10 +9,10 @@
 
         <div class="email-meta">
             <div class="sender-info">
-                <img src="${pageContext.request.contextPath}/images/profile/${email.employee.employeeId}.jpg" alt="Sender Profile" class="sender-avatar">
+                <img src="${pageContext.request.contextPath}/images/profile/${email.sender.employeeId}.jpg" alt="Sender Profile" class="sender-avatar">
                 <div class="sender-details">
-                    <span class="sender-name">${email.employee.employeeName}</span>
-                    <span class="sender-email">&lt;${email.employee.employeeId}@hot.com&gt;</span>
+                    <span class="sender-name">${email.sender.employeeName}</span>
+                    <span class="sender-email">&lt;${email.sender.employeeId}@hot.com&gt;</span>
                     <span class="email-date">
                         <fmt:formatDate value="${email.emailSendDate}" pattern="yyyy년 MM월 dd일 HH:mm"/>
                     </span>

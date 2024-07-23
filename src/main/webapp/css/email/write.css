@@ -1,0 +1,95 @@
+@charset "UTF-8";
+.email-write-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.email-write-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.email-write-form .form-group {
+    margin-bottom: 20px;
+}
+
+.email-write-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+.email-write-form .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.email-write-form .form-control-file {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.email-write-form .button-group {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.email-write-form .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.email-write-form .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.email-write-form .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.email-write-form .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    margin-left: 10px;
+}
+
+.email-write-form .btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.email-write-form .btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    margin-left: 10px;
+}
+
+.email-write-form .btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Summernote 에디터 스타일 조정 */
+.note-editor.note-frame {
+    border-color: #ddd;
+}
+
+.note-editor.note-frame .note-editing-area {
+    background-color: white;
+}

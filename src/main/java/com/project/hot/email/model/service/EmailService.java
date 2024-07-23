@@ -1,13 +1,24 @@
 package com.project.hot.email.model.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.project.hot.email.model.dto.Email;
+import com.project.hot.employee.model.dto.Employee;
+
+import jakarta.mail.MessagingException;
 
 public interface EmailService {
 
-	List<Email> getInboxEmails(int employeeNo);
+    List<Email> getInboxEmails(int employeeNo);
 
-	Email getEmailByNo(int emailNo);
+    Email getEmailByNo(int emailNo);
 
+    void sendEmail(Email email, MultipartFile[] attachments, String senderEmail) throws MessagingException, IOException;
+
+    String uploadImage(MultipartFile file) throws IOException;
+
+    Employee findEmployeeByEmployeeId(String employeeId);
 }

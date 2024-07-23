@@ -35,7 +35,7 @@
             <!-- 페이지 콘텐츠 시작 -->
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="emailSidebar">
                             <button class="btn btn-primary w-100 mb-3" id="writeBtn">메일 쓰기</button>
                             <ul class="list-group">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="col-md-9" id="mailContent">
-                        <!-- 메일 목록 또는 상세 내용이 여기에 로드됩니다 -->
+                        <!-- 메일 목록 또는 상세 내용이 여기에  -->
                     </div>
                 </div>
             </div>
@@ -63,6 +63,7 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
     <script type="text/javascript" src="${path}/js/email/email-common.js"></script>
     <script type="text/javascript" src="${path}/js/email/email-view.js"></script>
     <script type="text/javascript" src="${path}/js/email/email-main.js"></script>
