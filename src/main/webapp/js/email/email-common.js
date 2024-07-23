@@ -19,8 +19,8 @@ var EmailCommon = {
         });
 
         // 메일 작성 버튼 클릭 이벤트
-        $(document).on('click', '#composeBtn', function() {
-            EmailCommon.showComposeForm();
+        $(document).on('click', '#writeBtn', function() {
+            EmailCommon.showWriteForm();
         });
 
         // 전체 선택 체크박스 이벤트
@@ -132,9 +132,9 @@ var EmailCommon = {
     },
 
     // 메일 작성 폼 표시 함수
-    showComposeForm: function() {
+    showWriteForm: function() {
         $.ajax({
-            url: this.contextPath + '/compose',
+            url: this.contextPath + '/write',
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
