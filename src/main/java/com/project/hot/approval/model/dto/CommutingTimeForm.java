@@ -1,6 +1,7 @@
 package com.project.hot.approval.model.dto;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,16 +9,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class VacationForm {
+public class CommutingTimeForm {
 
-	private int vacationFormNo;
+	private int commutingTimeFormNo;
 	private Approval approvalNo;
-	private Date vacationStart;
-	private Date vacationEnd;
-	private int vacationDay;
-	private String vacationType;
-	private String vacationEmergency;
+	private Date commutingWorkDate;
+	private String commutingType;
+	private LocalDateTime commutingEditTime;
 }
