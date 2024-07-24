@@ -1,16 +1,21 @@
 package com.project.hot.email.model.dao;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
 import com.project.hot.email.model.dto.Email;
 import com.project.hot.email.model.dto.EmailAtt;
 import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.employee.model.dto.Employee;
 
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Repository;
+import jakarta.mail.Session;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-import java.util.Map;
-
+@Slf4j
 @Repository
 public class EmailDaoImpl implements EmailDao {
 
@@ -18,6 +23,11 @@ public class EmailDaoImpl implements EmailDao {
     public List<Email> selectInboxEmails(int employeeNo, SqlSession session) {
         return session.selectList("email.selectInboxEmails", employeeNo);
     }
+
+	@Override
+	public List<Email> selectTrashEmails(SqlSession session, int employeeNo) {
+		return session.selectList("email.selectTrashEmails", employeeNo);
+	}
 
     @Override
     public Email getEmailByNo(int emailNo, SqlSession session) {
@@ -72,4 +82,22 @@ public class EmailDaoImpl implements EmailDao {
         Map<String, Object> params = Map.of("emailNo", emailNo, "employeeNo", employeeNo);
         session.update("email.toggleImportantEmail", params);
     }
+
+    @Override
+    public List<Employee> searchEmployees(String keyword, SqlSession session) {
+        log.debug("Executing searchEmployees with keyword: {}", keyword);
+        List<Employee> employees = session.selectList("email.searchEmployees", keyword);
+        log.debug("Result of searchEmployees: {}", employees);
+        return employees;
+    }
+
+    @Override
+    public int moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession session) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        return session.update("email.moveEmailsToTrash", params);
+    }
+
+
 }

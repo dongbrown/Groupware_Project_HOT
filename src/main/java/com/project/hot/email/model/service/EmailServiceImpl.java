@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -25,7 +26,6 @@ import com.project.hot.email.model.dto.Email;
 import com.project.hot.email.model.dto.EmailAtt;
 import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.employee.model.dto.Employee;
-import com.project.hot.employee.model.dao.EmployeeDao;
 
 import jakarta.mail.Authenticator;
 import jakarta.mail.BodyPart;
@@ -205,4 +205,28 @@ public class EmailServiceImpl implements EmailService {
 
         return newFileName;
     }
+
+    @Override
+    public List<Employee> searchEmployees(String keyword) {
+        log.debug("Searching employees with keyword: {}", keyword);
+        List<Employee> employees = dao.searchEmployees(keyword, sqlSession);
+        if (employees == null) {
+            log.warn("Search returned null for keyword: {}", keyword);
+            employees = new ArrayList<>();
+        }
+        log.debug("Found employees: {}", employees);
+        return employees;
+    }
+
+    @Override
+    @Transactional
+    public int moveEmailsToTrash(List<Integer> emailNos, int employeeNo) {
+        return dao.moveEmailsToTrash(emailNos, employeeNo, sqlSession);
+    }
+
+	@Override
+	public List<Email> getTrashEmails(int employeeNo) {
+		return dao.selectTrashEmails(sqlSession, employeeNo);
+	}
+
 }

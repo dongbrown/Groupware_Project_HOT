@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 .email-write-container {
     max-width: 800px;
     margin: 0 auto;
@@ -92,4 +93,127 @@
 
 .note-editor.note-frame .note-editing-area {
     background-color: white;
+}
+
+.receivers-list {
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.receiver-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.receiver-item:hover {
+    background-color: #f0f0f0;
+}
+
+.employee-name {
+    font-weight: bold;
+}
+
+.employee-email {
+    margin-left: 10px;
+    color: #666;
+}
+
+/* 새로 추가된 스타일 */
+.selected-receivers {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.selected-receiver {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.remove-receiver {
+    cursor: pointer;
+    margin-left: 5px;
+    font-weight: bold;
+    color: #666;
+}
+
+.remove-receiver:hover {
+    color: #dc3545;
+}
+
+#receiversList {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#receivers {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* 기존 스타일 유지 */
+
+.receivers-list {
+    position: absolute;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.receiver-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.receiver-item:last-child {
+    border-bottom: none;
+}
+
+.receiver-item:hover {
+    background-color: #f0f0f0;
+}
+
+.name-email {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.employee-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.employee-email {
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+/* 추가: 파란색 배경의 스타일 */
+.receiver-item.blue-bg {
+    background-color: #e3f2fd;
+}
+
+.receiver-item.blue-bg .employee-name {
+    color: #1565c0;
+}
+
+.receiver-item.blue-bg .employee-email {
+    color: #1976d2;
 }

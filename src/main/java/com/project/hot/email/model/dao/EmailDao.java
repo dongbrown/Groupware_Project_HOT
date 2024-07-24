@@ -22,4 +22,7 @@ public interface EmailDao {
     Employee findEmployeeByEmployeeId(String employeeId, SqlSession session);
     List<EmailAtt> selectEmailAttachments(int emailNo, SqlSession session);
     void toggleImportantEmail(int emailNo, int employeeNo, SqlSession session);
+	List<Employee> searchEmployees(String keyword, SqlSession session);
+	int moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession sqlSession);
+	List<Email> selectTrashEmails(SqlSession session, int employeeNo);
 }

@@ -6,6 +6,7 @@ var EmailCommon = {
         this.contextPath = contextPath;
         this.bindEvents();
         this.loadMailbox('inbox');
+        this.initReceiverAutocomplete();
     },
 
     bindEvents: function() {
@@ -46,19 +47,19 @@ var EmailCommon = {
                 return;
             }
 
-            EmailCommon.deleteEmails(selectedEmails, function() {
+            EmailCommon.moveEmailsToTrash(selectedEmails, function() {
                 EmailCommon.loadMailbox('inbox');
             });
         });
 
         // 검색 버튼 클릭 이벤트
         $(document).on('click', '#searchBtn', function() {
-            var query = $('#searchInput').val();
-            if (query.trim() === '') {
+            var keyword = $('#searchInput').val();
+            if (keyword.trim() === '') {
                 alert('검색어를 입력하세요.');
                 return;
             }
-            EmailCommon.searchEmails('inbox', query, function(response) {
+            EmailCommon.searchEmails('inbox', keyword, function(response) {
                 $('#mailItems').html(response);
             });
         });
@@ -127,27 +128,36 @@ var EmailCommon = {
         });
     },
 
-    deleteEmails: function(emailNos, callback) {
+	moveEmailsToTrash: function(emailNos, callback) {
+        if (!Array.isArray(emailNos)) {
+            emailNos = [emailNos]; // 단일 이메일 ID를 배열로 변환
+        }
+
         $.ajax({
-            url: this.contextPath + '/delete',
+            url: this.contextPath + '/move-to-trash',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
             success: function(response) {
-                alert('선택한 이메일이 삭제되었습니다.');
+                var message = emailNos.length > 1 ?
+                    '선택한 이메일들이 휴지통으로 이동되었습니다.' :
+                    '선택한 이메일이 휴지통으로 이동되었습니다.';
+                alert(message);
                 if (callback) callback();
             },
             error: function() {
-                alert('이메일 삭제에 실패했습니다.');
+                alert('이메일을 휴지통으로 이동하는데 실패했습니다.');
             }
         });
     },
 
-    searchEmails: function(mailbox, query, callback) {
+
+
+    searchEmails: function(mailbox, keyword, callback) {
         $.ajax({
             url: this.contextPath + '/search',
             type: 'GET',
-            data: { mailbox: mailbox, keyword: query },
+            data: { mailbox: mailbox, keyword: keyword },
             success: function(response) {
                 if (callback) callback(response);
             },
@@ -292,7 +302,101 @@ var EmailCommon = {
                 alert('메일 전송에 실패했습니다. 오류: ' + error);
             }
         });
-	}
+    },
+
+	initReceiverAutocomplete: function() {
+        var $receivers = $('#receivers');
+        var $receiversList = $('#receiversList');
+        var debounceTimer;
+
+        $receivers.on('input', function() {
+            var keyword = $(this).val();
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(function() {
+                if (keyword.length > 0) {
+                    EmailCommon.searchEmployees(keyword);
+                } else {
+                    $receiversList.empty().hide();
+                }
+            }, 300);
+        });
+
+        $(document).on('click', '.receiver-item', function() {
+            var email = $(this).data('email');
+            var currentReceivers = $receivers.val();
+            var newReceivers = currentReceivers ? currentReceivers + ', ' + email : email;
+            $receivers.val(newReceivers);
+            $receiversList.empty().hide();
+        });
+
+        // 선택된 수신자 표시 및 제거 기능 추가
+        $receivers.on('change', function() {
+            var emails = $(this).val().split(',').map(function(email) {
+                return email.trim();
+            });
+
+            var $selectedReceivers = $('#selectedReceivers');
+            $selectedReceivers.empty();
+
+            emails.forEach(function(email) {
+                if (email) {
+                    var $tag = $('<span class="selected-receiver"></span>')
+                        .text(email)
+                        .append('<span class="remove-receiver">×</span>');
+                    $selectedReceivers.append($tag);
+                }
+            });
+        });
+
+        $(document).on('click', '.remove-receiver', function() {
+            var removedEmail = $(this).parent().text().slice(0, -1);
+            var currentEmails = $receivers.val().split(',').map(function(email) {
+                return email.trim();
+            });
+            var updatedEmails = currentEmails.filter(function(email) {
+                return email !== removedEmail;
+            });
+            $receivers.val(updatedEmails.join(', ')).trigger('change');
+        });
+    },
+
+    searchEmployees: function(keyword) {
+        $.ajax({
+            url: this.contextPath + '/search-employees',  // URL 수정
+            type: 'GET',
+            data: { keyword: keyword },
+            success: function(response) {
+                EmailCommon.displayEmployeeList(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('직원 검색 중 오류가 발생했습니다:', error);
+                console.log('서버 응답:', xhr.responseText);
+            }
+        });
+    },
+
+        displayEmployeeList: function(employees) {
+        var $receiversList = $('#receiversList');
+        $receiversList.empty();
+
+        if (employees.length === 0) {
+            $receiversList.hide();
+            return;
+        }
+
+        employees.forEach(function(employee) {
+            var $item = $('<div class="receiver-item"></div>');
+            var $nameEmail = $('<span class="name-email"></span>');
+            $nameEmail.append('<span class="employee-name">' + employee.name + '</span>');
+            $nameEmail.append('<span class="employee-email">' + employee.email + '</span>');
+            $item.append($nameEmail);
+            $item.data('email', employee.email);
+            $receiversList.append($item);
+        });
+
+        $receiversList.show();
+    },
 };
 
 // 페이지 로드 시 초기화

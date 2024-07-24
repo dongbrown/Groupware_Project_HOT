@@ -12,7 +12,11 @@ import jakarta.mail.MessagingException;
 
 public interface EmailService {
 
+	//받은 메일함
     List<Email> getInboxEmails(int employeeNo);
+
+    //휴지통
+    List<Email> getTrashEmails(int employeeNo);
 
     Email getEmailByNo(int emailNo);
 
@@ -21,4 +25,10 @@ public interface EmailService {
     String uploadImage(MultipartFile file) throws IOException;
 
     Employee findEmployeeByEmployeeId(String employeeId);
+
+	List<Employee> searchEmployees(String keyword);
+
+	int moveEmailsToTrash(List<Integer> emailNos, int employeeNo);
+
+
 }

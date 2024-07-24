@@ -5,12 +5,14 @@
 <div class="email-write-container">
     <h2 class="email-write-title">새 메일 작성</h2>
     <form id="emailForm" class="email-write-form">
-		<div class="form-group">
+     	<div class="form-group">
 		    <label for="receivers">받는 사람:</label>
 		    <input type="text" id="receivers" name="receivers" class="form-control" required>
+		    <div id="receiversList" class="receivers-list"></div>
+		    <div id="selectedReceivers" class="selected-receivers"></div>
 		</div>
         <div class="form-group">
-            <label for="subject">제목:</label>
+            <label for="emailTitle">제목:</label>
             <input type="text" id="emailTitle" name="emailTitle" class="form-control" required>
         </div>
         <div class="form-group">
@@ -33,9 +35,13 @@
     </form>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/email-common.js"></script>
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
+    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initSummernote === 'function') {
         EmailCommon.initSummernote();
-    });
+    }
+    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initReceiverAutocomplete === 'function') {
+        EmailCommon.initReceiverAutocomplete();
+    }
+});
 </script>
