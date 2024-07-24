@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.employee.model.service.EmployeeService;
+import com.project.hot.hr.model.dto.OrgData;
 import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.service.HRService;
@@ -190,5 +191,10 @@ public class HRController {
 		}else {
 			return "수정 실패!";
 		}
+	}
+
+	@GetMapping("/selectOrgData")
+	public OrgData selectDeptAndEmployee(){
+		return HRService.selectOrgData();
 	}
 }

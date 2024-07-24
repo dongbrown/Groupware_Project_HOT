@@ -1,0 +1,16 @@
+/*
+	조직도 페이지용 css~
+*/
+
+.org-section {
+	display: flex;
+    justify-content: center;
+}
+
+.org-div {
+	width: 80%;
+    height: 87vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

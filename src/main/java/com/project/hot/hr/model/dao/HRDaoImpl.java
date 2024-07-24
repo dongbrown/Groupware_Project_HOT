@@ -7,7 +7,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.employee.model.dto.RequestEmployee;
+import com.project.hot.employee.model.dto.SearchEmployeeData;
 import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.dto.ResponseCommuting;
@@ -76,6 +78,11 @@ public class HRDaoImpl implements HRDao {
 	@Override
 	public int updateCommuting(SqlSession session, RequestCommuting rc) {
 		return session.update("hr.updateCommuting", rc);
+	}
+
+	@Override
+	public List<Employee> selectAllEmp(SqlSession session) {
+		return session.selectList("employee.selectAllEmployee");
 	}
 
 }
