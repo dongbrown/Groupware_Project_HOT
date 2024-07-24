@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class EmailAtt {
 
 	private int emailAttNo;
-	private Email emailNo;
+	private int emailNo;
 	private String emailAttOriginalFilename;
 	private String emailAttRenamedFilename;
 }

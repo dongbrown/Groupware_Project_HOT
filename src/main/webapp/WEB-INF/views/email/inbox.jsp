@@ -31,7 +31,7 @@
                     <i class="far fa-star"></i>
                 </div>
                 <div class="sender-wrapper me-3 text-truncate" style="max-width: 200px;">
-                    ${email.employee.employeeName}(${email.employee.employeeId}@hot.com)
+                    ${email.sender.employeeName}(${email.sender.employeeId}@hot.com)
                 </div>
                 <div class="subject-wrapper flex-grow-1 text-truncate">
                     <span class="fw-bold">${email.emailTitle}</span>

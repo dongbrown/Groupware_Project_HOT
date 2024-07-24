@@ -1,6 +1,7 @@
 package com.project.hot.email.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import com.project.hot.employee.model.dto.Employee;
 
@@ -16,10 +17,12 @@ import lombok.NoArgsConstructor;
 public class Email {
 
 	private int emailNo;
-	private Employee employee;
+	private Employee sender;
 	private String emailTitle;
 	private String emailContent;
 	private Date emailSendDate;
 	private int emailCategoryNo;
 	private String emailIsDelete;
+    private List<EmailReceiver> receivers;
+
 }
