@@ -23,7 +23,7 @@ public class Approval {
 	 private Date approvalDocPeriod; //보존연한
 	 private String approvalTitle;//결재제목
 	 private String approvalContent;//결재내용
-	 private String approvalStatus;//상태
+	 private int approvalStatus;//상태
 	 private String approvalSecurity;//보안등급
 
 }

@@ -66,7 +66,7 @@
                 <div id="approval" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">결재함</h6>
-                        <a class="collapse-item" href="${path}/approval/approvalAll">전체</a>
+                        <a class="collapse-item" href="${path}/approval/approvalAllList">전체</a>
                         <a class="collapse-item" href="${path}/approval/approvalWait">결재대기</a>
                         <a class="collapse-item" href="${path}/approval/approvalProcess">결재진행</a>
                         <a class="collapse-item" href="${path}/approval/approvalPending">결재예정</a>

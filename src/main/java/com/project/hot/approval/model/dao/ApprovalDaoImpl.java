@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Repository
-public class ApprovalDocumentDaoImpl implements ApprovalDocumentDao {
+public class ApprovalDaoImpl implements ApprovalDao {
 
 	private final SqlSession session;
 

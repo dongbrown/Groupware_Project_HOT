@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.hot.approval.model.dto.Approval;
-import com.project.hot.approval.model.service.ApprovalDocumentService;
+import com.project.hot.approval.model.service.ApprovalService;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class ApprovalDocumentController {
 
-    private final ApprovalDocumentService service;
+    private final ApprovalService service;
 
-    @GetMapping("/approvalAll.do")
-    public String approvalAll(Model model) {
-        List<Approval> approvalAll = service.getAllDocuments();
-        model.addAttribute("approvalAll", approvalAll);
-        return "approval/documentAll";
-    }
+//    @GetMapping("/approvalAll")
+//    public String approvalAll(Model model) {
+//        List<Approval> approvalAll = service.getAllDocuments();
+//        model.addAttribute("approvalAll", approvalAll);
+//        return "approval/documentAll";
+//    }
 
 
     @GetMapping("/employees")

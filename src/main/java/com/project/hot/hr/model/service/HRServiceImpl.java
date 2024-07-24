@@ -108,12 +108,10 @@ public class HRServiceImpl implements HRService {
 		List<Employee> employees=hrDao.selectAllEmp(session);
 		List<Department> departments=empDao.selectDepartmentList(session);
 		OrgData result = new OrgData();
-		OrgOption op = new OrgOption("#000", "#fff"); //카드 옵션
 		//조직도 데이터로 바꾸기
 		//최상위 부서
 		employees.stream().filter(f->f.getDepartmentCode().getDepartmentHighCode()==0).forEach(e->{
 			result.setId(e.getEmployeeName());
-			//result.setOptions(op);
 			result.setData(new OrgContent().builder()
 					.url(e.getEmployeePhoto()).name(e.getEmployeeName())
 					.pos(e.getPositionCode().getPositionTitle())
@@ -128,13 +126,11 @@ public class HRServiceImpl implements HRService {
 					result.setChildren(new ArrayList<OrgData>());
 					result.getChildren().add(new OrgData().builder()
 									.id(d.getDepartmentTitle())
-									//.options(op)
 									.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 									.build());
 				}else {
 					result.getChildren().add(new OrgData().builder()
 							.id(d.getDepartmentTitle())
-							//.options(op)
 							.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 							.build());
 				}
@@ -144,13 +140,11 @@ public class HRServiceImpl implements HRService {
 						e.setChildren(new ArrayList<OrgData>());
 						e.getChildren().add(new OrgData().builder()
 										.id(d.getDepartmentTitle())
-										//.options(op)
 										.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 										.build());
 					}else {
 						e.getChildren().add(new OrgData().builder()
 								.id(d.getDepartmentTitle())
-								//.options(op)
 								.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
 								.build());
 					}
@@ -165,7 +159,6 @@ public class HRServiceImpl implements HRService {
 						od.setChildren(new ArrayList<OrgData>());
 						od.getChildren().add(new OrgData().builder()
 										.id(e.getEmployeeName())
-										//.options(op)
 										.data(new OrgContent().builder()
 												.name(e.getEmployeeName())
 												.pos(e.getPositionCode().getPositionTitle())
@@ -183,7 +176,6 @@ public class HRServiceImpl implements HRService {
 	}
 
 	private void insertChildren(OrgData od, Employee e) {
-		OrgOption op = new OrgOption("#0081a7", "#0081a7");
 		if(od.getChildren() == null) {
 			od.setChildren(new ArrayList<OrgData>());
 			od.getChildren().add(new OrgData().builder()
@@ -193,7 +185,6 @@ public class HRServiceImpl implements HRService {
 							.pos(e.getPositionCode().getPositionTitle())
 							.dept(e.getDepartmentCode().getDepartmentTitle())
 							.build())
-					//.options(op)
 					.build());
 		}else {
 			insertChildren(od.getChildren().get(0),e);

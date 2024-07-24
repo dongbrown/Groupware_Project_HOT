@@ -8,7 +8,7 @@ import com.project.hot.approval.model.dto.Approval;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
-public interface ApprovalDocumentDao {
+public interface ApprovalDao {
 
 	List<Approval> AllDocuments(SqlSession session);
 	List<Employee> getEmployeesByDepartment(SqlSession session, String departmentCode);
