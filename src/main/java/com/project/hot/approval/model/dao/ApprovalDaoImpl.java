@@ -11,11 +11,8 @@ import com.project.hot.employee.model.dto.Employee;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Repository
 public class ApprovalDaoImpl implements ApprovalDao {
-
-	private final SqlSession session;
 
     @Override
     public List<Approval> AllDocuments(SqlSession session) {
@@ -31,4 +28,25 @@ public class ApprovalDaoImpl implements ApprovalDao {
     public List<Department> selectDepartmentList(SqlSession session) {
         return session.selectList("approval.selectDepartmentList");
     }
+
+	@Override
+	public int selectApprovalWaitCount(SqlSession session, int no) {
+		return session.selectOne("approval.selectApprovalWaitCount", no);
+	}
+
+	@Override
+	public int selectApprovalProcessCount(SqlSession session, int no) {
+		return session.selectOne("approval.selectApprovalProcessCount", no);
+	}
+
+	@Override
+	public int selectApprovalPendingCount(SqlSession session, int no) {
+		return session.selectOne("approval.selectApprovalPendingCount", no);
+	}
+
+	@Override
+	public int selectApprovalCompleteCount(SqlSession session, int no) {
+		return session.selectOne("approval.selectApprovalCompleteCount", no);
+	}
+
 }

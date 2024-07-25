@@ -43,9 +43,16 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public Map<String, Object> getApprovalsCountAndList(int no) {
 		Map<String, Object> result=new HashMap<>();
-		ResponseApprovalsCount rac=new ResponseApprovalsCount();
 
+		//각 결재문서 카운트
+		ResponseApprovalsCount rac=new ResponseApprovalsCount();
+		rac.setWaitCount(dao.selectApprovalWaitCount(session, no));
+		rac.setProcessCount(dao.selectApprovalProcessCount(session, no));
+		rac.setPendingCount(dao.selectApprovalPendingCount(session, no));
+		rac.setCompleteCount(dao.selectApprovalCompleteCount(session, no));
 		result.put("rac", rac);
+
+		//결재 문서 리스트 가져오기
 		return result;
 	}
 

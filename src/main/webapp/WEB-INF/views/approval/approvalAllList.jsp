@@ -48,12 +48,13 @@
 		<thead>
 			<tr>
 				<th style="width:10%;">결재번호</th>
-				<th style="width:40%;">제목</th>
+				<th style="width:7%;">종류</th>
+				<th style="width:36%;">제목</th>
 				<th style="width:10%;">기안자</th>
 				<th style="width:10%;">기안부서</th>
 				<th style="width:10%;">기안일</th>
-				<th style="width:10%;">결재일</th>
-				<th style="width:10%;">상태</th>
+				<th style="width:10%;">결재완료일</th>
+				<th style="width:7%;">상태</th>
 			</tr>
 		</thead>
 		<tbody id="approvalBody">
@@ -72,7 +73,7 @@
 			</c:if>
 			<c:if test="${empty approvalAll}">
 				<tr>
-					<td colspan="7">
+					<td colspan="8">
 						<p>조회된 결과가 없습니다.</p>
 					</td>
 				</tr>

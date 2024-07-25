@@ -13,4 +13,8 @@ public interface ApprovalDao {
 	List<Approval> AllDocuments(SqlSession session);
 	List<Employee> getEmployeesByDepartment(SqlSession session, String departmentCode);
 	List<Department> selectDepartmentList(SqlSession session);
+	int selectApprovalWaitCount(SqlSession session, int no);
+	int selectApprovalProcessCount(SqlSession session, int no);
+	int selectApprovalPendingCount(SqlSession session, int no);
+	int selectApprovalCompleteCount(SqlSession session, int no);
 }
