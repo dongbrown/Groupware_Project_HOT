@@ -27,9 +27,8 @@ import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.email.model.service.EmailService;
 import com.project.hot.employee.model.dto.Employee;
 
-import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Controller
 @RequestMapping("/email")
@@ -39,13 +38,13 @@ public class EmailController {
     private EmailService service;
 
     @GetMapping("/")
-	public String showEmail() {
-		return "email/email";
-	}
+    public String showEmail() {
+        return "email/email";
+    }
 
     @GetMapping("/inbox")
-    public String inbox(HttpSession session, Model model) {
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public String inbox(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         List<Email> inboxEmails = service.getInboxEmails(loginEmployee.getEmployeeNo());
         model.addAttribute("emails", inboxEmails);
@@ -53,8 +52,8 @@ public class EmailController {
     }
 
     @GetMapping("/trash")
-    public String trash(HttpSession session, Model model) {
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public String trash(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         List<Email> trashEmails = service.getTrashEmails(loginEmployee.getEmployeeNo());
         model.addAttribute("emails", trashEmails);
@@ -75,47 +74,38 @@ public class EmailController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<?> sendEmail(
+    public ResponseEntity<?> saveEmail(
             @RequestParam("receivers") String receivers,
             @RequestParam("emailTitle") String emailTitle,
             @RequestParam("emailContent") String emailContent,
-            @RequestParam(value = "attachments", required = false) MultipartFile[] attachments,
-            HttpSession session) {
+            @RequestParam(value = "attachments", required = false) MultipartFile[] attachments) {
 
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             Employee sender = (Employee) auth.getPrincipal();
-
-            String senderEmail = sender.getEmployeeId() + "@hot.com";
 
             Email email = new Email();
             email.setSender(sender);
             email.setEmailTitle(emailTitle);
             email.setEmailContent(emailContent);
 
-            // 수신자 처리
-//            List<EmailReceiver> emailReceivers = Arrays.stream(receivers.split(","))
-//                .map(String::trim)
-//                .filter(id -> !id.isEmpty())
-//                .map(service::findEmployeeByEmployeeId)
-//                .filter(Objects::nonNull)
-//                .map(employee -> {
-//                    EmailReceiver receiver = EmailReceiver.builder().employee(employee).build();
-//                    log.info("Created EmailReceiver: {}", receiver);
-//                    return receiver;
-//                })
-//                .collect(Collectors.toList());
-
             List<EmailReceiver> emailReceivers = new ArrayList<>();
             String[] receiverEmails = receivers.split(",");
 
-            for(String e : receiverEmails) {
-            	String receiverEmail = e.trim();
+            for (String receiverEmail : receiverEmails) {
+                String trimmedEmail = receiverEmail.trim();
+                String employeeId = trimmedEmail.split("@")[0]; // '@hot.com' 제거
 
-            	if(!receiverEmail.isEmpty()) {
-            	}
+                if (!employeeId.isEmpty()) {
+                    Employee receiver = service.findEmployeeByEmployeeId(employeeId);
+                    if (receiver != null) {
+                        EmailReceiver emailReceiver = EmailReceiver.builder().employee(receiver).build();
+                        if (!emailReceivers.contains(emailReceiver)) { // 중복 체크
+                            emailReceivers.add(emailReceiver);
+                        }
+                    }
+                }
             }
-
 
             if (emailReceivers.isEmpty()) {
                 log.warn("No valid recipients found. Receivers input: {}", receivers);
@@ -125,29 +115,27 @@ public class EmailController {
             log.info("Processed receivers: {}", emailReceivers);
             email.setReceivers(emailReceivers);
 
-            service.sendEmail(email, attachments, senderEmail);
+            service.saveEmail(email, attachments);
 
-            return ResponseEntity.ok().body("이메일 전송 성공");
+            return ResponseEntity.ok().body("이메일 저장 성공");
 
-        } catch (MessagingException | IOException e) {
-            log.error("이메일 전송 실패", e);
-            return ResponseEntity.badRequest().body("이메일 전송 실패 : " + e.getMessage());
+        } catch (IOException e) {
+            log.error("이메일 저장 실패", e);
+            return ResponseEntity.badRequest().body("이메일 저장 실패 : " + e.getMessage());
         }
     }
 
+//    @PostMapping("/upload-image")
+//    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+//        try {
+//            String imageUrl = service.uploadImage(file);
+//            return ResponseEntity.ok(imageUrl);
+//        } catch (Exception e) {
+//            log.error("이미지 업로드 실패", e);
+//            return ResponseEntity.badRequest().body("이미지 업로드 실패: " + e.getMessage());
+//        }
+//    }
 
-    @PostMapping("/upload-image")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            String imageUrl = service.uploadImage(file);
-            return ResponseEntity.ok(imageUrl);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("이미지 업로드 실패: " + e.getMessage());
-        }
-    }
-
-    //사원 검색(수신자)
     @GetMapping("/search-employees")
     public ResponseEntity<List<Map<String, String>>> searchEmployees(@RequestParam String keyword) {
         try {
@@ -247,7 +235,7 @@ public class EmailController {
 //            return ResponseEntity.badRequest().body("상태 변경 실패: " + e.getMessage());
 //        }
 //    }
-//
+
 //    // 중요 이메일 토글
 //    @PostMapping("/toggle-important/{emailNo}")
 //    @ResponseBody

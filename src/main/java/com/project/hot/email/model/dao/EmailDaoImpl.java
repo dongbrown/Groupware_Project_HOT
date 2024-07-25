@@ -12,7 +12,6 @@ import com.project.hot.email.model.dto.EmailAtt;
 import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.employee.model.dto.Employee;
 
-import jakarta.mail.Session;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,10 +23,10 @@ public class EmailDaoImpl implements EmailDao {
         return session.selectList("email.selectInboxEmails", employeeNo);
     }
 
-	@Override
-	public List<Email> selectTrashEmails(SqlSession session, int employeeNo) {
-		return session.selectList("email.selectTrashEmails", employeeNo);
-	}
+    @Override
+    public List<Email> selectTrashEmails(SqlSession session, int employeeNo) {
+        return session.selectList("email.selectTrashEmails", employeeNo);
+    }
 
     @Override
     public Email getEmailByNo(int emailNo, SqlSession session) {
@@ -37,7 +36,7 @@ public class EmailDaoImpl implements EmailDao {
     @Override
     public int saveEmail(Email email, SqlSession session) {
         session.insert("email.insertEmail", email);
-        return email.getEmailNo();  // 자동 생성된 키 값 반환
+        return email.getEmailNo(); // 자동 생성된 키 값 반환
     }
 
     @Override
@@ -57,13 +56,17 @@ public class EmailDaoImpl implements EmailDao {
 
     @Override
     public void updateEmailReadStatus(int emailNo, int employeeNo, SqlSession session) {
-        Map<String, Object> params = Map.of("emailNo", emailNo, "employeeNo", employeeNo);
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNo", emailNo);
+        params.put("employeeNo", employeeNo);
         session.update("email.updateEmailReadStatus", params);
     }
 
     @Override
     public void deleteEmails(List<Integer> emailNos, int employeeNo, SqlSession session) {
-        Map<String, Object> params = Map.of("emailNos", emailNos, "employeeNo", employeeNo);
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
         session.update("email.deleteEmails", params);
     }
 
@@ -79,7 +82,9 @@ public class EmailDaoImpl implements EmailDao {
 
     @Override
     public void toggleImportantEmail(int emailNo, int employeeNo, SqlSession session) {
-        Map<String, Object> params = Map.of("emailNo", emailNo, "employeeNo", employeeNo);
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNo", emailNo);
+        params.put("employeeNo", employeeNo);
         session.update("email.toggleImportantEmail", params);
     }
 
@@ -98,6 +103,4 @@ public class EmailDaoImpl implements EmailDao {
         params.put("employeeNo", employeeNo);
         return session.update("email.moveEmailsToTrash", params);
     }
-
-
 }

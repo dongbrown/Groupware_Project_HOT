@@ -15,6 +15,7 @@
 <link href="https://webfontworld.github.io/gmarket/GmarketSans.css"
     rel="stylesheet">
 <link href="${path}/css/schedule/schedule.css" rel="stylesheet">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/gcal.min.js'></script>
 </head>
 <body>
     <c:set var="loginEmployee"

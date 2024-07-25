@@ -59,9 +59,7 @@ var EmailCommon = {
                 alert('검색어를 입력하세요.');
                 return;
             }
-            EmailCommon.searchEmails('inbox', keyword, function(response) {
-                $('#mailItems').html(response);
-            });
+            EmailCommon.searchEmails(keyword);
         });
 
         // 메일 항목 클릭 이벤트 (체크박스 제외)
@@ -108,10 +106,10 @@ var EmailCommon = {
             EmailCommon.updateFileList();
         });
 
-        // 메일 전송 폼 제출 이벤트
+        // 메일 저장 폼 제출 이벤트
         $(document).on('submit', '#emailForm', function(e) {
             e.preventDefault();
-            EmailCommon.sendEmail();
+            EmailCommon.saveEmail();
         });
     },
 
@@ -128,7 +126,7 @@ var EmailCommon = {
         });
     },
 
-	moveEmailsToTrash: function(emailNos, callback) {
+    moveEmailsToTrash: function(emailNos, callback) {
         if (!Array.isArray(emailNos)) {
             emailNos = [emailNos]; // 단일 이메일 ID를 배열로 변환
         }
@@ -151,15 +149,13 @@ var EmailCommon = {
         });
     },
 
-
-
-    searchEmails: function(mailbox, keyword, callback) {
+    searchEmails: function(keyword) {
         $.ajax({
             url: this.contextPath + '/search',
             type: 'GET',
-            data: { mailbox: mailbox, keyword: keyword },
+            data: { keyword: keyword },
             success: function(response) {
-                if (callback) callback(response);
+                $('#mailContent').html(response);
             },
             error: function() {
                 alert('이메일 검색에 실패했습니다.');
@@ -260,32 +256,24 @@ var EmailCommon = {
         }
     },
 
-    sendEmail: function() {
+    saveEmail: function() {
         var formData = new FormData($('#emailForm')[0]);
 
-        // 디버깅을 위한 로그 추가
         console.log("Form Data:", $('#emailForm').serialize());
         console.log("Receivers:", $('#receivers').val());
         console.log("Email Title:", $('#emailTitle').val());
 
-        // 이메일 제목 추가 (수정)
         formData.append('emailTitle', $('#emailTitle').val());
-
-        // Summernote 에디터의 내용을 추가
         formData.append('emailContent', $('#summernote').summernote('code'));
-
-        // 수신자 정보 추가
         formData.append('receivers', $('#receivers').val());
 
-        // FormData 내용 확인을 위한 로그
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
-
-        // 첨부 파일 추가
         this.files.forEach(function(file, index) {
             formData.append('attachments', file);
         });
+
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
 
         $.ajax({
             url: this.contextPath + '/send',
@@ -294,17 +282,17 @@ var EmailCommon = {
             processData: false,
             contentType: false,
             success: function(response) {
-                alert('메일이 성공적으로 전송되었습니다.');
+                alert('메일이 성공적으로 저장되었습니다.');
                 EmailCommon.loadMailbox('sent');
             },
             error: function(xhr, status, error) {
-                console.error("Email send error:", xhr.responseText);
-                alert('메일 전송에 실패했습니다. 오류: ' + error);
+                console.error("Email save error:", xhr.responseText);
+                alert('메일 저장에 실패했습니다. 오류: ' + error);
             }
         });
     },
 
-	initReceiverAutocomplete: function() {
+    initReceiverAutocomplete: function() {
         var $receivers = $('#receivers');
         var $receiversList = $('#receiversList');
         var debounceTimer;
@@ -330,7 +318,6 @@ var EmailCommon = {
             $receiversList.empty().hide();
         });
 
-        // 선택된 수신자 표시 및 제거 기능 추가
         $receivers.on('change', function() {
             var emails = $(this).val().split(',').map(function(email) {
                 return email.trim();
@@ -363,7 +350,7 @@ var EmailCommon = {
 
     searchEmployees: function(keyword) {
         $.ajax({
-            url: this.contextPath + '/search-employees',  // URL 수정
+            url: this.contextPath + '/search-employees',
             type: 'GET',
             data: { keyword: keyword },
             success: function(response) {
@@ -376,7 +363,7 @@ var EmailCommon = {
         });
     },
 
-        displayEmployeeList: function(employees) {
+    displayEmployeeList: function(employees) {
         var $receiversList = $('#receiversList');
         $receiversList.empty();
 

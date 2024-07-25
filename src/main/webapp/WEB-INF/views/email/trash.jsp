@@ -18,9 +18,7 @@
             <input type="checkbox" id="selectAll" class="form-check-input">
             <button class="btn btn-sm">읽음</button>
             <button class="btn btn-sm">영구삭제</button>
-            <button class="btn btn-sm">스팸차단</button>
-            <button class="btn btn-sm">이동</button>
-            <button class="btn btn-sm">더보기</button>
+            <button class="btn btn-sm">복구</button>
         </div>
         <div class="toolbar-right">
             <select class="form-select form-select-sm">
