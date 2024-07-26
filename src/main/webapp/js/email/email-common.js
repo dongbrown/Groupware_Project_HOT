@@ -1,17 +1,19 @@
 var EmailCommon = {
     contextPath: '',
-    files: [], // 첨부 파일을 저장할 배열
+    files: [],
+    initialized: false,
 
     init: function(contextPath) {
+        if (this.initialized) return;
+        this.initialized = true;
+
         this.contextPath = contextPath;
         this.bindEvents();
         this.loadMailbox('inbox');
-        this.initReceiverAutocomplete();
     },
 
     bindEvents: function() {
-        // 메일함 선택 이벤트
-        $(document).on('click', '.list-group-item', function(e) {
+        $(document).off('click', '.list-group-item').on('click', '.list-group-item', function(e) {
             e.preventDefault();
             $('.list-group-item').removeClass('active');
             $(this).addClass('active');
@@ -19,25 +21,21 @@ var EmailCommon = {
             EmailCommon.loadMailbox(mailbox);
         });
 
-        // 메일 작성 버튼 클릭 이벤트
-        $(document).on('click', '#writeBtn', function(e) {
+        $(document).off('click', '#writeBtn').on('click', '#writeBtn', function(e) {
             e.preventDefault();
             EmailCommon.showWriteForm();
         });
 
-        // 전체 선택 체크박스 이벤트
-        $(document).on('change', '#select-all', function() {
+        $(document).off('change', '#select-all').on('change', '#select-all', function() {
             $('.mail-item-checkbox').prop('checked', $(this).prop('checked'));
         });
 
-        // 개별 체크박스 이벤트
-        $(document).on('change', '.mail-item-checkbox', function() {
+        $(document).off('change', '.mail-item-checkbox').on('change', '.mail-item-checkbox', function() {
             var allChecked = $('.mail-item-checkbox:checked').length === $('.mail-item-checkbox').length;
             $('#select-all').prop('checked', allChecked);
         });
 
-        // 삭제 버튼 클릭 이벤트
-        $(document).on('click', '#deleteBtn', function() {
+        $(document).off('click', '#deleteBtn').on('click', '#deleteBtn', function() {
             var selectedEmails = $('.mail-item-checkbox:checked').map(function() {
                 return $(this).val();
             }).get();
@@ -52,8 +50,7 @@ var EmailCommon = {
             });
         });
 
-        // 검색 버튼 클릭 이벤트
-        $(document).on('click', '#searchBtn', function() {
+        $(document).off('click', '#searchBtn').on('click', '#searchBtn', function() {
             var keyword = $('#searchInput').val();
             if (keyword.trim() === '') {
                 alert('검색어를 입력하세요.');
@@ -62,55 +59,87 @@ var EmailCommon = {
             EmailCommon.searchEmails(keyword);
         });
 
-        // 메일 항목 클릭 이벤트 (체크박스 제외)
-        $(document).on('click', '.email-item', function(e) {
+        $(document).off('click', '.email-item').on('click', '.email-item', function(e) {
             if (!$(e.target).is('input:checkbox')) {
                 var emailNo = $(this).data('email-no');
                 EmailCommon.viewEmail(emailNo);
             }
         });
 
-        // 드래그 앤 드롭 이벤트
-        $(document).on('dragover', '#dropZone', function(e) {
+        $(document).off('dragover', '#dropZone').on('dragover', '#dropZone', function(e) {
             e.preventDefault();
             e.stopPropagation();
             $(this).addClass('drag-over');
         });
 
-        $(document).on('dragleave', '#dropZone', function(e) {
+        $(document).off('dragleave', '#dropZone').on('dragleave', '#dropZone', function(e) {
             e.preventDefault();
             e.stopPropagation();
             $(this).removeClass('drag-over');
         });
 
-        $(document).on('drop', '#dropZone', function(e) {
+        $(document).off('drop', '#dropZone').on('drop', '#dropZone', function(e) {
             e.preventDefault();
             e.stopPropagation();
             $(this).removeClass('drag-over');
             EmailCommon.handleFiles(e.originalEvent.dataTransfer.files);
         });
 
-        // 파일 선택 클릭 이벤트
-        $(document).on('click', '#dropZone', function() {
+        $(document).off('click', '#dropZone').on('click', '#dropZone', function() {
             $('#fileInput').click();
         });
 
-        $(document).on('change', '#fileInput', function() {
+        $(document).off('change', '#fileInput').on('change', '#fileInput', function() {
             EmailCommon.handleFiles(this.files);
         });
 
-        // 파일 제거 이벤트
-        $(document).on('click', '.remove-file', function() {
+        $(document).off('click', '.remove-file').on('click', '.remove-file', function() {
             var index = $(this).data('index');
             EmailCommon.files.splice(index, 1);
             EmailCommon.updateFileList();
         });
 
-        // 메일 저장 폼 제출 이벤트
-        $(document).on('submit', '#emailForm', function(e) {
+        $(document).off('submit', '#emailForm').on('submit', '#emailForm', function(e) {
             e.preventDefault();
             EmailCommon.saveEmail();
         });
+
+        $(document).off('keydown', '#receivers').on('keydown', '#receivers', function(e) {
+            var $receiversList = $('#receiversList');
+            var $highlighted = $receiversList.find('.keyboard-selected');
+
+            switch(e.which) {
+                case 40: // down arrow
+                    e.preventDefault();
+                    EmailCommon.moveSelection($highlighted, 'down');
+                    break;
+                case 38: // up arrow
+                    e.preventDefault();
+                    EmailCommon.moveSelection($highlighted, 'up');
+                    break;
+                case 13: // enter
+                    e.preventDefault();
+                    if ($highlighted.length > 0) {
+                        $highlighted.click();
+                    }
+                    break;
+            }
+        });
+    },
+
+    moveSelection: function($highlighted, direction) {
+        var $items = $('#receiversList').find('.receiver-item');
+        var index = $items.index($highlighted);
+
+        $highlighted.removeClass('keyboard-selected');
+
+        if (direction === 'down') {
+            index = (index + 1) % $items.length;
+        } else {
+            index = (index - 1 + $items.length) % $items.length;
+        }
+
+        $items.eq(index).addClass('keyboard-selected');
     },
 
     loadMailbox: function(mailbox) {
@@ -119,6 +148,7 @@ var EmailCommon = {
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
+                EmailCommon.initMailboxSpecificFunctions();
             },
             error: function() {
                 alert(mailbox + ' 메일함을 로드하는데 실패했습니다.');
@@ -128,7 +158,7 @@ var EmailCommon = {
 
     moveEmailsToTrash: function(emailNos, callback) {
         if (!Array.isArray(emailNos)) {
-            emailNos = [emailNos]; // 단일 이메일 ID를 배열로 변환
+            emailNos = [emailNos];
         }
 
         $.ajax({
@@ -182,7 +212,7 @@ var EmailCommon = {
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
-                EmailCommon.initSummernote();
+                EmailCommon.initMailboxSpecificFunctions();
             },
             error: function() {
                 alert('메일 작성 폼을 불러오는데 실패했습니다.');
@@ -190,48 +220,32 @@ var EmailCommon = {
         });
     },
 
-    initSummernote: function() {
-        $('#summernote').summernote({
-            height: 800,
-            lang: 'ko-KR',
-            toolbar: [
-                ['fontsize', ['fontsize']],
-                ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                ['color', ['color']],
-                ['table', ['table']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['height', ['height']],
-                ['insert', ['picture']]
-            ],
-            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '굴림', '돋음체', '바탕체'],
-            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
-            focus: true,
-            callbacks: {
-                onImageUpload: function(files) {
-                    for (var i = 0; i < files.length; i++) {
-                        EmailCommon.uploadImage(files[i], this);
-                    }
-                }
-            }
-        });
+    initMailboxSpecificFunctions: function() {
+        if ($('#summernote').length) {
+            this.initSummernote();
+        }
+        if ($('#receivers').length) {
+            this.initReceiverAutocomplete();
+        }
     },
 
-    uploadImage: function(file, editor) {
-        var formData = new FormData();
-        formData.append("file", file);
-        $.ajax({
-            data: formData,
-            type: "POST",
-            url: this.contextPath + "/upload-image",
-            contentType: false,
-            enctype: 'multipart/form-data',
-            processData: false,
-            success: function(url) {
-                $(editor).summernote('insertImage', url);
-            },
-            error: function() {
-                alert('이미지 업로드에 실패했습니다.');
-            }
+    initSummernote: function() {
+        $('#summernote').summernote({
+            height: 300,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            lang: 'ko-KR',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['link', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
         });
     },
 
@@ -259,21 +273,15 @@ var EmailCommon = {
     saveEmail: function() {
         var formData = new FormData($('#emailForm')[0]);
 
-        console.log("Form Data:", $('#emailForm').serialize());
-        console.log("Receivers:", $('#receivers').val());
-        console.log("Email Title:", $('#emailTitle').val());
-
         formData.append('emailTitle', $('#emailTitle').val());
         formData.append('emailContent', $('#summernote').summernote('code'));
-        formData.append('receivers', $('#receivers').val());
+
+        var receivers = this.getSelectedReceivers();
+        formData.append('receivers', receivers.join(','));
 
         this.files.forEach(function(file, index) {
             formData.append('attachments', file);
         });
-
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
 
         $.ajax({
             url: this.contextPath + '/send',
@@ -282,12 +290,12 @@ var EmailCommon = {
             processData: false,
             contentType: false,
             success: function(response) {
-                alert('메일이 성공적으로 저장되었습니다.');
+                alert('메일이 성공적으로 전송되었습니다.');
                 EmailCommon.loadMailbox('sent');
             },
             error: function(xhr, status, error) {
                 console.error("Email save error:", xhr.responseText);
-                alert('메일 저장에 실패했습니다. 오류: ' + error);
+                alert('메일 전송에 실패했습니다. 오류: ' + error);
             }
         });
     },
@@ -295,9 +303,10 @@ var EmailCommon = {
     initReceiverAutocomplete: function() {
         var $receivers = $('#receivers');
         var $receiversList = $('#receiversList');
+        var $selectedReceivers = $('#selectedReceivers');
         var debounceTimer;
 
-        $receivers.on('input', function() {
+        $receivers.off('input').on('input', function() {
             var keyword = $(this).val();
             clearTimeout(debounceTimer);
 
@@ -310,42 +319,55 @@ var EmailCommon = {
             }, 300);
         });
 
-        $(document).on('click', '.receiver-item', function() {
+        $(document).off('click', '.receiver-item').on('click', '.receiver-item', function() {
             var email = $(this).data('email');
-            var currentReceivers = $receivers.val();
-            var newReceivers = currentReceivers ? currentReceivers + ', ' + email : email;
-            $receivers.val(newReceivers);
+            var name = $(this).find('.employee-name').text();
+            EmailCommon.addSelectedReceiver(email, name);
             $receiversList.empty().hide();
+            $receivers.val('');
         });
 
-        $receivers.on('change', function() {
-            var emails = $(this).val().split(',').map(function(email) {
-                return email.trim();
-            });
-
-            var $selectedReceivers = $('#selectedReceivers');
-            $selectedReceivers.empty();
-
-            emails.forEach(function(email) {
-                if (email) {
-                    var $tag = $('<span class="selected-receiver"></span>')
-                        .text(email)
-                        .append('<span class="remove-receiver">×</span>');
-                    $selectedReceivers.append($tag);
-                }
-            });
+        $selectedReceivers.on('click', '.remove-receiver', function() {
+            $(this).parent().remove();
         });
 
-        $(document).on('click', '.remove-receiver', function() {
-            var removedEmail = $(this).parent().text().slice(0, -1);
-            var currentEmails = $receivers.val().split(',').map(function(email) {
-                return email.trim();
-            });
-            var updatedEmails = currentEmails.filter(function(email) {
-                return email !== removedEmail;
-            });
-            $receivers.val(updatedEmails.join(', ')).trigger('change');
+        $receivers.off('keydown').on('keydown', function(e) {
+            var $items = $receiversList.find('.receiver-item');
+            var $selected = $items.filter('.keyboard-selected');
+            var index = $items.index($selected);
+
+            switch (e.which) {
+                case 40: // down arrow
+                    e.preventDefault();
+                    EmailCommon.moveSelection($selected, 'down');
+                    break;
+                case 38: // up arrow
+                    e.preventDefault();
+                    EmailCommon.moveSelection($selected, 'up');
+                    break;
+                case 13: // enter
+                    e.preventDefault();
+                    if ($selected.length > 0) {
+                        $selected.click();
+                    }
+                    break;
+            }
         });
+    },
+
+    addSelectedReceiver: function(email, name) {
+        var $selectedReceivers = $('#selectedReceivers');
+        var $tag = $('<span class="selected-receiver"></span>')
+            .text(name + ' <' + email + '>')
+            .append('<span class="remove-receiver">×</span>')
+            .data('email', email);
+        $selectedReceivers.append($tag);
+    },
+
+    getSelectedReceivers: function() {
+        return $('#selectedReceivers .selected-receiver').map(function() {
+            return $(this).data('email');
+        }).get();
     },
 
     searchEmployees: function(keyword) {
@@ -372,21 +394,100 @@ var EmailCommon = {
             return;
         }
 
-        employees.forEach(function(employee) {
-            var $item = $('<div class="receiver-item"></div>');
+        employees.forEach(function(employee, index) {
+            var $item = $('<div class="receiver-item" tabindex="0"></div>');
             var $nameEmail = $('<span class="name-email"></span>');
             $nameEmail.append('<span class="employee-name">' + employee.name + '</span>');
             $nameEmail.append('<span class="employee-email">' + employee.email + '</span>');
             $item.append($nameEmail);
             $item.data('email', employee.email);
+            if (index === 0) {
+                $item.addClass('keyboard-selected');
+            }
             $receiversList.append($item);
         });
 
         $receiversList.show();
     },
+
+    markEmailAsRead: function(emailNo) {
+        $.ajax({
+            url: this.contextPath + '/mark-as-read/' + emailNo,
+            type: 'POST',
+            success: function(response) {
+                console.log('이메일을 읽음으로 표시했습니다.');
+            },
+            error: function(xhr, status, error) {
+                console.error('이메일 읽음 표시 실패:', error);
+            }
+        });
+    },
+
+	toggleImportant: function(emailNo) {
+        $.ajax({
+            url: this.contextPath + '/toggle-important/' + emailNo,
+            type: 'POST',
+            success: function(response) {
+                alert(response);
+                EmailCommon.loadMailbox('inbox'); // 메일함 새로고침
+            },
+            error: function(xhr, status, error) {
+                console.error('중요 표시 변경 실패:', error);
+            }
+        });
+    },
+
+    replyEmail: function(emailNo) {
+        $.ajax({
+            url: this.contextPath + '/reply/' + emailNo,
+            type: 'GET',
+            success: function(response) {
+                $('#mailContent').html(response);
+                EmailCommon.initMailboxSpecificFunctions();
+            },
+            error: function() {
+                alert('답장 폼을 불러오는데 실패했습니다.');
+            }
+        });
+    },
+
+    forwardEmail: function(emailNo) {
+        $.ajax({
+            url: this.contextPath + '/forward/' + emailNo,
+            type: 'GET',
+            success: function(response) {
+                $('#mailContent').html(response);
+                EmailCommon.initMailboxSpecificFunctions();
+            },
+            error: function() {
+                alert('전달 폼을 불러오는데 실패했습니다.');
+            }
+        });
+    },
+
+    updateUnreadCount: function() {
+        $.ajax({
+            url: this.contextPath + '/unread-count',
+            type: 'GET',
+            success: function(count) {
+                $('.unread-count').text(count);
+            },
+            error: function(xhr, status, error) {
+                console.error('읽지 않은 메일 수 업데이트 실패:', error);
+            }
+        });
+    }
 };
 
-// 페이지 로드 시 초기화
 $(document).ready(function() {
-    EmailCommon.init('/email');
+    var contextPath = '/email';
+    EmailCommon.init(contextPath);
+
+    // 페이지 로드 시 읽지 않은 메일 수 업데이트
+    EmailCommon.updateUnreadCount();
+
+    // 주기적으로 읽지 않은 메일 수 업데이트 (예: 1분마다)
+    setInterval(function() {
+        EmailCommon.updateUnreadCount();
+    }, 60000);
 });

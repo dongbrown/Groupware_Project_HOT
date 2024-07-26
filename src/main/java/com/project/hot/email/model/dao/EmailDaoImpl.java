@@ -36,7 +36,7 @@ public class EmailDaoImpl implements EmailDao {
     @Override
     public int saveEmail(Email email, SqlSession session) {
         session.insert("email.insertEmail", email);
-        return email.getEmailNo(); // 자동 생성된 키 값 반환
+        return email.getEmailNo();
     }
 
     @Override
@@ -50,7 +50,10 @@ public class EmailDaoImpl implements EmailDao {
     }
 
     @Override
-    public List<Email> searchEmails(Map<String, Object> params, SqlSession session) {
+    public List<Email> searchEmails(int employeeNo, String keyword, SqlSession session) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("employeeNo", employeeNo);
+        params.put("keyword", keyword);
         return session.selectList("email.searchEmails", params);
     }
 
@@ -63,11 +66,8 @@ public class EmailDaoImpl implements EmailDao {
     }
 
     @Override
-    public void deleteEmails(List<Integer> emailNos, int employeeNo, SqlSession session) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("emailNos", emailNos);
-        params.put("employeeNo", employeeNo);
-        session.update("email.deleteEmails", params);
+    public void deleteEmails(List<Integer> emailNos, SqlSession session) {
+        session.update("email.deleteEmails", emailNos);
     }
 
     @Override
@@ -81,11 +81,12 @@ public class EmailDaoImpl implements EmailDao {
     }
 
     @Override
-    public void toggleImportantEmail(int emailNo, int employeeNo, SqlSession session) {
+    public boolean toggleImportantEmail(int emailNo, int employeeNo, SqlSession session) {
         Map<String, Object> params = new HashMap<>();
         params.put("emailNo", emailNo);
         params.put("employeeNo", employeeNo);
-        session.update("email.toggleImportantEmail", params);
+        int result = session.update("email.toggleImportantEmail", params);
+        return result > 0;
     }
 
     @Override
@@ -102,5 +103,20 @@ public class EmailDaoImpl implements EmailDao {
         params.put("emailNos", emailNos);
         params.put("employeeNo", employeeNo);
         return session.update("email.moveEmailsToTrash", params);
+    }
+
+    @Override
+    public List<Email> selectSentEmails(int employeeNo, SqlSession session) {
+        return session.selectList("email.selectSentEmails", employeeNo);
+    }
+
+    @Override
+    public EmailAtt getAttachmentById(int attachmentId, SqlSession session) {
+        return session.selectOne("email.selectAttachmentById", attachmentId);
+    }
+
+    @Override
+    public int getUnreadCount(int employeeNo, SqlSession session) {
+        return session.selectOne("email.getUnreadCount", employeeNo);
     }
 }

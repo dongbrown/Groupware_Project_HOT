@@ -7,7 +7,7 @@
     <form id="emailForm" class="email-write-form">
      	<div class="form-group">
 		    <label for="receivers">받는 사람:</label>
-		    <input type="text" id="receivers" name="receivers" class="form-control" required>
+		    <input type="text" id="receivers" name="receivers" class="form-control">
 		    <div id="receiversList" class="receivers-list"></div>
 		    <div id="selectedReceivers" class="selected-receivers"></div>
 		</div>

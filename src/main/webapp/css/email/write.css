@@ -86,7 +86,6 @@
     background-color: #c82333;
 }
 
-/* Summernote 에디터 스타일 조정 */
 .note-editor.note-frame {
     border-color: #ddd;
 }
@@ -100,30 +99,63 @@
     z-index: 1000;
     background-color: white;
     border: 1px solid #ddd;
+    border-top: none;
     max-height: 200px;
     overflow-y: auto;
     width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .receiver-item {
-    padding: 10px;
+    padding: 8px 12px;
     cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
 }
 
-.receiver-item:hover {
-    background-color: #f0f0f0;
+.receiver-item:last-child {
+    border-bottom: none;
+}
+
+.receiver-item:hover,
+.receiver-item:focus,
+.receiver-item.selected {
+    background-color: #e3f2fd;
+    outline: none;
+}
+
+.receiver-item.keyboard-selected {
+    background-color: #bbdefb;
+}
+
+.name-email {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .employee-name {
     font-weight: bold;
+    color: #2c3e50;
 }
 
 .employee-email {
-    margin-left: 10px;
-    color: #666;
+    color: #7f8c8d;
+    font-size: 0.9em;
 }
 
-/* 새로 추가된 스타일 */
+.receiver-item.blue-bg {
+    background-color: #e3f2fd;
+}
+
+.receiver-item.blue-bg .employee-name {
+    color: #1565c0;
+}
+
+.receiver-item.blue-bg .employee-email {
+    color: #1976d2;
+}
+
 .selected-receivers {
     margin-top: 10px;
     display: flex;
@@ -162,58 +194,56 @@
     border-bottom-right-radius: 0;
 }
 
-/* 기존 스타일 유지 */
-
-.receivers-list {
-    position: absolute;
-    z-index: 1000;
-    background-color: white;
-    border: 1px solid #ddd;
-    max-height: 200px;
-    overflow-y: auto;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.receiver-item {
-    padding: 8px 12px;
+#dropZone {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
     cursor: pointer;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
 }
 
-.receiver-item:last-child {
-    border-bottom: none;
-}
-
-.receiver-item:hover {
+#dropZone.drag-over {
     background-color: #f0f0f0;
+    border-color: #007bff;
 }
 
-.name-email {
+#fileList {
+    margin-top: 10px;
+}
+
+.file-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
 }
 
-.employee-name {
+.remove-file {
+    cursor: pointer;
+    color: #dc3545;
     font-weight: bold;
-    color: #2c3e50;
 }
 
-.employee-email {
-    color: #7f8c8d;
-    font-size: 0.9em;
+.remove-file:hover {
+    color: #a71d2a;
 }
 
-/* 추가: 파란색 배경의 스타일 */
-.receiver-item.blue-bg {
-    background-color: #e3f2fd;
-}
+@media (max-width: 768px) {
+    .email-write-container {
+        padding: 10px;
+    }
 
-.receiver-item.blue-bg .employee-name {
-    color: #1565c0;
-}
+    .email-write-form .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 
-.receiver-item.blue-bg .employee-email {
-    color: #1976d2;
+    .email-write-form .btn-secondary,
+    .email-write-form .btn-danger {
+        margin-left: 0;
+    }
 }

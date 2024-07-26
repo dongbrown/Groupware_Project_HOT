@@ -8,21 +8,23 @@ import com.project.hot.employee.model.dto.Employee;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
-import java.util.Map;
 
 public interface EmailDao {
     List<Email> selectInboxEmails(int employeeNo, SqlSession session);
+    List<Email> selectTrashEmails(SqlSession session, int employeeNo);
     Email getEmailByNo(int emailNo, SqlSession session);
     int saveEmail(Email email, SqlSession session);
     void saveEmailReceiver(EmailReceiver receiver, SqlSession session);
     void saveAttachment(EmailAtt attachment, SqlSession session);
-    List<Email> searchEmails(Map<String, Object> params, SqlSession session);
+    List<Email> searchEmails(int employeeNo, String keyword, SqlSession session);
     void updateEmailReadStatus(int emailNo, int employeeNo, SqlSession session);
-    void deleteEmails(List<Integer> emailNos, int employeeNo, SqlSession session);
+    void deleteEmails(List<Integer> emailNos, SqlSession session);
     Employee findEmployeeByEmployeeId(String employeeId, SqlSession session);
     List<EmailAtt> selectEmailAttachments(int emailNo, SqlSession session);
-    void toggleImportantEmail(int emailNo, int employeeNo, SqlSession session);
+    boolean toggleImportantEmail(int emailNo, int employeeNo, SqlSession session);
     List<Employee> searchEmployees(String keyword, SqlSession session);
-    int moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession sqlSession);
-    List<Email> selectTrashEmails(SqlSession session, int employeeNo);
+    int moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession session);
+    List<Email> selectSentEmails(int employeeNo, SqlSession session);
+    EmailAtt getAttachmentById(int attachmentId, SqlSession session);
+    int getUnreadCount(int employeeNo, SqlSession session);
 }

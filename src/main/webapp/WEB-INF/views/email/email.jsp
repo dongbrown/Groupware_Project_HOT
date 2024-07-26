@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link href="${path}/css/email/email.css" rel="stylesheet">
     <link href="${path}/css/email/trash.css" rel="stylesheet">
+    <link href="${path}/css/email/write.css" rel="stylesheet">
     <link href="${path}/css/email/email-view.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -43,7 +44,7 @@
                     </div>
                 </div>
                 <div class="col-md-9" id="mailContent">
-                    <!-- 메일 목록 또는 상세 내용이 여기에 로드됩니다 -->
+                    <!-- 메일 목록 또는 메일 쓰기 영역 -->
                 </div>
             </div>
         </div>
@@ -62,8 +63,31 @@
 <script type="text/javascript" src="${path}/js/email/email-common.js"></script>
 
 <script>
+// contextPath를 전역 변수로 설정
+var contextPath = '${pageContext.request.contextPath}/email';
+
 $(document).ready(function() {
-    EmailCommon.init('${pageContext.request.contextPath}/email');
+    // EmailCommon이 정의되어 있고 초기화되지 않았다면 초기화
+    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.init === 'function' && !EmailCommon.initialized) {
+        EmailCommon.init(contextPath);
+    }
+
+    // MutationObserver를 사용하여 동적으로 로드된 컨텐츠 처리
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList' && mutation.target.id === 'mailContent') {
+                if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initMailboxSpecificFunctions === 'function') {
+                    EmailCommon.initMailboxSpecificFunctions();
+                }
+            }
+        });
+    });
+
+    // mailContent 요소에 대한 변경 관찰 시작
+    var mailContent = document.getElementById('mailContent');
+    if (mailContent) {
+        observer.observe(mailContent, { childList: true });
+    }
 });
 </script>
 </body>
