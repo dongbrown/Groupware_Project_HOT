@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -39,9 +38,6 @@ public class EmailController {
 
     @Autowired
     private EmailService service;
-
-    @Value("${image.url.path}")
-    private String imageUrlPath;
 
     // 이메일 페이지를 표시
     @GetMapping("/")
@@ -140,20 +136,6 @@ public class EmailController {
         }
     }
 
-    // 썸머노트 이미지 업로드 처리
-    @PostMapping("/uploadImg")
-    @ResponseBody
-    public ResponseEntity<?> uploadSummernoteImageFile(@RequestParam("file") MultipartFile file) {
-        try {
-            EmailAtt emailAtt = service.saveImage(file);
-            String imageUrl = imageUrlPath + emailAtt.getEmailAttRenamedFilename();
-            return ResponseEntity.ok().body(Map.of("url", imageUrl));
-        } catch (IOException e) {
-            log.error("이미지 업로드 실패", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드 실패");
-        }
-    }
-
     // 키워드를 이용해 직원 검색
     @GetMapping("/search-employees")
     public ResponseEntity<List<Map<String, String>>> searchEmployees(@RequestParam String keyword) {
@@ -198,7 +180,6 @@ public class EmailController {
         }
     }
 
-    // 키워드를 이용해 이메일 검색
     @GetMapping("/search")
     public String searchEmails(@RequestParam String keyword, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -207,7 +188,8 @@ public class EmailController {
 
         List<Email> searchResults = service.searchEmails(employeeNo, keyword);
         model.addAttribute("emails", searchResults);
-        return "email/inbox :: #mailItems";
+
+        return "email/inbox-list";
     }
 
     // 답장 이메일 작성 폼을 표시

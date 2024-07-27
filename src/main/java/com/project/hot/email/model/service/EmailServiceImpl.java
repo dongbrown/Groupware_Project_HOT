@@ -202,4 +202,6 @@ public class EmailServiceImpl implements EmailService {
     public boolean toggleImportantEmail(int emailNo, int employeeNo) {
         return dao.toggleImportantEmail(emailNo, employeeNo, sqlSession);
     }
+
+
 }

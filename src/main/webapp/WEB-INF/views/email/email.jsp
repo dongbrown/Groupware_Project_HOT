@@ -67,26 +67,11 @@
 var contextPath = '${pageContext.request.contextPath}/email';
 
 $(document).ready(function() {
-    // EmailCommon이 정의되어 있고 초기화되지 않았다면 초기화
-    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.init === 'function' && !EmailCommon.initialized) {
+    // EmailCommon 초기화
+    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.init === 'function') {
         EmailCommon.init(contextPath);
-    }
-
-    // MutationObserver를 사용하여 동적으로 로드된 컨텐츠 처리
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'childList' && mutation.target.id === 'mailContent') {
-                if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initMailboxSpecificFunctions === 'function') {
-                    EmailCommon.initMailboxSpecificFunctions();
-                }
-            }
-        });
-    });
-
-    // mailContent 요소에 대한 변경 관찰 시작
-    var mailContent = document.getElementById('mailContent');
-    if (mailContent) {
-        observer.observe(mailContent, { childList: true });
+        // 초기 inbox 로드
+        EmailCommon.loadMailbox('inbox');
     }
 });
 </script>

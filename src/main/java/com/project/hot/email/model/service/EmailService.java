@@ -44,4 +44,5 @@ public interface EmailService {
     void markEmailAsRead(int emailNo, int employeeNo);
 
     boolean toggleImportantEmail(int emailNo, int employeeNo);
+
 }
