@@ -20,6 +20,7 @@ import com.project.hot.email.model.dto.EmailAtt;
 import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.employee.model.dto.Employee;
 
+import jakarta.mail.Session;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -202,6 +203,31 @@ public class EmailServiceImpl implements EmailService {
     public boolean toggleImportantEmail(int emailNo, int employeeNo) {
         return dao.toggleImportantEmail(emailNo, employeeNo, sqlSession);
     }
+
+	@Override
+	public int markTrashAsRead(List<Integer> emailNos) {
+		return dao.markTrashAsRead(emailNos, sqlSession);
+	}
+
+	@Override
+	public int deletePermanently(List<Integer> emailNos) {
+		return dao.deletePermanently(emailNos, sqlSession);
+	}
+
+	@Override
+	public int restoreFromTrash(List<Integer> emailNos) {
+		return dao.restoreFromTrash(emailNos, sqlSession);
+	}
+
+	@Override
+	public List<Email> getImportantEmails(int employeeNo) {
+		return dao.getImportantEmails(employeeNo, sqlSession);
+	}
+
+	@Override
+	public List<Email> getSelfEmails(int employeeNo) {
+		return dao.getSelfEmails(employeeNo, sqlSession);
+	}
 
 
 }

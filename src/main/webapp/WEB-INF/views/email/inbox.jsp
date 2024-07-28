@@ -79,8 +79,7 @@
 
     <!-- 작업 버튼 -->
     <div class="mt-3">
-        <button id="deleteBtn" class="btn btn-danger">삭제</button>
-        <!-- 필요한 경우 다른 버튼 추가 -->
+
     </div>
 </div>
 

@@ -12,6 +12,7 @@ import com.project.hot.email.model.dto.EmailAtt;
 import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.employee.model.dto.Employee;
 
+import jakarta.mail.Session;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -119,4 +120,26 @@ public class EmailDaoImpl implements EmailDao {
     public int getUnreadCount(int employeeNo, SqlSession session) {
         return session.selectOne("email.getUnreadCount", employeeNo);
     }
+    public int markTrashAsRead(List<Integer> emailNos, SqlSession session) {
+        return session.update("email.markTrashAsRead", emailNos);
+    }
+
+    public int deletePermanently(List<Integer> emailNos, SqlSession session) {
+        return session.delete("email.deletePermanently", emailNos);
+    }
+
+    public int restoreFromTrash(List<Integer> emailNos, SqlSession session) {
+        return session.update("email.restoreFromTrash", emailNos);
+    }
+
+	@Override
+	public List<Email> getImportantEmails(int employeeNo, SqlSession session) {
+		return session.selectList("email.selectImportantEmails", employeeNo);
+	}
+
+	@Override
+	public List<Email> getSelfEmails(int employeeNo, SqlSession session) {
+		return session.selectList("email.selectSelfEmails", employeeNo);
+	}
+
 }

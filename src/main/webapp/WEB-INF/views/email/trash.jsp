@@ -3,71 +3,71 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<div class="container-fluid">
-    <h2 class="mb-4">휴지통 <span class="badge bg-secondary">${emails.size()} / 100</span></h2>
+<div class="trash-container">
+    <div class="trash-header">
+        <h2>휴지통 <span class="email-count">${emails.size()} / 100</span></h2>
+        <div class="trash-actions">
+            <button id="searchBtn" class="btn btn-light btn-sm">메일 검색</button>
+        </div>
+    </div>
 
-    <!-- 검색 폼 include -->
-    <jsp:include page="search.jsp" />
+    <div class="trash-toolbar">
+        <div class="toolbar-left">
+            <input type="checkbox" id="select-all" class="form-check-input">
+            <label for="select-all" class="form-check-label">전체 선택</label>
+            <button id="readBtn" class="btn btn-secondary btn-sm">읽음</button>
+            <button id="deleteBtn" class="btn btn-danger btn-sm">영구삭제</button>
+            <button id="restoreBtn" class="btn btn-primary btn-sm">복구</button>
+        </div>
+        <div class="toolbar-right">
+            <select class="form-select form-select-sm">
+                <option>필터</option>
+            </select>
+        </div>
+    </div>
 
-    <!-- 이메일 목록 -->
-    <div class="card">
-        <div class="card-body">
-            <div class="d-flex justify-content-between mb-3">
-                <div>
-                    <button id="readBtn" class="btn btn-sm btn-secondary">읽음</button>
-                    <button id="deleteBtn" class="btn btn-sm btn-danger">영구삭제</button>
-                    <button id="restoreBtn" class="btn btn-sm btn-primary">복구</button>
+    <div class="email-list">
+        <c:choose>
+            <c:when test="${empty emails}">
+                <div class="no-email">
+                    <div class="no-email-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <p>휴지통에 메일이 없습니다.</p>
                 </div>
-
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
+            </c:when>
+            <c:otherwise>
+                <table class="table">
                     <thead>
                         <tr>
-                            <th>
-                                <input type="checkbox" id="select-all" class="form-check-input">
-                            </th>
+                            <th></th>
                             <th>보낸 사람</th>
                             <th>제목</th>
                             <th>날짜</th>
                         </tr>
                     </thead>
-                    <tbody id="emailList">
-                        <c:choose>
-                            <c:when test="${empty emails}">
-                                <tr>
-                                    <td colspan="4" class="text-center">
-                                        <div class="py-5">
-                                            <i class="fas fa-envelope fa-3x mb-3"></i>
-                                            <p>휴지통에 메일이 없습니다.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </c:when>
-                            <c:otherwise>
-                                <c:forEach items="${emails}" var="email">
-                                    <tr class="email-item" data-email-no="${email.emailNo}">
-                                        <td>
-                                            <input type="checkbox" class="form-check-input email-checkbox" value="${email.emailNo}">
-                                        </td>
-                                        <td>${email.sender.employeeName}</td>
-                                        <td>
-                                            <c:out value="${email.emailTitle}" />
-                                            <%-- <c:if test="${email.hasAttachment}">
-                                                <i class="fas fa-paperclip"></i>
-                                            </c:if> --%>
-                                        </td>
-                                        <td>
-                                            <fmt:formatDate value="${email.emailSendDate}" pattern="yyyy-MM-dd HH:mm"/>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </c:otherwise>
-                        </c:choose>
+                    <tbody>
+                        <c:forEach items="${emails}" var="email">
+                            <tr class="email-item" data-email-no="${email.emailNo}">
+                                <td>
+                                    <input type="checkbox" class="form-check-input email-checkbox" value="${email.emailNo}">
+                                </td>
+                                <td>${email.sender.employeeName}</td>
+                                <td>
+                                    <c:out value="${email.emailTitle}" />
+<%--                                     <c:if test="${email.hasAttachment}">
+                                        <i class="fas fa-paperclip"></i>
+                                    </c:if> --%>
+                                </td>
+                                <td>
+                                    <fmt:formatDate value="${email.emailSendDate}" pattern="yyyy-MM-dd HH:mm"/>
+                                </td>
+                            </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 
@@ -85,12 +85,9 @@ $(document).ready(function() {
 
     // 읽음 버튼 클릭 이벤트
     $("#readBtn").click(function() {
-        var selectedEmails = $('.email-checkbox:checked').map(function() {
-            return $(this).val();
-        }).get();
+        var selectedEmails = getSelectedEmails();
         if (selectedEmails.length > 0) {
-            // TODO: 선택된 이메일을 읽음 처리하는 로직 구현
-            console.log("읽음 처리할 이메일:", selectedEmails);
+            EmailCommon.markTrashAsRead(selectedEmails);
         } else {
             alert("선택된 이메일이 없습니다.");
         }
@@ -98,14 +95,9 @@ $(document).ready(function() {
 
     // 영구삭제 버튼 클릭 이벤트
     $("#deleteBtn").click(function() {
-        var selectedEmails = $('.email-checkbox:checked').map(function() {
-            return $(this).val();
-        }).get();
+        var selectedEmails = getSelectedEmails();
         if (selectedEmails.length > 0) {
-            if (confirm("선택한 이메일을 영구적으로 삭제하시겠습니까?")) {
-                // TODO: 선택된 이메일을 영구 삭제하는 로직 구현
-                console.log("영구 삭제할 이메일:", selectedEmails);
-            }
+            EmailCommon.deletePermanently(selectedEmails);
         } else {
             alert("선택된 이메일이 없습니다.");
         }
@@ -113,12 +105,9 @@ $(document).ready(function() {
 
     // 복구 버튼 클릭 이벤트
     $("#restoreBtn").click(function() {
-        var selectedEmails = $('.email-checkbox:checked').map(function() {
-            return $(this).val();
-        }).get();
+        var selectedEmails = getSelectedEmails();
         if (selectedEmails.length > 0) {
-            // TODO: 선택된 이메일을 복구하는 로직 구현
-            console.log("복구할 이메일:", selectedEmails);
+            EmailCommon.restoreFromTrash(selectedEmails);
         } else {
             alert("선택된 이메일이 없습니다.");
         }
@@ -128,9 +117,15 @@ $(document).ready(function() {
     $(document).on('click', '.email-item', function(e) {
         if (!$(e.target).is('input:checkbox')) {
             var emailNo = $(this).data('email-no');
-            // TODO: 이메일 상세 보기 로직 구현
-            console.log("상세 보기할 이메일 번호:", emailNo);
+            EmailCommon.viewEmail(emailNo);
         }
     });
+
+    // 선택된 이메일 번호 가져오기
+    function getSelectedEmails() {
+        return $('.email-checkbox:checked').map(function() {
+            return $(this).val();
+        }).get();
+    }
 });
 </script>

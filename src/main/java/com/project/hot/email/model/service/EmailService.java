@@ -45,4 +45,14 @@ public interface EmailService {
 
     boolean toggleImportantEmail(int emailNo, int employeeNo);
 
+	int markTrashAsRead(List<Integer> emailNos);
+
+	int deletePermanently(List<Integer> emailNos);
+
+	int restoreFromTrash(List<Integer> emailNos);
+
+	List<Email> getImportantEmails(int employeeNo);
+
+	List<Email> getSelfEmails(int employeeNo);
+
 }

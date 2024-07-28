@@ -131,15 +131,15 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">메일 조회</h6>
                         <%-- <a class="collapse-item" href="${path }/email/">전체 메일</a> --%>
-                        <a class="collapse-item" href="${path }/email/">받은 메일함</a>
-                        <a class="collapse-item" href="${path }/email/">내게 쓴 메일함</a>
-                        <a class="collapse-item" href="${path }/email/">보낸 메일함</a>
-                        <a class="collapse-item" href="${path }/email/">중요 메일함</a>
-                        <a class="collapse-item" href="${path }/email/">임시 메일함</a>
-                        <a class="collapse-item" href="${path }/email/">휴지통</a><br>
-                        <h6 class="collapse-header">메일 발송</h6>
-                        <a class="collapse-item" href="utilities-other.html">메일 발송</a>
-                        <a class="collapse-item" href="utilities-other.html">내게 쓰기</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="inbox">받은 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="self">내게 쓴 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="sent">보낸 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="important">중요 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="drafts">임시 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="trash">휴지통</a><br>
+				        <h6 class="collapse-header">메일 발송</h6>
+				        <a class="collapse-item" href="#" id="writeEmailBtn">메일 발송</a>
+				        <a class="collapse-item" href="#" id="writeSelfEmailBtn">내게 쓰기</a>
                     </div>
                 </div>
             </li>

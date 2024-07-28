@@ -55,6 +55,36 @@ public class EmailController {
         return "email/inbox";
     }
 
+    // 보낸메일함 목록을 표시
+    @GetMapping("/sent")
+    public String sent(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        List<Email> sentEmails = service.getSentEmails(loginEmployee.getEmployeeNo());
+        model.addAttribute("emails", sentEmails);
+        return "email/sent";
+    }
+
+    // 중요메일함 목록을 표시
+    @GetMapping("/important")
+    public String important(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        List<Email> importantEmails = service.getImportantEmails(loginEmployee.getEmployeeNo());
+        model.addAttribute("emails", importantEmails);
+        return "email/important";
+    }
+
+    // 내게쓴 메일함 목록을 표시
+    @GetMapping("/self")
+    public String self(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        List<Email> selfEmails = service.getSelfEmails(loginEmployee.getEmployeeNo());
+        model.addAttribute("emails", selfEmails);
+        return "email/self";
+    }
+
     // 휴지통 목록을 표시
     @GetMapping("/trash")
     public String trash(Model model) {
@@ -78,6 +108,13 @@ public class EmailController {
     public String showWriteForm(Model model) {
         model.addAttribute("email", new Email());
         return "email/write";
+    }
+
+    //내게쓰기
+    @GetMapping("/write-self")
+    public String showWriteSelfForm(Model model) {
+        model.addAttribute("email", new Email());
+        return "email/write-self";
     }
 
     // 이메일을 전송
@@ -252,6 +289,39 @@ public class EmailController {
             return ResponseEntity.ok(message);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("중요 표시 변경 실패: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/trash/mark-as-read")
+    @ResponseBody
+    public ResponseEntity<?> markTrashAsRead(@RequestBody List<Integer> emailNos) {
+        try {
+            int updatedCount = service.markTrashAsRead(emailNos);
+            return ResponseEntity.ok("성공적으로 " + updatedCount + "개의 이메일을 읽음 처리했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("읽음 처리 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/trash/delete-permanently")
+    @ResponseBody
+    public ResponseEntity<?> deletePermanently(@RequestBody List<Integer> emailNos) {
+        try {
+            int deletedCount = service.deletePermanently(emailNos);
+            return ResponseEntity.ok("성공적으로 " + deletedCount + "개의 이메일을 영구 삭제했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("영구 삭제 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/trash/restore")
+    @ResponseBody
+    public ResponseEntity<?> restoreFromTrash(@RequestBody List<Integer> emailNos) {
+        try {
+            int restoredCount = service.restoreFromTrash(emailNos);
+            return ResponseEntity.ok("성공적으로 " + restoredCount + "개의 이메일을 복구했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("복구 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 }
