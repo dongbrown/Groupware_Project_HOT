@@ -39,6 +39,8 @@ public class Project {
 	    private String projectStatus;
 	    private String memberPhotos;
 	    private String memberEmployeeNos;
+	    private String projectRequestStatus;
+	    private String projectRequestEmployee;
 	    private List<ProjectEmployee> employee;
 	    private RequestProject requestProject;
 

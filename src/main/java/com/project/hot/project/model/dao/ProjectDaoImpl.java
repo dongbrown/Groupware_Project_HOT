@@ -101,4 +101,15 @@ public class ProjectDaoImpl implements ProjectDao {
 		return session.selectOne("project.requestProjectlistallCount",param.get("employeeNo"));
 	}
 
+	@Override
+	public List<Project> responseProjectlistall(SqlSession session, Map<String, Integer> param) {
+		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
+		return session.selectList("project.responseProjectlistall",param.get("employeeNo"),rb);
+	}
+
+	@Override
+	public int responseProjectlistallCount(SqlSession session, Map<String, Integer> param) {
+		return session.selectOne("project.responseProjectlistallCount",param.get("employeeNo"));
+	}
+
 }
