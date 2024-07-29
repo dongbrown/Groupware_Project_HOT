@@ -8,16 +8,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class VacationForm {
+public class OvertimeForm {
 
-	private int vacationFormNo;
+	private int overtimeFormNo;
 	private Approval approvalNo;
-	private Date vacationStart;
-	private Date vacationEnd;
-	private int vacationDay;
-	private String vacationType;
-	private String vacationEmergency;
+	private Date overtimeStartDate;
+	private Date overtimeEndDate;
+	private int overtimeHours;
 }

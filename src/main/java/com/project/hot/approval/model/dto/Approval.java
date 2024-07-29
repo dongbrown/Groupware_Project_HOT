@@ -17,15 +17,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Approval {
 
-	 private int  approvalNo; //결재고유번호에 따라 결재양식 가져오고
+	 private String approvalNo; //결재고유번호  '양식종류-년도-월일-001'  ex) 1-2024-0711-011
+	 private Employee employeeNo;
+	 private Date approvalDate;//기안일
+	 private Date approvalPeriod; //보존연한
 	 private String approvalTitle;//결재제목
 	 private String approvalContent;//결재내용
-	 private Date approvalDraftDate;//기안일
-	 private Date approverDate; //결재일
-	 private String status;//상태(진행,완료)
-	 private Employee employeeNo;
-	 private Department departmentCode;
-	 private Employee employeeName;
-	 private Position positionCode;
+	 private int approvalStatus;//상태
+	 private String approvalSecurity;//보안등급
 
 }
