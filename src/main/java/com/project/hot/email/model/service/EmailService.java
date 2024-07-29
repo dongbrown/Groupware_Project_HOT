@@ -55,4 +55,8 @@ public interface EmailService {
 
 	List<Email> getSelfEmails(int employeeNo);
 
+	EmailAtt getAttachment(int attachmentId);
+
+	List<EmailAtt> getEmailAttachments(int emailNo);
+
 }

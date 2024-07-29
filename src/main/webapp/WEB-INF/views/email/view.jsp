@@ -38,24 +38,16 @@
         </div>
     </div>
 
-    <div class="email-view-footer">
-<%--         <c:if test="${not empty email.emailAttachments}">
-            <div class="email-attachments">
-                <h3>첨부 파일</h3>
-                <ul class="attachment-list">
-                    <c:forEach var="attachment" items="${email.emailAttachments}">
-                        <li>
-                            <i class="fas fa-paperclip"></i>
-                            <a href="${pageContext.request.contextPath}/email/download/${attachment.emailAttNo}" class="attachment-link">
-                                ${attachment.emailAttOriginalFilename}
-                            </a>
-                            <span class="attachment-size">(${attachment.emailAttFileSize} KB)</span>
-                        </li>
-                    </c:forEach>
-                </ul>
-            </div>
-        </c:if> --%>
-    </div>
+	<div class="email-view-footer">
+	    <c:if test="${email.hasAttachment}">
+	        <div class="email-attachments">
+	            <h3>첨부 파일</h3>
+	            <ul id="attachmentList" class="attachment-list">
+	                <!-- 첨부 파일 목록이 여기에 동적으로ㅜ -->
+	            </ul>
+	        </div>
+	    </c:if>
+	</div>
 
     <div class="email-actions-bottom">
         <button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/email/reply/${email.emailNo}'">
@@ -69,5 +61,10 @@
         </button>
     </div>
 </div>
+<script>
+$(document).ready(function() {
+    EmailCommon.loadEmailAttachments(${email.emailNo});
+});
+</script>
 <script src="${pageContext.request.contextPath}/js/email-common.js"></script>
 <script src="${pageContext.request.contextPath}/js/view.js"></script>

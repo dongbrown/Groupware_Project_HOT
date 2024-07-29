@@ -48,7 +48,12 @@
 	                                        ${email.emailTitle}
 	                                    </c:otherwise>
 	                                </c:choose>
+	                                 <c:if test="${email.hasAttachment}">
+                                        <i class="fas fa-paperclip ml-2"></i>
+                                    </c:if>
 	                            </td>
+
+
 	                            <td>
 	                                <fmt:formatDate value="${email.emailSendDate}" pattern="yyyy-MM-dd HH:mm"/>
 	                            </td>

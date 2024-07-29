@@ -1,6 +1,8 @@
 package com.project.hot.email.controller;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -324,4 +330,26 @@ public class EmailController {
             return ResponseEntity.badRequest().body("복구 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
+
+
+    @GetMapping("/download/{attachmentId}")
+    public ResponseEntity<Resource> downloadAttachment(@PathVariable int attachmentId) throws IOException {
+        EmailAtt attachment = service.getAttachment(attachmentId);
+        Path path = Paths.get(attachment.getEmailAttRenamedFilename());
+        Resource resource = new UrlResource(path.toUri());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getEmailAttOriginalFilename() + "\"")
+                .body(resource);
+    }
+
+    @GetMapping("/attachments/{emailNo}")
+    @ResponseBody
+    public List<EmailAtt> getEmailAttachments(@PathVariable int emailNo) {
+        return service.getEmailAttachments(emailNo);
+    }
+
+
+
 }

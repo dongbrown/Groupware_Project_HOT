@@ -113,7 +113,7 @@ public class EmailDaoImpl implements EmailDao {
 
     @Override
     public EmailAtt getAttachmentById(int attachmentId, SqlSession session) {
-        return session.selectOne("email.selectAttachmentById", attachmentId);
+        return session.selectOne("email.selectAttachment", attachmentId);
     }
 
     @Override
@@ -140,6 +140,11 @@ public class EmailDaoImpl implements EmailDao {
 	@Override
 	public List<Email> getSelfEmails(int employeeNo, SqlSession session) {
 		return session.selectList("email.selectSelfEmails", employeeNo);
+	}
+
+	@Override
+	public List<EmailAtt> getEmailAttachments(int emailNo, SqlSession session) {
+		return session.selectList("email.selectEmailAttachments", emailNo);
 	}
 
 }

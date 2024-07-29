@@ -25,6 +25,11 @@
 	            EmailCommon.showWriteForm();
 	        });
 
+	        $(document).off('click', '#write-selfBtn').on('click', '#write-selfBtn', function(e) {
+	            e.preventDefault();
+	            EmailCommon.showSelfWriteForm();
+	        });
+
 	        $(document).off('change', '#select-all').on('change', '#select-all', function() {
 	            $('.mail-item-checkbox').prop('checked', $(this).prop('checked'));
 	        });
@@ -296,6 +301,20 @@
 	            success: function(response) {
 	                $('#mailContent').html(response);
 	                EmailCommon.initializeMailboxFunctions('write');
+	            },
+	            error: function() {
+	                alert('메일 작성 폼을 불러오는데 실패했습니다.');
+	            }
+	        });
+	    },
+
+	    showSelfWriteForm: function() {
+	    	$.ajax({
+	            url: this.contextPath + '/write-self',
+	            type: 'GET',
+	            success: function(response) {
+	                $('#mailContent').html(response);
+	                EmailCommon.initializeMailboxFunctions('write-self');
 	            },
 	            error: function() {
 	                alert('메일 작성 폼을 불러오는데 실패했습니다.');
@@ -662,18 +681,45 @@
 	        }
 	    },
 
-	    restoreFromTrash: function(emailNos) {
+		downloadAttachment: function(attachmentId, filename) {
+	        var url = this.contextPath + '/download/' + attachmentId;
+
+	        fetch(url)
+	            .then(response => response.blob())
+	            .then(blob => {
+	                var link = document.createElement('a');
+	                link.href = window.URL.createObjectURL(blob);
+	                link.download = filename;
+	                link.click();
+	            })
+	            .catch(error => {
+	                console.error('파일 다운로드 중 오류 발생:', error);
+	                alert('파일 다운로드에 실패했습니다.');
+	            });
+	    },
+
+	    loadEmailAttachments: function(emailNo) {
 	        $.ajax({
-	            url: this.contextPath + '/trash/restore',
-	            type: 'POST',
-	            contentType: 'application/json',
-	            data: JSON.stringify(emailNos),
-	            success: function(response) {
-	                alert(response);
-	                EmailCommon.loadMailbox('trash');
+	            url: this.contextPath + '/attachments/' + emailNo,
+	            type: 'GET',
+	            success: function(attachments) {
+	                var $attachmentList = $('#attachmentList');
+	                $attachmentList.empty();
+	                attachments.forEach(function(att) {
+	                    var $item = $('<li>')
+	                        .append($('<a>')
+	                            .text(att.emailAttOriginalFilename)
+	                            .attr('href', '#')
+	                            .click(function(e) {
+	                                e.preventDefault();
+	                                EmailCommon.downloadAttachment(att.emailAttNo, att.emailAttOriginalFilename);
+	                            })
+	                        );
+	                    $attachmentList.append($item);
+	                });
 	            },
-	            error: function(xhr, status, error) {
-	                alert("복구 중 오류가 발생했습니다: " + xhr.responseText);
+	            error: function() {
+	                console.error('첨부 파일 목록을 불러오는데 실패했습니다.');
 	            }
 	        });
 	    }

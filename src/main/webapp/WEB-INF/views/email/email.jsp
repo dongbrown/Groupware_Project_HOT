@@ -34,6 +34,7 @@
                 <div class="col-md-2">
                     <div class="emailSidebar">
                         <button class="btn btn-primary w-100 mb-3" id="writeBtn">메일 쓰기</button>
+                        <button class="btn btn-primary w-100 mb-3" id="write-selfBtn">내게 쓰기</button>
                         <ul class="list-group">
                             <li class="list-group-item active" data-mailbox="inbox"><i class="fas fa-inbox me-2"></i>받은메일함 <span class="badge bg-primary rounded-pill">999+</span></li>
                             <li class="list-group-item" data-mailbox="sent"><i class="fas fa-paper-plane me-2"></i>보낸메일함</li>

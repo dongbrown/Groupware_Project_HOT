@@ -229,5 +229,15 @@ public class EmailServiceImpl implements EmailService {
 		return dao.getSelfEmails(employeeNo, sqlSession);
 	}
 
+	@Override
+	public EmailAtt getAttachment(int attachmentId) {
+		return dao.getAttachmentById(attachmentId, sqlSession);
+	}
+
+	@Override
+	public List<EmailAtt> getEmailAttachments(int emailNo) {
+		return dao.getEmailAttachments(emailNo, sqlSession);
+	}
+
 
 }

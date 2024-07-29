@@ -32,4 +32,5 @@ public interface EmailDao {
 	int restoreFromTrash(List<Integer> emailNos, SqlSession session);
 	List<Email> getImportantEmails(int employeeNo, SqlSession session);
 	List<Email> getSelfEmails(int employeeNo, SqlSession session);
+	List<EmailAtt> getEmailAttachments(int emailNo, SqlSession sqlSession);
 }
