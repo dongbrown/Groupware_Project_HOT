@@ -98,7 +98,7 @@
 <!-- 콘텐츠 Wrapper 끝 -->
 
 <script>
-var currentEmployeeNo = ${loginEmployee.employeeNo};
+var loginEmployeeNo = ${loginEmployee.employeeNo};
 </script>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

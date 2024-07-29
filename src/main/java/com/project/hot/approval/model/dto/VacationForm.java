@@ -11,17 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class VacationForm {
 
 	private int vacationFormNo;
-	private int vacationNo;
-	private Date vacationApplocationDate;
+	private Approval approvalNo;
 	private Date vacationStart;
 	private Date vacationEnd;
-	private String vacationPurpose;
 	private int vacationDay;
 	private String vacationType;
-	private int employeeId;
-	//employeeId,Name 등 필요
+	private String vacationEmergency;
 }

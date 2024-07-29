@@ -66,17 +66,19 @@
                 <div id="approval" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">결재함</h6>
-                        <a class="collapse-item" href="${path}/approval/approvalAll.do">전체</a>
-                        <a class="collapse-item" href="${path}/approval/approvalWait.do">결재대기</a>
-                        <a class="collapse-item" href="${path}/approval/approvalProcess.do">결재진행</a>
-                        <a class="collapse-item" href="${path}/approval/approvalComplete.do">결재완료</a><br>
+                        <a class="collapse-item" href="${path}/approval/approvalAllList">전체</a>
+                        <a class="collapse-item" href="${path}/approval/approvalWait">결재대기</a>
+                        <a class="collapse-item" href="${path}/approval/approvalProcess">결재진행</a>
+                        <a class="collapse-item" href="${path}/approval/approvalPending">결재예정</a>
+                        <a class="collapse-item" href="${path}/approval/approvalComplete">결재완료</a><br>
 
                         <h6 class="collapse-header">문서함</h6>
-                        <a class="collapse-item" href="${path}/approval/documentAll.do">전체문서</a>
-                        <a class="collapse-item" href="${path}/approval/draftDocument.do">기안문서</a>
-                        <a class="collapse-item" href="${path}/approval/referenceDocument.do">참조문서</a>
-                        <a class="collapse-item" href="${path}/approval/viewDocument.do">열람문서</a>
-                        <a class="collapse-item" href="${path}/approval/temporaryStorage.do">임시저장</a>
+                        <a class="collapse-item" href="${path}/approval/allDocument">전체문서</a>
+                        <a class="collapse-item" href="${path}/approval/myDocument">내 기안문서</a>
+                        <a class="collapse-item" href="${path}/approval/receivedDocument">수신문서</a>
+                        <a class="collapse-item" href="${path}/approval/referenceDocument">참조문서</a>
+                        <a class="collapse-item" href="${path}/approval/viewDocument">열람문서</a>
+                        <a class="collapse-item" href="${path}/approval/temporaryDocument">임시저장</a>
                     </div>
                 </div>
             </li>
@@ -114,8 +116,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">캘린더</h6>
-                        <a class="collapse-item" href="${path }/schedule/">내 캘린더</a>
-                        <a class="collapse-item" href="${path }/schedule/">공유 캘린더</a>
+                        <a class="collapse-item" href="${path }/schedule/">내 일정 / 공유 일정</a>
+<%--                         <a class="collapse-item" href="${path }/schedule/">공유 캘린더</a> --%>
                     </div>
                 </div>
             </li>
@@ -131,15 +133,15 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">메일 조회</h6>
                         <a class="collapse-item" href="${path }/email/">전체 메일</a>
-                        <a class="collapse-item" href="utilities-border.html">받은 메일함</a>
-                        <a class="collapse-item" href="utilities-animation.html">내게 쓴 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">보낸 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">중요 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">임시 메일함</a>
-                        <a class="collapse-item" href="utilities-other.html">휴지통</a><br>
-                        <h6 class="collapse-header">메일 발송</h6>
-                        <a class="collapse-item" href="utilities-other.html">메일 발송</a>
-                        <a class="collapse-item" href="utilities-other.html">내게 쓰기</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="inbox">받은 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="self">내게 쓴 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="sent">보낸 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="important">중요 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="drafts">임시 메일함</a>
+				        <a class="collapse-item email-link" href="#" data-mailbox="trash">휴지통</a><br>
+				        <h6 class="collapse-header">메일 발송</h6>
+				        <a class="collapse-item" href="#" id="writeEmailBtn">메일 발송</a>
+				        <a class="collapse-item" href="#" id="writeSelfEmailBtn">내게 쓰기</a>
                     </div>
                 </div>
             </li>
@@ -186,8 +188,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">커뮤니티 목록</h6>
-                        <a class="collapse-item" href="${path }/community/">즐겨찾는 커뮤니티</a>
                         <a class="collapse-item" href="${path }/community/">내 커뮤니티</a>
+                        <%-- <a class="collapse-item" href="${path }/community/">내 커뮤니티</a> --%>
 						<a class="collapse-item" href="${path}/community/communityList">커뮤니티 리스트</a>                    </div>
                 </div>
             </li>
@@ -206,7 +208,7 @@
                         <h6 class="collapse-header">주소록</h6>
                         <a class="collapse-item" href="${path }/employee/addressbook">주소록 조회</a><br>
                         <h6 class="collapse-header">조직도</h6>
-                        <a class="collapse-item" href="utilities-color.html">조직도 조회</a>
+                        <a class="collapse-item" href="${path }/hr/orgChart">조직도 조회</a>
                     </div>
                 </div>
             </li>

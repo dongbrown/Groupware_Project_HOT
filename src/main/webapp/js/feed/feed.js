@@ -53,13 +53,12 @@ $(document).ready(function() {
             reader.readAsDataURL(file);
         }
     });
-
-    // 좋아요 버튼 클릭 이벤트 리스너
-    $(document).on('click', '.like-btn', function(e) {
-        e.preventDefault();
-        const feedNo = $(this).closest('.feed-item').data('feed-no');
-        likeFeed(feedNo);
-    });
+	//좋아요 버튼 클릭 이벤트 리스너
+	$(document).on('click', '.like-btn', function(e) {
+	    e.preventDefault();
+	    const feedNo = $(this).data('feed-no');
+	    likeFeed(feedNo, $(this));
+	});
 });
 
 function submitFeed() {
@@ -149,7 +148,7 @@ function displayFeeds(feeds) {
 }
 
 function createFeedHtml(feed) {
-    const isAuthor = feed.employeeNo === getCurrentEmployeeNo();
+    const isAuthor = feed.employeeNo === getLoginEmployeeNo();
     let menuHtml = '';
     if (isAuthor) {
         menuHtml = `
@@ -170,7 +169,7 @@ function createFeedHtml(feed) {
 
     const likedClass = feed.isLiked ? 'liked' : '';
 
-    return `
+  return `
         <div class="feed-item" id="feed-${feed.feedNo}" data-feed-no="${feed.feedNo}">
             <div class="feed-header">
                 <h5>${feed.employeeName}</h5>
@@ -185,8 +184,8 @@ function createFeedHtml(feed) {
             </div>
             <small class="text-muted">${feed.feedEnrollDate}</small>
             <div class="feed-actions">
-                <button class="btn btn-sm btn-outline-primary like-btn ${likedClass}">
-                    <i class="far fa-thumbs-up"></i>  <span class="like-count">${feed.likeCount || 0}</span>
+                <button class="btn btn-sm btn-outline-primary like-btn ${likedClass}" data-feed-no="${feed.feedNo}">
+                    <i class="far fa-thumbs-up"></i> <span class="like-count">${feed.likeCount || 0}</span>
                 </button>
                 <button class="btn btn-sm btn-outline-secondary comment-btn" onclick="toggleComments(${feed.feedNo})">
                     <i class="far fa-comment"></i> <span class="comment-count">${feed.commentCount || 0}</span>
@@ -207,8 +206,8 @@ function toggleFeedMenu(feedNo) {
     $(`#feedMenu-${feedNo}`).toggle();
 }
 
-function getCurrentEmployeeNo() {
-    return currentEmployeeNo;
+function getLoginEmployeeNo() {
+    return loginEmployeeNo;
 }
 
 function showEditForm(feedNo) {
@@ -365,6 +364,7 @@ function generateTreeHtml(departments) {
     html += '</ul>';
     return html;
 }
+
 function updateSelectedParticipants() {
     const $participantList = $('#participantList');
     $participantList.empty();
@@ -426,15 +426,15 @@ function inviteParticipants(participants) {
     });
 }
 
-function likeFeed(feedNo) {
-    const likeButton = $(`#feed-${feedNo} .like-btn`);
-
+function likeFeed(feedNo, likeButton) {
     // 이미 처리 중인 경우 추가 클릭 방지
     if (likeButton.data('processing')) {
         return;
     }
 
     likeButton.data('processing', true);
+
+    const likeCount = likeButton.find('.like-count');
 
     $.ajax({
         url: '/community/feed/like',
@@ -443,7 +443,6 @@ function likeFeed(feedNo) {
         data: JSON.stringify({ feedNo: feedNo }),
         success: function(response) {
             if (response.success) {
-                const likeCount = likeButton.find('.like-count');
                 const currentCount = parseInt(likeCount.text());
                 if (response.liked) {
                     // 좋아요 추가
@@ -456,10 +455,12 @@ function likeFeed(feedNo) {
                 }
             } else {
                 console.error('좋아요 처리 실패:', response.message);
+                alert('좋아요 처리에 실패했습니다.');
             }
         },
         error: function(xhr, status, error) {
             console.error('좋아요 오류:', error);
+            alert('좋아요 처리 중 오류가 발생했습니다.');
         },
         complete: function() {
             likeButton.data('processing', false);
@@ -525,22 +526,107 @@ function createCommentHtml(comment, feedNo, isReply = false) {
     const replyButton = !isReply ?
         `<button class="btn btn-sm btn-outline-secondary reply-btn" onclick="showReplyForm(${feedNo}, ${comment.feedCommentNo})">답글</button>` : '';
 
-    //XSS방지(escapeHtml) : 사용자 입력 데이터(이름, 콘텐츠 등)를 안전하게 처리
+    const isLoginUser = comment.employeeNo === getLoginEmployeeNo();
+    const editDeleteButtons = isLoginUser ? `
+        <div class="comment-actions">
+            <button class="btn btn-sm btn-outline-primary edit-comment-btn" onclick="showEditCommentForm(${feedNo}, ${comment.feedCommentNo})">수정</button>
+            <button class="btn btn-sm btn-outline-danger delete-comment-btn" onclick="deleteComment(${feedNo}, ${comment.feedCommentNo})">삭제</button>
+        </div>
+    ` : '';
 
     return `
         <div class="comment" data-comment-id="${comment.feedCommentNo}">
-            <strong>${escapeHtml(comment.employeeName)}</strong>
-            <p>${escapeHtml(comment.feedCommentContent)}</p>
-            <small class="text-muted">${formattedDate}</small>
-            ${replyButton}
+            <div class="comment-content">
+                <strong>${escapeHtml(comment.employeeName)}</strong>
+                <p class="comment-text">${escapeHtml(comment.feedCommentContent)}</p>
+                <small class="text-muted">${formattedDate}</small>
+                ${replyButton}
+            </div>
+            ${editDeleteButtons}
             ${!isReply ? `
                 <div class="reply-form" style="display:none;">
                     <input type="text" class="form-control reply-input" placeholder="답글을 입력하세요...">
                     <button class="btn btn-sm btn-primary submit-reply" onclick="submitReply(${feedNo}, ${comment.feedCommentNo})">답글 작성</button>
                 </div>
             ` : ''}
+            <div class="edit-comment-form" style="display:none;">
+                <input type="text" class="form-control edit-comment-input" value="${escapeHtml(comment.feedCommentContent)}">
+                <button class="btn btn-sm btn-primary save-edit-comment" onclick="submitEditComment(${feedNo}, ${comment.feedCommentNo})">저장</button>
+                <button class="btn btn-sm btn-secondary cancel-edit-comment" onclick="cancelEditComment(${feedNo}, ${comment.feedCommentNo})">취소</button>
+            </div>
         </div>
     `;
+}
+
+function showEditCommentForm(feedNo, commentNo) {
+    const commentEl = $(`#feed-${feedNo} .comment[data-comment-id="${commentNo}"]`);
+    commentEl.find('.comment-content').hide();
+    commentEl.find('.comment-actions').hide();
+    commentEl.find('.edit-comment-form').show();
+}
+
+function cancelEditComment(feedNo, commentNo) {
+    const commentEl = $(`#feed-${feedNo} .comment[data-comment-id="${commentNo}"]`);
+    commentEl.find('.comment-content').show();
+    commentEl.find('.comment-actions').show();
+    commentEl.find('.edit-comment-form').hide();
+}
+
+function submitEditComment(feedNo, commentNo) {
+    const commentEl = $(`#feed-${feedNo} .comment[data-comment-id="${commentNo}"]`);
+    const editedContent = commentEl.find('.edit-comment-input').val().trim();
+    const loginEmployeeNo = getLoginEmployeeNo();
+
+    if (editedContent === '') {
+        alert('댓글 내용을 입력해주세요.');
+        return;
+    }
+
+    $.ajax({
+        url: '/community/feed/comment/update',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            feedCommentNo: commentNo,
+            feedCommentContent: editedContent,
+            employeeNo: loginEmployeeNo
+        }),
+        success: function(response) {
+            if (response.success) {
+                commentEl.find('.comment-text').text(editedContent);
+                cancelEditComment(feedNo, commentNo);
+            } else {
+                alert('댓글 수정에 실패했습니다: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('댓글 수정 오류:', error);
+            alert('댓글 수정 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function deleteComment(feedNo, commentNo) {
+    if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) return;
+
+    $.ajax({
+        url: '/community/feed/comment/delete',
+        method: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify({ feedCommentNo: commentNo }),
+        success: function(response) {
+            if (response.success) {
+                $(`#feed-${feedNo} .comment[data-comment-id="${commentNo}"]`).remove();
+                updateCommentCount(feedNo, -1);
+            } else {
+                alert('댓글 삭제에 실패했습니다: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('댓글 삭제 오류:', error);
+            alert('댓글 삭제 중 오류가 발생했습니다.');
+        }
+    });
 }
 
 function showReplyForm(feedNo, commentNo) {
@@ -556,7 +642,7 @@ function submitReply(feedNo, parentCommentNo) {
     }
 
     $.ajax({
-        url: '/community/feed/comment',
+        url: '/community/feed/comment/add',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -568,6 +654,7 @@ function submitReply(feedNo, parentCommentNo) {
             if (response.success) {
                 replyInput.val('');
                 loadComments(feedNo);
+                updateCommentCount(feedNo, 1);
             } else {
                 alert('답글 작성에 실패했습니다: ' + response.message);
             }
@@ -588,7 +675,7 @@ function submitComment(feedNo) {
     }
 
     $.ajax({
-        url: '/community/feed/comment',
+        url: '/community/feed/comment/add',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

@@ -19,13 +19,15 @@ public class WebMVCConfig implements WebMvcConfigurer{
 		registry.addViewController("/work/workinsert.do").setViewName("project/workInsert");
 		registry.addViewController("/work/workupdate.do").setViewName("project/workUpdate");
 		registry.addViewController("/project/projectListAll.do").setViewName("project/projectListAll");
-		registry.addViewController("/commuting").setViewName("employee/commuting");
-		registry.addViewController("/vacation").setViewName("employee/vacation");
-		registry.addViewController("/profile").setViewName("employee/profile");
+		registry.addViewController("/employee/commuting").setViewName("employee/commuting");
+		registry.addViewController("/employee/vacation").setViewName("employee/vacation");
+		registry.addViewController("/employee/profile").setViewName("employee/profile");
+		registry.addViewController("/hr/orgChart").setViewName("humanResource/orgChart");
 		registry.addViewController("/hr/department").setViewName("humanResource/department");
 		registry.addViewController("/hr/employee").setViewName("humanResource/employee");
 		registry.addViewController("/hr/createEmployee").setViewName("humanResource/createEmployee");
 		registry.addViewController("/hr/allEmpCommuting").setViewName("humanResource/allEmpCommuting");
+		registry.addViewController("/approval/approvalAllList").setViewName("approval/approvalAllList");
 	}
 
 	@Override

@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+.trash-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.trash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.trash-header h2 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.email-count {
+    font-size: 14px;
+    color: #666;
+    margin-left: 10px;
+}
+
+.trash-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.trash-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.toolbar-left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.email-list {
+    min-height: 300px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.no-email {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+}
+
+.no-email-icon {
+    font-size: 48px;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+
+.no-email p {
+    font-size: 18px;
+    color: #666;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 768px) {
+    .trash-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .trash-actions {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .trash-toolbar {
+        flex-direction: column;
+    }
+
+    .toolbar-left, .toolbar-right {
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .toolbar-left {
+        flex-wrap: wrap;
+    }
+
+    .toolbar-left button {
+        margin-top: 5px;
+    }
+}

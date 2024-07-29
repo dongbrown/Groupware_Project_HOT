@@ -1,6 +1,7 @@
 package com.project.hot.hr.model.service;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import com.project.hot.employee.model.dao.EmployeeDao;
+import com.project.hot.employee.model.dto.Department;
+import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.hr.model.dao.HRDao;
+import com.project.hot.hr.model.dto.OrgContent;
+import com.project.hot.hr.model.dto.OrgData;
+import com.project.hot.hr.model.dto.OrgOption;
 import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
 import com.project.hot.hr.model.dto.ResponseCommuting;
@@ -97,4 +103,91 @@ public class HRServiceImpl implements HRService {
 		return hrDao.updateCommuting(session, rc);
 	}
 
+	@Override
+	public OrgData selectOrgData() {
+		List<Employee> employees=hrDao.selectAllEmp(session);
+		List<Department> departments=empDao.selectDepartmentList(session);
+		OrgData result = new OrgData();
+		//조직도 데이터로 바꾸기
+		//최상위 부서
+		employees.stream().filter(f->f.getDepartmentCode().getDepartmentHighCode()==0).forEach(e->{
+			result.setId(e.getEmployeeName());
+			result.setData(new OrgContent().builder()
+					.url(e.getEmployeePhoto()).name(e.getEmployeeName())
+					.pos(e.getPositionCode().getPositionTitle())
+					.dept(e.getDepartmentCode().getDepartmentTitle())
+					.deptCode(e.getDepartmentCode().getDepartmentCode())
+					.build());
+		});
+		//하위 부서, 팀
+		departments.stream().filter(f->f.getDepartmentHighCode() != 0).forEach(d->{
+			if(d.getDepartmentHighCode()==result.getData().getDeptCode()) {
+				if(result.getChildren()==null) {
+					result.setChildren(new ArrayList<OrgData>());
+					result.getChildren().add(new OrgData().builder()
+									.id(d.getDepartmentTitle())
+									.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
+									.build());
+				}else {
+					result.getChildren().add(new OrgData().builder()
+							.id(d.getDepartmentTitle())
+							.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
+							.build());
+				}
+			}else {
+				result.getChildren().stream().filter(c->c.getData().getDeptCode()==d.getDepartmentHighCode()).forEach(e->{
+					if(e.getChildren()==null) {
+						e.setChildren(new ArrayList<OrgData>());
+						e.getChildren().add(new OrgData().builder()
+										.id(d.getDepartmentTitle())
+										.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
+										.build());
+					}else {
+						e.getChildren().add(new OrgData().builder()
+								.id(d.getDepartmentTitle())
+								.data(new OrgContent().builder().name(d.getDepartmentTitle()).deptCode(d.getDepartmentCode()).build())
+								.build());
+					}
+				});
+			}
+		});
+		//사원들 - 대표이사를 제외한 나머지
+		employees.stream().filter(f->f.getDepartmentCode().getDepartmentHighCode()!=0).forEach(e->{
+			result.getChildren().stream().forEach(d->{
+				d.getChildren().stream().filter(fld->fld.getData().getDeptCode()==e.getDepartmentCode().getDepartmentCode()).forEach(od->{
+					if(od.getChildren()==null) {
+						od.setChildren(new ArrayList<OrgData>());
+						od.getChildren().add(new OrgData().builder()
+										.id(e.getEmployeeName())
+										.data(new OrgContent().builder()
+												.name(e.getEmployeeName())
+												.pos(e.getPositionCode().getPositionTitle())
+												.dept(e.getDepartmentCode().getDepartmentTitle())
+												.build())
+										.build());
+					}else {
+						insertChildren(od, e);
+					}
+				});
+			});
+		});
+
+		return result;
+	}
+
+	private void insertChildren(OrgData od, Employee e) {
+		if(od.getChildren() == null) {
+			od.setChildren(new ArrayList<OrgData>());
+			od.getChildren().add(new OrgData().builder()
+					.id(e.getEmployeeName())
+					.data(new OrgContent().builder()
+							.name(e.getEmployeeName())
+							.pos(e.getPositionCode().getPositionTitle())
+							.dept(e.getDepartmentCode().getDepartmentTitle())
+							.build())
+					.build());
+		}else {
+			insertChildren(od.getChildren().get(0),e);
+		}
+	}
 }
