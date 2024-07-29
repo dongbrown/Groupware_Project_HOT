@@ -103,4 +103,12 @@ public class ProjectServiceImpl implements ProjectService {
 		return result;
 	}
 
+	@Override
+	public Map<String, Object> responseProjectlistall(Map<String, Integer> param) {
+		Map<String,Object> result=new HashMap<>();
+		result.put("projects", dao.responseProjectlistall(session, param));
+		result.put("totalPage",Math.ceil((double)dao.responseProjectlistallCount(session,param)/param.get("numPerpage")));
+		return result;
+	}
+
 }

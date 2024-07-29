@@ -18,6 +18,7 @@ public interface ProjectService {
 	List<ProjectEmployee> selectEmployeetByProjectNo(Map<String,Integer> param);
 	int requestJoinProject(Map<String,Integer> param);
 	Map<String,Object> requestProjectlistall(Map<String,Integer> param);
+	Map<String,Object> responseProjectlistall(Map<String,Integer> param);
 	int insertProject(Project p);
 	int updateProject(Project p);
 	int deleteProject(int projectNo);

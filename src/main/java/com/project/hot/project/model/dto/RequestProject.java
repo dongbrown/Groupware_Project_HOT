@@ -23,4 +23,5 @@ public class RequestProject {
 	private String projectStatus;
 	private String projectRefuseContent;
 	private Project project;
+	private Employee employee;
 }

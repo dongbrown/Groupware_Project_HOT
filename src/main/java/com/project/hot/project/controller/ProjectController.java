@@ -148,7 +148,7 @@ public class ProjectController {
 	}
 
 	@ResponseBody
-	@PostMapping("/requestProjectlistallajax")
+	@GetMapping("/requestProjectlistallajax")
 	public Map<String,Object> requestProjectlistall(@RequestParam(defaultValue = "1") int cPage
 														,@RequestParam int employeeNo){
 		ObjectMapper mapper=new ObjectMapper();
@@ -158,6 +158,20 @@ public class ProjectController {
 			e.printStackTrace();
 		}
 		return service.requestProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
+
+	}
+
+	@ResponseBody
+	@GetMapping("/responseProjectlistallajax")
+	public Map<String,Object> responseProjectlistall(@RequestParam(defaultValue = "1") int cPage
+														,@RequestParam int employeeNo){
+		ObjectMapper mapper=new ObjectMapper();
+		try {
+			mapper.writeValueAsString(service.responseProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo)));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return service.responseProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
 
 	}
 }
