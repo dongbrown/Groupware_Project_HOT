@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.project.hot.approval.model.dto.Approval;
+import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
@@ -20,4 +21,5 @@ public interface ApprovalDao {
 	int selectApprovalCompleteCount(SqlSession session, int no);
 	int selectApprovalAllCount(SqlSession session, int no);
 	List<Approval> selectApprovalAllList(SqlSession session, Map<String, Object> param);
+	int insertApproval(SqlSession session, RequestApproval ra);
 }

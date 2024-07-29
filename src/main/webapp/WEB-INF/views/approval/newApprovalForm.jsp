@@ -214,17 +214,17 @@
                 </div>
             </div>
             <div id="middleApprover" class="approval-box">
-                <h5 class="approval-title">중간결재자</h5>
+                <h5 class="approval-title">중간결재자<span class="asterisk">*</span></h5>
                 <div class="approval-content"></div>
             </div>
             <div id="finalApprover" class="approval-box">
-                <h5 class="approval-title">최종결재자</h5>
+                <h5 class="approval-title">최종결재자<span class="asterisk">*</span></h5>
                 <div class="approval-content"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="documentType">문서종류</label>
-            <select id="documentType" class="form-control" name="vacationType">
+            <label for="documentType">문서종류<span class="asterisk">*</span></label>
+            <select id="documentType" class="form-control" name="vacationType" required>
                 <option value="반차">반차 신청서</option>
                 <option value="연차">연차 신청서</option>
                 <option value="병가">병가 신청서</option>
@@ -250,16 +250,16 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>제목</th>
-                    <td colspan="5"><input type="text" name="title" class="form-control"></td>
+                    <th>제목<span class="asterisk">*</span></th>
+                    <td colspan="5"><input type="text" name="title" class="form-control" required></td>
                 </tr>
                 <tr>
-                    <th>휴가시작일</th>
-                    <td><input type="date" id="startDate" name="vacationStart" class="form-control"></td>
-                    <th>휴가종료일</th>
-                    <td><input type="date" id="endDate" name="vacationEnd" class="form-control"></td>
-                    <th>보존연한</th>
-                    <td><select id="retentionPeriod" class="form-control" name="period">
+                    <th>휴가시작일<span class="asterisk">*</span></th>
+                    <td><input type="date" id="startDate" name="vacationStart" class="form-control" required></td>
+                    <th>휴가종료일<span class="asterisk">*</span></th>
+                    <td><input type="date" id="endDate" name="vacationEnd" class="form-control" required></td>
+                    <th>보존연한<span class="asterisk">*</span></th>
+                    <td><select id="retentionPeriod" class="form-control" name="period" required>
                         <option value="3">3 개월</option>
                         <option value="6">6 개월</option>
                         <option value="12">1 년</option>
@@ -268,8 +268,8 @@
                 </tr>
                 <tr>
                     <th>비상연락처</th>
-                    <td><input type="text" class="form-control" name="vacationEmergency"></td>
-                    <th>수신처</th>
+                    <td><input type="text" id="phoneNumber" class="form-control" name="vacationEmergency"></td>
+                    <th>수신처<span class="asterisk">*</span></th>
                     <td colspan="3">
                         <div id="recipient" class="form-control recipientDiv"></div>
                     </td>
@@ -279,9 +279,9 @@
                     <td colspan="3">
                         <div id="referer-div" class="form-control refererDiv"></div>
                     </td>
-                    <th>보안등급</th>
+                    <th>보안등급<span class="asterisk">*</span></th>
                     <td>
-                        <select id="securityLevel" class="form-control" name="security">
+                        <select id="securityLevel" class="form-control" name="security" required>
                             <option value="S">S</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
@@ -307,12 +307,12 @@
             </tfoot>
         </table>
         <div class="form-group mt-3">
-            <label for="details">휴가내용</label>
-            <textarea id="details" class="form-control" rows="10" name="content"></textarea>
+            <label for="details">휴가내용<span class="asterisk">*</span></label>
+            <textarea id="details" class="form-control" rows="10" name="content" required></textarea>
         </div>
         <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-primary vacation-insert-btn">결재상신</button>
-            <button type="button" class="btn btn-secondary ml-2">임시저장</button>
+            <button type="button" class="btn btn-primary" id="vacation-insert-btn">결재상신</button>
+            <button type="button" class="btn btn-secondary ml-2" id="vacation-temp-btn">임시저장</button>
             <button type="button" class="btn btn-danger ml-2">취소</button>
         </div>
     </form>

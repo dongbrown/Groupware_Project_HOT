@@ -13,4 +13,5 @@ public interface ApprovalService {
 	List<Employee> getEmployeesByDepartment(String departmentCode);
 	List<Department> selectDepartmentList();
 	Map<String, Object> getApprovalsCountAndList(Map<String, Object> param);
+	int insertVacation(Map<String, Object> param);
 }

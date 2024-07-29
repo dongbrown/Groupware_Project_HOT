@@ -1,6 +1,12 @@
 /*
 	결재문서 작성용 css~
 */
+
+/* 별표(문서입력필수 표시) */
+.asterisk {
+	color: red;
+}
+
 .referer-item, .recipient-item {
 	display: inline-flex;
 	align-items: center;

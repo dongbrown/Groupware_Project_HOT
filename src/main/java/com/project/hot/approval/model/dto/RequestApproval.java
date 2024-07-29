@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RequestApproval {
+	private String approvalNo;
 	private int approvalEmpNo;
 	private Date approvalDate;
+	private int approvalStatus;
 	private String title;
 	private String content;
 	private Date period;

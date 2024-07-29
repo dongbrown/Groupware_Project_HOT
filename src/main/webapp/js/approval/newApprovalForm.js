@@ -2,22 +2,70 @@
 	결재문서 작성 페이지용 js~
 */
 
+//휴대폰번호 입력 처리
+document.getElementById('phoneNumber').addEventListener('input', function() {
+    let input = this.value.replace(/\D/g, ''); // 숫자만 남기기
+    let formatted = '';
+
+    if (input.length > 11) {
+        input = input.slice(0, 11); // 최대 11자리까지
+    }
+
+    if (input.length === 11) {
+        // 11자리 포맷: 010-1234-1234
+        formatted = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7);
+    } else if (input.length === 10) {
+        // 10자리 포맷: 010-123-1234
+        formatted = input.slice(0, 3) + '-' + input.slice(3, 6) + '-' + input.slice(6);
+    } else {
+        // 기본 포맷
+        formatted = input;
+    }
+
+    this.value = formatted;
+});
+
 //휴가 신청서 insert
-$('.vacation-insert-btn').click(()=>{
+$('#vacation-insert-btn').click(insertApproval);
+$('#vacation-temp-btn').click(insertApproval);
+function insertApproval(){
 	const $form=$('#vacation-form').get(0);
 
-	if(!$form.checkValidity()){
-		alert('정보를 전부 입력해주세요!');
+	//입력 전부했는지 확인
+	if($(this).attr('id') == 'vacation-insert-btn'){
+		if(!$form.checkValidity()){
+			alert('필수정보를 전부 입력해주세요!');
+			return;
+		}
+	}
+	
+	//결재자 입력 확인
+	if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+		alert('결재자를 등록해주세요!');
 		return;
 	}
-
+	
+	if($('#phoneNumber').val() != ''){
+    	let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+    	if(!result.test($('#phoneNumber').val())){
+			alert('알맞은 핸드폰번호 형식이 아닙니다!');
+			return;
+		}
+	}
+	
 	const fd=new FormData($form);
 
 	//보존기한 날짜 Date로 바꾸기
 	const periodDate=new Date();
-	periodDate.setMonth(periodDate.getMonth()+1+fd.get('period'));
+	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
 	fd.set('period', periodDate.toISOString());
-
+	
+	//결재상신인지 임시저장인지 확인하여 status저장
+	if($(this).attr('id') == 'vacation-insert-btn'){
+		fd.set('approvalStatus', 1); //결재상신
+	}else{
+		fd.set('approvalStatus', 5); //임시저장
+	}
 
 	fetch(path+'/api/approval/insertVacation', {
 		method:'POST',
@@ -26,11 +74,13 @@ $('.vacation-insert-btn').click(()=>{
 	.then(response=>response.text())
 	.then(data=>{
 		console.log(data);
+		alert(data);
+		location.reload();
 	})
 	.catch(error=>{
 		console.log(error);
 	})
-});
+};
 
 
 //참조, 수신자 태그 x버튼 함수

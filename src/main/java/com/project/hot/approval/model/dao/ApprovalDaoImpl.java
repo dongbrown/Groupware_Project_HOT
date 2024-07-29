@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.hot.approval.model.dto.Approval;
+import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
@@ -60,6 +61,11 @@ public class ApprovalDaoImpl implements ApprovalDao {
 	@Override
 	public int selectApprovalAllCount(SqlSession session, int no) {
 		return session.selectOne("approval.selectApprovalAllCount", no);
+	}
+
+	@Override
+	public int insertApproval(SqlSession session, RequestApproval ra) {
+		return 0;
 	}
 
 
