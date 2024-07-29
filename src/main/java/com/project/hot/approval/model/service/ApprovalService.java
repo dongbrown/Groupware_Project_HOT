@@ -12,5 +12,5 @@ public interface ApprovalService {
 	List<Approval> getAllDocuments();
 	List<Employee> getEmployeesByDepartment(String departmentCode);
 	List<Department> selectDepartmentList();
-	Map<String, Object> getApprovalsCountAndList(int no);
+	Map<String, Object> getApprovalsCountAndList(Map<String, Object> param);
 }

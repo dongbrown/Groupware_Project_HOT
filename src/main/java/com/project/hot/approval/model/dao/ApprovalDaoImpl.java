@@ -1,7 +1,9 @@
 package com.project.hot.approval.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -48,5 +50,18 @@ public class ApprovalDaoImpl implements ApprovalDao {
 	public int selectApprovalCompleteCount(SqlSession session, int no) {
 		return session.selectOne("approval.selectApprovalCompleteCount", no);
 	}
+
+	@Override
+	public List<Approval> selectApprovalAllList(SqlSession session, Map<String, Object> param) {
+		return session.selectList("approval.selectApprovalAllList", param,
+				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
+	}
+
+	@Override
+	public int selectApprovalAllCount(SqlSession session, int no) {
+		return session.selectOne("approval.selectApprovalAllCount", no);
+	}
+
+
 
 }

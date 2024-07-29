@@ -79,6 +79,21 @@
 						<button type="button" class="btn btn-primary" onclick="addReferer();">참조자 추가</button>
 					</div>
 				</div>
+
+				<div class="form-group">
+					<label for="receiver">수신처 선택</label>
+					<div class="d-flex justify-content-between align-items-center">
+						<select id="receiver" class="form-control mr-2" style="width: 70%;">
+							<c:if test="${not empty employees}">
+								<option value="">선택하세요</option>
+								<c:forEach var="employee" items="${employees}">
+									<option value="${employee.employeeNo}">${employee.employeeName}</option>
+								</c:forEach>
+							</c:if>
+						</select>
+						<button type="button" class="btn btn-primary" onclick="addReceiver();">수신처 추가</button>
+					</div>
+				</div>
 				<button type="button" class="btn btn-danger ml-2" onclick="resetApprovers()">초기화</button>
 
 			</div>
@@ -186,106 +201,131 @@
 				</div>
 
 <!-- 휴가신청서 -->
-				<div id="form2" class="form-container">
-					<h5>휴가신청서</h5>
-					<form>
-						<div class="approval-line">
-						    <div id="draftApprover" class="approval-box">
-						        <h5 class="approval-title">기안자</h5>
-						        <div class="approval-content">
-						            <p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
-						            <p id="draftEmployee">${loginEmployee.employeeName}</p>
-						            <p id="draftDate">${currentDate}</p>
-						        </div>
-						    </div>
-						    <div id="middleApprover" class="approval-box">
-						        <h5 class="approval-title">중간결재자</h5>
-						        <div class="approval-content"></div>
-						    </div>
-						    <div id="finalApprover" class="approval-box">
-						        <h5 class="approval-title">최종결재자</h5>
-						        <div class="approval-content"></div>
-						    </div>
-						</div>
-						<form>
-							<div class="form-group">
-								<label for="documentType">문서종류</label> <select id="documentType"
-									class="form-control">
-									<option>반차 신청서</option>
-									<option>월차 신청서</option>
-									<option>연차 신청서</option>
-									<option>병가 신청서</option>
-									<option>육아 휴직 신청서</option>
-									<option>출산 휴가 신청서</option>
-								</select>
-							</div>
+<div id="form2" class="form-container">
+    <h5>휴가신청서</h5>
+    <form>
+        <div class="approval-line">
+            <div id="draftApprover" class="approval-box">
+                <h5 class="approval-title">기안자</h5>
+                <div class="approval-content">
+                    <p id="draftDepartment">${loginEmployee.departmentCode.departmentTitle}</p>
+                    <p id="draftEmployee">${loginEmployee.employeeName}</p>
+                    <p id="draftDate">${currentDate}</p>
+                </div>
+            </div>
+            <div id="middleApprover" class="approval-box">
+                <h5 class="approval-title">중간결재자</h5>
+                <div class="approval-content"></div>
+            </div>
+            <div id="finalApprover" class="approval-box">
+                <h5 class="approval-title">최종결재자</h5>
+                <div class="approval-content"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="documentType">문서종류</label>
+            <select id="documentType" class="form-control">
+                <option value="반차">반차 신청서</option>
+                <option value="연차">연차 신청서</option>
+                <option value="병가">병가 신청서</option>
+                <option value="육아휴직">육아 휴직 신청서</option>
+                <option value="출산휴가">출산 휴가 신청서</option>
+            </select>
+        </div>
 
-							<table id="infoTable">
+        <table id="infoTable">
+            <tbody>
+                <tr>
+                    <th>기안자</th>
+                    <td>${loginEmployee.employeeName}</td>
+                    <th>부서</th>
+                    <td>${loginEmployee.departmentCode.departmentTitle}</td>
+                    <th>기안일</th>
+                    <td class="draftDate">${currentDate}</td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td colspan="5"><input type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <th>휴가시작일</th>
+                    <td><input type="date" id="startDate" class="form-control"></td>
+                    <th>휴가종료일</th>
+                    <td><input type="date" id="endDate" class="form-control"></td>
+                    <th>보존연한</th>
+                    <td><select id="retentionPeriod" class="form-control">
+                        <option>3 개월</option>
+                        <option>6 개월</option>
+                        <option>1 년</option>
+                        <option>3 년</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <th>비상연락처</th>
+                    <td><input type="text" class="form-control"></td>
+                    <th>수신처</th>
+                    <td colspan="3">
+                        <div id="recipient" class="form-control">
+                            <div class="recipient-item">
+                                <input type="hidden" name="recipientId" value="사번">
+                                <span class="recipient-details">수신처 이름 및 직급부서</span>
+                                <span class="remove-recipient" onclick="removeElement(this)">x</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>참조자</th>
+                    <td colspan="3">
+                        <div id="addReferer" class="form-control">
+                            <div class="referer-item">
+                                <input type="hidden" name="refererId" value="사번">
+                                <span class="referer-details">참조자 이름 및 직급부서</span>
+                                <span class="remove-referer" onclick="removeElement(this)">x</span>
+                            </div>
+                        </div>
+                    </td>
+                    <th>보안등급</th>
+                    <td>
+                        <select id="securityLevel" class="form-control">
+                            <option value="S">S</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>파일첨부</th>
+                    <td colspan="5">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input file-input" multiple>
+                                <label class="custom-file-label">파일 선택</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary file-select-button">파일 선택</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="form-group mt-3">
+            <label for="details">휴가내용</label>
+            <textarea id="details" class="form-control" rows="10"></textarea>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">결재상신</button>
+            <button type="button" class="btn btn-secondary ml-2">임시저장</button>
+            <button type="button" class="btn btn-danger ml-2">취소</button>
+        </div>
+    </form>
+</div>
 
-								<tbody>
-									<tr>
-										<th>기안자</th>
-										<td>${loginEmployee.employeeName}</td>
-										<th>부서</th>
-										<td>${loginEmployee.departmentCode.departmentTitle}</td>
-										<th>기안일</th>
-										<td class="draftDate">${currentDate}</td>
 
-									</tr>
-									<tr>
-										<th>제목</th>
-										<td colspan="5"><input type="text" class="form-control"></td>
 
-									</tr>
-									<tr>
-										<th>휴가시작일</th>
-										<td><input type="date" id="startDate" class="form-control"></td>
-										<th>휴가종료일</th><!-- 시작일을 min으로 설정해서 그 이후만 선택가능하게 -->
-										<td><input type="date" id="endDate" class="form-control"></td><th>보존연한</th>
-										<td><select id="retentionPeriod" class="form-control">
-												<option>3 개월</option>
-												<option>6 개월</option>
-												<option>1 년</option>
-												<option>3 년</option>
-										</select></td>
-									</tr>
-									<tr>
-										<th>비상연락처</th>
-										<td><input type="text" class="form-control"></td>
-										<th>참조자</th>
-										<td colspan="3"><input type="text" id="addReferer" class="form-control" readonly></td>
-									</tr>
-								</tbody>
-								<tfoot>
-									<tr>
-										<th>파일첨부</th>
-										<td colspan="5">
-											<div class="input-group">
-											    <div class="custom-file">
-											        <input type="file" class="custom-file-input file-input" multiple>
-											        <label class="custom-file-label">파일 선택</label>
-											    </div>
-											    <div class="input-group-append">
-											        <button type="button" class="btn btn-primary file-select-button">파일 선택</button>
-											    </div>
-											</div>
-										</td>
-									</tr>
-								</tfoot>
-
-							</table>
-							<div class="form-group mt-3">
-								<label for="details">휴가내용</label>
-								<textarea id="details" class="form-control" rows="10"></textarea>
-							</div>
-							<div class="d-flex justify-content-center">
-								<button type="submit" class="btn btn-primary">결재상신</button>
-								<button type="button" class="btn btn-secondary ml-2">임시저장</button>
-								<button type="button" class="btn btn-danger ml-2">취소</button>
-							</div>
-						</form>
-					</form>
-				</div>
 
 
 <!-- 초과근무신청서 -->

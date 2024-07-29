@@ -1,6 +1,7 @@
 package com.project.hot.approval.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -17,4 +18,6 @@ public interface ApprovalDao {
 	int selectApprovalProcessCount(SqlSession session, int no);
 	int selectApprovalPendingCount(SqlSession session, int no);
 	int selectApprovalCompleteCount(SqlSession session, int no);
+	int selectApprovalAllCount(SqlSession session, int no);
+	List<Approval> selectApprovalAllList(SqlSession session, Map<String, Object> param);
 }

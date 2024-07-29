@@ -31,17 +31,20 @@ document.getElementById('formType').addEventListener('change', showForm);
 function updateEmployeeSelects(employees) {
 	var approverSelect = document.getElementById("approver");
 	var refererSelect = document.getElementById("referer");
+	var receiverSelect = document.getElementById("receiver");
 
 	// 기존 옵션 제거
 	approverSelect.innerHTML = '<option value="">선택하세요</option>';
 	refererSelect.innerHTML = '<option value="">선택하세요</option>';
+	receiverSelect.innerHTML = '<option value="">선택하세요</option>';
 
 	// 새 직원 옵션 추가
 	employees.forEach(function(employee) {
 		var optionText = employee.employeeName + ' (' + employee.positionCode.positionTitle + ')';
 		var option = new Option(optionText, JSON.stringify(employee));
 		approverSelect.add(option.cloneNode(true));
-		refererSelect.add(option);
+		refererSelect.add(option.cloneNode(true));
+		receiverSelect.add(option);
 	});
 }
 
@@ -133,6 +136,43 @@ function addReferer() {
 
 
 //참조자 나타내기
+function updateReferersInAllForms() {
+	console.log("Updating referers in all forms");
+	var refererString = referers.map(ref => ref.employeeName).join(", ");
+	var forms = document.getElementsByClassName('form-container');
+
+	for (var i = 0; i < forms.length; i++) {
+		var form = forms[i];
+		var refererInput = form.querySelector("#addReferer");
+		var refererList = form.querySelector("#refererList");
+
+		if (refererInput) {
+			refererInput.value = refererString;
+		} else if (refererList) {
+			refererList.innerHTML = refererString;
+		}
+	}
+}
+
+//수신처 추가
+function addReceiver() {
+	var refererSelect = document.getElementById("receiver");
+	var selectedOption = refererSelect.options[refererSelect.selectedIndex];
+
+	if (selectedOption && selectedOption.value) {
+		var employee = JSON.parse(selectedOption.value);
+
+		if (!referers.some(ref => ref.employeeNo === employee.employeeNo)) {
+			referers.push(employee);
+			updateReferersInAllForms();
+		} else {
+			alert("이미 추가된 참조자입니다.");
+		}
+	}
+}
+
+
+//수신처 나타내기
 function updateReferersInAllForms() {
 	console.log("Updating referers in all forms");
 	var refererString = referers.map(ref => ref.employeeName).join(", ");

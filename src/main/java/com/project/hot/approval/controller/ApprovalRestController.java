@@ -1,5 +1,6 @@
 package com.project.hot.approval.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,11 @@ public class ApprovalRestController {
 	private final ApprovalService service;
 
 	@GetMapping("/getApprovalsCountAndList")
-	public Map<String, Object> getApprovalsCountAndList(@RequestParam int no) {
-		return service.getApprovalsCountAndList(no);
+	public Map<String, Object> getApprovalsCountAndList(@RequestParam int no, @RequestParam(defaultValue = "1") int cPage) {
+		Map<String, Object> param=new HashMap<>();
+		param.put("no", no);
+		param.put("cPage", cPage);
+		param.put("numPerpage", 10);
+		return service.getApprovalsCountAndList(param);
 	}
 }

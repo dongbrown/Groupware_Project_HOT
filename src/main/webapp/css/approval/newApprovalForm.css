@@ -1,6 +1,48 @@
 /*
 	결재문서 작성용 css~
 */
+.referer-item, .recipient-item {
+	display: inline-flex;
+	align-items: center;
+	margin: 5px;
+	padding: 5px 10px;
+	background-color: #f1f1f1;
+	border-radius: 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.remove-referer, .remove-recipient {
+	cursor: pointer;
+	color: red;
+	margin-left: 10px;
+}
+
+.form-control {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.form-control-plaintext {
+	border: none;
+	background: none;
+	padding-left: 0;
+	margin-left: 0;
+	pointer-events: none;
+}
+
+.input-group {
+	width: 100%;
+}
+
+#recipient, #addReferer {
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
 html, body {
 	height: 100%;

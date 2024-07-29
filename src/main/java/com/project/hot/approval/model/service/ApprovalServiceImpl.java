@@ -41,18 +41,20 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 
 	@Override
-	public Map<String, Object> getApprovalsCountAndList(int no) {
+	public Map<String, Object> getApprovalsCountAndList(Map<String, Object> param) {
 		Map<String, Object> result=new HashMap<>();
 
 		//각 결재문서 카운트
 		ResponseApprovalsCount rac=new ResponseApprovalsCount();
-		rac.setWaitCount(dao.selectApprovalWaitCount(session, no));
-		rac.setProcessCount(dao.selectApprovalProcessCount(session, no));
-		rac.setPendingCount(dao.selectApprovalPendingCount(session, no));
-		rac.setCompleteCount(dao.selectApprovalCompleteCount(session, no));
+		rac.setWaitCount(dao.selectApprovalWaitCount(session, (int)param.get("no")));
+		rac.setProcessCount(dao.selectApprovalProcessCount(session, (int)param.get("no")));
+		rac.setPendingCount(dao.selectApprovalPendingCount(session, (int)param.get("no")));
+		rac.setCompleteCount(dao.selectApprovalCompleteCount(session, (int)param.get("no")));
 		result.put("rac", rac);
 
 		//결재 문서 리스트 가져오기
+		result.put("totalPage", Math.ceil((double)dao.selectApprovalCompleteCount(session, (int)param.get("no"))/10));
+		result.put("approvals", dao.selectApprovalAllList(session, param));
 		return result;
 	}
 
