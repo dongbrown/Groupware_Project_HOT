@@ -2,6 +2,57 @@
 	결재문서 작성 페이지용 js~
 */
 
+//휴가 신청서 insert
+$('.vacation-insert-btn').click(()=>{
+	const $form=$('#vacation-form').get(0);
+
+	if(!$form.checkValidity()){
+		alert('정보를 전부 입력해주세요!');
+		return;
+	}
+
+	const fd=new FormData($form);
+
+	//보존기한 날짜 Date로 바꾸기
+	const periodDate=new Date();
+	periodDate.setMonth(periodDate.getMonth()+1+fd.get('period'));
+	fd.set('period', periodDate.toISOString());
+
+
+	fetch(path+'/api/approval/insertVacation', {
+		method:'POST',
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		console.log(data);
+	})
+	.catch(error=>{
+		console.log(error);
+	})
+});
+
+
+//참조, 수신자 태그 x버튼 함수
+function removeElement(element) {
+	element.parentElement.remove();
+	const no = $(element).siblings().eq(0).val();
+	if($(element).parent().attr('class') == 'referer-item'){
+		//참조자 삭제
+		approvalReferers.forEach(e=>{
+			if(e.employeeNo == no){
+				approvalReferers.pop(e);
+			}
+		})
+	}else{
+		//수신처 삭제
+		approvalReceivers.forEach(e=>{
+			if(e.employeeNo == no){
+				approvalReceivers.pop(e);
+			}
+		})
+	}
+}
 
 //부서 불러오기
 function loadEmployees() {
@@ -51,7 +102,8 @@ function updateEmployeeSelects(employees) {
 // 직원 선택후 결재선 라인에 추가
 var middleApprover = null;
 var finalApprover = null;
-var referers = [];
+var approvalReferers = [];
+var approvalReceivers = [];
 
 function addApprover() {
 	var approverSelect = document.getElementById("approver");
@@ -108,6 +160,7 @@ function updateApprovalBox(type, employee, form) {
 	console.log("Box content element:", boxContent);
 	if (boxContent) {
 		boxContent.innerHTML =
+			"<input name='"+ type +"No' value='"+ employee.employeeNo +"' hidden>" +
 			"<p>" + employee.departmentCode.departmentTitle + "</p>" +
 			"<p>" + employee.employeeName + " " + employee.positionCode.positionTitle + "</p>";
 		console.log("Updated content:", boxContent.innerHTML);
@@ -119,15 +172,15 @@ function updateApprovalBox(type, employee, form) {
 
 //참조자 추가
 function addReferer() {
-	var refererSelect = document.getElementById("referer");
-	var selectedOption = refererSelect.options[refererSelect.selectedIndex];
+	const $refererSelect = document.getElementById("referer");
+	const selectedOption = $refererSelect.options[$refererSelect.selectedIndex];
 
 	if (selectedOption && selectedOption.value) {
-		var employee = JSON.parse(selectedOption.value);
+		const employee = JSON.parse(selectedOption.value);
 
-		if (!referers.some(ref => ref.employeeNo === employee.employeeNo)) {
-			referers.push(employee);
-			updateReferersInAllForms();
+		if (!approvalReferers.some(ref => ref.employeeNo === employee.employeeNo)) {
+			approvalReferers.push(employee);
+			makeRefererTags(employee);
 		} else {
 			alert("이미 추가된 참조자입니다.");
 		}
@@ -136,59 +189,45 @@ function addReferer() {
 
 
 //참조자 나타내기
-function updateReferersInAllForms() {
+function makeRefererTags(employee) {
 	console.log("Updating referers in all forms");
-	var refererString = referers.map(ref => ref.employeeName).join(", ");
-	var forms = document.getElementsByClassName('form-container');
 
-	for (var i = 0; i < forms.length; i++) {
-		var form = forms[i];
-		var refererInput = form.querySelector("#addReferer");
-		var refererList = form.querySelector("#refererList");
-
-		if (refererInput) {
-			refererInput.value = refererString;
-		} else if (refererList) {
-			refererList.innerHTML = refererString;
-		}
-	}
+	const $referer = $('<div>').addClass('referer-item');
+	const $no = $('<input>').attr('type','hidden').attr('name', 'refererNo').attr('value', employee.employeeNo);
+	const $name = $('<span>').addClass('referer-details').text(employee.employeeName+" "+employee.positionCode.positionTitle+'('+employee.departmentCode.departmentTitle+')');
+	const $x = $('<span>').addClass('remove-referer').attr('onclick', 'removeElement(this)').text('x');
+	$referer.append($no).append($name).append($x);
+	$('.refererDiv').append($referer);
 }
 
 //수신처 추가
 function addReceiver() {
-	var refererSelect = document.getElementById("receiver");
-	var selectedOption = refererSelect.options[refererSelect.selectedIndex];
+	const $receive = document.getElementById("receiver");
+	const selectedOption = $receive.options[$receive.selectedIndex];
 
 	if (selectedOption && selectedOption.value) {
-		var employee = JSON.parse(selectedOption.value);
+		const employee = JSON.parse(selectedOption.value);
 
-		if (!referers.some(ref => ref.employeeNo === employee.employeeNo)) {
-			referers.push(employee);
-			updateReferersInAllForms();
+		if (!approvalReceivers.some(ref => ref.employeeNo === employee.employeeNo)) {
+			approvalReceivers.push(employee);
+			makeReceiversTag(employee);
 		} else {
-			alert("이미 추가된 참조자입니다.");
+			alert("이미 추가된 수신처입니다.");
 		}
 	}
 }
 
 
 //수신처 나타내기
-function updateReferersInAllForms() {
-	console.log("Updating referers in all forms");
-	var refererString = referers.map(ref => ref.employeeName).join(", ");
-	var forms = document.getElementsByClassName('form-container');
+function makeReceiversTag(employee) {
+	console.log("Updating receivers in all forms");
 
-	for (var i = 0; i < forms.length; i++) {
-		var form = forms[i];
-		var refererInput = form.querySelector("#addReferer");
-		var refererList = form.querySelector("#refererList");
-
-		if (refererInput) {
-			refererInput.value = refererString;
-		} else if (refererList) {
-			refererList.innerHTML = refererString;
-		}
-	}
+	const $recipient = $('<div>').addClass('recipient-item');
+	const $no = $('<input>').attr('type','hidden').attr('name', 'receiverNo').attr('value', employee.employeeNo);
+	const $name = $('<span>').addClass('recipient-details').text(employee.employeeName+" "+employee.positionCode.positionTitle+'('+employee.departmentCode.departmentTitle+')');
+	const $x = $('<span>').addClass('remove-recipient').attr('onclick', 'removeElement(this)').text('x');
+	$recipient.append($no).append($name).append($x);
+	$('.recipientDiv').append($recipient);
 }
 
 
@@ -197,7 +236,8 @@ function resetApprovers() {
 	console.log("resetApprovers function called");
 	middleApprover = null;
 	finalApprover = null;
-	referers = [];
+	approvalReferers = [];
+	approvalReceivers = [];
 
 	var forms = document.getElementsByClassName('form-container');
 	for (var i = 0; i < forms.length; i++) {
@@ -210,7 +250,10 @@ function resetApprovers() {
 	}
 
 	// 참조자 필드 초기화
-	document.getElementById("addReferer").value = "";
+	$('#referer-div').html('');
+
+	//수신처 영역 초기화
+	$('#recipient').html('');
 
 	// 선택된 옵션 초기화
 	document.getElementById("approver").selectedIndex = 0;
@@ -236,7 +279,6 @@ function showForm() {
 		var currentForm = document.getElementById(selectedForm);
 		if (currentForm) {
 			currentForm.style.display = 'block';
-			updateReferersInAllForms();
 		}
 	}
 }
@@ -246,8 +288,9 @@ function showForm() {
 function clearApproversAndReferers() {
 	middleApprover = null;
 	finalApprover = null;
-	referers = [];
-	updateReferersInAllForms();
+	approvalReferers = [];
+	approvalReceivers = [];
+
 
 	// 모든 폼에 대해 결재자 정보 초기화
 	var forms = document.getElementsByClassName('form-container');
@@ -261,8 +304,9 @@ function clearApproversAndReferers() {
 	}
 
 	// 참조자 필드 초기화
-	var refererInput = document.getElementById("addReferer");
-	if (refererInput) refererInput.value = "";
+	$('#referer-div').html('');
+	// 수신처 div 초기화
+	$('#receiver').html('');
 
 	// 선택된 옵션 초기화
 	var approverSelect = document.getElementById("approver");
@@ -331,9 +375,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		formTypeSelect.addEventListener('change', showForm);
 	}
 
-
-	// 참조자 추가시 나타내는 이벤트
-	updateReferersInAllForms();
 
 
 	// 모든 폼의 파일 선택 버튼에 대해 이벤트 리스너 추가

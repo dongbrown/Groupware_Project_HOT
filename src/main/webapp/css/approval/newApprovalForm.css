@@ -4,44 +4,40 @@
 .referer-item, .recipient-item {
 	display: inline-flex;
 	align-items: center;
-	margin: 5px;
-	padding: 5px 10px;
+	margin: 2px 3px;
+	padding: 2px 5px;
 	background-color: #f1f1f1;
 	border-radius: 5px;
-	white-space: nowrap;
+	max-width: calc(100% - 10px);
 	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 12px;
 }
 
 .remove-referer, .remove-recipient {
 	cursor: pointer;
 	color: red;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 .form-control {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-}
-
-.form-control-plaintext {
-	border: none;
-	background: none;
-	padding-left: 0;
-	margin-left: 0;
-	pointer-events: none;
+	overflow: hidden;
 }
 
 .input-group {
 	width: 100%;
 }
 
-#recipient, #addReferer {
+#recipient, #referer-div {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 	max-width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	overflow: auto;
 }
 
 html, body {
