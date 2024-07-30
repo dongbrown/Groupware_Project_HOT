@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.project.hot.chatting.model.dto.CommonMessageDTO;
 import com.project.hot.chatting.model.dto.HotTalkAtt;
+import com.project.hot.chatting.model.dto.HotTalkContent;
 import com.project.hot.chatting.model.dto.HotTalkMember;
 import com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO;
 import com.project.hot.chatting.model.dto.ResponseHotTalkListDTO;
@@ -22,4 +23,5 @@ public interface HotTalkService {
 	int getHotTalkNo(Map<String, Integer> param);
 	HotTalkMember selectMember(int employeeNo);
 	int insertNewChatRoom(CommonMessageDTO msg);
+	void updateIsReadByNo(Map<String, Integer> param);
 }

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ApprovalAtt {
 
 	private int approvalAttNo;
-	private int approvalNo;
+	private String approvalNo;
 	private String approvalAttOriginalFilename;
 	private String approvalAttRenameFilename;
 	private Date approvalAttDate;

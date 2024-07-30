@@ -28,6 +28,7 @@ public class Project {
 
 	 	private int projectNo;
 	 	private String projectTitle;
+	 	private String projectEmployeeName;
 	    private int employeeNo;
 	    private Employee employeeCode;
 	    private int projectRank;
@@ -37,8 +38,13 @@ public class Project {
 	    private Date projectEndDate;
 	    private int projectProgress;
 	    private String projectStatus;
+	    private String employeeName;
+	    private String departmentName;
 	    private String memberPhotos;
 	    private String memberEmployeeNos;
+	    private String projectRequestStatus;
+	    private String projectRequestEmployee;
+	    private String projectRefuseContent;
 	    private List<ProjectEmployee> employee;
 	    private RequestProject requestProject;
 

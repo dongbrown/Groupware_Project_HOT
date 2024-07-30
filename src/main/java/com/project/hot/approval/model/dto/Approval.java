@@ -26,4 +26,5 @@ public class Approval {
 	 private int approvalStatus;//상태
 	 private String approvalSecurity;//보안등급
 
+	 private VacationForm vacationForm;
 }

@@ -55,19 +55,7 @@
 	            <span>트</span>
 	        </div>
     	</a>
-	    <a href="#" class="button reverse" style="background:rgb(0, 128, 192);">
-	        <div class="main-txt">
-	            <span>승</span>
-	            <span>인</span>
-	            <span>된</span>
-	            <span>&nbsp;</span>
-	            <span>프</span>
-	            <span>로</span>
-	            <span>젝</span>
-	            <span>트</span>
-	        </div>
-	    </a>
-	    <a href="#" id="allProjectSearch" class="button">
+	    <a href="#" id="responseProjectSearch" class="button reverse" style="background:rgb(0, 128, 192);">
 	        <div class="main-txt">
 	            <span>프</span>
 	            <span>로</span>
@@ -76,8 +64,9 @@
 	            <span>&nbsp;</span>
 	            <span>요</span>
 	            <span>청</span>
+	            <span>함</span>
 	        </div>
-    	</a>
+	    </a>
 	</div>
 		<div style="height:auto; min-height:600px; margin:0 100px;">
 			<div class="conteudo__geral">
@@ -89,7 +78,7 @@
 		</div>
 		<div class="pagebar-div">페이지 바</div>
 
-		<!-- Modal -->
+		<!-- 참여 요청 Modal -->
 			<div class="modal fade" id="joinModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true">
 			  <div class="modal-dialog">
 			    <div class="modal-content">
@@ -107,6 +96,46 @@
 			    </div>
 			  </div>
 			</div>
+
+		<!-- 프로젝트 응답 Modal -->
+		<div class="modal fade" id="projectResponseModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">참여 요청 응답</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        해당 사원의 프로젝트 참여를 허용하시겠습니까?
+		      </div>
+		        	<textarea id="refuseTextarea"></textarea>
+		      <div class="modal-footer">
+		        <button type="button" id="requestRefuseBtn" class="btn btn-danger">거절</button>
+		        <button type="button" id="requestApprovalBtn" class="btn btn-primary">승인</button>
+		        <button type="button" id="requestRefuseResultBtn" class="btn btn-danger">거절</button>
+		        <button type="button" id="requestRefuseCancleBtn" class="btn btn-secondary">취소</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- 프로젝트 참여 거절됨 버튼 모달 -->
+		<div class="modal fade" id="refusedModal" tabindex="-1" aria-labelledby="joinModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">프로젝트 거절 사유</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div id="refuseComent" class="modal-body">
+		      </div>
+		      <div class="modal-footer">
+		         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		        <button type="button" id="refusedCheckBtn" class="btn btn-primary">확인 후 삭제</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
 </section>
 </div>
 <script>

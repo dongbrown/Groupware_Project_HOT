@@ -6,7 +6,7 @@
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
 <script type="text/javascript" src="${path }/js/common/index.js"></script>
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column" data-employee-no="${loginEmployee.employeeNo }">
+        <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
@@ -155,8 +155,8 @@
                                 </c:if>
                             </a>
                             <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
+                            <div id="header-empNo" class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown" data-employee-no="${loginEmployee.employeeNo }">
                                 <a class="dropdown-item" href="${path }/employee/profile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     프로필

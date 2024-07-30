@@ -1,26 +1,27 @@
 function connectSse() {
-	const loginEmployeeNo = $('#content-wrapper').data('employeeNo');
+	const loginEmployeeNo = $('#header-empNo').data('employeeNo');
 	const eventSource = new EventSource(`/subscribe/${loginEmployeeNo}`);
-
+	console.log(loginEmployeeNo);
 	eventSource.onmessage = function(event){
 		// console.log("Receive Message : "+event.data);
 	}
 
 	eventSource.onerror = function(error){
-		console.log("EventSource Fail : ", error);
+		// console.log("EventSource Fail : ", error);
 		eventSource.close();
 	}
 
 	eventSource.addEventListener("Init", (e) => {
+		console.log(loginEmployeeNo);
 		const hotTalkInfo = JSON.parse(e.data);
-		console.log(hotTalkInfo);
+		// console.log(hotTalkInfo);
 
 	  	const hotTalkDivNotiBox = $(".hottalk-notify");
 	  	hotTalkDivNotiBox.empty();
 		const header = $("<h6>").addClass("dropdown-header").text("HotTalk");
   		hotTalkDivNotiBox.append(header);
 		hotTalkInfo.forEach((d) => {
-			console.log(d.hotTalkContent);
+			// console.log(d.hotTalkContent);
 
 		    const hotTalkInfoBox = $("<a>").addClass("dropdown-item d-flex align-items-center");
 		    const hotTalkInfoFirstDiv = $("<div>").addClass("mr-3");

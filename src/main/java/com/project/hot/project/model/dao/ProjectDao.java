@@ -21,7 +21,9 @@ public interface ProjectDao {
 	List<ProjectEmployee> selectEmployeetByProjectNo(SqlSession session,Map<String,Integer> param);
 	int requestJoinProject(SqlSession session,Map<String,Integer> param);
 	List<Project> requestProjectlistall(SqlSession session,Map<String,Integer> param);
+	List<Project> responseProjectlistall(SqlSession session,Map<String,Integer> param);
 	int requestProjectlistallCount(SqlSession session,Map<String,Integer> param);
+	int responseProjectlistallCount(SqlSession session,Map<String,Integer> param);
 	int insertProjectEmp(SqlSession session,Map<String,Object> param);
 	int updateProject(SqlSession session,Project p);
 	int updateProjectDeleteEmp(SqlSession session,Map<String,Integer> param);
@@ -29,5 +31,9 @@ public interface ProjectDao {
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
 	List<Project> selectProjectAllByEmpNo(SqlSession session, Map<String, Integer> param);
 	int selectProjectAllCountByEmpNo(SqlSession session, Map<String, Integer> param);
+	int responseApprovalInsert(SqlSession session, Map<String, Integer> param);
+	int responseApprovalDelete(SqlSession session, Map<String, Integer> param);
+	int requestRefuseUpdate(SqlSession session, Map<String, Object> param);
+	int refusedCheckDelete(SqlSession session, Map<String, Integer> param);
 
 }

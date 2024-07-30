@@ -30,6 +30,8 @@ public interface HotTalkDao {
 	int insertNewChatRoomContents(SqlSession session, CommonMessageDTO msg);
 	int insertNewChatRoomReceiver(SqlSession session, CommonMessageDTO msg);
 	int getGroupTalkNo(SqlSession session, CommonMessageDTO msg);
+	int updateIsReadByNo(SqlSession session, Map<String, Integer> param);
+	List<Integer> getReceivers(SqlSession session, int hotTalkNo);
 
 	// SSE
 	List<HotTalkContent> selectMyMessage(SqlSession session, int employeeNo);

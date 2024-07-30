@@ -31,25 +31,28 @@ public class NotificationService {
 		emitter.onCompletion(()->emitters.remove(loginEmployeeNo));
 		emitter.onTimeout(()->emitters.remove(loginEmployeeNo));
 		// 연결 즉시 이벤트 전송
-		sendInitEvent(emitter, loginEmployeeNo);
+		sendInitEvent(loginEmployeeNo);
 
 		return emitter;
 	}
 
-	private void sendInitEvent(SseEmitter emitter, int loginEmployeeNo) {
-		try {
-			emitter.send(SseEmitter.event().name("Init").data(dao.selectMyMessage(session, loginEmployeeNo)));
-		}catch(IOException e) {
-			emitter.completeWithError(e);
+	public void sendInitEvent(int loginEmployeeNo) {
+		if(emitters.containsKey(loginEmployeeNo)) {
+		SseEmitter emitter = emitters.get(loginEmployeeNo);
+			try {
+				emitter.send(SseEmitter.event().name("Init").data(dao.selectMyMessage(session, loginEmployeeNo)));
+			}catch(IOException e) {
+				emitter.completeWithError(e);
+			}
 		}
 	}
 
 	// 특정 사용자에게 message String 값을 보내주는 메소드
-	private void sendNotification(int employeeNo, String message) {
+	public void sendNotification(int employeeNo) {
 		SseEmitter emitter = emitters.get(employeeNo);
 		if(emitter != null) {
 			try {
-				emitter.send(SseEmitter.event().name("Message").data(message));
+				emitter.send(SseEmitter.event().name("Message").data(dao.selectMyMessage(session, employeeNo)));
 			}catch(IOException e) {
 				emitters.remove(employeeNo);
 				emitter.completeWithError(e);

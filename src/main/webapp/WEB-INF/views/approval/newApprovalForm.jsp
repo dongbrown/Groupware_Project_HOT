@@ -203,7 +203,7 @@
 <!-- 휴가신청서 -->
 <div id="form2" class="form-container">
     <h5>휴가신청서</h5>
-    <form>
+    <form id="vacation-form">
         <div class="approval-line">
             <div id="draftApprover" class="approval-box">
                 <h5 class="approval-title">기안자</h5>
@@ -214,17 +214,17 @@
                 </div>
             </div>
             <div id="middleApprover" class="approval-box">
-                <h5 class="approval-title">중간결재자</h5>
+                <h5 class="approval-title">중간결재자<span class="asterisk">*</span></h5>
                 <div class="approval-content"></div>
             </div>
             <div id="finalApprover" class="approval-box">
-                <h5 class="approval-title">최종결재자</h5>
+                <h5 class="approval-title">최종결재자<span class="asterisk">*</span></h5>
                 <div class="approval-content"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="documentType">문서종류</label>
-            <select id="documentType" class="form-control">
+            <label for="documentType">문서종류<span class="asterisk">*</span></label>
+            <select id="documentType" class="form-control" name="vacationType" required>
                 <option value="반차">반차 신청서</option>
                 <option value="연차">연차 신청서</option>
                 <option value="병가">병가 신청서</option>
@@ -237,57 +237,51 @@
             <tbody>
                 <tr>
                     <th>기안자</th>
-                    <td>${loginEmployee.employeeName}</td>
+                    <td>
+                    	<input type="hidden" value="${loginEmployee.employeeNo }" name="approvalEmpNo">
+                    	${loginEmployee.employeeName}
+                    </td>
                     <th>부서</th>
                     <td>${loginEmployee.departmentCode.departmentTitle}</td>
                     <th>기안일</th>
-                    <td class="draftDate">${currentDate}</td>
+                    <td class="draftDate">
+                    	<input type="hidden" value="${currentDate }" name="approvalDate">
+                    	${currentDate}
+                    </td>
                 </tr>
                 <tr>
-                    <th>제목</th>
-                    <td colspan="5"><input type="text" class="form-control"></td>
+                    <th>제목<span class="asterisk">*</span></th>
+                    <td colspan="5"><input type="text" name="title" class="form-control" required></td>
                 </tr>
                 <tr>
-                    <th>휴가시작일</th>
-                    <td><input type="date" id="startDate" class="form-control"></td>
-                    <th>휴가종료일</th>
-                    <td><input type="date" id="endDate" class="form-control"></td>
-                    <th>보존연한</th>
-                    <td><select id="retentionPeriod" class="form-control">
-                        <option>3 개월</option>
-                        <option>6 개월</option>
-                        <option>1 년</option>
-                        <option>3 년</option>
+                    <th>휴가시작일<span class="asterisk">*</span></th>
+                    <td><input type="date" id="startDate" name="vacationStart" class="form-control" required></td>
+                    <th>휴가종료일<span class="asterisk">*</span></th>
+                    <td><input type="date" id="endDate" name="vacationEnd" class="form-control" required></td>
+                    <th>보존연한<span class="asterisk">*</span></th>
+                    <td><select id="retentionPeriod" class="form-control" name="period" required>
+                        <option value="3">3 개월</option>
+                        <option value="6">6 개월</option>
+                        <option value="12">1 년</option>
+                        <option value="36">3 년</option>
                     </select></td>
                 </tr>
                 <tr>
                     <th>비상연락처</th>
-                    <td><input type="text" class="form-control"></td>
-                    <th>수신처</th>
+                    <td><input type="tel" id="phoneNumber" class="form-control" name="vacationEmergency"></td>
+                    <th>수신처<span class="asterisk">*</span></th>
                     <td colspan="3">
-                        <div id="recipient" class="form-control">
-                            <div class="recipient-item">
-                                <input type="hidden" name="recipientId" value="사번">
-                                <span class="recipient-details">수신처 이름 및 직급부서</span>
-                                <span class="remove-recipient" onclick="removeElement(this)">x</span>
-                            </div>
-                        </div>
+                        <div id="recipient" class="form-control recipientDiv"></div>
                     </td>
                 </tr>
                 <tr>
                     <th>참조자</th>
                     <td colspan="3">
-                        <div id="addReferer" class="form-control">
-                            <div class="referer-item">
-                                <input type="hidden" name="refererId" value="사번">
-                                <span class="referer-details">참조자 이름 및 직급부서</span>
-                                <span class="remove-referer" onclick="removeElement(this)">x</span>
-                            </div>
-                        </div>
+                        <div id="referer-div" class="form-control refererDiv"></div>
                     </td>
-                    <th>보안등급</th>
+                    <th>보안등급<span class="asterisk">*</span></th>
                     <td>
-                        <select id="securityLevel" class="form-control">
+                        <select id="securityLevel" class="form-control" name="security" required>
                             <option value="S">S</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
@@ -301,7 +295,7 @@
                     <td colspan="5">
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input file-input" multiple>
+                                <input type="file" class="custom-file-input file-input" name="upFile" multiple>
                                 <label class="custom-file-label">파일 선택</label>
                             </div>
                             <div class="input-group-append">
@@ -313,18 +307,16 @@
             </tfoot>
         </table>
         <div class="form-group mt-3">
-            <label for="details">휴가내용</label>
-            <textarea id="details" class="form-control" rows="10"></textarea>
+            <label for="details">휴가내용<span class="asterisk">*</span></label>
+            <textarea id="details" class="form-control" rows="10" name="content" required></textarea>
         </div>
         <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary">결재상신</button>
-            <button type="button" class="btn btn-secondary ml-2">임시저장</button>
+            <button type="button" class="btn btn-primary" id="vacation-insert-btn">결재상신</button>
+            <button type="button" class="btn btn-secondary ml-2" id="vacation-temp-btn">임시저장</button>
             <button type="button" class="btn btn-danger ml-2">취소</button>
         </div>
     </form>
 </div>
-
-
 
 
 

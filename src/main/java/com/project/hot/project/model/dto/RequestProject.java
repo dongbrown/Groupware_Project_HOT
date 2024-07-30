@@ -22,5 +22,8 @@ public class RequestProject {
 	private Date projectRequestDate;
 	private String projectStatus;
 	private String projectRefuseContent;
+	private String reqEmpName;
+	private String reqEmpDeptTitle;
 	private Project project;
+	private Employee employee;
 }
