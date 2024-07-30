@@ -26,6 +26,78 @@ function makePhoneFormat(){
     this.value = formatted;
 };
 
+//초과근무 신청서 insert
+$('#overtime-insert-btn').click(insertOvertime);
+$('#overtime-temp-btn').click(insertOvertime);
+function insertOvertime(){
+	const $form=$('#overtime-form').get(0);
+	
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'overtime-insert-btn'){
+		//결재상신
+		
+		//입력 전부했는지 확인
+		if(!$form.checkValidity()){
+			alert('필수정보를 전부 입력해주세요!');
+			return;
+		}
+		
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.overtime-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
+	}
+	
+	const fd=new FormData($form);
+	
+	//문서 타입값 설정
+	fd.append('type', 3);
+	
+	//보존기한 날짜 Date로 바꾸기
+	const periodDate=new Date();
+	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
+	fd.set('period', periodDate.toISOString());
+
+	//결재상신인지 임시저장인지 확인하여 status저장
+	if($(this).attr('id') == 'overtime-insert-btn'){
+		fd.set('approvalStatus', 1); //결재상신
+	}else{
+		fd.set('approvalStatus', 5); //임시저장
+	}
+	
+	//초과근무 시작, 종료 시간 형식 바꾸기
+	let startTime=fd.get('overtimeStartTime');
+	let endTime=fd.get('overtimeEndTime');
+	// 현재 날짜를 ISO 8601 형식으로 가져오기
+	const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 날짜만 추출
+	// 현재 날짜와 시간 문자열 결합
+	startTime = `${currentDate}T${startTime}:00`; // YYYY-MM-DDTHH:mm:ss 형식
+	endTime = `${currentDate}T${endTime}:00`; // YYYY-MM-DDTHH:mm:ss 형식
+	fd.set('overtimeStartTime', startTime);
+	fd.set('overtimeEndTime', endTime);
+	
+	fetch(path+'/api/approval/insertOvertime', {
+		method:'POST',
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+	.catch(error=>{
+		console.log(error);
+	})
+};
+
 //출퇴근 정정 신청서 insert
 $('#commuting-insert-btn').click(insertCommuting);
 $('#commuting-temp-btn').click(insertCommuting);
