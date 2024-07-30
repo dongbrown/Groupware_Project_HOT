@@ -109,9 +109,8 @@
 		        해당 사원의 프로젝트 참여를 허용하시겠습니까?
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		        <button type="button" id="projectRequestBtn" class="btn btn-danger">거절</button>
-		        <button type="button" id="projectRequestBtn" class="btn btn-primary">승인</button>
+		        <button type="button" id="requestRefuseBtn" class="btn btn-danger">거절</button>
+		        <button type="button" id="requestApprovalBtn" class="btn btn-primary">승인</button>
 		      </div>
 		    </div>
 		  </div>
