@@ -112,4 +112,24 @@ public class ProjectDaoImpl implements ProjectDao {
 		return session.selectOne("project.responseProjectlistallCount",param.get("employeeNo"));
 	}
 
+	@Override
+	public int responseApprovalInsert(SqlSession session, Map<String, Integer> param) {
+		return session.insert("project.responseApprovalInsert",param);
+	}
+
+	@Override
+	public int responseApprovalDelete(SqlSession session, Map<String, Integer> param) {
+		return session.delete("project.responseApprovalDelete",param);
+	}
+
+	@Override
+	public int requestRefuseUpdate(SqlSession session, Map<String, Object> param) {
+		return session.update("project.requestRefuseUpdate",param);
+	}
+
+	@Override
+	public int refusedCheckDelete(SqlSession session, Map<String, Integer> param) {
+		return session.delete("project.refusedCheckDelete",param);
+	}
+
 }

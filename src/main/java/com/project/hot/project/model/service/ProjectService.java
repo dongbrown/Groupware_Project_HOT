@@ -22,4 +22,8 @@ public interface ProjectService {
 	int insertProject(Project p);
 	int updateProject(Project p);
 	int deleteProject(int projectNo);
+	int responseApproval(Map<String, Integer> param);
+	int requestRefuseUpdate(Map<String, Object> param);
+	int refusedCheckDelete(Map<String, Integer> param);
+
 }
