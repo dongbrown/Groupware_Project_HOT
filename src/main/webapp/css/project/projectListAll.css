@@ -297,3 +297,26 @@
     left: 120px; /* 100px의 3분의 2씩 겹치기 */
     background-color: lightgray;
 }
+
+#refuseTextarea{
+	width:400px;
+	height:100px;
+	resize:none;
+	display:none;
+	margin:20px auto;
+}
+
+
+#requestRefuseResultBtn{
+	display:none;
+}
+
+#requestRefuseCancleBtn{
+	display:none;
+}
+
+.modal-body{
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+}

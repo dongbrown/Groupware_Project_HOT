@@ -31,5 +31,9 @@ public interface ProjectDao {
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
 	List<Project> selectProjectAllByEmpNo(SqlSession session, Map<String, Integer> param);
 	int selectProjectAllCountByEmpNo(SqlSession session, Map<String, Integer> param);
+	int responseApprovalInsert(SqlSession session, Map<String, Integer> param);
+	int responseApprovalDelete(SqlSession session, Map<String, Integer> param);
+	int requestRefuseUpdate(SqlSession session, Map<String, Object> param);
+	int refusedCheckDelete(SqlSession session, Map<String, Integer> param);
 
 }

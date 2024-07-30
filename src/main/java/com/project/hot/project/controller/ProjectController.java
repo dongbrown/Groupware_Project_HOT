@@ -172,6 +172,49 @@ public class ProjectController {
 			e.printStackTrace();
 		}
 		return service.responseProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
-
 	}
+
+	@ResponseBody
+	@PostMapping("/requestApprovalBtn.do")
+	public ResponseEntity<String> requestApproval(@RequestBody Map<String, String> param){
+		try {
+			int projectNo = Integer.parseInt(param.get("projectNo"));
+		    int empNo = Integer.parseInt(param.get("empNo"));
+			service.responseApproval(Map.of("projectNo",projectNo,"empNo",empNo));
+			return ResponseEntity.ok("프로젝트 참여 요청 성공");
+		}catch(Exception e) {
+			log.error("=========프로젝트 참여 승인 중 오류 발생=========", e);
+			return ResponseEntity.badRequest().body("프로젝트 참여 승인 실패");
+		}
+	}
+
+	@ResponseBody
+	@PostMapping("/requestRefuseUpdate.do")
+	public ResponseEntity<String> requestRefuseUpdate(@RequestBody Map<String, Object> param){
+		try {
+			String refuseComent = (String)param.get("refuseComent");
+			String projectNo = (String) param.get("projectNo");
+		    String empNo = (String) param.get("empNo");
+			service.requestRefuseUpdate(Map.of("refuseComent",refuseComent,"projectNo",projectNo,"empNo",empNo));
+			return ResponseEntity.ok("프로젝트 참여 거절 성공");
+		}catch(Exception e) {
+			log.error("=========프로젝트 참여 거절 중 오류 발생=========", e);
+			return ResponseEntity.badRequest().body("프로젝트 참여 거절 실패");
+		}
+	}
+
+	@ResponseBody
+	@PostMapping("/refusedCheckDelete.do")
+	public ResponseEntity<String> refusedCheckDelete(@RequestBody Map<String, Integer> param){
+		try {
+			int projectNo = param.get("projectNo");
+		    int empNo = param.get("empNo");
+			service.refusedCheckDelete(Map.of("projectNo",projectNo,"empNo",empNo));
+			return ResponseEntity.ok("거절 코멘트 확인 후 삭제 성공");
+		}catch(Exception e) {
+			log.error("=========프로젝트 참여 거절 중 오류 발생=========", e);
+			return ResponseEntity.badRequest().body("거절 코멘트 확인 후 삭제 실패");
+		}
+	}
+
 }

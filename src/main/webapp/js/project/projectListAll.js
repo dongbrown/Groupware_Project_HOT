@@ -102,6 +102,9 @@
 					//프로젝트 참여 요청중 버튼
 					if(p.projectRequestStatus=='요청' && p.projectRequestEmployee==empNo){
 						$joinBtn=$('<a>',{role: 'button', id: 'joinBtn', class: 'btn btn-secondary disabled', text: '참여 요청중'});
+					//프로젝트 참여 요청중 - 거절됨 버튼
+					}else if(p.projectRequestStatus=='거절' && p.projectRequestEmployee==empNo){
+							$joinBtn=$('<button>',{type: 'button', id: 'refusedBtn', class: 'btn btn-danger', text: '참여 거절됨','data-bs-toggle': 'modal', 'data-bs-target': '#refusedModal','data-id':p.projectRefuseContent});
 					//프로젝트 참여 요청 버튼
 					}else{
 						$joinBtn=$('<button>',{type: 'button', id: 'joinBtn', class: 'btn btn-primary', text: '참여 요청', 'data-bs-toggle': 'modal', 'data-bs-target': '#joinModal'});
@@ -146,7 +149,7 @@ function makeProjectList2(projects) {
 					const $projectMemberWrab1=$('<div>',{id:'memberWrab'});
 
 					$joinBtn=$('<a>',{role: 'button', id: 'responseBtn', class: 'btn btn-success','data-bs-toggle': 'modal', 'data-bs-target': '#projectResponseModal', text: '응답'});
-					$projectMemberWrab1.html(p.requestProject.reqEmpDeptTitle+' : '+p.requestProject.reqEmpName +'<span id="employeeNo" style="display:none;">'+p.requestProject.projectRequestEmployee+"</span>");
+					$projectMemberWrab1.html(p.employeeName+' : '+p.departmentName +'<span id="employeeNo" style="display:none;">'+p.requestProject.projectRequestEmployee+"</span>");
 
 					$projectMemberWrab.append($projectMemberWrab1);
 					$projectDiv2.append($projectPtag).append($projectH3tag).append($projectMemberWrab).append($joinBtn);
@@ -192,13 +195,15 @@ function makeProjectList2(projects) {
 		let empNo = $(this).closest('.elemento__cartao').find('#employeeNo').text();
 
 		$("#requestApprovalBtn").click(e=>{
-			alert("ddd");
 			fetch(path+"requestApprovalBtn.do",{
 				method:'POST',
 				headers: {
 			        'Content-Type': 'application/json'
 			    },
-			    body:JSON.stringify({projectNo: parseInt(projectNo),empNo: parseInt(empNo)}),
+			     body: JSON.stringify({
+		            projectNo: projectNo,
+		            empNo: empNo
+        		}),
 			})
 			.then(response => {
 		        if (!response.ok) {
@@ -207,7 +212,8 @@ function makeProjectList2(projects) {
 		        return response.text();
 			})
 			.then(data=>{
-				alert("승인 성공");
+				alert("승인 완료");
+				location.reload();
 			})
 			.catch(error=>{
 				alert("프로젝트 승인 실패");
@@ -215,4 +221,102 @@ function makeProjectList2(projects) {
 			})
 		});
 	});
+//프로젝트 참여 요청 거절시
+	//모달창 초기화
+	$(document).on('click', '#responseBtn', function(e) {
+		$("#requestRefuseResultBtn").css("display","none");
+		$("#refuseTextarea").val("");
+		$("#refuseTextarea").css("display","none");
+		$("#requestRefuseCancleBtn").css("display","none");
+		$("#requestRefuseBtn").css("display","block");
+		$("#requestApprovalBtn").css("display","block");
+		$(".modal-body").text("해당 사원의 프로젝트 참여를 허용하시겠습니까?");
+	})
+	$("#requestRefuseBtn").click(e=>{
+		$("#requestRefuseResultBtn").css("display","block");
+		$("#refuseTextarea").css("display","block");
+		$("#requestRefuseCancleBtn").css("display","block");
+		$("#requestRefuseBtn").css("display","none");
+		$("#requestApprovalBtn").css("display","none");
+		$(".modal-body").text("거절 사유를 입력해주세요.");
+	});
+	$("#requestRefuseCancleBtn").click(e=>{
+		$("#requestRefuseResultBtn").css("display","none");
+		$("#refuseTextarea").css("display","none");
+		$("#requestRefuseCancleBtn").css("display","none");
+		$("#requestRefuseBtn").css("display","block");
+		$("#requestApprovalBtn").css("display","block");
+		$(".modal-body").text("해당 사원의 프로젝트 참여를 허용하시겠습니까?");
+	});
+	//프로젝트 사유 적고 거절 시 최종 거절진행 - PROJECTR_REQUEST테이블에 수정(상태, 거절 코멘트)
+	$(document).on('click', '#responseBtn', function(e) {
+		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
+		let empNo = $(this).closest('.elemento__cartao').find('#employeeNo').text();
 
+		$("#requestRefuseResultBtn").click(e=>{
+			const refuseComent = $('#refuseTextarea').val();
+			fetch(path+'requestRefuseUpdate.do',{
+				method:'POST',
+				headers: {
+			        'Content-Type': 'application/json'
+			    },
+			    body: JSON.stringify({
+					refuseComent : refuseComent,
+					projectNo : projectNo,
+					empNo : empNo,
+			    }),
+			})
+			.then(response => {
+			        if (!response.ok) {
+			            throw new Error('서버 응답이 실패했습니다.');
+			        }
+			        return response.text();
+				})
+				.then(data=>{
+					alert("거절 완료");
+					location.reload();
+				})
+				.catch(error=>{
+					alert("프로젝트 거절 실패");
+					console.log(error);
+				})
+			})
+		});
+
+//거절된 프로젝트 버튼 클릭시 모달에서 거절 사유 표시
+	$(document).on('click', '#refusedBtn', function(e) {
+		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
+
+		const refuseComent = $(e.target).data('id');
+		if(refuseComent==null){
+			$("#refuseComent").text("등록된 사유가 없습니다.");
+		}else{
+			$("#refuseComent").text(refuseComent);
+		}
+		//거절 코멘트 확인 후 삭제 버튼
+		$("#refusedCheckBtn").click(e=>{
+			fetch(path+'refusedCheckDelete.do',{
+				method:'POST',
+				headers: {
+			        'Content-Type': 'application/json'
+			    },
+			    body: JSON.stringify({
+					projectNo : projectNo,
+					empNo : empNo,
+			    }),
+			})
+			.then(response => {
+			        if (!response.ok) {
+			            throw new Error('서버 응답이 실패했습니다.');
+			        }
+			        return response.text();
+				})
+				.then(data=>{
+					location.reload();
+				})
+				.catch(error=>{
+					alert("거절 코멘트 확인 후 삭제 실패");
+					console.log(error);
+				})
+		});
+	});
