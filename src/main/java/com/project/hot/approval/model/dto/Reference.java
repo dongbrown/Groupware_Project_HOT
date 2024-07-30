@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Reference {
 
 	private int referenceNo;
-	private Approval approvalNo;
+	private String approvalNo;
 	private Employee employeeNo;
 	private String referenceType;
 	private String referenceStatus;

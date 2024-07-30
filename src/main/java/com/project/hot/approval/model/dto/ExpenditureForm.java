@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ExpenditureForm {
 
 	private int expenditureFormNo;
-	private Approval approvalNo;
+	private String approvalNo;
 	private Date expenditureDate;
 	private int expenditureAmount;
 	private String expenditureName;

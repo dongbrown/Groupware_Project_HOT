@@ -1,15 +1,26 @@
 package com.project.hot.approval.model.service;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.hot.approval.model.dao.ApprovalDao;
 import com.project.hot.approval.model.dto.Approval;
+import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.ResponseApprovalsCount;
+import com.project.hot.approval.model.dto.VacationForm;
+import com.project.hot.common.exception.ApprovalException;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
 
@@ -53,9 +64,83 @@ public class ApprovalServiceImpl implements ApprovalService {
 		result.put("rac", rac);
 
 		//결재 문서 리스트 가져오기
-		result.put("totalPage", Math.ceil((double)dao.selectApprovalCompleteCount(session, (int)param.get("no"))/10));
+		result.put("totalPage", Math.ceil((double)dao.selectApprovalAllCount(session, (int)param.get("no"))/10));
 		result.put("approvals", dao.selectApprovalAllList(session, param));
 		return result;
 	}
+
+
+	@Transactional
+	@Override
+	public String insertApproval(Map<String, Object> param) {
+		//결재문서 고유번호 생성
+		RequestApproval ra=(RequestApproval)param.get("ra");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MMdd");
+		int type=((RequestApproval)param.get("ra")).getType();
+		String appNo=type+"-"+sdf.format(ra.getApprovalDate())+"-"; // 1-yyyy-MMdd-
+		ra.setApprovalNo(appNo);
+		param.put("ra", ra);
+
+		//참조자, 수신자 no 문자열로 변경
+		int[] referers=ra.getRefererNo();
+		int[] receivers=ra.getReceiverNo();
+		String strReferers=Arrays.stream(referers).mapToObj(String::valueOf).collect(Collectors.joining(","));
+		String strReceivers=Arrays.stream(receivers).mapToObj(String::valueOf).collect(Collectors.joining(","));
+		param.put("receiverNo", strReceivers);
+		param.put("refererNo", strReferers);
+
+		//첨부파일 저장
+		String rename = "";
+		String oriname = "";
+		MultipartFile[] upFile=(MultipartFile[])param.get("upFile");
+		String path=(String)param.get("path"); //저장 경로
+		if(upFile.length>0) {
+			File dir=new File(path);
+			if(!dir.exists()) dir.mkdirs(); //폴더 없으면 생성
+
+			for(MultipartFile mf:upFile) {
+				String oriFilename=mf.getOriginalFilename(); //원본 이름
+				String ext=oriFilename.substring(oriFilename.lastIndexOf(".")); //확장자
+				String reFilename=LocalDateTime.now().toLocalDate().toString()+"_"+(int)(Math.random()*10000000)+ext; // 변경 이름
+
+				//파일 저장
+				try {
+					mf.transferTo(new File(path, reFilename));
+					rename=rename.isEmpty()?reFilename:String.join(",", rename, reFilename);
+					oriname=oriname.isEmpty()?oriFilename:String.join(",", oriname, oriFilename);
+				}catch(Exception e) {
+					//파일 저장 실패
+					cleanUploadFile(rename, path);
+					e.printStackTrace();
+					return null;
+				}
+			}
+		}
+		param.put("rename", rename);
+		param.put("oriname", oriname);
+		param.put("newApprovalNo", "");
+
+		//결재문서 결재자 참조, 수신처 저장
+		String newApprovalNo=dao.insertApproval(session, param);
+		if(newApprovalNo==null || newApprovalNo.isEmpty()) {
+			cleanUploadFile(rename, path);
+			throw new ApprovalException("결재문서 insert 실패");
+		}
+
+		return newApprovalNo;
+	}
+
+	public void cleanUploadFile(String rename, String path) {
+		for(String s: rename.split(rename)) {
+			File f=new File(path, s);
+			f.delete();
+		}
+	}
+
+	@Override
+	public int insertVacation(VacationForm vf) {
+		return dao.insertVacation(session, vf);
+	}
+
 
 }

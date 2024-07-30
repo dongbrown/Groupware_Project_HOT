@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Approver {
 
 	private int approverNo;
-	private Approval approvalNo;
+	private String approvalNo;
 	private Employee employeeNo;
 	private String approverStatus;
 	private Date approverDate;

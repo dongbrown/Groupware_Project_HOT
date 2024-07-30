@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CommutingTimeForm {
 
 	private int commutingTimeFormNo;
-	private Approval approvalNo;
+	private String approvalNo;
 	private Date commutingWorkDate;
 	private String commutingType;
 	private LocalDateTime commutingEditTime;
