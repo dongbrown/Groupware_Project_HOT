@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								sendMsg(loginEmployeeNo, receiver, d.contents[0].hotTalkNo);
 							});
 						}else{
-							console.log(d);
+							// console.log(d);
 							groupList();
 							$(".target-avatar").attr("src","https://cdn.hankyung.com/photo/202212/01.32245693.1.jpg");
 							$(".chat-user-name").text(d.hotTalkTitle);
@@ -442,11 +442,13 @@ document.addEventListener('DOMContentLoaded', function() {
 								    }
 									$chattingRoom.append($chatBox);
 								} else if(c.hotTalkContent==a.hotTalkOriginalFilename){
+									console.log(a.hotTalkRenamedFilename);
 									if(isImageFile(a.hotTalkOriginalFilename)){
 										const $chatBox = $("<div>").addClass("chat-message");
 										// File 다운로드 a 태그 생성
 										const $fileDownload = $("<a>").attr("href", path+"/hottalk/download?hotTalkOriginalFilename="+a.hotTalkOriginalFilename+"&hotTalkRenamedFilename="+a.hotTalkRenamedFilename);
 										const $previewImg = $("<img>").attr("src", path+"/upload/hottalk/"+a.hotTalkRenamedFilename).addClass("preview-img")
+
 										$fileDownload.append($previewImg);
 										$chatBox.append($fileDownload);
 									    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
@@ -489,15 +491,17 @@ document.addEventListener('DOMContentLoaded', function() {
 					openChatRoom(data.sender, data.hotTalkNo);
 					$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 				break;
+
 			}
 		}
 
 		switch(data.type){
 			case "msgSuccess":
 				openChatRoom(data.sender, data.hotTalkNo);
-
 			break;
 			case "file":
+				console.log("ㅋㅋ")
+				console.log(data);
 				openChatRoom(data.sender, data.hotTalkNo);	// openChatRoom 함수 → 파일 일 경우 분기처리 필요
 				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 			break;
@@ -637,6 +641,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	        contentType: false,
 	        cache: false,
 	        success: function (data) {
+				console.log(data);
 				$(".chat-msg").val(file.name);
 	            // 파일 업로드 성공 후 WebSocket을 통해 파일 정보 전송
 	            let upFile = new Object();
@@ -645,7 +650,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	            upFile.hotTalkOriginalFilename=data.hotTalkOriginalFilename;
 	            upFile.hotTalkRenamedFilename=data.hotTalkRenamedFilename;
 	            upFile.hotTalkAttSender=data.hotTalkAttSender;
-	            // console.log(upFile);
+	            console.log(upFile);
 
 	            chatServer.send(JSON.stringify(upFile));
 				$(".chat-msg").val("");
@@ -676,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	class CommonMessage{
-		constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString(), title=""){
+		constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString(), title="", hotTalkRenamedFilename=""){
 			this.type=type;
 			this.sender=sender;
 			this.receiver=receiver;
@@ -684,6 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			this.msg=msg;
 			this.eventTime=eventTime;
 			this.title=title;
+			this.hotTalkRenamedFilename=hotTalkRenamedFilename;
 		}
 		convert(){
 			return JSON.stringify(this);
