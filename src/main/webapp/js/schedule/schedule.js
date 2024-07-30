@@ -22,7 +22,7 @@ $(document).ready(function() {
             {
                 events: function(start, end, timezone, callback) {
                     $.ajax({
-                        url: '/schedule/all',
+                        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/all',
                         type: 'GET',
                         dataType: 'json',
                         success: function(events) {
@@ -263,7 +263,7 @@ $(document).ready(function() {
     };
 
     $.ajax({
-      url: '/schedule/addSchedule',
+      url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/addSchedule',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(newSchedule),
@@ -337,7 +337,7 @@ $(document).ready(function() {
 
     if (confirm('정말로 이 일정을 삭제하시겠습니까?')) {
       $.ajax({
-        url: '/schedule/deleteSchedule',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/deleteSchedule',
         type: 'DELETE',
         data: { id: scheduleId },
         success: function(response) {
@@ -366,7 +366,7 @@ $(document).ready(function() {
     // 부서 목록 로드
     function loadDepartments(prefix = '') {
         $.ajax({
-            url: '/api/employee/departmentList',
+            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/api/employee/departmentList',
             type: 'GET',
             dataType: 'json',
             success: function(departments) {
@@ -394,7 +394,7 @@ $(document).ready(function() {
     // 사원 목록 로드
     function loadEmployees(deptCode, prefix = '') {
         $.ajax({
-            url: '/schedule/selectEmpByDept',
+            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/selectEmpByDept',
             type: 'GET',
             data: { deptCode: deptCode },
             dataType: 'json',
@@ -477,7 +477,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '/schedule/updateSchedule',
+            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/updateSchedule',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(updatedSchedule),
@@ -564,7 +564,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: '/schedule/addCompanySchedule',
+            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/addCompanySchedule',
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),

@@ -776,7 +776,7 @@ var EmailCommon = {
 
 // DOM이 로드된 후 실행
 $(document).ready(function() {
-    var contextPath = '/email';
+    var contextPath = 'http://14.36.141.71:15555/GDJ_79_HOT/email';
     EmailCommon.init(contextPath);
 
     // 페이지 로드 시 읽지 않은 메일 수 업데이트

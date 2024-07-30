@@ -78,7 +78,7 @@ function submitFeed() {
     }
 
     $.ajax({
-        url: '/community/feed/insert',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/insert',
         type: 'POST',
         data: formData,
         processData: false,
@@ -104,7 +104,7 @@ function submitFeed() {
 function loadFeeds() {
     const communityNo = $("#community-container").data("id");
     $.ajax({
-        url: '/community/feed/list',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/list',
         method: 'GET',
         data: { communityNo: communityNo },
         success: function(response) {
@@ -234,7 +234,7 @@ function updateFeed(feedNo) {
     }
 
     $.ajax({
-        url: '/community/feed/update',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/update',
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({ feedNo: feedNo, feedContent: updatedContent }),
@@ -259,7 +259,7 @@ function deleteFeed(feedNo) {
     if (!confirm('정말로 이 피드를 삭제하시겠습니까?')) return;
 
     $.ajax({
-        url: '/community/feed/delete',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/delete',
         method: 'DELETE',
         contentType: 'application/json',
         data: JSON.stringify({ feedNo: feedNo }),
@@ -285,7 +285,7 @@ function showAddParticipant() {
 
 function loadDepartments() {
     $.ajax({
-        url: '/api/employee/departmentList',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/api/employee/departmentList',
         type: 'GET',
         dataType: 'json',
         success: function(departments) {
@@ -403,7 +403,7 @@ function getSelectedParticipants() {
 function inviteParticipants(participants) {
     const communityNo = $("#community-container").data("id");
     $.ajax({
-        url: '/community/feed/invite',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/invite',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -437,7 +437,7 @@ function likeFeed(feedNo, likeButton) {
     const likeCount = likeButton.find('.like-count');
 
     $.ajax({
-        url: '/community/feed/like',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/like',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ feedNo: feedNo }),
@@ -480,7 +480,7 @@ function toggleComments(feedNo) {
 
 function loadComments(feedNo) {
     $.ajax({
-        url: '/community/feed/comments',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comments',
         method: 'GET',
         data: { feedNo: feedNo },
         success: function(response) {
@@ -583,7 +583,7 @@ function submitEditComment(feedNo, commentNo) {
     }
 
     $.ajax({
-        url: '/community/feed/comment/update',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/update',
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -610,7 +610,7 @@ function deleteComment(feedNo, commentNo) {
     if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) return;
 
     $.ajax({
-        url: '/community/feed/comment/delete',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/delete',
         method: 'DELETE',
         contentType: 'application/json',
         data: JSON.stringify({ feedCommentNo: commentNo }),
@@ -642,7 +642,7 @@ function submitReply(feedNo, parentCommentNo) {
     }
 
     $.ajax({
-        url: '/community/feed/comment/add',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/add',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -675,7 +675,7 @@ function submitComment(feedNo) {
     }
 
     $.ajax({
-        url: '/community/feed/comment/add',
+        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/add',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
