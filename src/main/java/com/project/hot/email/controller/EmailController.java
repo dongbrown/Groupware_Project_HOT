@@ -130,6 +130,9 @@ public class EmailController {
             @RequestParam("emailTitle") String emailTitle,
             @RequestParam("emailContent") String emailContent,
             @RequestParam(value = "attachments", required = false) MultipartFile[] attachments) {
+    	  if (receivers == null || receivers.trim().isEmpty()) {
+    		    return ResponseEntity.badRequest().body("수신자가 지정되지 않았습니다.");
+    		  }
 
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();

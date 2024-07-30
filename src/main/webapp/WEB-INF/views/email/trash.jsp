@@ -3,15 +3,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<div class="trash-container">
-    <div class="trash-header">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/email-common.css">
+
+<div class="email-container">
+    <div class="email-header">
         <h2>휴지통 <span class="email-count">${emails.size()} / 100</span></h2>
-        <div class="trash-actions">
+        <div class="email-actions">
             <button id="searchBtn" class="btn btn-light btn-sm">메일 검색</button>
         </div>
     </div>
 
-    <div class="trash-toolbar">
+    <div class="email-toolbar">
         <div class="toolbar-left">
             <input type="checkbox" id="select-all" class="form-check-input">
             <label for="select-all" class="form-check-label">전체 선택</label>
@@ -31,7 +33,7 @@
             <c:when test="${empty emails}">
                 <div class="no-email">
                     <div class="no-email-icon">
-                        <i class="fas fa-envelope"></i>
+                        <i class="fas fa-trash"></i>
                     </div>
                     <p>휴지통에 메일이 없습니다.</p>
                 </div>
@@ -55,9 +57,9 @@
                                 <td>${email.sender.employeeName}</td>
                                 <td>
                                     <c:out value="${email.emailTitle}" />
-<%--                                     <c:if test="${email.hasAttachment}">
+                                    <c:if test="${email.hasAttachment}">
                                         <i class="fas fa-paperclip"></i>
-                                    </c:if> --%>
+                                    </c:if>
                                 </td>
                                 <td>
                                     <fmt:formatDate value="${email.emailSendDate}" pattern="yyyy-MM-dd HH:mm"/>

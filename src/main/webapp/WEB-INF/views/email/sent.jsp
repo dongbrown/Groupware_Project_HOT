@@ -5,13 +5,10 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/email-common.css">
 
-<div class="email-container">
-    <div class="email-header">
-        <h2>보낸 메일함 <span class="email-count">${emails.size()}</span></h2>
-        <div class="email-actions">
-            <button id="searchBtn" class="btn btn-light btn-sm">메일 검색</button>
-        </div>
-    </div>
+<div class="container-fluid">
+    <h2 class="mb-4">보낸 메일함 <span class="email-count">${emails.size()}/999</span></h2>
+    <jsp:include page="search.jsp" />
+
 
     <div class="email-toolbar">
         <div class="toolbar-left">

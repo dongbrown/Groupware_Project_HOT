@@ -20,7 +20,6 @@ import com.project.hot.email.model.dto.EmailAtt;
 import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.employee.model.dto.Employee;
 
-import jakarta.mail.Session;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -22,7 +22,7 @@
 <c:import url="/WEB-INF/views/common/sidebar.jsp" />
 
 <!-- 콘텐츠 Wrapper -->
-<div id="content-wrapper" class="d-flex flex-column">
+<div id="content-wrapper" class="d-flex flex-column" data-employee-no="${loginEmployee.employeeNo}">
     <!-- 메인 콘텐츠 -->
     <div id="content">
         <!-- 헤더 include -->
@@ -32,19 +32,21 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2">
-                    <div class="emailSidebar">
-                        <button class="btn btn-primary w-100 mb-3" id="writeBtn">메일 쓰기</button>
-                        <button class="btn btn-primary w-100 mb-3" id="write-selfBtn">내게 쓰기</button>
-                        <ul class="list-group">
-                            <li class="list-group-item active" data-mailbox="inbox"><i class="fas fa-inbox me-2"></i>받은메일함 <span class="badge bg-primary rounded-pill">999+</span></li>
-                            <li class="list-group-item" data-mailbox="sent"><i class="fas fa-paper-plane me-2"></i>보낸메일함</li>
-                            <li class="list-group-item" data-mailbox="self"><i class="fas fa-user me-2"></i>내게쓴메일함 <span class="badge bg-secondary rounded-pill">20</span></li>
-                            <li class="list-group-item" data-mailbox="important"><i class="fas fa-star me-2"></i>중요메일함</li>
-                            <li class="list-group-item" data-mailbox="trash"><i class="fas fa-trash me-2"></i>휴지통 <span class="badge bg-danger rounded-pill">30</span></li>
-                        </ul>
-                    </div>
+                   <div class="emailSidebar">
+				    <div class="d-flex mb-3">
+				        <button class="btn btn-primary flex-grow-1 me-2" id="writeBtn">메일 쓰기</button>
+				        <button class="btn btn-primary flex-grow-1" id="write-selfBtn">내게 쓰기</button>
+				    </div>
+				    <ul class="list-group">
+				        <li class="list-group-item active" data-mailbox="inbox"><i class="fas fa-inbox me-2"></i>받은메일함 <span class="badge bg-primary rounded-pill">999+</span></li>
+				        <li class="list-group-item" data-mailbox="sent"><i class="fas fa-paper-plane me-2"></i>보낸메일함</li>
+				        <li class="list-group-item" data-mailbox="self"><i class="fas fa-user me-2"></i>내게쓴메일함 <span class="badge bg-secondary rounded-pill">20</span></li>
+				        <li class="list-group-item" data-mailbox="important"><i class="fas fa-star me-2"></i>중요메일함</li>
+				        <li class="list-group-item" data-mailbox="trash"><i class="fas fa-trash me-2"></i>휴지통 <span class="badge bg-danger rounded-pill">30</span></li>
+				    </ul>
+				</div>
                 </div>
-                <div class="col-md-9" id="mailContent">
+                <div class="col-md-10" id="mailContent">
                     <!-- 메일 목록 또는 메일 쓰기 영역 -->
                 </div>
             </div>

@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
 <div class="email-write-container">
     <h2 class="email-write-title">내게 쓰기</h2>
     <form id="emailForm" class="email-write-form">
         <div class="form-group">
             <label for="receivers">받는 사람:</label>
             <input type="text" id="receivers" name="receivers" class="form-control"
-                   value="${loginEmployee.employeeId}@hot.com" readonly>
+                value="${loginEmployee.employeeId}@hot.com(${loginEmployee.employeeName })" readonly>
         </div>
         <div class="form-group">
             <label for="emailTitle">제목:</label>
@@ -28,7 +28,6 @@
         </div>
         <div class="button-group">
             <button type="submit" class="btn btn-primary">보내기</button>
-            <button type="button" class="btn btn-secondary" id="saveAsDraft">임시 저장</button>
             <button type="button" class="btn btn-danger" id="cancel">취소</button>
         </div>
     </form>
@@ -40,23 +39,16 @@ $(document).ready(function() {
         EmailCommon.initSummernote();
     }
 
-    // 파일 드래그앤드롭 및 첨부 기능 초기화
     if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initFileAttachment === 'function') {
         EmailCommon.initFileAttachment();
     }
 
-    // 폼 제출 이벤트 처리
     $('#emailForm').submit(function(e) {
         e.preventDefault();
-        EmailCommon.saveEmail(false);
+        var receivers = $('#receivers').val().split('(')[0]; // 이메일 주소만 추출
+        EmailCommon.saveEmail(false, receivers);
     });
 
-    // 임시 저장 버튼 클릭 이벤트
-    $('#saveAsDraft').click(function() {
-        EmailCommon.saveEmail(true);
-    });
-
-    // 취소 버튼 클릭 이벤트
     $('#cancel').click(function() {
         if (confirm('작성 중인 내용이 저장되지 않습니다. 정말 취소하시겠습니까?')) {
             EmailCommon.loadMailbox('inbox');

@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <div class="container-fluid">
-    <h2 class="mb-4">받은 메일함</h2>
+    <h2 class="mb-4">받은 메일함<span class="email-count">${emails.size()}</span></h2>
 	<!-- 검색 폼 include -->
 	<jsp:include page="search.jsp" />
 
