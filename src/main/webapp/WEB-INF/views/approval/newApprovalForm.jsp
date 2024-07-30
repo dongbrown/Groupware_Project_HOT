@@ -268,7 +268,7 @@
                 </tr>
                 <tr>
                     <th>비상연락처</th>
-                    <td><input type="text" id="phoneNumber" class="form-control" name="vacationEmergency"></td>
+                    <td><input type="tel" id="phoneNumber" class="form-control" name="vacationEmergency"></td>
                     <th>수신처<span class="asterisk">*</span></th>
                     <td colspan="3">
                         <div id="recipient" class="form-control recipientDiv"></div>

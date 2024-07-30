@@ -3,7 +3,8 @@
 */
 
 //휴대폰번호 입력 처리
-document.getElementById('phoneNumber').addEventListener('input', function() {
+document.getElementById('phoneNumber').addEventListener('input', makePhoneFormat);
+function makePhoneFormat(){
     let input = this.value.replace(/\D/g, ''); // 숫자만 남기기
     let formatted = '';
 
@@ -23,7 +24,7 @@ document.getElementById('phoneNumber').addEventListener('input', function() {
     }
 
     this.value = formatted;
-});
+};
 
 //휴가 신청서 insert
 $('#vacation-insert-btn').click(insertApproval);
@@ -56,7 +57,7 @@ function insertApproval(){
 	const fd=new FormData($form);
 
 	//휴가신청서 타입
-	fd.append('type', 1);
+	fd.append('type', 2);
 
 	//보존기한 날짜 Date로 바꾸기
 	const periodDate=new Date();
