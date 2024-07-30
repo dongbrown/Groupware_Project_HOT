@@ -1,5 +1,6 @@
 package com.project.hot.chatting.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class HotTalkServiceImpl implements HotTalkService {
 
 	private final HotTalkDao dao;
 	private final SqlSession session;
+	private final NotificationService sseService;
 	@Override
 	public List<ResponseLoginEmployeeDTO> getHotTalkMemberList(int empNo) {
 		return dao.getHotTalkMemberList(session, empNo);
@@ -56,10 +58,15 @@ public class HotTalkServiceImpl implements HotTalkService {
 	@Transactional
 	public int insertHotTalkMessage(CommonMessageDTO msg) {
 	    int result;
+	    List<Integer> receivers = new ArrayList<>();
 	    try {
 	        result = dao.insertMessageSender(session, msg);
 	        if (result > 0) {
 	            result = dao.insertMessageReceiver(session, msg);
+	            receivers = getReceivers(msg.getHotTalkNo());
+	            receivers.forEach(r->{
+	            	if(r!=msg.getSender()) sseService.sendInitEvent(r);
+	            });
 	            if (result == 0) {
 	                throw new ChattingException("수신자 정보 저장 실패");
 	            }
@@ -73,7 +80,7 @@ public class HotTalkServiceImpl implements HotTalkService {
 	}
 	@Override
 	public int insertHotTalkAtt(HotTalkAtt hotTalkAtt) {
-		System.out.println(hotTalkAtt);
+		// System.out.println(hotTalkAtt);
 		return dao.insertHotTalkAtt(session, hotTalkAtt);
 	}
 	@Override
@@ -101,6 +108,10 @@ public class HotTalkServiceImpl implements HotTalkService {
 	    } catch (Exception e) {
 	        throw new ChattingException("채팅방 생성 실패: " + e.getMessage());
 	    }
+	}
+
+	private List<Integer> getReceivers(int hotTalkNo){
+		return dao.getReceivers(session, hotTalkNo);
 	}
 
 	private void insertChatRoom(CommonMessageDTO msg) {
@@ -136,6 +147,13 @@ public class HotTalkServiceImpl implements HotTalkService {
 	    param.put("clickedNo", Integer.parseInt(receiver));
 	    param.put("loginEmployeeNo", sender);
 	    return dao.getHotTalkNo(session, param);
+	}
+	@Override
+	public void updateIsReadByNo(Map<String, Integer> param) {
+		int result = dao.updateIsReadByNo(session, param);
+		if(result > 0) {
+			sseService.sendInitEvent(param.get("empNo"));
+		}
 	}
 
 }

@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}); break;
 				case '갠톡':
 					data.forEach(d=>{
-						console.log(d);
+						// console.log(d);
 						const $chattingroom = document.createElement("div");
 						const $hotTalkTitle = document.createElement("h5");
 						if(loginEmployeeNo==d.receiverNo) $hotTalkTitle.innerText=d.receiverName;
@@ -367,12 +367,15 @@ document.addEventListener('DOMContentLoaded', function() {
 					});*/
 					// 해당 방 번호 저장
 					$("#room-no").val(data[0].hotTalkNo);
-					console.log(data);
+					// console.log(data);
 					// console.log($("#room-no").val());
 					data.forEach((d,i) => {
+						console.log(d);
+						// constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString(), title="")
+						const isRead = new CommonMessage("read", loginEmployeeNo,"", d.hotTalkNo);
+						chatServer.send(JSON.stringify(isRead));
 						let receiver;
 						const contents = d.contents;
-						// console.log(d);
 						// console.log(d.contents[0].hotTalkNo);
 						if(d.hotTalkIsGroup=='N'){
 							privateList();
@@ -681,30 +684,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			this.msg=msg;
 			this.eventTime=eventTime;
 			this.title=title;
-		}
-		convert(){
-			return JSON.stringify(this);
-		}
-	}
-	class Employee{
-		constructor(type="사원", employeeNo="", employeeName="", departmentCode="", employeePhoto=""){
-			this.type=type;
-			this.employeeNo=employeeNo;
-			this.employeeName=employeeName;
-			this.departmentCode=departmentCode;
-			this.employeePhoto=employeePhoto;
-		}
-		convert(){
-			return JSON.stringify(this);
-		}
-	}
-	class HotTalkList{
-		constructor(type="핫톡",hotTalkIsgroup="", hotTalkTitle="", hotTalkNo="", hotTalkContent=""){
-			this.type=type;
-			this.hotTalkIsgroup=hotTalkIsgroup;
-			this.hotTalkTitle=hotTalkTitle;
-			this.hotTalkNo=hotTalkNo;
-			this.hotTalkContent=hotTalkContent;
 		}
 		convert(){
 			return JSON.stringify(this);

@@ -162,8 +162,18 @@ public class HotTalkHandler extends TextWebSocketHandler {
 						   responseMsg(msg, hotTalkNo, session);
 						   // 채팅방 더블클릭한 사람, 더블클릭 당한사람 사번 전달해서 실행한 결과(HOT_TALK_NO) 전달
 						   break;
-			case "createChat" : createPrivateChatRoom(session, msg);
+			case "createChat" : createPrivateChatRoom(session, msg); break;
+			case "read" : updateIsReadByNo(session, msg); break;
 		}
+	}
+
+	public void updateIsReadByNo(WebSocketSession session, CommonMessageDTO msg) {
+		int roomNo = msg.getHotTalkNo();
+		int empNo = msg.getSender();
+		Map<String, Integer>  param = new HashMap<>();
+		param.put("roomNo", roomNo);
+		param.put("empNo", empNo);
+		service.updateIsReadByNo(param);
 	}
 
 	public void createPrivateChatRoom(WebSocketSession session, CommonMessageDTO msg) {
