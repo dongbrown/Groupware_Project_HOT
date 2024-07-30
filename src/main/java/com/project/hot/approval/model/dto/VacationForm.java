@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class VacationForm {
 
 	private int vacationFormNo;
-	private Approval approvalNo;
+	private String approvalNo;
 	private Date vacationStart;
 	private Date vacationEnd;
 	private int vacationDay;

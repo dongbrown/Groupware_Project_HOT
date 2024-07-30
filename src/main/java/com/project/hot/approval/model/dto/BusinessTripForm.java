@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class BusinessTripForm {
 
 	private int businessTripFormNo;
-	private Approval approvalNo;
+	private String approvalNo;
 	private Date businessTripStartDate;
 	private Date businessTripEndDate;
 	private String businessTripDestination;

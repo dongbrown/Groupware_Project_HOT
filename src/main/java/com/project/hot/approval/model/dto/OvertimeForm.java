@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class OvertimeForm {
 
 	private int overtimeFormNo;
-	private Approval approvalNo;
+	private String approvalNo;
 	private Date overtimeStartDate;
 	private Date overtimeEndDate;
 	private int overtimeHours;

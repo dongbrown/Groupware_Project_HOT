@@ -38,13 +38,13 @@ function insertApproval(){
 			return;
 		}
 	}
-	
+
 	//결재자 입력 확인
 	if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
 		alert('결재자를 등록해주세요!');
 		return;
 	}
-	
+
 	if($('#phoneNumber').val() != ''){
     	let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
     	if(!result.test($('#phoneNumber').val())){
@@ -52,14 +52,17 @@ function insertApproval(){
 			return;
 		}
 	}
-	
+
 	const fd=new FormData($form);
+
+	//휴가신청서 타입
+	fd.append('type', 1);
 
 	//보존기한 날짜 Date로 바꾸기
 	const periodDate=new Date();
 	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
 	fd.set('period', periodDate.toISOString());
-	
+
 	//결재상신인지 임시저장인지 확인하여 status저장
 	if($(this).attr('id') == 'vacation-insert-btn'){
 		fd.set('approvalStatus', 1); //결재상신
@@ -73,7 +76,6 @@ function insertApproval(){
 	})
 	.then(response=>response.text())
 	.then(data=>{
-		console.log(data);
 		alert(data);
 		location.reload();
 	})

@@ -49,10 +49,19 @@ public class ApprovalRestController {
 			@ModelAttribute RequestApproval ra,
 			@ModelAttribute VacationForm vf,
 			HttpServletRequest req) {
-		Map<String, Object> param=Map.of("ra", ra, "vf", vf, "upFile", upFile, "path", req.getServletContext().getRealPath("/upload/approval"));
-		int result=service.insertVacation(param);
-		if(result>0) {
-			return "완료!";
+		Map<String, Object> param=new HashMap<>();
+		param.put("ra", ra);
+		param.put("upFile", upFile);
+		param.put("path", req.getServletContext().getRealPath("/upload/approval"));
+		String newApprovalNo=service.insertApproval(param);
+		if(newApprovalNo != null) {
+			vf.setApprovalNo(newApprovalNo);
+			int result=service.insertVacation(vf);
+			if(result>0) {
+				return "완료!";
+			}else {
+				return "실패!";
+			}
 		}else {
 			return "실패!";
 		}

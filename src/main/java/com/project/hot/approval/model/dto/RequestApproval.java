@@ -24,4 +24,5 @@ public class RequestApproval {
 	private int[] refererNo;
 	private int middleApproverNo;
 	private int finalApproverNo;
+	private int type;
 }
