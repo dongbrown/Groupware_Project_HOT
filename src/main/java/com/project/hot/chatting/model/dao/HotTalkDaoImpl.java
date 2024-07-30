@@ -117,4 +117,14 @@ public class HotTalkDaoImpl implements HotTalkDao {
 		return session.selectList("hottalk.selectMyMessage", employeeNo);
 	}
 
+	@Override
+	public int updateIsReadByNo(SqlSession session, Map<String, Integer> param) {
+		return session.update("hottalk.updateIsReadByNo", param);
+	}
+
+	public List<Integer> getReceivers(SqlSession session, int hotTalkNo){
+		return session.selectList("hottalk.getReceivers", hotTalkNo);
+	}
+
+
 }

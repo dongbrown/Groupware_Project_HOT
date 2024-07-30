@@ -1,7 +1,7 @@
 function connectSse() {
-	const loginEmployeeNo = $('#content-wrapper').data('employeeNo');
+	const loginEmployeeNo = $('#header-empNo').data('employeeNo');
 	const eventSource = new EventSource(`/subscribe/${loginEmployeeNo}`);
-
+	console.log(loginEmployeeNo);
 	eventSource.onmessage = function(event){
 		// console.log("Receive Message : "+event.data);
 	}
@@ -12,6 +12,7 @@ function connectSse() {
 	}
 
 	eventSource.addEventListener("Init", (e) => {
+		console.log(loginEmployeeNo);
 		const hotTalkInfo = JSON.parse(e.data);
 		// console.log(hotTalkInfo);
 
