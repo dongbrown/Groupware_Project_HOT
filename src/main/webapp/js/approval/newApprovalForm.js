@@ -26,26 +26,109 @@ function makePhoneFormat(){
     this.value = formatted;
 };
 
-//휴가 신청서 insert
-$('#vacation-insert-btn').click(insertApproval);
-$('#vacation-temp-btn').click(insertApproval);
-function insertApproval(){
-	const $form=$('#vacation-form').get(0);
-
-	//입력 전부했는지 확인
-	if($(this).attr('id') == 'vacation-insert-btn'){
+//출퇴근 정정 신청서 insert
+$('#commuting-insert-btn').click(insertCommuting);
+$('#commuting-temp-btn').click(insertCommuting);
+function insertCommuting(){
+	const $form=$('#commuting-form').get(0);
+	
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'commuting-insert-btn'){
+		//결재상신
+		
+		//입력 전부했는지 확인
 		if(!$form.checkValidity()){
 			alert('필수정보를 전부 입력해주세요!');
 			return;
 		}
+		
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.commuting-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
 	}
+	
+	const fd=new FormData($form);
+	
+	//문서 타입값 설정
+	fd.append('type', 1);
+	
+	//보존기한 날짜 Date로 바꾸기
+	const periodDate=new Date();
+	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
+	fd.set('period', periodDate.toISOString());
 
-	//결재자 입력 확인
-	if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
-		alert('결재자를 등록해주세요!');
-		return;
+	//결재상신인지 임시저장인지 확인하여 status저장
+	if($(this).attr('id') == 'commuting-insert-btn'){
+		fd.set('approvalStatus', 1); //결재상신
+	}else{
+		fd.set('approvalStatus', 5); //임시저장
 	}
+	
+	//정정시간 형식 바꾸기
+	const editTime=fd.get('commutingEditTime');
+	// 현재 날짜를 ISO 8601 형식으로 가져오기
+	const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 날짜만 추출
+	// 현재 날짜와 시간 문자열 결합
+	const dateTimeString = `${currentDate}T${editTime}:00`; // YYYY-MM-DDTHH:mm:ss 형식
+	
+	fd.set('commutingEditTime', dateTimeString);
+	
+	fetch(path+'/api/approval/insertCommuting', {
+		method:'POST',
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+	.catch(error=>{
+		console.log(error);
+	})
+};
 
+//휴가 신청서 insert
+$('#vacation-insert-btn').click(insertVacation);
+$('#vacation-temp-btn').click(insertVacation);
+function insertVacation(){
+	const $form=$('#vacation-form').get(0); //form태그
+	
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'vacation-insert-btn'){
+		//결재상신
+		
+		//입력 전부했는지 확인
+		if($(this).attr('id') == 'vacation-insert-btn'){
+			if(!$form.checkValidity()){
+				alert('필수정보를 전부 입력해주세요!');
+				return;
+			}
+		}
+		
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.vacation-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
+	}
+	
+	//핸드폰 번호 형식확인
 	if($('#phoneNumber').val() != ''){
     	let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
     	if(!result.test($('#phoneNumber').val())){
@@ -54,7 +137,7 @@ function insertApproval(){
 		}
 	}
 
-	const fd=new FormData($form);
+	const fd=new FormData($form); //form태그로부터 FormData객체 생성
 
 	//휴가신청서 타입
 	fd.append('type', 2);
@@ -359,7 +442,7 @@ function clearApproversAndReferers() {
 	// 참조자 필드 초기화
 	$('#referer-div').html('');
 	// 수신처 div 초기화
-	$('#receiver').html('');
+	$('#recipient').html('');
 
 	// 선택된 옵션 초기화
 	var approverSelect = document.getElementById("approver");

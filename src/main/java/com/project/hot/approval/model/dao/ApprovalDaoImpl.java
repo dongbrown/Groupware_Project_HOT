@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.hot.approval.model.dto.Approval;
+import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.employee.model.dto.Department;
@@ -75,6 +76,9 @@ public class ApprovalDaoImpl implements ApprovalDao {
 		return session.insert("approval.insertVacation", vf);
 	}
 
-
+	@Override
+	public int insertCommuting(SqlSession session, CommutingTimeForm ctf) {
+		return session.insert("approval.insertCommuting", ctf);
+	}
 
 }

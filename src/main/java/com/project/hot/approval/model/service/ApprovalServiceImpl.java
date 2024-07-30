@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.hot.approval.model.dao.ApprovalDao;
 import com.project.hot.approval.model.dto.Approval;
+import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.ResponseApprovalsCount;
 import com.project.hot.approval.model.dto.VacationForm;
@@ -140,6 +141,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public int insertVacation(VacationForm vf) {
 		return dao.insertVacation(session, vf);
+	}
+
+
+	@Override
+	public int insertCommuting(CommutingTimeForm ctf) {
+		return dao.insertCommuting(session, ctf);
 	}
 
 
