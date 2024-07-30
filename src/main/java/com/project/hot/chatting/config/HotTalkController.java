@@ -40,7 +40,7 @@ public class HotTalkController {
 								 @RequestParam(name="file") MultipartFile file, HttpSession session) {
 		HotTalkAtt hotTalkAtt = new HotTalkAtt();
 		String path = session.getServletContext().getRealPath("/upload/hottalk");
-		System.out.println(path);
+		// System.out.println(path);
 		if(file != null) {
 			hotTalkAtt.setHotTalkNo(hotTalkNo);
 			hotTalkAtt.setHotTalkOriginalFilename(file.getOriginalFilename());
@@ -50,6 +50,8 @@ public class HotTalkController {
 			int rndNum = (int)(Math.random()*10000+1);
 			// RenamedFilename 만들기
 			String rename = "HOT_"+file.getOriginalFilename().substring(0,file.getOriginalFilename().indexOf("."))+"_"+(new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(now))+"_"+rndNum+ext;
+			// System.out.println(file.getOriginalFilename());
+			// System.out.println(rename);
 			hotTalkAtt.setHotTalkRenamedFilename(rename);
 			hotTalkAtt.setHotTalkAttSender(hotTalkAttSender);
 			// 경로 만들기
