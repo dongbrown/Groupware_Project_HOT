@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		newStatus.type="change";
 		newStatus.employeeNo = loginEmployeeNo;
 		newStatus.hotTalkStatus = status;
+		console.log(newStatus)
 		chatServer.send(JSON.stringify(newStatus))
 	});
 	// 상태 메세지 변경
@@ -100,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		newStatus.type="change";
 		newStatus.employeeNo = loginEmployeeNo;
 		newStatus.hotTalkStatusMessage = statusMsg;
+		console.log(newStatus);
 		chatServer.send(JSON.stringify(newStatus))
 	})
 
@@ -122,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						const $name = document.createElement("h5");
 						const $dept = document.createElement("p");
 						if(d.receiver.length==0){
+							console.log(d.senderStatus.hotTalkStatus, d.senderStatus.hotTalkStatusMessage)
 							const $status = document.querySelector(".my-status");
 							$status.innerText=d.senderStatus.hotTalkStatus;
 							const $msg = document.querySelector(".my-status-message");
@@ -276,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							    members += $(this).data('employeeno') + ',';
 							})
 							members = members.slice(0, -1); // 마지막 쉼표 제거
-							console.log(members);
+							// console.log(members);
 							$(".chat-send-btn").off("click");
 							$(".chat-send-btn").click(()=>{
 								const newMsg = $(".chat-msg").val().trim();
@@ -290,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
 									  text: "채팅방 생성을 위하여 메세지를 입력해주세요."
 									});
 								}
-
 							})
 						}
 					})
@@ -367,10 +369,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					});*/
 					// 해당 방 번호 저장
 					$("#room-no").val(data[0].hotTalkNo);
-					// console.log(data);
+					console.log(data);
 					// console.log($("#room-no").val());
 					data.forEach((d,i) => {
-						console.log(d);
 						// constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString(), title="")
 						const isRead = new CommonMessage("read", loginEmployeeNo,"", d.hotTalkNo);
 						chatServer.send(JSON.stringify(isRead));
@@ -395,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
 									// console.log(data);
 									$(".target-avatar").attr("src",path+"/upload/employee/"+d.contents[0].hotTalkReceiver[0].hotTalkReceiver.hotTalkMember.employeePhoto);
 								} else {
-									$(".target-avatar").attr("src","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_kSSoomJ9hiFXmiF2RdZlwx72Y23XsT6iwQ&s");
+									$(".target-avatar").attr("src",path+"/images/스크린샷 2024-06-15 오후 6.31.16.png");
 								}
 							} else {	// 1:1 채팅에서 첫 번째 content의 발신자 != 로그인한 유저의 경우 → 발신자를 상단에 출력
 								receiver=contents[0].hotTalkContentSender.hotTalkMember.employeeNo;
@@ -427,10 +428,9 @@ document.addEventListener('DOMContentLoaded', function() {
 							});
 						}
 						// sendBtnHandle=function(){sendMsg(loginEmployeeNo, receiver, d.contents[0].hotTalkNo);}
+
 						data[i].attachments.forEach((a,n)=>{
 							const c = contents[n];
-							// console.log(a.hotTalkRenamedFilename==null);
-							// console.log(a.hotTalkRenamedFilename+"//"+c.hotTalkContent)
 								if(a.hotTalkRenamedFilename==null){
 								    const $chatBox = $("<div>").addClass("chat-message");
 								    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
@@ -441,9 +441,9 @@ document.addEventListener('DOMContentLoaded', function() {
 								      $chatBox.addClass("chattingRoom-right-msg");
 								    }
 									$chattingRoom.append($chatBox);
-								} else if(c.hotTalkContent==a.hotTalkOriginalFilename){
-									console.log(a.hotTalkRenamedFilename);
-									if(isImageFile(a.hotTalkOriginalFilename)){
+								} else if(c.hotTalkContent==a.hotTalkRenamedFilename){
+
+									if(isImageFile(a.hotTalkRenamedFilename)){
 										const $chatBox = $("<div>").addClass("chat-message");
 										// File 다운로드 a 태그 생성
 										const $fileDownload = $("<a>").attr("href", path+"/hottalk/download?hotTalkOriginalFilename="+a.hotTalkOriginalFilename+"&hotTalkRenamedFilename="+a.hotTalkRenamedFilename);
@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										$fileDownload.append($previewImg);
 										$chatBox.append($fileDownload);
 									    $chatBox.append($("<sup>").html("<b>"+c.hotTalkContentSender.hotTalkMember.employeeName+"</b> "+(c.hotTalkContentDate.split('T'))[0]+" "+(c.hotTalkContentDate.split('T'))[1]));
-										$chatBox.append($("<span>").text(c.hotTalkContent));
+										$chatBox.append($("<span>").text(a.hotTalkRenamedFilename));
 									    if (c.hotTalkContentSender.hotTalkMember.employeeNo != loginEmployeeNo) {
 									      $chatBox.addClass("chattingRoom-left-msg");
 									    } else {
@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 				break;
 				case "new":
-					console.log(data);
+					// console.log(data);
 					openChatRoom(data.sender, data.hotTalkNo);
 					$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 				break;
@@ -498,10 +498,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		switch(data.type){
 			case "msgSuccess":
 				openChatRoom(data.sender, data.hotTalkNo);
+				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 			break;
 			case "file":
-				console.log("ㅋㅋ")
-				console.log(data);
 				openChatRoom(data.sender, data.hotTalkNo);	// openChatRoom 함수 → 파일 일 경우 분기처리 필요
 				$(".chat-messages").scrollTop($(".chat-messages")[0].scrollHeight);
 			break;

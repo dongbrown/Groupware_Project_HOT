@@ -1,6 +1,7 @@
 package com.project.hot.chatting.model.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,14 +37,27 @@ public class NotificationService {
 		return emitter;
 	}
 
+//	public void sendInitEvent(List<Integer> loginEmployeeNo) {
+//		loginEmployeeNo.stream().forEach(n->{
+//			if(emitters.containsKey(n)) {
+//				SseEmitter emitter = emitters.get(n);
+//					try {
+//						emitter.send(SseEmitter.event().name("Init").data(dao.selectMyMessage(session, n)));
+//					}catch(IOException e) {
+//						emitter.completeWithError(e);
+//					}
+//				}
+//		});
+//	}
+
 	public void sendInitEvent(int loginEmployeeNo) {
 		if(emitters.containsKey(loginEmployeeNo)) {
-		SseEmitter emitter = emitters.get(loginEmployeeNo);
-			try {
-				emitter.send(SseEmitter.event().name("Init").data(dao.selectMyMessage(session, loginEmployeeNo)));
-			}catch(IOException e) {
-				emitter.completeWithError(e);
-			}
+			SseEmitter emitter = emitters.get(loginEmployeeNo);
+				try {
+					emitter.send(SseEmitter.event().name("Init").data(dao.selectMyMessage(session, loginEmployeeNo)));
+				}catch(IOException e) {
+					emitter.completeWithError(e);
+				}
 		}
 	}
 

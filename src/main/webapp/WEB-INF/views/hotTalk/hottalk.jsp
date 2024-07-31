@@ -18,7 +18,7 @@
 	<div class="chat-container">
         <div class="chat-sidebar">
             <div class="user-profile">
-                <img src="${path }/upload/employee/${loginEmployee.employeePhoto}" alt="아이유" class="user-avatar IUimg">
+                <img src="${path }/upload/employee/${loginEmployee.employeePhoto}" alt="사원 사진" class="user-avatar IUimg">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 				    <i class="fas fa-cog"></i>
 			 	</a>
@@ -98,7 +98,12 @@
         </div>
         <div class="chat-main ">
             <div class="chat-header">
-                <img src="https://cdn.eroun.net/news/photo/202305/32650_59862_4410.jpg" alt="아이유" class="user-avatar target-avatar IUimg">
+            <c:if test="${loginEmployee.employeePhoto!=null}">
+                <img src="${path }/upload/employee/${loginEmployee.employeePhoto}" alt="사원 사진" class="target-avatar user-avatar IUimg">
+            </c:if>
+            <c:if test="${loginEmployee.employeePhoto==null}">
+            	<img src="${path }/images/스크린샷 2024-06-15 오후 6.31.16.png" alt="사원 사진" class="target-avatar user-avatar IUimg">
+            </c:if>
                 <div style="width: 1000px; margin-left:10px">
                     <h3 class="chat-user-name">${loginEmployee.employeeName}</h3>
                     <sup class="user-status"></sup>
