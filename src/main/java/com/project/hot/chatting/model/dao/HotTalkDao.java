@@ -19,7 +19,9 @@ public interface HotTalkDao {
 	List<ResponseHotTalkListDTO> getGroupHotTalkList(SqlSession session, int employeeNo);
 	List<ResponseHotTalkContentDTO> getHotTalkContents(SqlSession session, int openEmployeeNo, int openHotTalkNo);
 	int updateHotTalkStatus(SqlSession session, int employeeNo, String status);
+	int insertHotTalkStatus(SqlSession session, int employeeNo, String status);
 	int updateHotTalkStatusMessage(SqlSession session, int employeeNo, String statusMsg);
+	int insertHotTalkStatusMessage(SqlSession session, int employeeNo, String statusMsg);
 	int insertMessageSender(SqlSession session, CommonMessageDTO msg);
 	int insertMessageReceiver(SqlSession session, CommonMessageDTO msg);
 	int insertHotTalkAtt(SqlSession session, HotTalkAtt hotTalkAtt);

@@ -8,8 +8,12 @@ $(document).ready(()=>{
 });
 
 function getApprovalCountAndList(cPage){
+<<<<<<< HEAD
 	const no=$('#header-empNo').data('employee-no');
 	//$('#header-empNo').data('employeeNo');
+=======
+	const no=$('#header-empNo').data('employeeNo');
+>>>>>>> a8a89029978c2a146a043c14fb222f1c17bf1a7f
 
 	fetch(path+'/api/approval/getApprovalsCountAndList?no='+no)
 	.then(response=>response.json())

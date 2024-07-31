@@ -1,26 +1,20 @@
 package com.project.hot.approval.controller;
 
-import java.io.File;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.hot.approval.model.dto.CommutingTimeForm;
+import com.project.hot.approval.model.dto.OvertimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
+import com.project.hot.approval.model.dto.RequestBusinessTrip;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.approval.model.service.ApprovalService;
 
@@ -66,4 +60,78 @@ public class ApprovalRestController {
 			return "실패!";
 		}
 	}
+
+	@PostMapping("/insertCommuting")
+	public String insertCommuting(
+			@RequestParam("upFile") MultipartFile[] upFile,
+			@ModelAttribute RequestApproval ra,
+			@ModelAttribute CommutingTimeForm ctf,
+			HttpServletRequest req
+			) {
+		Map<String, Object> param=new HashMap<>();
+		param.put("ra", ra);
+		param.put("upFile", upFile);
+		param.put("path", req.getServletContext().getRealPath("/upload/approval"));
+		String newApprovalNo=service.insertApproval(param);
+		if(newApprovalNo != null) {
+			ctf.setApprovalNo(newApprovalNo);
+			int result=service.insertCommuting(ctf);
+			if(result>0) {
+				return "완료!";
+			}else {
+				return "실패!";
+			}
+		}else {
+			return "실패!";
+		}
+	}
+
+	@PostMapping("/insertOvertime")
+	public String insertOvertime(
+			@RequestParam("upFile") MultipartFile[] upFile,
+			@ModelAttribute RequestApproval ra,
+			@ModelAttribute OvertimeForm of,
+			HttpServletRequest req) {
+		Map<String, Object> param=new HashMap<>();
+		param.put("ra", ra);
+		param.put("upFile", upFile);
+		param.put("path", req.getServletContext().getRealPath("/upload/approval"));
+		String newApprovalNo=service.insertApproval(param);
+		if(newApprovalNo != null) {
+			of.setApprovalNo(newApprovalNo);
+			int result=service.insertOvertime(of);
+			if(result>0) {
+				return "완료!";
+			}else {
+				return "실패!";
+			}
+		}else {
+			return "실패!";
+		}
+	}
+
+	@PostMapping("/insertBusinessTrip")
+	public String insertBusinessTrip(
+			@RequestParam("upFile") MultipartFile[] upFile,
+			@ModelAttribute RequestApproval ra,
+			@ModelAttribute RequestBusinessTrip rbt,
+			HttpServletRequest req) {
+		Map<String, Object> param=new HashMap<>();
+		param.put("ra", ra);
+		param.put("upFile", upFile);
+		param.put("path", req.getServletContext().getRealPath("/upload/approval"));
+		String newApprovalNo=service.insertApproval(param);
+		if(newApprovalNo != null) {
+			rbt.setApprovalNo(newApprovalNo);
+			int result=service.insertBusinessTrip(rbt);
+			if(result>0) {
+				return "완료!";
+			}else {
+				return "실패!";
+			}
+		}else {
+			return "실패!";
+		}
+	}
+
 }

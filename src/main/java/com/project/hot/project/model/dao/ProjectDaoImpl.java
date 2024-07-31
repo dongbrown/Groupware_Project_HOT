@@ -102,9 +102,13 @@ public class ProjectDaoImpl implements ProjectDao {
 	}
 
 	@Override
-	public List<Project> responseProjectlistall(SqlSession session, Map<String, Integer> param) {
+	public List<RequestProject> responseProjectlistall(SqlSession session, Map<String, Integer> param) {
 		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
-		return session.selectList("project.responseProjectlistall",param.get("employeeNo"),rb);
+		List<RequestProject> result = session.selectList("project.responseProjectlistall",param.get("employeeNo"),rb);
+		result.forEach(e->{
+			System.out.println("왜안나오냐 : "+e);
+		});
+		return result;
 	}
 
 	@Override

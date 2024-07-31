@@ -73,6 +73,7 @@
 			fetch('/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
+					console.log(data);
 					makeProjectList2(data.projects);
 
 					const $pagebar = createPagination(cPage, data.totalPage, 'getResponseProjectList');
@@ -91,8 +92,9 @@
 					let remainMember=photos.length-3;
 					let $addEmpCount='';
 					let $projectInMember='';
+					let $projectAtag='';
 
-					const $projectAtag=$('<a>',{class:'elemento__cartao', href:'#', 'data-project-no': p.projectNo});
+
 					const $projectDiv=$('<div>',{class:'elemento__cartao--fundo',css:{backgroundImage:'url(https://images.unsplash.com/photo-1604147706283-d7119b5b822c?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)'}});
 					const $projectDiv2=$('<div>',{class:'elemento__cartao--conteudo'});
 					const $projectPtag=$('<p>',{class:'elemento__cartao--texto-categoria'}).html('프로젝트 번호 : <span id="requestProjectNo">'+p.projectNo+'</span><span id="requestProjectEmployeeNo" style="display:none;">'+p.employeeNo+'</span>');
@@ -101,12 +103,15 @@
 					const $projectMemberWrab1=$('<div>',{id:'memberWrab'});
 					//프로젝트 참여 요청중 버튼
 					if(p.projectRequestStatus=='요청' && p.projectRequestEmployee==empNo){
+						$projectAtag=$('<a>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 						$joinBtn=$('<a>',{role: 'button', id: 'joinBtn', class: 'btn btn-secondary disabled', text: '참여 요청중'});
 					//프로젝트 참여 요청중 - 거절됨 버튼
 					}else if(p.projectRequestStatus=='거절' && p.projectRequestEmployee==empNo){
-							$joinBtn=$('<button>',{type: 'button', id: 'refusedBtn', class: 'btn btn-danger', text: '참여 거절됨','data-bs-toggle': 'modal', 'data-bs-target': '#refusedModal','data-id':p.projectRefuseContent});
+						$projectAtag=$('<a>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
+						$joinBtn=$('<button>',{type: 'button', id: 'refusedBtn', class: 'btn btn-danger', text: '참여 거절됨','data-bs-toggle': 'modal', 'data-bs-target': '#refusedModal','data-id':p.projectRefuseContent});
 					//프로젝트 참여 요청 버튼
 					}else{
+						$projectAtag=$('<a>',{id:"projectListInfo",class:'elemento__cartao', href:'#', 'data-project-no': p.projectNo});
 						$joinBtn=$('<button>',{type: 'button', id: 'joinBtn', class: 'btn btn-primary', text: '참여 요청', 'data-bs-toggle': 'modal', 'data-bs-target': '#joinModal'});
 						//본인 참여 프로젝트 표시 && 참여버튼 삭제
 						for(i=0;i<joinMembers.length;i++){
@@ -140,7 +145,7 @@
 function makeProjectList2(projects) {
 				projects.forEach(p => {
 					let $joinBtn;
-					const $projectAtag=$('<a>',{class:'elemento__cartao', href:'#', 'data-project-no': p.projectNo});
+					const $projectAtag=$('<a>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 					const $projectDiv=$('<div>',{class:'elemento__cartao--fundo',css:{backgroundImage:'url(https://images.unsplash.com/photo-1604147706283-d7119b5b822c?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)'}});
 					const $projectDiv2=$('<div>',{class:'elemento__cartao--conteudo'});
 					const $projectPtag=$('<p>',{class:'elemento__cartao--texto-categoria'}).html('프로젝트 번호 : <span id="requestProjectNo">'+p.projectNo+'</span><span id="requestProjectEmployeeNo" style="display:none;">'+p.employeeNo+'</span>');
@@ -149,7 +154,7 @@ function makeProjectList2(projects) {
 					const $projectMemberWrab1=$('<div>',{id:'memberWrab'});
 
 					$joinBtn=$('<a>',{role: 'button', id: 'responseBtn', class: 'btn btn-success','data-bs-toggle': 'modal', 'data-bs-target': '#projectResponseModal', text: '응답'});
-					$projectMemberWrab1.html(p.employeeName+' : '+p.departmentName +'<span id="employeeNo" style="display:none;">'+p.requestProject.projectRequestEmployee+"</span>");
+					$projectMemberWrab1.html(p.employeeName+' : '+p.departmentTitle +'<span id="employeeNo" style="display:none;">'+p.projectEmployeeNo+"</span>");
 
 					$projectMemberWrab.append($projectMemberWrab1);
 					$projectDiv2.append($projectPtag).append($projectH3tag).append($projectMemberWrab).append($joinBtn);
@@ -320,3 +325,9 @@ function makeProjectList2(projects) {
 				})
 		});
 	});
+
+//프로젝트 전체 조회에서 프로젝트 클릭시 모달에 해당 프로젝트 정보 표시
+	$(document).on('click', '#projectListInfo', function(e) {
+		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
+		location.assign(path+"projectListInfo.do"); 
+	})

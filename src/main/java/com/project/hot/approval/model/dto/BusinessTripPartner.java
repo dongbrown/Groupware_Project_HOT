@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BusinessTripPartner {
 
-	private BusinessTripForm businessTripFormNo;
+	private int businessTripFormNo;
 	private Employee employeeNo;
 }

@@ -7,7 +7,7 @@
 	color: red;
 }
 
-.referer-item, .recipient-item {
+.referer-item, .recipient-item, .partner-item {
 	display: inline-flex;
 	align-items: center;
 	margin: 2px 3px;
@@ -21,7 +21,7 @@
 	font-size: 12px;
 }
 
-.remove-referer, .remove-recipient {
+.remove-referer, .remove-recipient, .remove-partner {
 	cursor: pointer;
 	color: red;
 	margin-left: 5px;
@@ -38,7 +38,7 @@
 	width: 100%;
 }
 
-#recipient, #referer-div {
+#recipient, #referer-div, #partner {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;

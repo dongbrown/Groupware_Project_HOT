@@ -49,9 +49,9 @@ public class HotTalkController {
 			Date now = new Date(System.currentTimeMillis());
 			int rndNum = (int)(Math.random()*10000+1);
 			// RenamedFilename 만들기
-			String rename = "HOT_"+file.getOriginalFilename().substring(0,file.getOriginalFilename().indexOf("."))+"_"+(new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(now))+"_"+rndNum+ext;
-			// System.out.println(file.getOriginalFilename());
-			// System.out.println(rename);
+			String rename = "HOT_"+(new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(now))+"_"+rndNum+ext;
+			// System.out.println("fileOriname:"+file.getOriginalFilename());
+			// System.out.println("fileRename:"+rename);
 			hotTalkAtt.setHotTalkRenamedFilename(rename);
 			hotTalkAtt.setHotTalkAttSender(hotTalkAttSender);
 			// 경로 만들기
@@ -84,13 +84,12 @@ public class HotTalkController {
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			BufferedOutputStream bos = new BufferedOutputStream(out)) {
 
-			String encoding = new String(hotTalkOriginalFilename.getBytes("UTF-8"), "ISO-8859-1");
+			String encoding = new String(hotTalkRenamedFilename.getBytes("UTF-8"), "ISO-8859-1");
 
 			response.setContentType("application/octet-stream;charset=utf-8");
 			response.setHeader("Content-disposition", "attachment;filename=\""+encoding+"\"");
-
-			int data=1;
-			while((data=bis.read())!=1) {
+			int data;
+			while((data=bis.read())!=-1) {
 				bos.write(data);
 			}
 		} catch(IOException e) {
