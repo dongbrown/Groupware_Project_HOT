@@ -1,5 +1,7 @@
 package com.project.hot.approval.model.dto;
 
+import java.sql.Date;
+
 import com.project.hot.employee.model.dto.Employee;
 
 import lombok.AllArgsConstructor;
@@ -11,8 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BusinessTripPartner {
+public class RequestBusinessTrip {
 
 	private int businessTripFormNo;
-	private Employee employeeNo;
+	private String approvalNo;
+	private Date businessTripStartDate;
+	private Date businessTripEndDate;
+	private String businessTripDestination;
+	private String businessTripEmergency;
+	private int[] partnerNo; //동행자
 }

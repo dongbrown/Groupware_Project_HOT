@@ -2,8 +2,55 @@
 	결재문서 작성 페이지용 js~
 */
 
+
+//경비지출서 수량,단가로 금액계산
+$(document).on('keyup', '.item-quantity', calTotalPrice);
+$(document).on('keyup', '.item-price', calTotalPrice);
+function calTotalPrice(){
+	let quantity; //수량
+	let price; //단가
+	let totalPrice; //총 가격
+
+	if($(this).hasClass('item-quantity')){
+		//수량 입력 시
+		quantity = $(this).val();
+		price = $(this).parent().next().children().val();
+
+	}else{
+		//단가 입력 시
+		quantity = $(this).parent().prev().children().val();
+		price = $(this).val();
+	}
+
+	//해당 row의 가격
+	if(quantity != '' && price != ''){
+		totalPrice = quantity*price;
+		if($(this).hasClass('item-quantity')){
+			$(this).parent().next().next().children().val(totalPrice);
+		}else{
+			$(this).parent().next().children().val(totalPrice);
+		}
+	}else{
+		if($(this).hasClass('item-quantity')){
+			$(this).parent().next().next().children().val('');
+		}else{
+			$(this).parent().next().children().val('');
+		}
+	}
+
+	//품목 전체 총합 가격
+	let total=0;
+	for(let i=0; i<$('.item-amount').length; i++){
+		if($('.item-amount').eq(i).val() != null && $('.item-amount').eq(i).val() != '' && $('.item-amount').eq(i).val() != 'undefined'){
+			total+=parseInt($('.item-amount').eq(i).val());
+		}
+	}
+	$('#totalAmount').val(total);
+}
+
 //휴대폰번호 입력 처리
 document.getElementById('phoneNumber').addEventListener('input', makePhoneFormat);
+
 function makePhoneFormat(){
     let input = this.value.replace(/\D/g, ''); // 숫자만 남기기
     let formatted = '';
@@ -26,26 +73,173 @@ function makePhoneFormat(){
     this.value = formatted;
 };
 
-//휴가 신청서 insert
-$('#vacation-insert-btn').click(insertApproval);
-$('#vacation-temp-btn').click(insertApproval);
-function insertApproval(){
-	const $form=$('#vacation-form').get(0);
+//경비지출 신청서 insert
+$('#expenditure-insert-btn').click(insertExpenditure);
+$('#expenditure-temp-btn').click(insertExpenditure);
+function insertExpenditure(){
+	const $form=$('#expenditure-form').get(0);
 
-	//입력 전부했는지 확인
-	if($(this).attr('id') == 'vacation-insert-btn'){
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'expenditure-insert-btn'){
+		//결재상신
+
+		//입력 전부했는지 확인
 		if(!$form.checkValidity()){
 			alert('필수정보를 전부 입력해주세요!');
 			return;
 		}
+
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.overtime-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
 	}
 
-	//결재자 입력 확인
-	if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
-		alert('결재자를 등록해주세요!');
-		return;
+	const fd=new FormData($form);
+
+	//문서 타입값 설정
+	fd.append('type', 4);
+
+	//보존기한 날짜 Date로 바꾸기
+	const periodDate=new Date();
+	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
+	fd.set('period', periodDate.toISOString());
+
+	//결재상신인지 임시저장인지 확인하여 status저장
+	if($(this).attr('id') == 'overtime-insert-btn'){
+		fd.set('approvalStatus', 1); //결재상신
+	}else{
+		fd.set('approvalStatus', 5); //임시저장
 	}
 
+	fetch(path+'/api/approval/insertEXpenditure', {
+		method:'POST',
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+	.catch(error=>{
+		console.log(error);
+	})
+};
+
+//초과근무 신청서 insert
+$('#overtime-insert-btn').click(insertOvertime);
+$('#overtime-temp-btn').click(insertOvertime);
+function insertOvertime(){
+	const $form=$('#overtime-form').get(0);
+
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'overtime-insert-btn'){
+		//결재상신
+
+		//입력 전부했는지 확인
+		if(!$form.checkValidity()){
+			alert('필수정보를 전부 입력해주세요!');
+			return;
+		}
+
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.overtime-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
+	}
+
+	const fd=new FormData($form);
+
+	//문서 타입값 설정
+	fd.append('type', 3);
+
+	//보존기한 날짜 Date로 바꾸기
+	const periodDate=new Date();
+	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
+	fd.set('period', periodDate.toISOString());
+
+	//결재상신인지 임시저장인지 확인하여 status저장
+	if($(this).attr('id') == 'overtime-insert-btn'){
+		fd.set('approvalStatus', 1); //결재상신
+	}else{
+		fd.set('approvalStatus', 5); //임시저장
+	}
+
+	//초과근무 시작, 종료 시간 형식 바꾸기
+	const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 날짜만 추출
+	// 현재 날짜와 시간 문자열 결합
+	if(fd.get('overtimeStartTime') != ''){
+		let startTime=fd.get('overtimeStartTime');
+		startTime = `${currentDate}T${startTime}:00`; // YYYY-MM-DDTHH:mm:ss 형식
+		fd.set('overtimeStartTime', startTime);
+	}
+	if(fd.get('overtimeEndTime') != ''){
+		let endTime=fd.get('overtimeEndTime');
+		endTime = `${currentDate}T${endTime}:00`; // YYYY-MM-DDTHH:mm:ss 형식
+		fd.set('overtimeEndTime', endTime);
+	}
+
+	fetch(path+'/api/approval/insertOvertime', {
+		method:'POST',
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+	.catch(error=>{
+		console.log(error);
+	})
+};
+
+//출장 신청서 insert
+$('#business-insert-btn').click(insertBusiness);
+$('#business-temp-btn').click(insertBusiness);
+function insertBusiness(){
+	const $form = $('#business-form').get(0);
+
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'business-insert-btn'){
+		//결재상신
+
+		//입력 전부했는지 확인
+		if(!$form.checkValidity()){
+			alert('필수정보를 전부 입력해주세요!');
+			return;
+		}
+
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.business-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
+	}
+
+	//핸드폰 번호 형식확인
 	if($('#phoneNumber').val() != ''){
     	let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
     	if(!result.test($('#phoneNumber').val())){
@@ -55,6 +249,152 @@ function insertApproval(){
 	}
 
 	const fd=new FormData($form);
+
+	//문서 타입값 설정
+	fd.append('type', 5);
+
+	//보존기한 날짜 Date로 바꾸기
+	const periodDate=new Date();
+	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
+	fd.set('period', periodDate.toISOString());
+
+	//결재상신인지 임시저장인지 확인하여 status저장
+	if($(this).attr('id') == 'business-insert-btn'){
+		fd.set('approvalStatus', 1); //결재상신
+	}else{
+		fd.set('approvalStatus', 5); //임시저장
+	}
+
+
+
+	fetch(path+'/api/approval/insertBusinessTrip', {
+		method:'POST',
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+	.catch(error=>{
+		console.log(error);
+	});
+};
+
+//출퇴근 정정 신청서 insert
+$('#commuting-insert-btn').click(insertCommuting);
+$('#commuting-temp-btn').click(insertCommuting);
+function insertCommuting(){
+	const $form=$('#commuting-form').get(0);
+
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'commuting-insert-btn'){
+		//결재상신
+
+		//입력 전부했는지 확인
+		if(!$form.checkValidity()){
+			alert('필수정보를 전부 입력해주세요!');
+			return;
+		}
+
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.commuting-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
+	}
+
+	const fd=new FormData($form);
+
+	//문서 타입값 설정
+	fd.append('type', 1);
+
+	//보존기한 날짜 Date로 바꾸기
+	const periodDate=new Date();
+	periodDate.setMonth(periodDate.getMonth()+1+parseInt(fd.get('period')));
+	fd.set('period', periodDate.toISOString());
+
+	//결재상신인지 임시저장인지 확인하여 status저장
+	if($(this).attr('id') == 'commuting-insert-btn'){
+		fd.set('approvalStatus', 1); //결재상신
+	}else{
+		fd.set('approvalStatus', 5); //임시저장
+	}
+
+	//정정시간 형식 바꾸기
+	if(fd.get('commutingEditTime').length>0){
+		const editTime=fd.get('commutingEditTime');
+		// 현재 날짜를 ISO 8601 형식으로 가져오기
+		const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 날짜만 추출
+		// 현재 날짜와 시간 문자열 결합
+		const dateTimeString = `${currentDate}T${editTime}:00`; // YYYY-MM-DDTHH:mm:ss 형식
+
+		fd.set('commutingEditTime', dateTimeString);
+	}
+
+	fetch(path+'/api/approval/insertCommuting', {
+		method:'POST',
+		body:fd
+	})
+	.then(response=>response.text())
+	.then(data=>{
+		alert(data);
+		location.reload();
+	})
+	.catch(error=>{
+		console.log(error);
+	})
+};
+
+//휴가 신청서 insert
+$('#vacation-insert-btn').click(insertVacation);
+$('#vacation-temp-btn').click(insertVacation);
+function insertVacation(){
+	const $form=$('#vacation-form').get(0); //form태그
+
+	//결재상신인지 임시저장인지 확인
+	if($(this).attr('id') == 'vacation-insert-btn'){
+		//결재상신
+
+		//입력 전부했는지 확인
+		if($(this).attr('id') == 'vacation-insert-btn'){
+			if(!$form.checkValidity()){
+				alert('필수정보를 전부 입력해주세요!');
+				return;
+			}
+		}
+
+		//결재자 입력 확인
+		if($('#middleApprover .approval-content').is(':empty') || $('#finalApprover .approval-content').is(':empty')){
+			alert('결재자를 등록해주세요!');
+			return;
+		}
+	}else{
+		//임시저장
+		//제목 입력여부 확인
+		if($('.vacation-title').val().trim() === ''){
+			alert('제목은 꼭 입력해주세요!');
+			return;
+		}
+	}
+
+	//핸드폰 번호 형식확인
+	if($('#phoneNumber').val() != ''){
+    	let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+    	if(!result.test($('#phoneNumber').val())){
+			alert('알맞은 핸드폰번호 형식이 아닙니다!');
+			return;
+		}
+	}
+
+	const fd=new FormData($form); //form태그로부터 FormData객체 생성
 
 	//휴가신청서 타입
 	fd.append('type', 2);
@@ -119,7 +459,7 @@ function loadEmployees() {
 			success: function(employees) {
 				updateEmployeeSelects(employees);
 			},
-			error: function(xhr, status, error) {
+			error: function(error) {
 				console.error("Error loading employees:", error);
 			}
 		});
@@ -135,12 +475,14 @@ document.getElementById('formType').addEventListener('change', showForm);
 function updateEmployeeSelects(employees) {
 	var approverSelect = document.getElementById("approver");
 	var refererSelect = document.getElementById("referer");
-	var receiverSelect = document.getElementById("receiver");
+	const $receiverSelect = document.getElementById("receiver");
+	const $partnerSelect = document.getElementById("partner");
 
 	// 기존 옵션 제거
 	approverSelect.innerHTML = '<option value="">선택하세요</option>';
 	refererSelect.innerHTML = '<option value="">선택하세요</option>';
-	receiverSelect.innerHTML = '<option value="">선택하세요</option>';
+	$receiverSelect.innerHTML = '<option value="">선택하세요</option>';
+	$partnerSelect.innerHTML = '<option value="">선택하세요</option>';
 
 	// 새 직원 옵션 추가
 	employees.forEach(function(employee) {
@@ -148,7 +490,8 @@ function updateEmployeeSelects(employees) {
 		var option = new Option(optionText, JSON.stringify(employee));
 		approverSelect.add(option.cloneNode(true));
 		refererSelect.add(option.cloneNode(true));
-		receiverSelect.add(option);
+		$receiverSelect.add(option.cloneNode(true));
+		$partnerSelect.add(option.cloneNode(true));
 	});
 }
 
@@ -157,6 +500,7 @@ var middleApprover = null;
 var finalApprover = null;
 var approvalReferers = [];
 var approvalReceivers = [];
+var approvalPartners = [];
 
 function addApprover() {
 	var approverSelect = document.getElementById("approver");
@@ -283,6 +627,35 @@ function makeReceiversTag(employee) {
 	$('.recipientDiv').append($recipient);
 }
 
+//동행자 추가
+function addPartner() {
+	const $partner = document.getElementById("partner");
+	const selectedOption = $partner.options[$partner.selectedIndex];
+
+	if (selectedOption && selectedOption.value) {
+		const employee = JSON.parse(selectedOption.value);
+
+		if (!approvalPartners.some(ref => ref.employeeNo === employee.employeeNo)) {
+			approvalPartners.push(employee);
+			makePartnersTag(employee);
+		} else {
+			alert("이미 추가된 동행자입니다.");
+		}
+	}
+}
+
+
+//동행자 나타내기
+function makePartnersTag(employee) {
+	console.log("Updating receivers in all forms");
+
+	const $partner = $('<div>').addClass('partner-item');
+	const $no = $('<input>').attr('type','hidden').attr('name', 'partnerNo').attr('value', employee.employeeNo);
+	const $name = $('<span>').addClass('partner-details').text(employee.employeeName+" "+employee.positionCode.positionTitle+'('+employee.departmentCode.departmentTitle+')');
+	const $x = $('<span>').addClass('remove-partner').attr('onclick', 'removeElement(this)').text('x');
+	$partner.append($no).append($name).append($x);
+	$('#partner-div').append($partner);
+}
 
 //결재자,참조자 리셋버튼으로 초기화하기
 function resetApprovers() {
@@ -291,6 +664,7 @@ function resetApprovers() {
 	finalApprover = null;
 	approvalReferers = [];
 	approvalReceivers = [];
+	approvalPartners = [];
 
 	var forms = document.getElementsByClassName('form-container');
 	for (var i = 0; i < forms.length; i++) {
@@ -308,6 +682,9 @@ function resetApprovers() {
 	//수신처 영역 초기화
 	$('#recipient').html('');
 
+	//동행자 영역 초기화
+	$('#partner-div').html('');
+
 	// 선택된 옵션 초기화
 	document.getElementById("approver").selectedIndex = 0;
 	document.getElementById("referer").selectedIndex = 0;
@@ -317,12 +694,12 @@ function resetApprovers() {
 
 
 
-//양식 바뀔때 결재자,참조자정보 초기화
+//양식 바뀔때 결재자,참조자,동행자 정보 초기화
 function showForm() {
 	var selectedForm = document.getElementById('formType').value;
 	var forms = document.getElementsByClassName('form-container');
 
-	// 폼 변경 시 결재자와 참조자 정보 초기화
+	// 폼 변경 시 결재자와 참조자, 동행자 정보 초기화
 	clearApproversAndReferers();
 
 	for (var i = 0; i < forms.length; i++) {
@@ -332,18 +709,23 @@ function showForm() {
 		var currentForm = document.getElementById(selectedForm);
 		if (currentForm) {
 			currentForm.style.display = 'block';
+			if(selectedForm == 'form1'){
+				$('#partnerSelect').css('display', 'block');
+			}else{
+				$('#partnerSelect').css('display', 'none');
+			}
 		}
 	}
 }
 
 
-//양식이 바뀔때마다 결재자 참조자 초기화 시키기
+//양식이 바뀔때마다 결재자 참조자 동행자 초기화 시키기
 function clearApproversAndReferers() {
 	middleApprover = null;
 	finalApprover = null;
 	approvalReferers = [];
 	approvalReceivers = [];
-
+	approvalPartners = [];
 
 	// 모든 폼에 대해 결재자 정보 초기화
 	var forms = document.getElementsByClassName('form-container');
@@ -359,7 +741,9 @@ function clearApproversAndReferers() {
 	// 참조자 필드 초기화
 	$('#referer-div').html('');
 	// 수신처 div 초기화
-	$('#receiver').html('');
+	$('#recipient').html('');
+	// 동행자 div 초기화
+	$('#partner-div').html('');
 
 	// 선택된 옵션 초기화
 	var approverSelect = document.getElementById("approver");
@@ -479,14 +863,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 
-$(document).ready(function() {
-	// 추가 버튼 클릭 시 이벤트 처리
-	$('.btn-add-row').click(function() {
+//경비지출서 지출품목 추가 버튼 함수
+function addItemRow() {
 		var newRow = '<tr>' +
 			'<td><input type="text" class="form-control item-name"></td>' +
 			'<td><input type="text" class="form-control item-spec"></td>' +
 			'<td><input type="text" class="form-control item-unit"></td>' +
-			'<td><input type="number" class="form-control item-quantity"></td>' +
+			'<td><input type="number" class="form-control item-quantity "></td>' +
 			'<td><input type="number" class="form-control item-price"></td>' +
 			'<td><input type="number" class="form-control item-amount" readonly></td>' +
 			'<td><input type="text" class="form-control item-remark"></td>' +
@@ -494,9 +877,5 @@ $(document).ready(function() {
 			'</tr>';
 
 		$('#itemTable tbody').append(newRow);
-	});
-});
-
-
-
-
+};
+$(document).on('click', '.btn-add-row', addItemRow);

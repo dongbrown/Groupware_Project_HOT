@@ -8,7 +8,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.hot.approval.model.dto.Approval;
+import com.project.hot.approval.model.dto.BusinessTripForm;
+import com.project.hot.approval.model.dto.CommutingTimeForm;
+import com.project.hot.approval.model.dto.OvertimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
+import com.project.hot.approval.model.dto.RequestBusinessTrip;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -75,6 +79,24 @@ public class ApprovalDaoImpl implements ApprovalDao {
 		return session.insert("approval.insertVacation", vf);
 	}
 
+	@Override
+	public int insertCommuting(SqlSession session, CommutingTimeForm ctf) {
+		return session.insert("approval.insertCommuting", ctf);
+	}
 
+	@Override
+	public int insertOvertime(SqlSession session, OvertimeForm of) {
+		return session.insert("approval.insertOvertime", of);
+	}
+
+	@Override
+	public int insertBusinessTrip(SqlSession session, RequestBusinessTrip rbt) {
+		return session.insert("approval.insertBusinessTrip", rbt);
+	}
+
+	@Override
+	public int insertBusinessPartner(SqlSession session, RequestBusinessTrip rbt) {
+		return session.insert("approval.insertBusinessPartner", rbt);
+	}
 
 }
