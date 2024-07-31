@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.project.hot.approval.model.dto.Approval;
 import com.project.hot.approval.model.dto.CommutingTimeForm;
+import com.project.hot.approval.model.dto.OvertimeForm;
+import com.project.hot.approval.model.dto.RequestBusinessTrip;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -18,4 +20,6 @@ public interface ApprovalService {
 	String insertApproval(Map<String, Object> param);
 	int insertVacation(VacationForm vf);
 	int insertCommuting(CommutingTimeForm ctf);
+	int insertOvertime(OvertimeForm of);
+	int insertBusinessTrip(RequestBusinessTrip rbt);
 }
