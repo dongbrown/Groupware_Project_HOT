@@ -124,12 +124,20 @@ public class EmailDaoImpl implements EmailDao {
         return session.update("email.markTrashAsRead", emailNos);
     }
 
-    public int deletePermanently(List<Integer> emailNos, SqlSession session) {
-        return session.delete("email.deletePermanently", emailNos);
+    @Override
+    public int deletePermanently(List<Integer> emailNos, int employeeNo, SqlSession session) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        return session.delete("email.deletePermanently", params);
     }
 
-    public int restoreFromTrash(List<Integer> emailNos, SqlSession session) {
-        return session.update("email.restoreFromTrash", emailNos);
+    @Override
+    public int restoreFromTrash(List<Integer> emailNos, int employeeNo, SqlSession session) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        return session.update("email.restoreFromTrash", params);
     }
 
 	@Override
@@ -145,6 +153,11 @@ public class EmailDaoImpl implements EmailDao {
 	@Override
 	public List<EmailAtt> getEmailAttachments(int emailNo, SqlSession session) {
 		return session.selectList("email.selectEmailAttachments", emailNo);
+	}
+
+	@Override
+	public void deleteAttachments(Integer emailNo, SqlSession session) {
+	    session.delete("email.deleteAttachments", emailNo);
 	}
 
 }

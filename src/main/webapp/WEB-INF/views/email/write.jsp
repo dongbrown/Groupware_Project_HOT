@@ -22,14 +22,14 @@
         <div class="form-group">
             <label for="attachment">첨부 파일:</label>
             <div id="dropZone" class="drop-zone">
-                파일을 여기에 드래그하거나 클릭하여 선택하세요
+                파일을 여기에 드래그하세요
                 <input type="file" id="fileInput" multiple style="display: none;">
             </div>
             <div id="fileList" class="file-list"></div>
         </div>
         <div class="button-group">
             <button type="submit" class="btn btn-primary">보내기</button>
-            <button type="button" class="btn btn-secondary" id="saveAsDraft">임시 저장</button>
+            <!-- <button type="button" class="btn btn-secondary" id="saveAsDraft">임시 저장</button> -->
             <button type="button" class="btn btn-danger" id="cancel">취소</button>
         </div>
     </form>

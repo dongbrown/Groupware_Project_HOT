@@ -226,6 +226,8 @@ public class EmailController {
         }
     }
 
+
+
     @GetMapping("/search")
     public String searchEmails(@RequestParam String keyword, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -244,7 +246,7 @@ public class EmailController {
         Email originalEmail = service.getEmailByNo(emailNo);
         Email replyEmail = service.prepareReplyEmail(originalEmail);
         model.addAttribute("email", replyEmail);
-        return "email/write";
+        return "email/write :: #emailForm";  // write.jsp의 #emailForm 부분만 반환
     }
 
     // 이메일 전달 작성 폼을 표시
@@ -315,19 +317,33 @@ public class EmailController {
     @PostMapping("/trash/delete-permanently")
     @ResponseBody
     public ResponseEntity<?> deletePermanently(@RequestBody List<Integer> emailNos) {
+        if (emailNos == null || emailNos.isEmpty()) {
+            return ResponseEntity.badRequest().body("삭제할 메일을 선택하세요.");
+        }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+
         try {
-            int deletedCount = service.deletePermanently(emailNos);
+            int deletedCount = service.deletePermanently(emailNos, employeeNo);
             return ResponseEntity.ok("성공적으로 " + deletedCount + "개의 이메일을 영구 삭제했습니다.");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("영구 삭제 중 오류가 발생했습니다: " + e.getMessage());
+            log.error("이메일 영구 삭제 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("영구 삭제 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 
     @PostMapping("/trash/restore")
     @ResponseBody
     public ResponseEntity<?> restoreFromTrash(@RequestBody List<Integer> emailNos) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+
         try {
-            int restoredCount = service.restoreFromTrash(emailNos);
+            int restoredCount = service.restoreFromTrash(emailNos, employeeNo);
             return ResponseEntity.ok("성공적으로 " + restoredCount + "개의 이메일을 복구했습니다.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("복구 중 오류가 발생했습니다: " + e.getMessage());

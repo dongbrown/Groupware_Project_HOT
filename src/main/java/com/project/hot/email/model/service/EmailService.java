@@ -47,10 +47,9 @@ public interface EmailService {
 
 	int markTrashAsRead(List<Integer> emailNos);
 
-	int deletePermanently(List<Integer> emailNos);
+	int deletePermanently(List<Integer> emailNos, int employeeNo);
 
-	int restoreFromTrash(List<Integer> emailNos);
-
+	int restoreFromTrash(List<Integer> emailNos, int employeeNo);
 	List<Email> getImportantEmails(int employeeNo);
 
 	List<Email> getSelfEmails(int employeeNo);

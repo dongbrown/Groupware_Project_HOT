@@ -21,7 +21,7 @@
         <div class="form-group">
             <label for="attachment">첨부 파일:</label>
             <div id="dropZone" class="drop-zone">
-                파일을 여기에 드래그하거나 클릭하여 선택하세요
+                파일을 여기에 드래그하세요
                 <input type="file" id="fileInput" multiple style="display: none;">
             </div>
             <div id="fileList" class="file-list"></div>

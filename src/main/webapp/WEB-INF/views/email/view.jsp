@@ -50,15 +50,15 @@
 	</div>
 
     <div class="email-actions-bottom">
-        <button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/email/reply/${email.emailNo}'">
-            <i class="fas fa-reply"></i> 답장
-        </button>
-        <button class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/email/forward/${email.emailNo}'">
-            <i class="fas fa-share"></i> 전달
-        </button>
-        <button class="btn btn-danger" onclick="deleteEmail(${email.emailNo})">
-            <i class="fas fa-trash"></i> 삭제
-        </button>
+		<button class="btn btn-primary btn-reply">
+		    <i class="fas fa-reply"></i> 답장
+		</button>
+		<button class="btn btn-secondary btn-forward">
+		    <i class="fas fa-share"></i> 전달
+		</button>
+		<button class="btn btn-danger btn-delete">
+		    <i class="fas fa-trash"></i> 삭제
+		</button>
     </div>
 </div>
 <script>

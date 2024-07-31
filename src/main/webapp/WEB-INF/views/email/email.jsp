@@ -73,8 +73,26 @@ $(document).ready(function() {
     // EmailCommon 초기화
     if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.init === 'function') {
         EmailCommon.init(contextPath);
-        // 초기 inbox 로드
-        EmailCommon.loadMailbox('inbox');
+
+        // URL에서 현재 메일함 정보 가져오기
+        var currentMailbox = new URLSearchParams(window.location.search).get('mailbox') || 'inbox';
+
+        // 해당 메일함 로드
+        EmailCommon.loadMailbox(currentMailbox);
+
+        // 사이드바 메뉴 항목 클릭 이벤트 처리
+        $('.list-group-item').on('click', function(e) {
+            e.preventDefault();
+            var mailbox = $(this).data('mailbox');
+            EmailCommon.loadMailbox(mailbox);
+
+            // URL 업데이트
+            history.pushState(null, '', contextPath + '?mailbox=' + mailbox);
+
+            // 활성 클래스 토글
+            $('.list-group-item').removeClass('active');
+            $(this).addClass('active');
+        });
     }
 });
 </script>

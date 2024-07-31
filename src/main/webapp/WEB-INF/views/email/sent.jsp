@@ -7,7 +7,7 @@
 
 <div class="container-fluid">
     <h2 class="mb-4">보낸 메일함 <span class="email-count">${emails.size()}/999</span></h2>
-    <jsp:include page="search.jsp" />
+
 
 
     <div class="email-toolbar">

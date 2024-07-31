@@ -209,13 +209,36 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public int deletePermanently(List<Integer> emailNos) {
-		return dao.deletePermanently(emailNos, sqlSession);
+	@Transactional
+	public int deletePermanently(List<Integer> emailNos, int employeeNo) {
+	    int deletedCount = dao.deletePermanently(emailNos, employeeNo, sqlSession);
+	    if (deletedCount > 0) {
+	        deleteAttachments(emailNos);
+	    }
+	    return deletedCount;
+	}
+
+	private void deleteAttachments(List<Integer> emailNos) {
+	    for (Integer emailNo : emailNos) {
+	        List<EmailAtt> attachments = dao.getEmailAttachments(emailNo, sqlSession);
+	        if (attachments != null) {
+	            for (EmailAtt attachment : attachments) {
+	                if (attachment != null && attachment.getEmailAttRenamedFilename() != null) {
+	                    File file = new File(fileUploadDir, attachment.getEmailAttRenamedFilename());
+	                    if (file.exists()) {
+	                        file.delete();
+	                    }
+	                }
+	            }
+	            dao.deleteAttachments(emailNo, sqlSession);
+	        }
+	    }
 	}
 
 	@Override
-	public int restoreFromTrash(List<Integer> emailNos) {
-		return dao.restoreFromTrash(emailNos, sqlSession);
+	@Transactional
+	public int restoreFromTrash(List<Integer> emailNos, int employeeNo) {
+	    return dao.restoreFromTrash(emailNos, employeeNo, sqlSession);
 	}
 
 	@Override
