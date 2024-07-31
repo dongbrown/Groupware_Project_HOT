@@ -500,7 +500,7 @@
 <!-- 경비지출신청서 -->
 				<div id="form4" class="form-container">
 					<h5>경비지출신청서</h5>
-					<form>
+					<form id="expenditure-form">
 						<div class="approval-line">
 						    <div id="draftApprover" class="approval-box">
 						        <h5 class="approval-title">기안자</h5>
@@ -585,17 +585,17 @@
 								<tfoot>
 									<tr>
 										<th>파일첨부</th>
-										<td colspan="5">
-											<div class="input-group">
-											    <div class="custom-file">
-											        <input type="file" class="custom-file-input file-input" multiple>
-											        <label class="custom-file-label">파일 선택</label>
-											    </div>
-											    <div class="input-group-append">
-											        <button type="button" class="btn btn-primary file-select-button">파일 선택</button>
-											    </div>
-											</div>
-										</td>
+					                    <td colspan="5">
+					                        <div class="input-group">
+					                            <div class="custom-file">
+					                                <input type="file" class="custom-file-input file-input" name="upFile" multiple>
+					                                <label class="custom-file-label">파일 선택</label>
+					                            </div>
+					                            <div class="input-group-append">
+					                                <button type="button" class="btn btn-primary file-select-button">파일 선택</button>
+					                            </div>
+					                        </div>
+					                    </td>
 									</tr>
 								</tfoot>
 							</table>
@@ -618,13 +618,13 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td><input type="text" class="form-control item-name"></td>
-										<td><input type="text" class="form-control item-spec"></td>
-										<td><input type="text" class="form-control item-unit"></td>
-										<td><input type="number" class="form-control item-quantity"></td>
-										<td><input type="number" class="form-control item-price"></td>
-										<td><input type="number" class="form-control item-amount" readonly></td>
-										<td><input type="text" class="form-control item-remark"></td>
+										<td><input name="expenditureName" type="text" class="form-control item-name"></td>
+										<td><input name="expenditureSpec" type="text" class="form-control item-spec"></td>
+										<td><input name="expenditureUnit" type="text" class="form-control item-unit"></td>
+										<td><input name="expenditureQuantity" type="number" class="form-control item-quantity"></td>
+										<td><input name="expenditurePrice" type="number" class="form-control item-price"></td>
+										<td><input name="expenditureAmount" type="number" class="form-control item-amount" readonly></td>
+										<td><input name="expenditureRemark" type="text" class="form-control item-remark"></td>
 										<td><button type="button" class="btn btn-primary btn-add-row">+</button></td>
 									</tr>
 								</tbody>

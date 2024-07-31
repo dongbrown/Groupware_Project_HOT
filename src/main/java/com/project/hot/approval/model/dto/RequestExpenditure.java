@@ -11,10 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExpenditureForm {
+public class RequestExpenditure {
 
 	private int expenditureFormNo;
 	private String approvalNo;
 	private Date expenditureDate;
 	private int expenditureAmount;
+	private String[] expenditureName;
+	private String[] expenditureSpec;
+	private String[] expenditureUnit;
+	private int[] expenditureQuantity;
+	private long[] expenditurePrice;
+	private String[] expenditureRemark;
 }

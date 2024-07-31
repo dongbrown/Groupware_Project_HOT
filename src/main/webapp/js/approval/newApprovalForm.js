@@ -97,7 +97,7 @@ function insertExpenditure(){
 	}else{
 		//임시저장
 		//제목 입력여부 확인
-		if($('.overtime-title').val().trim() === ''){
+		if($('.expenditure-title').val().trim() === ''){
 			alert('제목은 꼭 입력해주세요!');
 			return;
 		}
@@ -114,13 +114,13 @@ function insertExpenditure(){
 	fd.set('period', periodDate.toISOString());
 
 	//결재상신인지 임시저장인지 확인하여 status저장
-	if($(this).attr('id') == 'overtime-insert-btn'){
+	if($(this).attr('id') == 'expenditure-insert-btn'){
 		fd.set('approvalStatus', 1); //결재상신
 	}else{
 		fd.set('approvalStatus', 5); //임시저장
 	}
 
-	fetch(path+'/api/approval/insertEXpenditure', {
+	fetch(path+'/api/approval/insertExpenditure', {
 		method:'POST',
 		body:fd
 	})
@@ -866,13 +866,13 @@ document.addEventListener('DOMContentLoaded', function() {
 //경비지출서 지출품목 추가 버튼 함수
 function addItemRow() {
 		var newRow = '<tr>' +
-			'<td><input type="text" class="form-control item-name"></td>' +
-			'<td><input type="text" class="form-control item-spec"></td>' +
-			'<td><input type="text" class="form-control item-unit"></td>' +
-			'<td><input type="number" class="form-control item-quantity "></td>' +
-			'<td><input type="number" class="form-control item-price"></td>' +
-			'<td><input type="number" class="form-control item-amount" readonly></td>' +
-			'<td><input type="text" class="form-control item-remark"></td>' +
+			'<td><input name="expenditureName" type="text" class="form-control item-name"></td>' +
+			'<td><input name="expenditureSpec" type="text" class="form-control item-spec"></td>' +
+			'<td><input name="expenditureUnit" type="text" class="form-control item-unit"></td>' +
+			'<td><input name="expenditureQuantity" type="number" class="form-control item-quantity "></td>' +
+			'<td><input name="expenditurePrice" type="number" class="form-control item-price"></td>' +
+			'<td><input name="expenditureAmount" type="number" class="form-control item-amount" readonly></td>' +
+			'<td><input name="expenditureRemark" type="text" class="form-control item-remark"></td>' +
 			'<td><button type="button" class="btn btn-primary btn-add-row">+</button></td>' +
 			'</tr>';
 

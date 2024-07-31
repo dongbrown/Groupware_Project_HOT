@@ -22,6 +22,7 @@ import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.OvertimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.RequestBusinessTrip;
+import com.project.hot.approval.model.dto.RequestExpenditure;
 import com.project.hot.approval.model.dto.ResponseApprovalsCount;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.common.exception.ApprovalException;
@@ -176,6 +177,17 @@ public class ApprovalServiceImpl implements ApprovalService {
 			}else {
 				return result;
 			}
+		}else {
+			return 0;
+		}
+	}
+
+
+	@Override
+	public int insertExpenditure(RequestExpenditure re) {
+		int result=dao.insertExpenditureForm(session, re);
+		if(result>0) {
+				return dao.insertExpenditureItem(session, re);
 		}else {
 			return 0;
 		}
