@@ -18,6 +18,11 @@ public class RequestProject {
 	private int projectRequestNo;
 	private int projectNo;
 	private int employeeNo;
+	private String employeeName;
+	private String departmentTitle;
+	private int projectEmployeeNo;
+	private String projectTitle;
+	private String projectRequestStatus;
 	private int projectRequestEmployee;
 	private Date projectRequestDate;
 	private String projectStatus;
