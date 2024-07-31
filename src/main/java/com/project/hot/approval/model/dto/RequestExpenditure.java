@@ -1,6 +1,7 @@
 package com.project.hot.approval.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,10 +18,6 @@ public class RequestExpenditure {
 	private String approvalNo;
 	private Date expenditureDate;
 	private int expenditureAmount;
-	private String[] expenditureName;
-	private String[] expenditureSpec;
-	private String[] expenditureUnit;
-	private int[] expenditureQuantity;
-	private long[] expenditurePrice;
-	private String[] expenditureRemark;
+	private List<ExpenditureItem> items;
+	
 }

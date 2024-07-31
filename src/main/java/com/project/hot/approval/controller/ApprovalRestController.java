@@ -138,7 +138,7 @@ public class ApprovalRestController {
 	}
 
 	@PostMapping("/insertExpenditure")
-	public String insertBusinessTrip(
+	public String insertExpenditure(
 			@RequestParam("upFile") MultipartFile[] upFile,
 			@ModelAttribute RequestApproval ra,
 			@ModelAttribute RequestExpenditure re,

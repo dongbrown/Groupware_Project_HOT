@@ -187,6 +187,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public int insertExpenditure(RequestExpenditure re) {
 		int result=dao.insertExpenditureForm(session, re);
 		if(result>0) {
+			
 				return dao.insertExpenditureItem(session, re);
 		}else {
 			return 0;

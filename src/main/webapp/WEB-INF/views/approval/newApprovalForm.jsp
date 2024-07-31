@@ -519,7 +519,6 @@
 						        <div class="approval-content"></div>
 						    </div>
 						</div>
-						<form>
 							<div class="form-group">
 								<label for="documentType">문서종류</label> <select id="documentType"
 									class="form-control">
@@ -550,7 +549,7 @@
 									</tr>
 									<tr>
 										<th>경비지출일<span class="asterisk">*</span></th>
-										<td><input type="date" name="expenditureDate" class="form-control"></td>
+										<td><input type="date" name="expenditureDate" class="form-control" required></td>
 										<th>보존연한<span class="asterisk">*</span></th>
 					                    <td>
 						                    <select id="retentionPeriod" class="form-control" name="period" required>
@@ -576,7 +575,7 @@
 				                        </td>
 				                    </tr>
 				                    <tr>
-					                    <th>수신처<span class="asterisk">*</span></th>
+					                    <th>수신처</th>
 					                    <td colspan="5">
 					                    	<div id="recipient" class="form-control recipientDiv"></div>
 					                    </td>
@@ -618,13 +617,13 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td><input name="expenditureName" type="text" class="form-control item-name"></td>
-										<td><input name="expenditureSpec" type="text" class="form-control item-spec"></td>
-										<td><input name="expenditureUnit" type="text" class="form-control item-unit"></td>
-										<td><input name="expenditureQuantity" type="number" class="form-control item-quantity"></td>
-										<td><input name="expenditurePrice" type="number" class="form-control item-price"></td>
-										<td><input name="expenditureAmount" type="number" class="form-control item-amount" readonly></td>
-										<td><input name="expenditureRemark" type="text" class="form-control item-remark"></td>
+										<td><input name="items[0].expenditureName" type="text" class="form-control item-name"></td>
+										<td><input name="items[0].expenditureSpec" type="text" class="form-control item-spec"></td>
+										<td><input name="items[0].expenditureUnit" type="text" class="form-control item-unit"></td>
+										<td><input name="items[0].expenditureQuantity" type="number" class="form-control item-quantity"></td>
+										<td><input name="items[0].expenditurePrice" type="number" class="form-control item-price"></td>
+										<td><input type="number" class="form-control item-amount" readonly></td>
+										<td><input name="items[0].expenditureRemark" type="text" class="form-control item-remark"></td>
 										<td><button type="button" class="btn btn-primary btn-add-row">+</button></td>
 									</tr>
 								</tbody>
@@ -646,7 +645,6 @@
 								<button type="button" class="btn btn-secondary ml-2" id="expenditure-temp-btn">임시저장</button>
 								<button type="button" class="btn btn-danger ml-2">취소</button>
 							</div>
-						</form>
 					</form>
 				</div>
 
@@ -763,7 +761,7 @@
                         </div>
                     </td>
                 </tr>
-            </tfoot>
+            	</tfoot>
             </table>
             <div class="form-group mt-3">
                 <label for="details">출퇴근정정 내용<span class="asterisk">*</span></label>

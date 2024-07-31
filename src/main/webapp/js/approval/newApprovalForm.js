@@ -119,6 +119,7 @@ function insertExpenditure(){
 	}else{
 		fd.set('approvalStatus', 5); //임시저장
 	}
+	
 
 	fetch(path+'/api/approval/insertExpenditure', {
 		method:'POST',
@@ -862,20 +863,39 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 });
-
+let itemRowCount=1;
 //경비지출서 지출품목 추가 버튼 함수
 function addItemRow() {
+	
 		var newRow = '<tr>' +
-			'<td><input name="expenditureName" type="text" class="form-control item-name"></td>' +
-			'<td><input name="expenditureSpec" type="text" class="form-control item-spec"></td>' +
-			'<td><input name="expenditureUnit" type="text" class="form-control item-unit"></td>' +
-			'<td><input name="expenditureQuantity" type="number" class="form-control item-quantity "></td>' +
-			'<td><input name="expenditurePrice" type="number" class="form-control item-price"></td>' +
-			'<td><input name="expenditureAmount" type="number" class="form-control item-amount" readonly></td>' +
-			'<td><input name="expenditureRemark" type="text" class="form-control item-remark"></td>' +
-			'<td><button type="button" class="btn btn-primary btn-add-row">+</button></td>' +
+			`<td><input name="items[${itemRowCount}].expenditureName" type="text" class="form-control item-name"></td>` +
+			`<td><input name="items[${itemRowCount}].expenditureSpec" type="text" class="form-control item-spec"></td>` +
+			`<td><input name="items[${itemRowCount}].expenditureUnit" type="text" class="form-control item-unit"></td>` +
+			`<td><input name="items[${itemRowCount}].expenditureQuantity" type="number" class="form-control item-quantity "></td>` +
+			`<td><input name="items[${itemRowCount}].expenditurePrice" type="number" class="form-control item-price"></td>` +
+			'<td><input type="number" class="form-control item-amount" readonly></td>' +
+			`<td><input name="items[${itemRowCount}].expenditureRemark" type="text" class="form-control item-remark"></td>` +
+			'<td><button type="button" class="btn btn-primary btn-add-row">+</button><button type="button" class="btn btn-danger btn-remove-row">-</button></td>' +
 			'</tr>';
 
 		$('#itemTable tbody').append(newRow);
+		itemRowCount++;
 };
 $(document).on('click', '.btn-add-row', addItemRow);
+//경비지출서 지출품목 제거 버튼 함수
+function removeItemRow(){
+	$(this).closest('tr').remove();
+	
+	$('#itemTable tbody tr').each(function(index) {
+    	$(this).find('input').each(function() {
+        	const name = $(this).attr('name');
+            if (name) {
+	            const newName = name.replace(/\[\d+\]/, `[${index}]`);
+	            $(this).attr('name', newName);
+            }
+        });
+    });
+		
+	itemRowCount--;
+}
+$(document).on('click', '.btn-remove-row', removeItemRow);
