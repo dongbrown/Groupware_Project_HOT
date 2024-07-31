@@ -165,13 +165,17 @@ public class ProjectController {
 	@GetMapping("/responseProjectlistallajax")
 	public Map<String,Object> responseProjectlistall(@RequestParam(defaultValue = "1") int cPage
 														,@RequestParam int employeeNo){
-		ObjectMapper mapper=new ObjectMapper();
-		try {
-			mapper.writeValueAsString(service.responseProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo)));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return service.responseProjectlistall(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
+		  Map<String, Object> result = service.responseProjectlistall(
+	                Map.of("cPage", cPage, "numPerpage", 8, "employeeNo", employeeNo)
+	        );
+	        try {
+	            ObjectMapper mapper = new ObjectMapper();
+	            String jsonResult = mapper.writeValueAsString(result);
+	            System.out.println("확인용 : " + jsonResult);
+	        } catch (JsonProcessingException e) {
+	            e.printStackTrace();
+	        }
+	        return result;
 	}
 
 	@ResponseBody

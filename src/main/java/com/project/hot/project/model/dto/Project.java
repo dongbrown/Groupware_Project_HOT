@@ -39,7 +39,7 @@ public class Project {
 	    private int projectProgress;
 	    private String projectStatus;
 	    private String employeeName;
-	    private String departmentName;
+	    private String departmentTitle;
 	    private String memberPhotos;
 	    private String memberEmployeeNos;
 	    private String projectRequestStatus;
