@@ -13,6 +13,7 @@ import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.OvertimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.RequestBusinessTrip;
+import com.project.hot.approval.model.dto.RequestExpenditure;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -97,6 +98,16 @@ public class ApprovalDaoImpl implements ApprovalDao {
 	@Override
 	public int insertBusinessPartner(SqlSession session, RequestBusinessTrip rbt) {
 		return session.insert("approval.insertBusinessPartner", rbt);
+	}
+
+	@Override
+	public int insertExpenditureForm(SqlSession session, RequestExpenditure re) {
+		return session.insert("approval.insertExpenditureForm", re);
+	}
+
+	@Override
+	public int insertExpenditureItem(SqlSession session, RequestExpenditure re) {
+		return session.insert("approval.insertExpenditureItem", re);
 	}
 
 }

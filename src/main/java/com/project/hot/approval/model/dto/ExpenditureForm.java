@@ -17,10 +17,4 @@ public class ExpenditureForm {
 	private String approvalNo;
 	private Date expenditureDate;
 	private int expenditureAmount;
-	private String expenditureName;
-	private String expenditureSpec;
-	private String expenditureUnit;
-	private int expenditureQuantity;
-	private int expenditurePrice;
-	private String expenditureRemark;
 }

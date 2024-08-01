@@ -3,6 +3,8 @@ package com.project.hot.email.model.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +22,7 @@ import com.project.hot.email.model.dto.EmailAtt;
 import com.project.hot.email.model.dto.EmailReceiver;
 import com.project.hot.employee.model.dto.Employee;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,6 +32,22 @@ public class EmailServiceImpl implements EmailService {
     private final String fileUploadDir;
     private final EmailDao dao;
     private final SqlSession sqlSession;
+
+    @Value("${image.upload.path}")
+    private String fileUploadPath;
+
+    @PostConstruct
+    public void init() {
+        File uploadDir = new File(fileUploadPath);
+        if (!uploadDir.exists()) {
+            if (uploadDir.mkdirs()) {
+                log.info("Upload directory created: {}", uploadDir.getAbsolutePath());
+            } else {
+                log.error("Failed to create upload directory: {}", uploadDir.getAbsolutePath());
+            }
+        }
+        log.info("Upload directory: {}", uploadDir.getAbsolutePath());
+    }
 
     @Autowired
     public EmailServiceImpl(@Value("${image.upload.directory}") String fileUploadDir,
@@ -70,10 +89,12 @@ public class EmailServiceImpl implements EmailService {
         return dao.findEmployeeByEmployeeId(employeeId, sqlSession);
     }
 
-    @Override
-    @Transactional
     public void saveEmail(Email email, MultipartFile[] attachments) throws IOException {
         try {
+            // 첨부 파일 여부 설정
+            boolean hasAttachment = attachments != null && attachments.length > 0;
+            email.setHasAttachment(hasAttachment);
+
             int emailNo = dao.saveEmail(email, sqlSession);
             email.setEmailNo(emailNo);
 
@@ -85,7 +106,7 @@ public class EmailServiceImpl implements EmailService {
                 dao.saveEmailReceiver(receiver, sqlSession);
             }
 
-            if (attachments != null) {
+            if (hasAttachment) {
                 for (MultipartFile attachment : attachments) {
                     if (attachment != null && !attachment.isEmpty()) {
                         EmailAtt emailAtt = saveImage(attachment);
@@ -139,22 +160,20 @@ public class EmailServiceImpl implements EmailService {
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String savedFilename = UUID.randomUUID().toString() + extension;
 
-        File destFile = new File(fileUploadDir, savedFilename);
+        Path destPath = Paths.get(fileUploadPath, savedFilename);
 
         try {
-            Files.copy(file.getInputStream(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            log.info("File saved successfully: {}", destFile.getAbsolutePath());
+            Files.copy(file.getInputStream(), destPath, StandardCopyOption.REPLACE_EXISTING);
+            log.info("File saved successfully: {}", destPath.toString());
         } catch (IOException e) {
-            log.error("Failed to save file: {}", destFile.getAbsolutePath(), e);
-            throw new IOException("Failed to save file: " + destFile.getAbsolutePath(), e);
+            log.error("Failed to save file: {}", destPath.toString(), e);
+            throw new IOException("Failed to save file: " + destPath.toString(), e);
         }
 
         EmailAtt emailAtt = EmailAtt.builder()
                 .emailAttOriginalFilename(originalFilename)
                 .emailAttRenamedFilename(savedFilename)
                 .build();
-
-        dao.saveAttachment(emailAtt, sqlSession);
 
         return emailAtt;
     }
@@ -209,13 +228,36 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public int deletePermanently(List<Integer> emailNos) {
-		return dao.deletePermanently(emailNos, sqlSession);
+	@Transactional
+	public int deletePermanently(List<Integer> emailNos, int employeeNo) {
+	    int deletedCount = dao.deletePermanently(emailNos, employeeNo, sqlSession);
+	    if (deletedCount > 0) {
+	        deleteAttachments(emailNos);
+	    }
+	    return deletedCount;
+	}
+
+	private void deleteAttachments(List<Integer> emailNos) {
+	    for (Integer emailNo : emailNos) {
+	        List<EmailAtt> attachments = dao.getEmailAttachments(emailNo, sqlSession);
+	        if (attachments != null) {
+	            for (EmailAtt attachment : attachments) {
+	                if (attachment != null && attachment.getEmailAttRenamedFilename() != null) {
+	                    File file = new File(fileUploadDir, attachment.getEmailAttRenamedFilename());
+	                    if (file.exists()) {
+	                        file.delete();
+	                    }
+	                }
+	            }
+	            dao.deleteAttachments(emailNo, sqlSession);
+	        }
+	    }
 	}
 
 	@Override
-	public int restoreFromTrash(List<Integer> emailNos) {
-		return dao.restoreFromTrash(emailNos, sqlSession);
+	@Transactional
+	public int restoreFromTrash(List<Integer> emailNos, int employeeNo) {
+	    return dao.restoreFromTrash(emailNos, employeeNo, sqlSession);
 	}
 
 	@Override
@@ -235,7 +277,29 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public List<EmailAtt> getEmailAttachments(int emailNo) {
-		return dao.getEmailAttachments(emailNo, sqlSession);
+	    List<EmailAtt> attachments = dao.getEmailAttachments(emailNo, sqlSession);
+	    log.info("Attachments for email {}: {}", emailNo, attachments);
+	    return attachments;
+	}
+
+	@Override
+	public Integer getInboxUnreadCount(int employeeNo) {
+		return dao.getInboxUnreadCount(employeeNo, sqlSession);
+	}
+
+	@Override
+	public Integer getSelfUnreadCount(int employeeNo) {
+		return dao.getSelfUnreadCount(employeeNo, sqlSession);
+	}
+
+	@Override
+	public Integer getImportantUnreadCount(int employeeNo) {
+		return dao.getImportantUnreadCount(employeeNo, sqlSession);
+	}
+
+	@Override
+	public Integer getTrashCount(int employeeNo) {
+		return dao.getTrashCount(employeeNo, sqlSession);
 	}
 
 

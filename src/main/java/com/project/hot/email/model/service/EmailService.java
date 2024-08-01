@@ -47,10 +47,9 @@ public interface EmailService {
 
 	int markTrashAsRead(List<Integer> emailNos);
 
-	int deletePermanently(List<Integer> emailNos);
+	int deletePermanently(List<Integer> emailNos, int employeeNo);
 
-	int restoreFromTrash(List<Integer> emailNos);
-
+	int restoreFromTrash(List<Integer> emailNos, int employeeNo);
 	List<Email> getImportantEmails(int employeeNo);
 
 	List<Email> getSelfEmails(int employeeNo);
@@ -58,5 +57,13 @@ public interface EmailService {
 	EmailAtt getAttachment(int attachmentId);
 
 	List<EmailAtt> getEmailAttachments(int emailNo);
+
+	Integer getInboxUnreadCount(int employeeNo);
+
+	Integer getSelfUnreadCount(int employeeNo);
+
+	Integer getImportantUnreadCount(int employeeNo);
+
+	Integer getTrashCount(int employeeNo);
 
 }

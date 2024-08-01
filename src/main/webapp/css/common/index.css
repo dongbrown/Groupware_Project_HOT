@@ -1,0 +1,453 @@
+@charset "EUC-KR";
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+section{
+    font-family: 'Pretendard-Regular';
+}
+.table{
+	 text-align:center;
+}
+/* 회전 카드 css */
+.card__giratorio {
+    background-color: transparent;
+    width: 100%;
+    height: 40%;
+    perspective: 1000px;
+}
+
+.card__giratorio-conteudo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.card__giratorio-conteudo.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.card__giratorio-conteudo--frente,
+.card__giratorio-conteudo--traseira {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    /* Safari */
+    backface-visibility: hidden;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card__giratorio-conteudo--frente {
+    background: #4E73DF;
+}
+
+.card__giratorio-conteudo--traseira {
+    background:#4E73DF;
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.card__giratorio-conteudo--traseira h1,
+.card__giratorio-conteudo--traseira p {
+    margin: 0;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.card__giratorio-conteudo--traseira h1 {
+    font-size: 1.7rem;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    filter: drop-shadow(2px 2px 5px black);
+    opacity: .7;
+}
+
+/* 나머지 화면 css */
+/* index css ------------------------------------------------------------------------------ */
+#content{
+	background-image: url("https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-size: 100%;
+}
+section{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:5px;
+
+}
+
+#main-wrap{
+    left: 110px;
+    width: 98%;
+    height: 88vh;
+    background-color: rgba(255, 255, 255, 0.511);
+    backdrop-filter: blur(10px);
+    display: flex;
+    border-radius: 20px;
+
+}
+
+/* 첫번째 줄 css */
+#first-wrap{
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    padding: 10px;
+}
+/* 호버시 크키 커지는 css */
+#first-wrap>div{
+    transition: all 0.3s
+}
+#first-wrap>div:hover{
+    transform: scale(1.05);
+}
+/* 1-1 */
+#member-card{
+    position: relative;
+    width: 100%;
+    height: 40%;
+    border-radius: 15px;
+    background-color: rgb(0, 57, 100);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+/* 프로필 사진 */
+#member-card-profile{
+    background-size: 100% 100%;
+    border-radius: 1000px;
+    width: 60%;
+    height:40%;
+}
+
+/* 프로필 체인지 버튼 */
+.changeBtn{
+    position: absolute;
+   top:15px;
+   right: 15px;
+   cursor: pointer;
+}
+.changeBtn:hover{
+    animation: rotate 4s linear infinite;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg); /* 초기 상태 */
+    }
+    to {
+        transform: rotate(360deg); /* 최종 상태 */
+    }
+}
+
+
+/* 프로필 하단 버튼 박스 */
+#member-card-mail{
+ display: flex;
+ width: 50%;
+ justify-content: center;
+ align-items: center;
+ justify-content: space-between;
+ margin-top: 30px;
+}
+#member-card-mail>div{
+opacity: 0.5;
+}
+#member-card-mail>div:hover{
+opacity: 1;
+}
+
+/* 1-2 */
+#approval-card{
+    margin-top:10px ;
+    width: 100%;
+    height: 15%;
+    border-radius: 15px;
+    background-color: white;
+}
+/* 1-3 */
+#search-card{
+    margin-top:10px ;
+    width: 100%;
+    height: 15%;
+    border-radius: 15px;
+    border: 3px solid rgb(0, 57, 100);
+}
+/* 1-4 */
+#mail-card{
+    margin-top:10px ;
+    width: 100%;
+    height: 27%;
+    border-radius: 15px;
+    background-color: white;
+}
+
+/* 두번째 줄 css */
+#second-wrap{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+/* 호버시 크키 커지는 css */
+#second-wrap>div{
+    transition: all 0.3s
+}
+#second-wrap>div:hover{
+    transform: scale(1.03);
+}
+
+/* 2-1 */
+#board-card{
+    width: 100%;
+    height: 35%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 2-2 */
+#project-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 40%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* 2-2-* */
+#project-card>div{
+    margin: 10px;
+    width: 48%;
+    height: 90%;
+    border: 1px solid red;
+    transition: all 0.6s;
+    overflow:hidden;
+}
+
+#project-card>div:hover{
+   /*  transform: scale(1.07); */
+    width: 350%;
+}
+
+#agenda-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 25%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+
+
+
+/* 세번째 줄 css */
+#third-wrap{
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+/* 호버시 크키 커지는 css */
+#third-wrap>div{
+    transition: all 0.3s
+}
+#third-wrap>div:hover{
+    transform: scale(1.03);
+}
+
+/* 3-1 */
+#calender-card{
+    width: 100%;
+    height: 30%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 3-2 */
+#today-work-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 15%;
+    border-radius: 15px;
+    background-color: #4E73DF;
+    backdrop-filter: blur(10px);
+}
+
+/* 3-3 */
+#banner-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 25%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 3-4 */
+#menu-card{
+    margin-top: 10px;
+    width: 100%;
+    height: 30%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.387);
+    backdrop-filter: blur(10px);
+}
+
+/* 켈린더 css */
+#calender-card{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+  #calendar {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+#calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+#calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    flex-grow: 1;
+}
+.calendar-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.calendar-cell:hover {
+    background-color: #f0f0f0;
+}
+.calendar-cell.selected {
+    background-color: #007bff;
+    border-radius:50px;
+    color: white;
+}
+.calendar-cell.other-month {
+    color: #ccc;
+}
+#weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 5px;
+}
+.weekday {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.month-nav {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #007bff;
+    padding: 5px;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+.month-nav:hover {
+    background-color: #f0f0f0;
+}
+#current-month {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+}
+#banner-card{
+	overflow:hidden;
+}
+#carouselExampleFade{
+	width:100%;
+	height:100%;
+}
+#board-card{
+	overflow:hidden;
+}
+
+#todolist{
+	height:70px;
+	overflow:auto;
+	font-weight: bold;
+    font-size: 15px;
+    width:95%;
+    margin:0 auto;
+
+   &::-webkit-scrollbar {
+        width: 8px;
+   }
+
+   &::-webkit-scrollbar-track {
+     background: #f1f1f1;
+     border-radius: 10px;
+   }
+
+   &::-webkit-scrollbar-thumb {
+     background: #888;
+     border-radius: 10px;
+     transition: all 0.3s ease;
+   }
+
+   &::-webkit-scrollbar-thumb:hover {
+     background: #555;
+   }
+}
+#todolist label{
+	color:white;
+}
+#menu-card{
+	overflow:auto;
+	 width: 100%;  /* 부모 div 너비를 100%로 설정 */
+	 height: 38vh;  /* 부모 div 높이를 화면 높이로 설정 */
+	 box-sizing: border-box; /* 테두리와 패딩을 크기 계산에 포함 */
+	 padding: 10px;  /* 여백 추가 */
+}
+#menu-table{
+	font-size:13px;
+	 height: auto;  /* 테이블 높이를 자동으로 설정 */
+            border-collapse: collapse;  /* 테두리 중복 제거 */
+            table-layout: fixed;  /* 셀 너비를 고정 */
+}
+#agenda-card{
+	overflow:hidden;
+}

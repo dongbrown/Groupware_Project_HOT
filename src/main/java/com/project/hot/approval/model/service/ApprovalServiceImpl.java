@@ -22,6 +22,7 @@ import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.OvertimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.RequestBusinessTrip;
+import com.project.hot.approval.model.dto.RequestExpenditure;
 import com.project.hot.approval.model.dto.ResponseApprovalsCount;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.common.exception.ApprovalException;
@@ -167,7 +168,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return dao.insertOvertime(session, of);
 	}
 
-
+	@Transactional
 	@Override
 	public int insertBusinessTrip(RequestBusinessTrip rbt) {
 		int result=dao.insertBusinessTrip(session, rbt);
@@ -178,7 +179,27 @@ public class ApprovalServiceImpl implements ApprovalService {
 				return result;
 			}
 		}else {
-			return 0;
+			throw new ApprovalException("결재문서 insert 실패");
+		}
+	}
+
+	@Transactional
+	@Override
+	public int insertExpenditure(RequestExpenditure re) {
+		int result=dao.insertExpenditureForm(session, re);
+		if(result>0) {
+			if(re.getItems().stream().anyMatch(e->e.isEmpty()==false)) {
+				result=dao.insertExpenditureItem(session, re);
+				if(result>0) {
+					return result;
+				}else {
+					throw new ApprovalException("결재문서 insert 실패");
+				}
+			}else {
+				return result;
+			}
+		}else {
+			throw new ApprovalException("결재문서 insert 실패");
 		}
 	}
 

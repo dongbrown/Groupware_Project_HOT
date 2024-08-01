@@ -10,6 +10,21 @@ var EmailView = {
                 EmailView.loadEmailContent(emailNo);
             }
         });
+
+        $(document).on('click', '.btn-reply', function() {
+            var emailNo = $('#emailNo').val();
+            EmailView.replyEmail(emailNo);
+        });
+
+        $(document).on('click', '.btn-forward', function() {
+            var emailNo = $('#emailNo').val();
+            EmailView.forwardEmail(emailNo);
+        });
+
+        $(document).on('click', '.btn-delete', function() {
+            var emailNo = $('#emailNo').val();
+            EmailView.deleteEmail(emailNo);
+        });
     },
 
     loadEmailContent: function(emailNo) {
@@ -18,6 +33,7 @@ var EmailView = {
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
+                EmailCommon.loadEmailAttachments(emailNo);
             },
             error: function() {
                 alert('이메일 내용을 불러오는데 실패했습니다.');
@@ -26,13 +42,11 @@ var EmailView = {
     },
 
     replyEmail: function(emailNo) {
-        // 답장 기능 구현
-        console.log('Reply to email:', emailNo);
+        EmailCommon.replyEmail(emailNo);
     },
 
     forwardEmail: function(emailNo) {
-        // 전달 기능 구현
-        console.log('Forward email:', emailNo);
+        EmailCommon.forwardEmail(emailNo);
     },
 
     deleteEmail: function(emailNo) {

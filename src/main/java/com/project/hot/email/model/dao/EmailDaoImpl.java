@@ -124,12 +124,20 @@ public class EmailDaoImpl implements EmailDao {
         return session.update("email.markTrashAsRead", emailNos);
     }
 
-    public int deletePermanently(List<Integer> emailNos, SqlSession session) {
-        return session.delete("email.deletePermanently", emailNos);
+    @Override
+    public int deletePermanently(List<Integer> emailNos, int employeeNo, SqlSession session) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        return session.delete("email.deletePermanently", params);
     }
 
-    public int restoreFromTrash(List<Integer> emailNos, SqlSession session) {
-        return session.update("email.restoreFromTrash", emailNos);
+    @Override
+    public int restoreFromTrash(List<Integer> emailNos, int employeeNo, SqlSession session) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        return session.update("email.restoreFromTrash", params);
     }
 
 	@Override
@@ -142,9 +150,36 @@ public class EmailDaoImpl implements EmailDao {
 		return session.selectList("email.selectSelfEmails", employeeNo);
 	}
 
+    @Override
+    public List<EmailAtt> getEmailAttachments(int emailNo, SqlSession session) {
+        List<EmailAtt> attachments = session.selectList("email.selectEmailAttachments", emailNo);
+        log.info("DAO - Attachments for email {}: {}", emailNo, attachments);
+        return attachments;
+    }
+
 	@Override
-	public List<EmailAtt> getEmailAttachments(int emailNo, SqlSession session) {
-		return session.selectList("email.selectEmailAttachments", emailNo);
+	public void deleteAttachments(Integer emailNo, SqlSession session) {
+	    session.delete("email.deleteAttachments", emailNo);
+	}
+
+	@Override
+	public Integer getInboxUnreadCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getInboxUnreadCount", employeeNo);
+	}
+
+	@Override
+	public Integer getSelfUnreadCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getSelfUnreadCount", employeeNo);
+	}
+
+	@Override
+	public Integer getImportantUnreadCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getImportantUnreadCount", employeeNo);
+	}
+
+	@Override
+	public Integer getTrashCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getTrashCount", employeeNo);
 	}
 
 }

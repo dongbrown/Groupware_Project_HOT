@@ -18,6 +18,8 @@ public interface WorkDao {
 	List<Work> selectWorkAll(SqlSession session,Map<String,Integer> param);
 	int selectworkAllCountByEmpNo(SqlSession session,Map<String,Integer> param);
 	int selectworkAllCount(SqlSession session);
+	List<Work> selectWorkAllByProjectNo(SqlSession session,Map<String,Integer> param);
+	int selectWorkAllCountByProjectNo(SqlSession session,Map<String,Integer> param);
 	Work selectWorkByWorkNo(SqlSession session,int workNo);
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
 	int selectProjectAllCount(SqlSession session,Map<String,Integer> param);

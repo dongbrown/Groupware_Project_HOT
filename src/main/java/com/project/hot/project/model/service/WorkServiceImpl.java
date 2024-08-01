@@ -32,12 +32,18 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public Map<String,Object> selectWorkAll(Map<String, Integer> param) {
 		Map<String,Object> result=new HashMap<>();
-		if(param.get("employeeNo")==null) {
-			result.put("works", dao.selectWorkAll(session,param));
-			result.put("totalPage",Math.ceil((double)dao.selectworkAllCount(session)/param.get("numPerpage")));
-		}else {
+		System.out.println("워크 조회하자 : "+param.get("employeeNo")+"  "+param.get("projectNo"));
+		if(param.get("projectNo")==0) {
 			result.put("works", dao.selectWorkAllByEmpNo(session,param));
 			result.put("totalPage",Math.ceil((double)dao.selectworkAllCountByEmpNo(session,param)/param.get("numPerpage")));
+
+		}else if(param.get("employeeNo")==0){
+			result.put("works", dao.selectWorkAllByProjectNo(session,param));
+			result.put("totalPage",Math.ceil((double)dao.selectWorkAllCountByProjectNo(session,param)/param.get("numPerpage")));
+
+		}else{
+			result.put("works", dao.selectWorkAll(session,param));
+			result.put("totalPage",Math.ceil((double)dao.selectworkAllCount(session)/param.get("numPerpage")));
 		}
 		return result;
 	}

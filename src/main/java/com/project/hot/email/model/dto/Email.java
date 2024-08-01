@@ -25,6 +25,10 @@ public class Email {
 	private String emailIsDelete;
     private List<EmailReceiver> receivers;
 
-    private boolean hasAttachment;
+    private Boolean hasAttachment;
+
+    public boolean hasAttachment() {
+        return hasAttachment != null && hasAttachment;
+    }
 
 }
