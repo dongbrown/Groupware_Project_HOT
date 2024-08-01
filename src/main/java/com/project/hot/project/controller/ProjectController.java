@@ -103,7 +103,7 @@ public class ProjectController {
 //		Project result = service.selectProjectByNo(projectNo);
 //		return result;
 //	}
-
+	//프로젝트 수정 - 프로젝트 기존정보 조회
 	@GetMapping("/selectProjectByNo.do")
 	public String selectProjectByNo(int projectNo,int empNo, Model m) {
 		Project project = service.selectProjectByNo(projectNo);
@@ -113,6 +113,17 @@ public class ProjectController {
 		m.addAttribute("emps",emps);
 		m.addAttribute("depts",depts);
 		return "project/projectUpdateDetail";
+	}
+	//프로젝트 전체 조회 - 프로젝트 상세조회
+	@GetMapping("/selectProjectListByNo.do")
+	public String selectProjectListByNo(int projectNo,int empNo,Model m) {
+		Project project = service.selectProjectByNo(projectNo);
+		List<ProjectEmployee> emps = service.selectEmployeetByProjectNo(Map.of("projectNo",projectNo,"empNo",empNo));
+		List<Department> depts = service.selectDeptAll();
+		m.addAttribute("project",project);
+		m.addAttribute("emps",emps);
+		m.addAttribute("depts",depts);
+		return "project/projectListInfo";
 	}
 
 	@ResponseBody

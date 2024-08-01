@@ -70,4 +70,15 @@ public class WorkDaoImpl implements WorkDao {
 		return session.selectOne("work.selectProjectAllCount",param.get("employeeNo"));
 	}
 
+	@Override
+	public List<Work> selectWorkAllByProjectNo(SqlSession session, Map<String, Integer> param) {
+		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
+		return session.selectList("work.selectWorkAllByProjectNo",param.get("projectNo"),rb);
+	}
+
+	@Override
+	public int selectWorkAllCountByProjectNo(SqlSession session, Map<String, Integer> param) {
+		return session.selectOne("work.selectWorkAllCountByProjectNo",param.get("projectNo"));
+	}
+
 }

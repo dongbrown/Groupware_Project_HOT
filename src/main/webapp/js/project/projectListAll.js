@@ -329,5 +329,5 @@ function makeProjectList2(projects) {
 //프로젝트 전체 조회에서 프로젝트 클릭시 모달에 해당 프로젝트 정보 표시
 	$(document).on('click', '#projectListInfo', function(e) {
 		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
-		location.assign(path+"projectListInfo.do"); 
+		 location.assign("/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+empNo);
 	})
