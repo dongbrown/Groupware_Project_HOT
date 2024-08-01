@@ -143,14 +143,47 @@ $('.changeBtn').click(e=>{
 				$wrapTr=$('<tr>');
 				$comuNoTh=$('<th>',{scope:'row'}).text(e.communityNo);
 				$comuTd=$('<td>').text(e.communityTitle);
-				$infoTd=$('<td>').text(e.communityIntroduce);
-				$wrapTr.append($comuNoTh).append($comuTd).append($infoTd);
+				$wrapTr.append($comuNoTh).append($comuTd);
 				$wrapTr.appendTo($('#comuList'));
 			});
 
 		})
 		.catch(error => {
-					console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
 		});
 
+//전자 결재 대기,진행,예정,완료 카운트 출력
+		fetch(path+'/api/approval/getApprovalsCountAndList?no='+no)
+		.then(response=>response.json())
+		.then(data=>{
+			console.log(data);
+			//결재 카운트들 태그에 값 넣기
+			insertCountText(data.rac);
+		})
+		.catch(error => {
+			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+		});
+function insertCountText(rac){
+	$('.approvalCount').eq(0).text(rac.waitCount);
+	$('.approvalCount').eq(1).text(rac.processCount);
+	$('.approvalCount').eq(2).text(rac.pendingCount);
+	$('.approvalCount').eq(3).text(rac.completeCount);
+}
 
+//메일 자료 들고오기
+fetch(path+'/index/inbox.do')
+		.then(response=>response.json())
+		.then(data=>{
+			data.forEach(e=>{
+				$wrapTr=$('<tr>');
+				$mailNoTh=$('<th>',{scope:'row'}).text(e.emailNo);
+				$senderTd=$('<td>').text(e.sender.employeeName);
+				$titleTd=$('<td>').text(e.emailTitle);
+				$wrapTr.append($mailNoTh).append($senderTd).append($titleTd);
+				$wrapTr.appendTo($('#mainMailList'));
+			});
+
+		})
+		.catch(error => {
+			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+		});

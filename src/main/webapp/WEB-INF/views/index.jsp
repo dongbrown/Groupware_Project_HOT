@@ -22,48 +22,93 @@
                         <h4 style="margin-top: 30px; font-weight: bolder; color:white;"><c:out value="${loginEmployee.employeeName}" />  </h3>
                         <a style="color:white;"><c:out value="${loginEmployee.departmentCode.departmentTitle}" /></a>
                         <div id="member-card-mail">
-                            <div><a href=""><img src="https://i.imgur.com/LIHIxyI.png" width="40px" style="margin-bottom: 3px;"></a></div>
+                            <div><a href="${path }/employee/profile"><img src="https://i.imgur.com/LIHIxyI.png" width="40px" style="margin-bottom: 3px;"></a></div>
                             <div><a href=""><img src="https://i.imgur.com/JjYn69Q.png" width="40px"></a></div>
                         </div>
                         </div>
                         <div class="card__giratorio-conteudo--traseira">
                             <div class="changeBtn"><img src="https://i.imgur.com/tTdzHN7.png" width="25px"></div>
-                            <button class="btn btn-primary btn-go-work" onclick="goWork()">출근</button>
-                            <button class="btn btn-warning btn-leave-work" onclick="leaveWork()">퇴근</button>
+                            <div style="display:flex;">
+                            	<button class="btn btn-primary btn-go-work" onclick="goWork()">출근</button>
+                            	<button class="btn btn-warning btn-leave-work" onclick="leaveWork()">퇴근</button>
+                            </div>
                         </div>
                     </div>
                     </div>
 
-                <div id="approval-card">전자결재</div>
-                <div id="search-card">직원 조회</div>
-                <div id="mail-card">받은메일</div>
-             </div>
-             <!-- 두번째 줄 wrap (게시판, 프로젝트/작업현황, 회의안건) -->
-             <div id="second-wrap">
-                <div id="board-card">
-
-                </div>
-                <div id="project-card">
-                    <div>프로젝트 현황</div>
-                    <div>작업 현황</div>
-                </div>
-            <div id="agenda-card">
-				<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">신규 커뮤니티 목록</p>
+                <div id="mail-card">
+                <p style="font-weight:bolder; font-size:17px; margin:10px; text-align:center; color:#4E73DF;">신규 커뮤니티 목록</p>
                 	<div>
 						<table class="table table-hover table-striped" >
 						  <thead>
 						    <tr>
-						      <th scope="col">#</th>
+						      <th scope="col">no</th>
 						      <th scope="col">커뮤니티</th>
-						      <th scope="col">소개</th>
 						    </tr>
 						  </thead>
 						  <tbody id="comuList" class="table-group-divider">
 						  </tbody>
 						</table>
 					</div>
-			</div>
+				</div>
+             </div>
+             <!-- 두번째 줄 wrap (게시판, 프로젝트/작업현황, 회의안건) -->
+             <div id="second-wrap">
+                <div id="board-card">
+					<div id="approvalIcon">
+						<div>
+							<img alt="" src="https://i.imgur.com/fAPILB4.png">
+							<div class="approvalCount"></div>
+						</div>
+						<div>
+							<img alt="" src="https://i.imgur.com/vzoUDYF.png">
+							<div class="approvalCount"></div>
+						</div>
+						<div>
+							<img alt="" src="https://i.imgur.com/MsGYwVk.png">
+							<div class="approvalCount"></div>
+						</div>
+						<div>
+							<img alt="" src="https://i.imgur.com/qnqBhzw.png">
+							<div class="approvalCount"></div>
+						</div>
+					</div>
+					<div id="mainAprrovalTable">
+						<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 결재 문서</p>
+	                	<div>
+							<table class="table table-hover table-striped" >
+							  <thead>
+							    <tr>
+							      <th scope="col">결재번호</th>
+							      <th scope="col">종류</th>
+							      <th scope="col">제목</th>
+							    </tr>
+							  </thead>
+							  <tbody class="table-group-divider">
+							  </tbody>
+							</table>
+						</div>
+					</div>
+                </div>
+                <div id="project-card">
+                    <div>프로젝트 현황</div>
+                    <div>작업 현황</div>
+                </div>
+            <div id="agenda-card">
 
+            <p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 메일함</p>
+					<table class="table table-hover">
+					  <thead>
+					    <tr>
+					      <th scope="col">no</th>
+					      <th scope="col">발신자</th>
+					      <th scope="col">제목</th>
+					    </tr>
+					  </thead>
+					  <tbody id="mainMailList">
+					  </tbody>
+					</table>
+			</div>
              </div>
             <!-- 세번째 줄 wrap (켈린더, 오늘의 일정, 홍보배너, 회사점심식단표) -->
              <div id="third-wrap">

@@ -103,11 +103,11 @@
 					const $projectMemberWrab1=$('<div>',{id:'memberWrab'});
 					//프로젝트 참여 요청중 버튼
 					if(p.projectRequestStatus=='요청' && p.projectRequestEmployee==empNo){
-						$projectAtag=$('<a>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
+						$projectAtag=$('<div>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 						$joinBtn=$('<a>',{role: 'button', id: 'joinBtn', class: 'btn btn-secondary disabled', text: '참여 요청중'});
 					//프로젝트 참여 요청중 - 거절됨 버튼
 					}else if(p.projectRequestStatus=='거절' && p.projectRequestEmployee==empNo){
-						$projectAtag=$('<a>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
+						$projectAtag=$('<div>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 						$joinBtn=$('<button>',{type: 'button', id: 'refusedBtn', class: 'btn btn-danger', text: '참여 거절됨','data-bs-toggle': 'modal', 'data-bs-target': '#refusedModal','data-id':p.projectRefuseContent});
 					//프로젝트 참여 요청 버튼
 					}else{
@@ -137,8 +137,8 @@
 					};
 
 					$projectMemberWrab.append($projectMemberWrab1);
-					$projectDiv2.append($projectPtag).append($projectH3tag).append($projectMemberWrab).append($joinBtn).append($projectInMember);
-					$projectAtag.append($projectDiv).append($projectDiv2).appendTo($('.conteudo__cartoes-grid'));
+					$projectDiv2.append($projectPtag).append($projectH3tag).append($projectMemberWrab).append($projectInMember);
+					$projectAtag.append($projectDiv).append($projectDiv2).append($joinBtn).appendTo($('.conteudo__cartoes-grid'));
 				});
 		};
 //응답할 프로젝트 목록 만들기
