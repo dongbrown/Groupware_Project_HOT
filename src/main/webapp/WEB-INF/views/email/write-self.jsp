@@ -21,7 +21,7 @@
         <div class="form-group">
             <label for="attachment">첨부 파일:</label>
             <div id="dropZone" class="drop-zone">
-                파일을 여기에 드래그하거나 클릭하여 선택하세요
+                파일을 여기에 드래그하세요
                 <input type="file" id="fileInput" multiple style="display: none;">
             </div>
             <div id="fileList" class="file-list"></div>
@@ -35,24 +35,19 @@
 
 <script>
 $(document).ready(function() {
-    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initSummernote === 'function') {
-        EmailCommon.initSummernote();
-    }
-
-    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initFileAttachment === 'function') {
-        EmailCommon.initFileAttachment();
-    }
-
-    $('#emailForm').submit(function(e) {
-        e.preventDefault();
-        var receivers = $('#receivers').val().split('(')[0]; // 이메일 주소만 추출
-        EmailCommon.saveEmail(false, receivers);
-    });
-
-    $('#cancel').click(function() {
-        if (confirm('작성 중인 내용이 저장되지 않습니다. 정말 취소하시겠습니까?')) {
-            EmailCommon.loadMailbox('inbox');
+    if (typeof EmailCommon !== 'undefined') {
+        if (typeof EmailCommon.initSummernote === 'function' && !EmailCommon.summernoteInitialized) {
+            EmailCommon.initSummernote();
+            EmailCommon.summernoteInitialized = true;
         }
-    });
+        if (typeof EmailCommon.initReceiverAutocomplete === 'function' && !EmailCommon.autocompleteInitialized) {
+            EmailCommon.initReceiverAutocomplete();
+            EmailCommon.autocompleteInitialized = true;
+        }
+        if (typeof EmailCommon.initFileAttachment === 'function' && !EmailCommon.fileAttachmentInitialized) {
+            EmailCommon.initFileAttachment();
+            EmailCommon.fileAttachmentInitialized = true;
+        }
+    }
 });
 </script>

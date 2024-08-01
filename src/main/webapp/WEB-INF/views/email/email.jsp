@@ -37,13 +37,27 @@
 				        <button class="btn btn-primary flex-grow-1 me-2" id="writeBtn">메일 쓰기</button>
 				        <button class="btn btn-primary flex-grow-1" id="write-selfBtn">내게 쓰기</button>
 				    </div>
-				    <ul class="list-group">
-				        <li class="list-group-item active" data-mailbox="inbox"><i class="fas fa-inbox me-2"></i>받은메일함 <span class="badge bg-primary rounded-pill">999+</span></li>
-				        <li class="list-group-item" data-mailbox="sent"><i class="fas fa-paper-plane me-2"></i>보낸메일함</li>
-				        <li class="list-group-item" data-mailbox="self"><i class="fas fa-user me-2"></i>내게쓴메일함 <span class="badge bg-secondary rounded-pill">20</span></li>
-				        <li class="list-group-item" data-mailbox="important"><i class="fas fa-star me-2"></i>중요메일함</li>
-				        <li class="list-group-item" data-mailbox="trash"><i class="fas fa-trash me-2"></i>휴지통 <span class="badge bg-danger rounded-pill">30</span></li>
-				    </ul>
+					<ul class="list-group">
+					    <li class="list-group-item" data-mailbox="inbox">
+					        <i class="fas fa-inbox me-2"></i>받은메일함
+					        <span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
+					    </li>
+					    <li class="list-group-item" data-mailbox="sent">
+					        <i class="fas fa-paper-plane me-2"></i>보낸메일함
+					    </li>
+					    <li class="list-group-item" data-mailbox="self">
+					        <i class="fas fa-user me-2"></i>내게쓴메일함
+					        <span class="badge bg-secondary rounded-pill" id="selfUnreadCount">${selfUnreadCount}</span>
+					    </li>
+					    <li class="list-group-item" data-mailbox="important">
+					        <i class="fas fa-star me-2"></i>중요메일함
+					        <span class="badge bg-warning rounded-pill" id="importantUnreadCount">${importantUnreadCount}</span>
+					    </li>
+					    <li class="list-group-item" data-mailbox="trash">
+					        <i class="fas fa-trash me-2"></i>휴지통
+					        <span class="badge bg-danger rounded-pill" id="trashCount">${trashCount}</span>
+					    </li>
+					</ul>
 				</div>
                 </div>
                 <div class="col-md-10" id="mailContent">
@@ -66,16 +80,50 @@
 <script type="text/javascript" src="${path}/js/email/email-common.js"></script>
 
 <script>
-// contextPath를 전역 변수로 설정
 var contextPath = '${pageContext.request.contextPath}/email';
+let path = '${pageContext.request.contextPath}';
+var EmailApp = {
+    init: function() {
+        if (this.initialized) return;
+        this.initialized = true;
+
+        EmailCommon.init(contextPath);
+        this.bindEvents();
+        this.loadInitialMailbox();
+    },
+    bindEvents: function() {
+        $(document).on('click', '.list-group-item', this.handleMailboxClick.bind(this));
+        $(document).on('submit', '#emailForm', this.handleEmailSubmit);
+        $(document).on('click', '#cancel', this.handleCancel);
+    },
+    loadInitialMailbox: function() {
+        var currentMailbox = new URLSearchParams(window.location.search).get('mailbox') || 'inbox';
+        EmailCommon.loadMailbox(currentMailbox);
+        $('.list-group-item[data-mailbox="' + currentMailbox + '"]').addClass('active');
+    },
+    handleMailboxClick: function(e) {
+        e.preventDefault();
+        var $target = $(e.currentTarget);
+        var mailbox = $target.data('mailbox');
+        EmailCommon.loadMailbox(mailbox);
+        history.pushState(null, '', contextPath + '?mailbox=' + mailbox);
+        $('.list-group-item').removeClass('active');
+        $target.addClass('active');
+    },
+    handleEmailSubmit: function(e) {
+        e.preventDefault();
+        var receivers = $('#receivers').val().split('(')[0]; // 이메일 주소만 추출
+        EmailCommon.saveEmail(false, receivers);
+    },
+    handleCancel: function() {
+        if (confirm('작성 중인 내용이 저장되지 않습니다. 정말 취소하시겠습니까?')) {
+            EmailCommon.loadMailbox('inbox');
+        }
+    }
+};
 
 $(document).ready(function() {
-    // EmailCommon 초기화
-    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.init === 'function') {
-        EmailCommon.init(contextPath);
-        // 초기 inbox 로드
-        EmailCommon.loadMailbox('inbox');
-    }
+    EmailApp.init();
 });
 </script>
 </body>

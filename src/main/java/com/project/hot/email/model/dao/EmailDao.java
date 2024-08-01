@@ -28,9 +28,13 @@ public interface EmailDao {
     EmailAtt getAttachmentById(int attachmentId, SqlSession session);
     int getUnreadCount(int employeeNo, SqlSession session);
 	int markTrashAsRead(List<Integer> emailNos, SqlSession session);
-	int deletePermanently(List<Integer> emailNos, SqlSession session);
-	int restoreFromTrash(List<Integer> emailNos, SqlSession session);
-	List<Email> getImportantEmails(int employeeNo, SqlSession session);
+    int deletePermanently(List<Integer> emailNos, int employeeNo, SqlSession session);
+	int restoreFromTrash(List<Integer> emailNos, int employeeNo, SqlSession session);	List<Email> getImportantEmails(int employeeNo, SqlSession session);
 	List<Email> getSelfEmails(int employeeNo, SqlSession session);
 	List<EmailAtt> getEmailAttachments(int emailNo, SqlSession sqlSession);
+	void deleteAttachments(Integer emailNo, SqlSession sqlSession);
+	Integer getInboxUnreadCount(int employeeNo, SqlSession sqlSession);
+	Integer getSelfUnreadCount(int employeeNo, SqlSession sqlSession);
+	Integer getImportantUnreadCount(int employeeNo, SqlSession sqlSession);
+	Integer getTrashCount(int employeeNo, SqlSession sqlSession);
 }

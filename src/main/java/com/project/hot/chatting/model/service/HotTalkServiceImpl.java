@@ -170,7 +170,6 @@ public class HotTalkServiceImpl implements HotTalkService {
 	}
 	@Override
 	public void updateIsReadByNo(Map<String, Integer> param) {
-		System.out.println(param);
 		int result = dao.updateIsReadByNo(session, param);
 		if(result > 0) {
 			sseService.sendInitEvent(param.get("empNo"));

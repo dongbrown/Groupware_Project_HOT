@@ -46,6 +46,8 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		employees.put(msg.getSender(), session);
 		List<ResponseLoginEmployeeDTO> list = service.getHotTalkMemberList(msg.getSender());
 		list.forEach(l->l.setType("사원"));
+		session.getAttributes().remove("privaterooms");
+		session.getAttributes().remove("grouprooms");
 		responseListDTO(list, session);
 	}
 
@@ -57,6 +59,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			rooms.add(l.getHotTalkNo());
 		});
 		session.getAttributes().put("privaterooms", rooms);
+		session.getAttributes().remove("grouprooms");
 		responseListDTO(list, session);
 	}
 
@@ -68,6 +71,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			rooms.add(l.getHotTalkNo());
 		});
 		session.getAttributes().put("grouprooms", rooms);
+		session.getAttributes().remove("privaterooms");
 		responseListDTO(list, session);
 	}
 	private void getHotTalkContents(WebSocketSession session, CommonMessageDTO msg) {
