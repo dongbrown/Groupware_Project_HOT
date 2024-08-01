@@ -1,37 +1,136 @@
-.formContainer {
-    max-width:320px;
-    box-shadow : 4px 8px 16px #d7d7d7;
-    margin:0 auto;
-    padding:20px;
-    border-radius:0px 0px 4px 4px;
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Pretendard-Regular';
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url("https://i.imgur.com/Tu6ObVO.jpeg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  width: 100%;
+  overflow: hidden;
+}
+.ring {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ring i {
+  position: absolute;
+  inset: 0;
+  border: 2px solid #a7a7a7;
+  transition: 0.5s;
+}
+.ring i:nth-child(1) {
+  border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+  animation: animate 6s linear infinite;
+}
+.ring i:nth-child(2) {
+  border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+  animation: animate 4s linear infinite;
+}
+.ring i:nth-child(3) {
+  border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+  animation: animate2 10s linear infinite;
+}
+.ring:hover i {
+  border: 2px solid var(--clr);
+  filter: drop-shadow(0 0 20px var(--clr));
+}
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
   }
-  input {
-    box-shadow:none !important;
-    outline:none;
+  100% {
+    transform: rotate(360deg);
   }
-  #btnHolder {
-    margin:0px -20px -20px -20px;
+}
+@keyframes animate2 {
+  0% {
+    transform: rotate(360deg);
   }
-  #btnHolder .btn {
-    border-radius:0px 0px 4px 4px !important;
-    height:60px;
+  100% {
+    transform: rotate(0deg);
   }
-  @media screen and (max-width:766px){
-    .centerOnMobile {
-      margin : 20vh auto
-    }
-  }
-  @media screen and (min-width:767px){
-    #mainBgn {
-      background : url('replace this with your image path') no-repeat;
-      background-size:cover;
-      background-position:center;
-      height:90vh;
-      width:100%;
-    }
-    #mainContainer {
-      box-shadow : 2px 4px 12px rgba(0,0,0,0.4);
-      height:90vh;
-      margin: 5vh 20px;
-    }
-  }
+}
+.login {
+  position: absolute;
+  width: 300px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.login h2 {
+  font-size: 2em;
+  color: #fff;
+}
+.login .inputBx {
+  position: relative;
+  width: 100%;
+}
+.login .inputBx input {
+  position: relative;
+  width: 100%;
+  padding: 12px 20px;
+  background: transparent;
+  border: 2px solid #fff;
+  border-radius: 40px;
+  color: #fff;
+  box-shadow: none;
+  outline: none;
+}
+.login .inputBx input[type="submit"] {
+  width: 100%;
+  background: #0078ff;
+  background: linear-gradient(45deg, #356eff, #00a696);
+  border: none;
+  cursor: pointer;
+}
+.login .inputBx input::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+.login .links {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.login .links a {
+  color: #fff;
+  text-decoration: none;
+}
+
+#loginBtn{
+    margin-top: 30px;
+    transition: all 0.4s
+}
+
+#loginBtn:hover{
+    border: 2px solid rgb(226, 226, 255);
+    box-shadow: rgb(226, 226, 255) 0px 0px 12px 1px inset, rgb(226, 226, 255) 0px 0px 12px 1px;
+}
+
+#exampleInputPassword{
+    margin-top: 15px;
+}
+
+#forgotBtn{
+    text-decoration: none;
+    text-underline-offset: unset;
+    color: white;
+    font-size: 20px;
+}

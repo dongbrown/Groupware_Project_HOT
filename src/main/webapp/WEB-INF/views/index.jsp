@@ -91,7 +91,31 @@
 					</div>
                 </div>
                 <div id="project-card">
-                    <div>프로젝트 현황</div>
+
+                    <div id="projectBox">
+                    <p style="font-weight:bolder; font-size:20px; margin:10px;color:#4E73DF;">프로젝트현황</p>
+					        <div class="donut-chart" data-percent="50">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#3498db" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					            </svg>
+					            <div class="percent">0%</div>
+					        </div>
+					        <div class="donut-chart" data-percent="30">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#2980b9" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					            </svg>
+					            <div class="percent">0%</div>
+					        </div>
+					        <div class="donut-chart" data-percent="70">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#1abc9c" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					            </svg>
+					            <div class="percent">0%</div>
+					        </div>
+                    </div>
                     <div>작업 현황</div>
                 </div>
             <div id="agenda-card">

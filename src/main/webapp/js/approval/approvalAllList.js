@@ -12,12 +12,7 @@ $("#selectType").on("change", e=>{
 });
 
 function getApprovalCountAndList(cPage){
-<<<<<<< HEAD
-	const no=$('#header-empNo').data('employeeNo');
-=======
 	const no=$('#header-empNo').data('employee-no');
-	//$('#header-empNo').data('employeeNo');
->>>>>>> dev
 
 	fetch(path+'/api/approval/getApprovalsCountAndList?no='+no)
 	.then(response=>response.json())
