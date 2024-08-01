@@ -66,34 +66,49 @@
 <script type="text/javascript" src="${path}/js/email/email-common.js"></script>
 
 <script>
-// contextPath를 전역 변수로 설정
 var contextPath = '${pageContext.request.contextPath}/email';
+var EmailApp = {
+    init: function() {
+        if (this.initialized) return;
+        this.initialized = true;
+
+        EmailCommon.init(contextPath);
+        this.bindEvents();
+        this.loadInitialMailbox();
+    },
+    bindEvents: function() {
+        $(document).on('click', '.list-group-item', this.handleMailboxClick.bind(this));
+        $(document).on('submit', '#emailForm', this.handleEmailSubmit);
+        $(document).on('click', '#cancel', this.handleCancel);
+    },
+    loadInitialMailbox: function() {
+        var currentMailbox = new URLSearchParams(window.location.search).get('mailbox') || 'inbox';
+        EmailCommon.loadMailbox(currentMailbox);
+        $('.list-group-item[data-mailbox="' + currentMailbox + '"]').addClass('active');
+    },
+    handleMailboxClick: function(e) {
+        e.preventDefault();
+        var $target = $(e.currentTarget);
+        var mailbox = $target.data('mailbox');
+        EmailCommon.loadMailbox(mailbox);
+        history.pushState(null, '', contextPath + '?mailbox=' + mailbox);
+        $('.list-group-item').removeClass('active');
+        $target.addClass('active');
+    },
+    handleEmailSubmit: function(e) {
+        e.preventDefault();
+        var receivers = $('#receivers').val().split('(')[0]; // 이메일 주소만 추출
+        EmailCommon.saveEmail(false, receivers);
+    },
+    handleCancel: function() {
+        if (confirm('작성 중인 내용이 저장되지 않습니다. 정말 취소하시겠습니까?')) {
+            EmailCommon.loadMailbox('inbox');
+        }
+    }
+};
 
 $(document).ready(function() {
-    // EmailCommon 초기화
-    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.init === 'function') {
-        EmailCommon.init(contextPath);
-
-        // URL에서 현재 메일함 정보 가져오기
-        var currentMailbox = new URLSearchParams(window.location.search).get('mailbox') || 'inbox';
-
-        // 해당 메일함 로드
-        EmailCommon.loadMailbox(currentMailbox);
-
-        // 사이드바 메뉴 항목 클릭 이벤트 처리
-        $('.list-group-item').on('click', function(e) {
-            e.preventDefault();
-            var mailbox = $(this).data('mailbox');
-            EmailCommon.loadMailbox(mailbox);
-
-            // URL 업데이트
-            history.pushState(null, '', contextPath + '?mailbox=' + mailbox);
-
-            // 활성 클래스 토글
-            $('.list-group-item').removeClass('active');
-            $(this).addClass('active');
-        });
-    }
+    EmailApp.init();
 });
 </script>
 </body>

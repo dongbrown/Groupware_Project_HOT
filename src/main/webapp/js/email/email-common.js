@@ -36,16 +36,24 @@ var EmailCommon = {
         });
 
         // 메일 쓰기 버튼 이벤트
-        $(document).off('click', '#writeBtn, #writeEmailBtn').on('click', '#writeBtn, #writeEmailBtn', function(e) {
-            e.preventDefault();
-            EmailCommon.showWriteForm();
-        });
+		$(document).off('click', '#writeBtn, #writeEmailBtn').on('click', '#writeBtn, #writeEmailBtn', function(e) {
+		      e.preventDefault();
+		      if (!$(this).data('clicked')) {
+		          $(this).data('clicked', true);
+		          EmailCommon.showWriteForm();
+		          setTimeout(() => $(this).data('clicked', false), 1000); // 1초 후 재클릭 가능
+		      }
+		});
 
         // 내게 쓰기 버튼 이벤트
-        $(document).off('click', '#write-selfBtn, #writeSelfEmailBtn').on('click', '#write-selfBtn, #writeSelfEmailBtn', function(e) {
-            e.preventDefault();
+    	$(document).off('click', '#write-selfBtn, #writeSelfEmailBtn').on('click', '#write-selfBtn, #writeSelfEmailBtn', function(e) {
+        e.preventDefault();
+        if (!$(this).data('clicked')) {
+            $(this).data('clicked', true);
             EmailCommon.showSelfWriteForm();
-        });
+            setTimeout(() => $(this).data('clicked', false), 1000); // 1초 후 재클릭 가능
+	        }
+	    });
 
         // 전체 선택 체크박스 이벤트
         $(document).off('change', '#select-all').on('change', '#select-all', function() {
@@ -424,7 +432,13 @@ var EmailCommon = {
     },
     // 이메일 저장 (전송 또는 임시저장)
     saveEmail: function(isDraft) {
+		if (this.isSaving) return; // 이미 저장 중이면 중복 실행 방지
+    	this.isSaving = true;
+
         var formData = new FormData($('#emailForm')[0]);
+
+		var receivers = this.getSelectedReceivers();
+		formData.set('receivers', receivers);
 
         if (!formData.get('receivers')) {
             formData.set('receivers', $('#receivers').val());
@@ -536,7 +550,7 @@ var EmailCommon = {
         }).get();
     },
 
-    // 직원 검색
+    // 사원 검색
     searchEmployees: function(keyword) {
         $.ajax({
             url: this.contextPath + '/search-employees',

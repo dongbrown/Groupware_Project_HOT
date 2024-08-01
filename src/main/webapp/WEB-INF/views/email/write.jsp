@@ -37,11 +37,19 @@
 
 <script>
 $(document).ready(function() {
-    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initSummernote === 'function') {
-        EmailCommon.initSummernote();
-    }
-    if (typeof EmailCommon !== 'undefined' && typeof EmailCommon.initReceiverAutocomplete === 'function') {
-        EmailCommon.initReceiverAutocomplete();
+    if (typeof EmailCommon !== 'undefined') {
+        if (typeof EmailCommon.initSummernote === 'function' && !EmailCommon.summernoteInitialized) {
+            EmailCommon.initSummernote();
+            EmailCommon.summernoteInitialized = true;
+        }
+        if (typeof EmailCommon.initReceiverAutocomplete === 'function' && !EmailCommon.autocompleteInitialized) {
+            EmailCommon.initReceiverAutocomplete();
+            EmailCommon.autocompleteInitialized = true;
+        }
+        if (typeof EmailCommon.initFileAttachment === 'function' && !EmailCommon.fileAttachmentInitialized) {
+            EmailCommon.initFileAttachment();
+            EmailCommon.fileAttachmentInitialized = true;
+        }
     }
 });
 </script>
