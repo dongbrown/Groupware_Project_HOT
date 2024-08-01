@@ -67,6 +67,7 @@
 
 <script>
 var contextPath = '${pageContext.request.contextPath}/email';
+let path = '${pageContext.request.contextPath}';
 var EmailApp = {
     init: function() {
         if (this.initialized) return;

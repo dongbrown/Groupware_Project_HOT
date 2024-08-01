@@ -1,6 +1,8 @@
 package com.project.hot.email.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -42,16 +45,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/email")
 public class EmailController {
 
-    @Autowired
-    private EmailService service;
+    private final EmailService service;
+    private final String fileUploadPath;
 
-    // 이메일 페이지를 표시
+    @Autowired
+    public EmailController(EmailService service, @Value("${image.upload.path}") String fileUploadPath) {
+        this.service = service;
+        this.fileUploadPath = fileUploadPath;
+    }
+
     @GetMapping("/")
     public String showEmail() {
         return "email/email";
     }
 
-    // 받은 편지함 목록을 표시
     @GetMapping("/inbox")
     public String inbox(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -61,7 +68,6 @@ public class EmailController {
         return "email/inbox";
     }
 
-    // 보낸메일함 목록을 표시
     @GetMapping("/sent")
     public String sent(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -71,7 +77,6 @@ public class EmailController {
         return "email/sent";
     }
 
-    // 중요메일함 목록을 표시
     @GetMapping("/important")
     public String important(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -81,7 +86,6 @@ public class EmailController {
         return "email/important";
     }
 
-    // 내게쓴 메일함 목록을 표시
     @GetMapping("/self")
     public String self(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -91,7 +95,6 @@ public class EmailController {
         return "email/self";
     }
 
-    // 휴지통 목록을 표시
     @GetMapping("/trash")
     public String trash(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -101,38 +104,46 @@ public class EmailController {
         return "email/trash";
     }
 
-    // 특정 이메일을 표시
     @GetMapping("/view/{emailNo}")
     public String viewEmail(@PathVariable int emailNo, Model model) {
         Email email = service.getEmailByNo(emailNo);
+        List<EmailAtt> attachments = new ArrayList<>();
+
+        if (email.hasAttachment()) {
+            attachments = service.getEmailAttachments(emailNo);
+        }
+
+        log.info("Email: {}", email);
+        log.info("Attachments: {}", attachments);
+
         model.addAttribute("email", email);
+        model.addAttribute("attachments", attachments);
+
         return "email/view";
     }
 
-    // 이메일 작성 폼을 표시
     @GetMapping("/write")
     public String showWriteForm(Model model) {
         model.addAttribute("email", new Email());
         return "email/write";
     }
 
-    //내게쓰기
     @GetMapping("/write-self")
     public String showWriteSelfForm(Model model) {
         model.addAttribute("email", new Email());
         return "email/write-self";
     }
 
-    // 이메일을 전송
     @PostMapping("/send")
     public ResponseEntity<?> saveEmail(
             @RequestParam("receivers") String receivers,
             @RequestParam("emailTitle") String emailTitle,
             @RequestParam("emailContent") String emailContent,
             @RequestParam(value = "attachments", required = false) MultipartFile[] attachments) {
-    	  if (receivers == null || receivers.trim().isEmpty()) {
-    		    return ResponseEntity.badRequest().body("수신자가 지정되지 않았습니다.");
-    		  }
+
+        if (receivers == null || receivers.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("수신자가 지정되지 않았습니다.");
+        }
 
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -144,6 +155,7 @@ public class EmailController {
                     .emailContent(emailContent)
                     .emailSendDate(new Date(System.currentTimeMillis()))
                     .emailIsDelete("N")
+                    .hasAttachment(attachments != null && attachments.length > 0)
                     .build();
 
             List<EmailReceiver> emailReceivers = new ArrayList<>();
@@ -151,13 +163,13 @@ public class EmailController {
 
             for (String receiverEmail : receiverEmails) {
                 String trimmedEmail = receiverEmail.trim();
-                String employeeId = trimmedEmail.split("@")[0]; // '@hot.com' 제거
+                String employeeId = trimmedEmail.split("@")[0];
 
                 if (!employeeId.isEmpty()) {
                     Employee receiver = service.findEmployeeByEmployeeId(employeeId);
                     if (receiver != null) {
                         EmailReceiver emailReceiver = EmailReceiver.builder().employee(receiver).build();
-                        if (!emailReceivers.contains(emailReceiver)) { // 중복 체크
+                        if (!emailReceivers.contains(emailReceiver)) {
                             emailReceivers.add(emailReceiver);
                         }
                     }
@@ -182,7 +194,6 @@ public class EmailController {
         }
     }
 
-    // 키워드를 이용해 직원 검색
     @GetMapping("/search-employees")
     public ResponseEntity<List<Map<String, String>>> searchEmployees(@RequestParam String keyword) {
         try {
@@ -207,7 +218,6 @@ public class EmailController {
         }
     }
 
-    // 이메일을 휴지통으로 이동
     @PostMapping("/move-to-trash")
     @ResponseBody
     public ResponseEntity<?> moveEmailsToTrash(@RequestBody List<Integer> emailNos) {
@@ -218,15 +228,13 @@ public class EmailController {
         try {
             int movedCount = service.moveEmailsToTrash(emailNos, employeeNo);
             String message = movedCount > 1 ?
-                movedCount + "개의 이메일이 휴지통으로 이동되었습니다." :
-                "이메일이 휴지통으로 이동되었습니다.";
+                    movedCount + "개의 이메일이 휴지통으로 이동되었습니다." :
+                    "이메일이 휴지통으로 이동되었습니다.";
             return ResponseEntity.ok(message);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("이메일 이동 실패: " + e.getMessage());
         }
     }
-
-
 
     @GetMapping("/search")
     public String searchEmails(@RequestParam String keyword, Model model) {
@@ -240,16 +248,14 @@ public class EmailController {
         return "email/inbox-list";
     }
 
-    // 답장 이메일 작성 폼을 표시
     @GetMapping("/reply/{emailNo}")
     public String showReplyForm(@PathVariable int emailNo, Model model) {
         Email originalEmail = service.getEmailByNo(emailNo);
         Email replyEmail = service.prepareReplyEmail(originalEmail);
         model.addAttribute("email", replyEmail);
-        return "email/write :: #emailForm";  // write.jsp의 #emailForm 부분만 반환
+        return "email/write :: #emailForm";
     }
 
-    // 이메일 전달 작성 폼을 표시
     @GetMapping("/forward/{emailNo}")
     public String showForwardForm(@PathVariable int emailNo, Model model) {
         Email originalEmail = service.getEmailByNo(emailNo);
@@ -258,7 +264,6 @@ public class EmailController {
         return "email/write";
     }
 
-    // 읽지 않은 이메일 수를 반환
     @GetMapping("/unread-count")
     @ResponseBody
     public ResponseEntity<Integer> getUnreadCount() {
@@ -270,7 +275,6 @@ public class EmailController {
         return ResponseEntity.ok(unreadCount);
     }
 
-    // 이메일을 읽음으로 표시
     @PostMapping("/mark-as-read/{emailNo}")
     @ResponseBody
     public ResponseEntity<?> markAsRead(@PathVariable int emailNo) {
@@ -286,7 +290,6 @@ public class EmailController {
         }
     }
 
-    // 이메일 중요 표시를 토글
     @PostMapping("/toggle-important/{emailNo}")
     @ResponseBody
     public ResponseEntity<?> toggleImportant(@PathVariable int emailNo) {
@@ -331,7 +334,7 @@ public class EmailController {
         } catch (Exception e) {
             log.error("이메일 영구 삭제 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("영구 삭제 중 오류가 발생했습니다: " + e.getMessage());
+                    .body("영구 삭제 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 
@@ -349,18 +352,23 @@ public class EmailController {
             return ResponseEntity.badRequest().body("복구 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
-
-
     @GetMapping("/download/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable int attachmentId) throws IOException {
         EmailAtt attachment = service.getAttachment(attachmentId);
-        Path path = Paths.get(attachment.getEmailAttRenamedFilename());
-        Resource resource = new UrlResource(path.toUri());
+        Path filePath = Paths.get(fileUploadPath, attachment.getEmailAttRenamedFilename());
+        Resource resource = new UrlResource(filePath.toUri());
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getEmailAttOriginalFilename() + "\"")
-                .body(resource);
+        log.info("Attempting to download file: {}", filePath.toString());
+
+        if (resource.exists() && resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getEmailAttOriginalFilename() + "\"")
+                    .body(resource);
+        } else {
+            log.error("File not found or not readable: {}", filePath.toString());
+            throw new FileNotFoundException("File not found or not readable: " + attachment.getEmailAttRenamedFilename());
+        }
     }
 
     @GetMapping("/attachments/{emailNo}")

@@ -18,17 +18,6 @@
                     </span>
                 </div>
             </div>
-            <div class="email-actions-top">
-                <button class="btn btn-light btn-sm" title="답장">
-                    <i class="fas fa-reply"></i>
-                </button>
-                <button class="btn btn-light btn-sm" title="전달">
-                    <i class="fas fa-share"></i>
-                </button>
-                <button class="btn btn-light btn-sm" title="삭제" onclick="deleteEmail(${email.emailNo})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
         </div>
     </div>
 
@@ -39,31 +28,45 @@
     </div>
 
 	<div class="email-view-footer">
-	    <c:if test="${email.hasAttachment}">
+	    <c:if test="${not empty attachments}">
 	        <div class="email-attachments">
 	            <h3>첨부 파일</h3>
 	            <ul id="attachmentList" class="attachment-list">
-	                <!-- 첨부 파일 목록이 여기에 동적으로ㅜ -->
+	                <c:forEach items="${attachments}" var="attachment">
+	                    <li class="attachment-item">
+	                        <span class="attachment-icon">
+	                            <i class="fas fa-file"></i>
+	                        </span>
+	                        <span class="attachment-name">${attachment.emailAttOriginalFilename}</span>
+	                        <a href="${pageContext.request.contextPath}/email/download/${attachment.emailAttNo}"
+	                           class="btn btn-sm btn-primary download-btn"
+	                           download="${attachment.emailAttOriginalFilename}">
+	                            <i class="fas fa-download"></i> 다운로드
+	                        </a>
+	                    </li>
+	                </c:forEach>
 	            </ul>
 	        </div>
 	    </c:if>
 	</div>
 
     <div class="email-actions-bottom">
-		<button class="btn btn-primary btn-reply">
-		    <i class="fas fa-reply"></i> 답장
-		</button>
-		<button class="btn btn-secondary btn-forward">
-		    <i class="fas fa-share"></i> 전달
-		</button>
-		<button class="btn btn-danger btn-delete">
-		    <i class="fas fa-trash"></i> 삭제
-		</button>
+        <button class="btn btn-primary btn-reply">
+            <i class="fas fa-reply"></i> 답장
+        </button>
+        <button class="btn btn-secondary btn-forward">
+            <i class="fas fa-share"></i> 전달
+        </button>
+        <button class="btn btn-danger btn-delete">
+            <i class="fas fa-trash"></i> 삭제
+        </button>
     </div>
 </div>
+
 <script>
 $(document).ready(function() {
-    EmailCommon.loadEmailAttachments(${email.emailNo});
+    // 첨부 파일 관련 기능 초기화 (필요한 경우)
+    EmailCommon.initAttachments();
 });
 </script>
 <script src="${pageContext.request.contextPath}/js/email-common.js"></script>

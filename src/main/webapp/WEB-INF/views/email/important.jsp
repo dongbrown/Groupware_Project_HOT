@@ -18,7 +18,7 @@
             <input type="checkbox" id="select-all" class="form-check-input">
             <label for="select-all" class="form-check-label">전체 선택</label>
             <button id="deleteBtn" class="btn btn-danger btn-sm">삭제</button>
-            <button id="unmarkImportantBtn" class="btn btn-warning btn-sm">중요 해제</button>
+            <!-- <button id="unmarkImportantBtn" class="btn btn-warning btn-sm">중요 해제</button> -->
         </div>
         <div class="toolbar-right">
             <select class="form-select form-select-sm">

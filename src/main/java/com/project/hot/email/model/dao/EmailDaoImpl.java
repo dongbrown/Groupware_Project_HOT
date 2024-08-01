@@ -150,10 +150,12 @@ public class EmailDaoImpl implements EmailDao {
 		return session.selectList("email.selectSelfEmails", employeeNo);
 	}
 
-	@Override
-	public List<EmailAtt> getEmailAttachments(int emailNo, SqlSession session) {
-		return session.selectList("email.selectEmailAttachments", emailNo);
-	}
+    @Override
+    public List<EmailAtt> getEmailAttachments(int emailNo, SqlSession session) {
+        List<EmailAtt> attachments = session.selectList("email.selectEmailAttachments", emailNo);
+        log.info("DAO - Attachments for email {}: {}", emailNo, attachments);
+        return attachments;
+    }
 
 	@Override
 	public void deleteAttachments(Integer emailNo, SqlSession session) {
