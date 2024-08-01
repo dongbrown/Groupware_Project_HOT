@@ -58,4 +58,12 @@ public interface EmailService {
 
 	List<EmailAtt> getEmailAttachments(int emailNo);
 
+	Integer getInboxUnreadCount(int employeeNo);
+
+	Integer getSelfUnreadCount(int employeeNo);
+
+	Integer getImportantUnreadCount(int employeeNo);
+
+	Integer getTrashCount(int employeeNo);
+
 }

@@ -264,15 +264,20 @@ public class EmailController {
         return "email/write";
     }
 
-    @GetMapping("/unread-count")
+    @GetMapping("/unread-counts")
     @ResponseBody
-    public ResponseEntity<Integer> getUnreadCount() {
+    public Map<String, Integer> getUnreadCounts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
-        int unreadCount = service.getUnreadCount(employeeNo);
-        return ResponseEntity.ok(unreadCount);
+        Map<String, Integer> counts = new HashMap<>();
+        counts.put("inboxUnreadCount", service.getInboxUnreadCount(employeeNo));
+        counts.put("selfUnreadCount", service.getSelfUnreadCount(employeeNo));
+        counts.put("importantUnreadCount", service.getImportantUnreadCount(employeeNo));
+        counts.put("trashCount", service.getTrashCount(employeeNo));
+
+        return counts;
     }
 
     @PostMapping("/mark-as-read/{emailNo}")

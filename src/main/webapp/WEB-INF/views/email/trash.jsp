@@ -3,61 +3,48 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/email-common.css">
+<div class="container-fluid">
+    <h2 class="mb-4">휴지통<span class="email-count">${emails.size()}</span></h2>
+    <!-- 검색 폼 include -->
+    <jsp:include page="search.jsp" />
 
-<div class="email-container">
-    <div class="email-header">
-        <h2>휴지통 <span class="email-count">${emails.size()} / 100</span></h2>
-        <div class="email-actions">
-            <button id="searchBtn" class="btn btn-light btn-sm">메일 검색</button>
-        </div>
-    </div>
-
-    <div class="email-toolbar">
-        <div class="toolbar-left">
-            <input type="checkbox" id="select-all" class="form-check-input">
-            <label for="select-all" class="form-check-label">전체 선택</label>
-            <button id="readBtn" class="btn btn-secondary btn-sm">읽음</button>
-			<button id="permanentDeleteBtn" class="btn btn-danger btn-sm">영구삭제</button>            <button id="restoreBtn" class="btn btn-primary btn-sm">복구</button>
-        </div>
-        <div class="toolbar-right">
-            <select class="form-select form-select-sm">
-                <option>필터</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="email-list">
-        <c:choose>
-            <c:when test="${empty emails}">
-                <div class="no-email">
-                    <div class="no-email-icon">
-                        <i class="fas fa-trash"></i>
-                    </div>
-                    <p>휴지통에 메일이 없습니다.</p>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <button id="readBtn" class="btn btn-sm btn-secondary">읽음</button>
+                    <button id="permanentDeleteBtn" class="btn btn-sm btn-danger">영구삭제</button>
+                    <button id="restoreBtn" class="btn btn-sm btn-primary">복구</button>
                 </div>
-            </c:when>
-            <c:otherwise>
-                <table class="table">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th><input type="checkbox" id="select-all"></th>
                             <th>보낸 사람</th>
                             <th>제목</th>
                             <th>날짜</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="emailList">
                         <c:forEach items="${emails}" var="email">
                             <tr class="email-item" data-email-no="${email.emailNo}">
                                 <td>
-                                    <input type="checkbox" class="form-check-input email-checkbox" value="${email.emailNo}">
+                                    <input type="checkbox" class="mail-item-checkbox" value="${email.emailNo}">
                                 </td>
                                 <td>${email.sender.employeeName}</td>
                                 <td>
-                                    <c:out value="${email.emailTitle}" />
+                                    <c:choose>
+                                        <c:when test="${fn:length(email.emailTitle) > 30}">
+                                            ${fn:substring(email.emailTitle, 0, 30)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${email.emailTitle}
+                                        </c:otherwise>
+                                    </c:choose>
                                     <c:if test="${email.hasAttachment}">
-                                        <i class="fas fa-paperclip"></i>
+                                        <i class="fas fa-paperclip ml-2"></i>
                                     </c:if>
                                 </td>
                                 <td>
@@ -67,10 +54,11 @@
                         </c:forEach>
                     </tbody>
                 </table>
-            </c:otherwise>
-        </c:choose>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <script>
 $(document).ready(function() {

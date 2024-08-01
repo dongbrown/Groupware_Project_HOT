@@ -33,4 +33,8 @@ public interface EmailDao {
 	List<Email> getSelfEmails(int employeeNo, SqlSession session);
 	List<EmailAtt> getEmailAttachments(int emailNo, SqlSession sqlSession);
 	void deleteAttachments(Integer emailNo, SqlSession sqlSession);
+	Integer getInboxUnreadCount(int employeeNo, SqlSession sqlSession);
+	Integer getSelfUnreadCount(int employeeNo, SqlSession sqlSession);
+	Integer getImportantUnreadCount(int employeeNo, SqlSession sqlSession);
+	Integer getTrashCount(int employeeNo, SqlSession sqlSession);
 }

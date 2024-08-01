@@ -37,13 +37,27 @@
 				        <button class="btn btn-primary flex-grow-1 me-2" id="writeBtn">메일 쓰기</button>
 				        <button class="btn btn-primary flex-grow-1" id="write-selfBtn">내게 쓰기</button>
 				    </div>
-				    <ul class="list-group">
-				        <li class="list-group-item active" data-mailbox="inbox"><i class="fas fa-inbox me-2"></i>받은메일함 <span class="badge bg-primary rounded-pill">999+</span></li>
-				        <li class="list-group-item" data-mailbox="sent"><i class="fas fa-paper-plane me-2"></i>보낸메일함</li>
-				        <li class="list-group-item" data-mailbox="self"><i class="fas fa-user me-2"></i>내게쓴메일함 <span class="badge bg-secondary rounded-pill">20</span></li>
-				        <li class="list-group-item" data-mailbox="important"><i class="fas fa-star me-2"></i>중요메일함</li>
-				        <li class="list-group-item" data-mailbox="trash"><i class="fas fa-trash me-2"></i>휴지통 <span class="badge bg-danger rounded-pill">30</span></li>
-				    </ul>
+					<ul class="list-group">
+					    <li class="list-group-item" data-mailbox="inbox">
+					        <i class="fas fa-inbox me-2"></i>받은메일함
+					        <span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
+					    </li>
+					    <li class="list-group-item" data-mailbox="sent">
+					        <i class="fas fa-paper-plane me-2"></i>보낸메일함
+					    </li>
+					    <li class="list-group-item" data-mailbox="self">
+					        <i class="fas fa-user me-2"></i>내게쓴메일함
+					        <span class="badge bg-secondary rounded-pill" id="selfUnreadCount">${selfUnreadCount}</span>
+					    </li>
+					    <li class="list-group-item" data-mailbox="important">
+					        <i class="fas fa-star me-2"></i>중요메일함
+					        <span class="badge bg-warning rounded-pill" id="importantUnreadCount">${importantUnreadCount}</span>
+					    </li>
+					    <li class="list-group-item" data-mailbox="trash">
+					        <i class="fas fa-trash me-2"></i>휴지통
+					        <span class="badge bg-danger rounded-pill" id="trashCount">${trashCount}</span>
+					    </li>
+					</ul>
 				</div>
                 </div>
                 <div class="col-md-10" id="mailContent">

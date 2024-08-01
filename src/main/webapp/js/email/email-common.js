@@ -10,6 +10,12 @@ var EmailCommon = {
 
         this.contextPath = contextPath;
         this.bindEvents();
+
+        // 초기 로드 시 안 읽은 메일 개수 업데이트
+        this.updateUnreadCounts();
+
+        // 3초마다 안 읽은 메일 개수 업데이트
+        setInterval(this.updateUnreadCounts.bind(this), 3000);
     },
 
     // 이벤트 바인딩
@@ -651,15 +657,19 @@ var EmailCommon = {
     },
 
     // 읽지 않은 메일 수 업데이트
-    updateUnreadCount: function() {
+    updateUnreadCounts: function() {
         $.ajax({
-            url: this.contextPath + '/unread-count',
+            url: this.contextPath + '/unread-counts',
             type: 'GET',
-            success: function(count) {
-                $('.unread-count').text(count);
+            dataType: 'json',
+            success: function(data) {
+                $('#inboxUnreadCount').text(data.inboxUnreadCount > 0 ? data.inboxUnreadCount : '');
+                $('#selfUnreadCount').text(data.selfUnreadCount > 0 ? data.selfUnreadCount : '');
+                $('#importantUnreadCount').text(data.importantUnreadCount > 0 ? data.importantUnreadCount : '');
+                $('#trashCount').text(data.trashCount > 0 ? data.trashCount : '');
             },
             error: function(xhr, status, error) {
-                console.error('읽지 않은 메일 수 업데이트 실패:', error);
+                console.error('Failed to update unread counts:', error);
             }
         });
     },
@@ -828,12 +838,4 @@ var EmailCommon = {
 $(document).ready(function() {
     var contextPath = '/email';
     EmailCommon.init(contextPath);
-
-    // 페이지 로드 시 읽지 않은 메일 수 업데이트
-    EmailCommon.updateUnreadCount();
-
-    // 주기적으로 읽지 않은 메일 수 업데이트 (1분마다)
-    setInterval(function() {
-        EmailCommon.updateUnreadCount();
-    }, 60000);
 });

@@ -162,4 +162,24 @@ public class EmailDaoImpl implements EmailDao {
 	    session.delete("email.deleteAttachments", emailNo);
 	}
 
+	@Override
+	public Integer getInboxUnreadCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getInboxUnreadCount", employeeNo);
+	}
+
+	@Override
+	public Integer getSelfUnreadCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getSelfUnreadCount", employeeNo);
+	}
+
+	@Override
+	public Integer getImportantUnreadCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getImportantUnreadCount", employeeNo);
+	}
+
+	@Override
+	public Integer getTrashCount(int employeeNo, SqlSession session) {
+		return session.selectOne("email.getTrashCount", employeeNo);
+	}
+
 }

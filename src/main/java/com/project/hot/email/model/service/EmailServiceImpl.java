@@ -282,5 +282,25 @@ public class EmailServiceImpl implements EmailService {
 	    return attachments;
 	}
 
+	@Override
+	public Integer getInboxUnreadCount(int employeeNo) {
+		return dao.getInboxUnreadCount(employeeNo, sqlSession);
+	}
+
+	@Override
+	public Integer getSelfUnreadCount(int employeeNo) {
+		return dao.getSelfUnreadCount(employeeNo, sqlSession);
+	}
+
+	@Override
+	public Integer getImportantUnreadCount(int employeeNo) {
+		return dao.getImportantUnreadCount(employeeNo, sqlSession);
+	}
+
+	@Override
+	public Integer getTrashCount(int employeeNo) {
+		return dao.getTrashCount(employeeNo, sqlSession);
+	}
+
 
 }
