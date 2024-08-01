@@ -364,13 +364,14 @@ var EmailCommon = {
     },
 
     // 메일 쓰기 폼 표시
-    showWriteForm: function() {
+    showWriteForm: function(isSelf) {
+        var url = contextPath + '/email/write' + (isSelf ? '?self=true' : '');
         $.ajax({
-            url: this.contextPath + '/write',
-            type: 'GET',
-            success: function(response) {
-                $('#mailContent').html(response);
-                EmailCommon.initializeMailboxFunctions('write');
+            url: url,
+            method: 'GET',
+            success: function(data) {
+                $('#mailContent').html(data);
+                history.pushState(null, '', url);
             },
             error: function() {
                 alert('메일 작성 폼을 불러오는데 실패했습니다.');
@@ -838,4 +839,13 @@ var EmailCommon = {
 $(document).ready(function() {
     var contextPath = '/email';
     EmailCommon.init(contextPath);
+    $('#writeBtn').click(function(e) {
+        e.preventDefault();
+        EmailCommon.showWriteForm(false);
+    });
+
+    $('#write-selfBtn').click(function(e) {
+        e.preventDefault();
+        EmailCommon.showWriteForm(true);
+    });
 });

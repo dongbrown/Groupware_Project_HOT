@@ -58,6 +58,43 @@ public class EmailController {
     public String showEmail() {
         return "email/email";
     }
+    @GetMapping
+    public String showEmailMain(@RequestParam(required = false, defaultValue = "inbox") String mailbox, Model model) {
+        // 여기서 기본 이메일 페이지를 로드하고, 필요한 데이터를 모델에 추가합니다.
+        model.addAttribute("currentMailbox", mailbox);
+        return "email/email";  // 메인 이메일 페이지 뷰
+    }
+
+    @GetMapping("/{mailbox}")
+    public String getMailboxContent(@PathVariable String mailbox, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        List<Email> emails;
+
+        switch (mailbox) {
+            case "inbox":
+                emails = service.getInboxEmails(loginEmployee.getEmployeeNo());
+                break;
+            case "sent":
+                emails = service.getSentEmails(loginEmployee.getEmployeeNo());
+                break;
+            case "important":
+                emails = service.getImportantEmails(loginEmployee.getEmployeeNo());
+                break;
+            case "self":
+                emails = service.getSelfEmails(loginEmployee.getEmployeeNo());
+                break;
+            case "trash":
+                emails = service.getTrashEmails(loginEmployee.getEmployeeNo());
+                break;
+            default:
+                return "redirect:/email?mailbox=inbox";
+        }
+
+        model.addAttribute("emails", emails);
+        return "email/" + mailbox;
+    }
+
 
     @GetMapping("/inbox")
     public String inbox(Model model) {
@@ -130,7 +167,10 @@ public class EmailController {
 
     @GetMapping("/write-self")
     public String showWriteSelfForm(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
         model.addAttribute("email", new Email());
+        model.addAttribute("loginEmployee", loginEmployee);
         return "email/write-self";
     }
 

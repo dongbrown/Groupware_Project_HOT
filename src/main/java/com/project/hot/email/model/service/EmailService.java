@@ -66,4 +66,5 @@ public interface EmailService {
 
 	Integer getTrashCount(int employeeNo);
 
+
 }
