@@ -126,5 +126,21 @@ public class HotTalkDaoImpl implements HotTalkDao {
 		return session.selectList("hottalk.getReceivers", hotTalkNo);
 	}
 
+	@Override
+	public int insertHotTalkStatus(SqlSession session, int employeeNo, String status) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("employeeNo", employeeNo);
+		param.put("status", status);
+		return session.insert("hottalk.insertHotTalkStatus", param);
+	}
+
+	@Override
+	public int insertHotTalkStatusMessage(SqlSession session, int employeeNo, String statusMsg) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("employeeNo", employeeNo);
+		param.put("statusMsg", statusMsg);
+		return session.insert("hottalk.insertHotTalkStatusMessage", param);
+	}
+
 
 }

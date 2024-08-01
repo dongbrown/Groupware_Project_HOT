@@ -21,7 +21,7 @@ function checkAttStatus(){
 			//퇴근 한 상태 - 출근버튼 비활성화, 퇴근버튼 비활성화
 			$('.btn-go-work').prop('disabled', true);
 			$('.btn-leave-work').prop('disabled', true);
-		}else if(currHour<=8||currHour>=15){
+		}else if(currHour<=7||currHour>=15){
 			//8시 이전, 15시 이후 출근 버튼 비활성화
 			$('.btn-go-work').prop('disabled', true);
 			$('.btn-leave-work').prop('disabled', true);
@@ -73,3 +73,84 @@ function leaveWork(){
 		console.log(error.message);
 	})
 }
+
+$('.changeBtn').click(e=>{
+    $('.card__giratorio-conteudo').toggleClass('is-flipped');
+});
+
+/*켈린더 스크립트 문 */
+ $(document).ready(function() {
+    const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    let currentDate = new Date();
+     let today = new Date();
+
+    function updateCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        $('#current-month').text(new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' }));
+
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDay = firstDay.getDay();
+
+        let calendarHTML = '';
+        let day = 1;
+
+        for (let i = 0; i < 42; i++) {
+            if (i < startingDay || day > daysInMonth) {
+                calendarHTML += '<div class="calendar-cell other-month"></div>';
+            } else {
+				// 오늘 날짜인지 확인
+                const isToday = (year === today.getFullYear() && month === today.getMonth() && day === today.getDate());
+
+                // 오늘 날짜에 selected 클래스 추가
+                const selectedClass = isToday ? 'selected' : '';
+
+                calendarHTML += `<div class="calendar-cell ${selectedClass}" data-date="${year}-${month+1}-${day}">${day}</div>`;
+                day++;
+            }
+        }
+
+        $('#calendar-body').html(calendarHTML);
+        $('#weekdays').html(weekdays.map(day => `<div class="weekday">${day}</div>`).join(''));
+    }
+
+    updateCalendar();
+
+    $('#prev-month').click(function() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        updateCalendar();
+    });
+
+    $('#next-month').click(function() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        updateCalendar();
+    });
+
+    $(document).on('click', '.calendar-cell', function() {
+        $('.calendar-cell').removeClass('selected');
+        $(this).addClass('selected');
+    });
+});
+
+//커뮤니티 목록 ajax로 출력
+	fetch(path+'/index/communityList.do')
+		.then(response=>response.json())
+		.then(data=>{
+			data.forEach(e=>{
+				$wrapTr=$('<tr>');
+				$comuNoTh=$('<th>',{scope:'row'}).text(e.communityNo);
+				$comuTd=$('<td>').text(e.communityTitle);
+				$infoTd=$('<td>').text(e.communityIntroduce);
+				$wrapTr.append($comuNoTh).append($comuTd).append($infoTd);
+				$wrapTr.appendTo($('#comuList'));
+			});
+
+		})
+		.catch(error => {
+					console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+		});
+
+

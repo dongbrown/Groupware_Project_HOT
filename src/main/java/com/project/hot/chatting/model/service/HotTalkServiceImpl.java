@@ -46,12 +46,32 @@ public class HotTalkServiceImpl implements HotTalkService {
 		return dao.getHotTalkContents(session, openEmployeeNo, openHotTalkNo);
 	}
 	@Override
+	@Transactional
 	public int updateHotTalkStatus(int employeeNo, String status) {
-		return dao.updateHotTalkStatus(session, employeeNo, status);
+		int result;
+		try {
+			result = dao.updateHotTalkStatus(session, employeeNo, status);
+			if(result != 1) {
+				dao.insertHotTalkStatus(session, employeeNo, status);
+			}
+		} catch(RuntimeException e) {
+			throw new ChattingException("상태 변경 실패: " + e.getMessage());
+		}
+		return result;
 	}
 	@Override
+	@Transactional
 	public int updateHotTalkStatusMessage(int employeeNo, String statusMsg) {
-		return dao.updateHotTalkStatusMessage(session, employeeNo, statusMsg);
+		int result;
+		try {
+			result = dao.updateHotTalkStatusMessage(session, employeeNo, statusMsg);
+			if(result != 1) {
+				dao.insertHotTalkStatusMessage(session, employeeNo, statusMsg);
+			}
+		} catch(RuntimeException e) {
+			throw new ChattingException("상태 변경 실패: " + e.getMessage());
+		}
+		return result;
 	}
 
 	@Override
@@ -150,6 +170,7 @@ public class HotTalkServiceImpl implements HotTalkService {
 	}
 	@Override
 	public void updateIsReadByNo(Map<String, Integer> param) {
+		System.out.println(param);
 		int result = dao.updateIsReadByNo(session, param);
 		if(result > 0) {
 			sseService.sendInitEvent(param.get("empNo"));

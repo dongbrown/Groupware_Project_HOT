@@ -46,8 +46,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		employees.put(msg.getSender(), session);
 		List<ResponseLoginEmployeeDTO> list = service.getHotTalkMemberList(msg.getSender());
 		list.forEach(l->l.setType("사원"));
-		session.getAttributes().remove("grouprooms");
-		session.getAttributes().remove("privaterooms");
 		responseListDTO(list, session);
 	}
 
@@ -59,7 +57,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			rooms.add(l.getHotTalkNo());
 		});
 		session.getAttributes().put("privaterooms", rooms);
-		session.getAttributes().remove("grouprooms");
 		responseListDTO(list, session);
 	}
 
@@ -71,7 +68,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 			rooms.add(l.getHotTalkNo());
 		});
 		session.getAttributes().put("grouprooms", rooms);
-		session.getAttributes().remove("privaterooms");
 		responseListDTO(list, session);
 	}
 	private void getHotTalkContents(WebSocketSession session, CommonMessageDTO msg) {
@@ -89,19 +85,20 @@ public class HotTalkHandler extends TextWebSocketHandler {
 		responseListDTO(contents, session);
 	}
 	private void updateHotTalkStatus(HotTalkStatus status) {
-		int result;
+		int statusResult;
+		int statusMessageResult;
 		if(status.getHotTalkStatus() != null) {
-			result = service.updateHotTalkStatus(status.getEmployeeNo(), status.getHotTalkStatus());
+			statusResult = service.updateHotTalkStatus(status.getEmployeeNo(), status.getHotTalkStatus());
+			System.out.println("statusResult : "+statusResult);
 		} else if(status.getHotTalkStatusMessage() != null){
-			result = service.updateHotTalkStatusMessage(status.getEmployeeNo(), status.getHotTalkStatusMessage());
-		} else {
-			result = 0;
+			statusMessageResult = service.updateHotTalkStatusMessage(status.getEmployeeNo(), status.getHotTalkStatusMessage());
+			System.out.println("statusMessageResult : "+statusMessageResult);
 		}
+
 	}
 
 	private void sendMessage(WebSocketSession session, CommonMessageDTO msg) {
-	    // System.out.println(msg.getHotTalkNo() + " " + msg.getMsg() + " " + msg.getSender() + " " + msg.getReceiver() + " " + msg.getEventTime());
-		if(!(msg.getHotTalkRenamedFilename().equals("") || msg.getType().equals("file"))) msg.setReceiverNo(Integer.parseInt(msg.getReceiver()));
+
 		// System.out.println(msg);
 		int result = service.insertHotTalkMessage(msg);
 
@@ -111,7 +108,6 @@ public class HotTalkHandler extends TextWebSocketHandler {
 	        List<Integer> groupRooms = (List<Integer>)(cEmp.getAttributes().get("grouprooms"));
 	        try {
 	        	if(!msg.getType().equals("file")) msg.setType(result > 0 ? "msgSuccess" : "msgFail");
-
 	            String message = mapper.writeValueAsString(msg);
 	            if (privateRooms != null && privateRooms.contains(msg.getHotTalkNo())) {
 	                cEmp.sendMessage(new TextMessage(message));
@@ -145,11 +141,12 @@ public class HotTalkHandler extends TextWebSocketHandler {
 							break;
 			case "msg" : sendMessage(session, msg); break;
 			case "file" : HotTalkAtt upFile = mapper.readValue(message.getPayload(), HotTalkAtt.class);
+						  System.out.println(upFile);
 						  CommonMessageDTO fileMsg = CommonMessageDTO.builder().type("file")
 								  											   .hotTalkNo(upFile.getHotTalkNo())
-								  											   .msg(upFile.getHotTalkOriginalFilename())
+								  											   .msg(upFile.getHotTalkRenamedFilename())
 								  											   .sender(upFile.getHotTalkAttSender())
-								  											   .hotTalkRenamedFilename(upFile.getHotTalkRenamedFilename())
+								  											   .hotTalkOriginalFilename(upFile.getHotTalkOriginalFilename())
 								  											   .build();
 						  sendMessage(session, fileMsg);
 						  break;

@@ -14,3 +14,4 @@ public class ChattingException extends RuntimeException implements Serializable{
 	}
 
 }
+                 

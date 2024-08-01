@@ -63,7 +63,7 @@ public class WorkController {
 		 return "project/insertWorkDetail";
 	}
 
-
+	//작업 수정
 	@GetMapping("/workupdatedetail.do")
 	public String workUpdate (int workNo,Model m) {
 		Work work = workService.selectWorkByWorkNo(workNo);
@@ -73,6 +73,13 @@ public class WorkController {
 //		});
 		m.addAttribute("work",work);
 		return "project/workUpdateDetail";
+	}
+	//전체 프로젝트 조회 - 프로젝트 작업 리스트 - 작업 상세 조회
+	@GetMapping("/selectworkdetail.do")
+	public String selectWorkDetail (int workNo,Model m) {
+		Work work = workService.selectWorkByWorkNo(workNo);
+		m.addAttribute("work",work);
+		return "project/selectWorkDetail";
 	}
 
 
@@ -140,15 +147,16 @@ public class WorkController {
 	@ResponseBody
 	@GetMapping("/workupdateajax")
 	public Map<String,Object> workUpdatePage(@RequestParam(defaultValue = "1") int cPage,
-			@RequestParam("employeeNo") int employeeNo) {
+											@RequestParam("employeeNo") int employeeNo,
+											@RequestParam("projectNo") int projectNo) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			mapper.writeValueAsString(
-					workService.selectWorkAll(Map.of("cPage", cPage, "numPerpage", 5, "employeeNo", employeeNo)));
+					workService.selectWorkAll(Map.of("cPage", cPage, "numPerpage", 5, "employeeNo", employeeNo,"projectNo",projectNo)));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		return workService.selectWorkAll(Map.of("cPage", cPage, "numPerpage", 5, "employeeNo", employeeNo));
+		return workService.selectWorkAll(Map.of("cPage", cPage, "numPerpage", 5, "employeeNo", employeeNo,"projectNo",projectNo));
 	};
 
 	@ResponseBody

@@ -11,6 +11,7 @@ import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.OvertimeForm;
 import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.RequestBusinessTrip;
+import com.project.hot.approval.model.dto.RequestExpenditure;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -32,4 +33,6 @@ public interface ApprovalDao {
 	int insertOvertime(SqlSession session, OvertimeForm of);
 	int insertBusinessTrip(SqlSession session, RequestBusinessTrip rbt);
 	int insertBusinessPartner(SqlSession session, RequestBusinessTrip rbt);
+	int insertExpenditureForm(SqlSession session, RequestExpenditure re);
+	int insertExpenditureItem(SqlSession session, RequestExpenditure re);
 }

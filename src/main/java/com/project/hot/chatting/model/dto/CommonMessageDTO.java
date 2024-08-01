@@ -22,7 +22,7 @@ public class CommonMessageDTO {
 	private int hotTalkContentNo;
 	private int receiverNo;
 	private String title;
-	private String hotTalkRenamedFilename;
+	private String hotTalkOriginalFilename;
 	private List<Integer> receivers;
 }
 
