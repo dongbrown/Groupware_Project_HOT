@@ -119,7 +119,7 @@ function insertExpenditure(){
 	}else{
 		fd.set('approvalStatus', 5); //임시저장
 	}
-	
+
 
 	fetch(path+'/api/approval/insertExpenditure', {
 		method:'POST',
@@ -454,7 +454,7 @@ function loadEmployees() {
 
 	if (departmentCode) {
 		$.ajax({
-			url: '/approval/employees',
+			url: path+'/approval/employees',
 			type: 'GET',
 			data: { departmentCode: departmentCode },
 			success: function(employees) {
@@ -866,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
 let itemRowCount=1;
 //경비지출서 지출품목 추가 버튼 함수
 function addItemRow() {
-	
+
 		var newRow = '<tr>' +
 			`<td><input name="items[${itemRowCount}].expenditureName" type="text" class="form-control item-name"></td>` +
 			`<td><input name="items[${itemRowCount}].expenditureSpec" type="text" class="form-control item-spec"></td>` +
@@ -885,7 +885,7 @@ $(document).on('click', '.btn-add-row', addItemRow);
 //경비지출서 지출품목 제거 버튼 함수
 function removeItemRow(){
 	$(this).closest('tr').remove();
-	
+
 	$('#itemTable tbody tr').each(function(index) {
     	$(this).find('input').each(function() {
         	const name = $(this).attr('name');
@@ -895,7 +895,7 @@ function removeItemRow(){
             }
         });
     });
-		
+
 	itemRowCount--;
 }
 $(document).on('click', '.btn-remove-row', removeItemRow);

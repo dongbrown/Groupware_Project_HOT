@@ -17,7 +17,7 @@ public class RequestExpenditure {
 	private int expenditureFormNo;
 	private String approvalNo;
 	private Date expenditureDate;
-	private int expenditureAmount;
+	private Integer expenditureAmount;
 	private List<ExpenditureItem> items;
-	
+
 }

@@ -11,13 +11,18 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ExpenditureItem {
 
-	private int expenditureItemNo;
-	private int expenditureFormNo;
+	private Integer expenditureItemNo;
+	private Integer expenditureFormNo;
 	private String expenditureName;
 	private String expenditureSpec;
 	private String expenditureUnit;
-	private int expenditureQuantity;
-	private long expenditurePrice;
+	private Integer expenditureQuantity;
+	private Long expenditurePrice;
 	private String expenditureRemark;
 
+
+	public boolean isEmpty() {
+		return expenditureName.isEmpty() && expenditureSpec.isEmpty() && expenditureUnit.isEmpty() && expenditureRemark.isEmpty()
+				&& expenditureQuantity==null && expenditurePrice==null;
+	}
 }
