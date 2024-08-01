@@ -20,6 +20,7 @@
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="select-all"></th>
+                            <th>보낸 사람</th>
                             <th>제목</th>
                             <th>날짜</th>
                         </tr>
@@ -30,6 +31,7 @@
                                 <td>
                                     <input type="checkbox" class="mail-item-checkbox" value="${email.emailNo}">
                                 </td>
+                                <td>${email.sender.employeeName}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${fn:length(email.emailTitle) > 30}">

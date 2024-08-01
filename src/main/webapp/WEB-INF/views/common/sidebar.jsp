@@ -4,6 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
+<script type="text/javascript" src="${path }/js/common/sidebar.js"></script>
+
 <head>
 
     <meta charset="UTF-8">
@@ -122,29 +124,42 @@
                 </div>
             </li>
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#email"
-                    aria-expanded="true" aria-controls="email">
-                    <i class="fas fa-envelope"></i>
-                    <span>메일</span>
-                </a>
-                <div id="email" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">메일 조회</h6>
-			            <a class="collapse-item email-link" href="#" data-mailbox="all">전체 메일</a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="inbox">받은 메일함</a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="self">내게 쓴 메일함</a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="sent">보낸 메일함</a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="important">중요 메일함</a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="drafts">임시 메일함</a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="trash">휴지통</a><br>
+			<li class="nav-item">
+			    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#email"
+			        aria-expanded="true" aria-controls="email">
+			        <i class="fas fa-envelope"></i>
+			        <span>메일</span>
+			    </a>
+			    <div id="email" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+			        <div class="bg-white py-2 collapse-inner rounded">
+			            <h6 class="collapse-header">메일 조회</h6>
+			            <a class="collapse-item email-link" href="#" data-mailbox="inbox">
+			                받은 메일함 <span class="badge bg-primary rounded-pill" id="inboxUnreadCount"></span>
+			            </a>
+			            <a class="collapse-item email-link" href="#" data-mailbox="sent">
+			                보낸 메일함
+			            </a>
+			            <a class="collapse-item email-link" href="#" data-mailbox="self">
+			                내게 쓴 메일함 <span class="badge bg-secondary rounded-pill" id="selfUnreadCount"></span>
+			            </a>
+			            <a class="collapse-item email-link" href="#" data-mailbox="important">
+			                중요 메일함 <span class="badge bg-warning rounded-pill" id="importantUnreadCount"></span>
+			            </a>
+			            <a class="collapse-item email-link" href="#" data-mailbox="trash">
+			                휴지통 <span class="badge bg-danger rounded-pill" id="trashCount"></span>
+			            </a>
+			            <br>
 			            <h6 class="collapse-header">메일 발송</h6>
-			            <a class="collapse-item" href="#" id="writeEmailBtn">메일 발송</a>
-			            <a class="collapse-item" href="#" id="writeSelfEmailBtn">내게 쓰기</a>
-                    </div>
-                </div>
-            </li>
+			            <a class="collapse-item" href="#" id="sidebarWriteBtn">
+			                메일 발송
+			            </a>
+			            <a class="collapse-item" href="#" id="sidebarWriteSelfBtn">
+			                내게 쓰기
+			            </a>
+			        </div>
+			    </div>
+			</li>
+
             <!--
              Nav Item - Utilities Collapse Menu
             <li class="nav-item">
@@ -245,3 +260,32 @@
 
         </ul>
         <!-- End of Sidebar -->
+        <script src="${pageContext.request.contextPath}/js/email-common.js"></script>
+<script>
+$(document).ready(function() {
+    // 이메일 링크 클릭 이벤트
+    $('.email-link').click(function(e) {
+        e.preventDefault();
+        var mailbox = $(this).data('mailbox');
+        EmailCommon.loadMailbox(mailbox);
+    });
+
+    // 메일 쓰기 버튼 클릭 이벤트
+    $('#sidebarWriteBtn').click(function(e) {
+        e.preventDefault();
+        EmailCommon.showWriteForm();
+    });
+
+    // 내게 쓰기 버튼 클릭 이벤트
+    $('#sidebarWriteSelfBtn').click(function(e) {
+        e.preventDefault();
+        EmailCommon.showWriteSelfForm();
+    });
+
+    // 초기 로드 시 안 읽은 메일 개수 업데이트
+    EmailCommon.updateUnreadCounts();
+
+    // 30초마다 안 읽은 메일 개수 업데이트
+    setInterval(EmailCommon.updateUnreadCounts, 30000);
+});
+</script>

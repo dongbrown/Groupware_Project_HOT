@@ -182,4 +182,5 @@ public class EmailDaoImpl implements EmailDao {
 		return session.selectOne("email.getTrashCount", employeeNo);
 	}
 
+
 }
