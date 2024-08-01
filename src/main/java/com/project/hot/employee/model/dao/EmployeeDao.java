@@ -30,4 +30,6 @@ public interface EmployeeDao {
 	Integer selectTotalOvertimeHour(SqlSession session, Map<String, Object> param);
 	List<Approval> selectVacationList(SqlSession session, Map<String, Object> param);
 	int countVacationList(SqlSession session, Map<String, Object> param);
+	double sumVacationDay(SqlSession session, Map<String, Object> param);
+	int selectEmployeeTotalVacation(SqlSession session, Map<String, Object> param);
 }

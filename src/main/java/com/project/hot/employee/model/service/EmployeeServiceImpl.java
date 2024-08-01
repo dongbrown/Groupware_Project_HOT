@@ -156,9 +156,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Map<String, Object> selectVacationList(Map<String, Object> param) {
 		Map<String, Object> result=new HashMap<>();
-		result.put("totalPage", Math.ceil((double)dao.countCommutingTotalData(session, param)/10));
+		result.put("totalPage", Math.ceil((double)dao.countVacationList(session, param)/10));
 		result.put("vacations", dao.selectVacationList(session, param));
-		return null;
+		result.put("totalVacationDay", dao.sumVacationDay(session, param));
+		result.put("employeeTotalVacation", dao.selectEmployeeTotalVacation(session, param));
+		return result;
 	}
 
 }

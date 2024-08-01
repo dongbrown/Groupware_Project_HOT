@@ -28,3 +28,8 @@
     font-size: 25px;
     gap: 20px;
 }
+
+.pagebar-div {
+	display: flex;
+    justify-content: center;
+}

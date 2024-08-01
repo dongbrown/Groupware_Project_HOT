@@ -1,0 +1,24 @@
+/*
+	전 사원 휴가내역용 css~
+*/
+
+.allEmpVacation-section {
+	display: flex;
+    justify-content: center;
+}
+
+.allEmpVacation-div {
+	display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 95%;
+}
+
+.search-div {
+	display: flex;
+    flex-direction: row;
+}
+
+.search-form {
+	display: flex;	
+}

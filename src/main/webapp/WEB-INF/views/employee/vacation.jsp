@@ -13,33 +13,34 @@
 		<div class="vacation-card-div mb-5">
 			<div class="vacation-card">
 				<span>총 휴가 일수</span>
-				<span>15일</span>
+				<span class="totalVacation"></span>일
 			</div>
 			<div class="vacation-card">
 				<span>사용한 휴가 일수</span>
-				<span>1일</span>
+				<span class="usedVacation"></span>일
 			</div>
 			<div class="vacation-card">
 				<span>남은 휴가 일수</span>
-				<span>1일</span>
+				<span class="unusedVacation"></span>일
 			</div>
 		</div>
 		<div class="vacation-table-div">
 			<h4>휴가 사용 내역</h4>
 			<select class="month-select mb-3"></select>
-			<table class="table com-table">
+			<table class="table vacation-table">
 				<thead class="table-dark">
 					<tr>
 						<th>휴가 신청 일자</th>
 						<th>휴가 종류</th>
 						<th>휴가 시작일</th>
 						<th>휴가 종료일</th>
-						<th>휴가 차감 일수</th>
+						<th>휴가 일수</th>
 					</tr>
 				</thead>
 				<tbody></tbody>
 			</table>
 		</div>
+		<div class="pagebar-div"></div>
 	</div>
 </section>
 </div>

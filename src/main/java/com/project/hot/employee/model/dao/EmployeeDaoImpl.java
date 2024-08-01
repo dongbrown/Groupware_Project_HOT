@@ -111,4 +111,14 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return session.selectOne("employee.countVacationList", param);
 	}
 
+	@Override
+	public double sumVacationDay(SqlSession session, Map<String, Object> param) {
+		return session.selectOne("employee.sumVacationDay", param);
+	}
+
+	@Override
+	public int selectEmployeeTotalVacation(SqlSession session, Map<String, Object> param) {
+		return session.selectOne("employee.selectEmployeeTotalVacation", param);
+	}
+
 }
