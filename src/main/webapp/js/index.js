@@ -21,7 +21,7 @@ function checkAttStatus(){
 			//퇴근 한 상태 - 출근버튼 비활성화, 퇴근버튼 비활성화
 			$('.btn-go-work').prop('disabled', true);
 			$('.btn-leave-work').prop('disabled', true);
-		}else if(currHour<=8||currHour>=15){
+		}else if(currHour<=7||currHour>=15){
 			//8시 이전, 15시 이후 출근 버튼 비활성화
 			$('.btn-go-work').prop('disabled', true);
 			$('.btn-leave-work').prop('disabled', true);
