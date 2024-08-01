@@ -22,4 +22,5 @@ public interface EmployeeService {
 	int insertCommutingNoAtt();
 	int checkAtt(String employeeId);
 	List<String> selectAllEmployeeId();
+	Map<String, Object> selectVacationList(Map<String, Object> param);
 }

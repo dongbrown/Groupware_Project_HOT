@@ -8,17 +8,36 @@
 <c:import url="${path }/WEB-INF/views/common/header.jsp"/>
 <link href="${path }/css/employee/vacation.css" rel="stylesheet" type="text/css">
 <section class="vacation-section">
-	<h2>휴가~</h2>
-	<div>
-		<div>
-
+	<div class="vacation-div shadow-lg p-3 bg-body rounded">
+		<h2 class="mb-5">휴가 내역</h2>
+		<div class="vacation-card-div mb-5">
+			<div class="vacation-card">
+				<span>총 휴가 일수</span>
+				<span>15일</span>
+			</div>
+			<div class="vacation-card">
+				<span>사용한 휴가 일수</span>
+				<span>1일</span>
+			</div>
+			<div class="vacation-card">
+				<span>남은 휴가 일수</span>
+				<span>1일</span>
+			</div>
 		</div>
-		<div>
+		<div class="vacation-table-div">
 			<h4>휴가 사용 내역</h4>
-			<table>
-				<tr>
-					<th></th>
-				</tr>
+			<select class="month-select mb-3"></select>
+			<table class="table com-table">
+				<thead class="table-dark">
+					<tr>
+						<th>휴가 신청 일자</th>
+						<th>휴가 종류</th>
+						<th>휴가 시작일</th>
+						<th>휴가 종료일</th>
+						<th>휴가 차감 일수</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
 			</table>
 		</div>
 	</div>

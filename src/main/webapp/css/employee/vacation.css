@@ -1,0 +1,30 @@
+/*
+	개인 휴가 페이지용 css~
+*/
+
+.vacation-section {
+	display: flex;
+    justify-content: center;
+}
+
+.vacation-div {
+	display: flex;
+    flex-direction: column;
+    width: 95%;
+    background-color: white;
+    height: 87vh;
+}
+
+.vacation-card-div {
+	display: flex;
+    justify-content: space-evenly;
+}
+
+.vacation-card {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    font-size: 25px;
+    gap: 20px;
+}

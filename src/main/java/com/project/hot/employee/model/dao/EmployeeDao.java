@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.hot.approval.model.dto.Approval;
 import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -25,4 +26,8 @@ public interface EmployeeDao {
 	int insertCommutingNoAtt(SqlSession session, Map<String, Object> param);
 	Commuting selectCommutingByName(SqlSession session, String employeeId);
 	List<String> selectAllEmployeeId(SqlSession session);
+	Commuting selectTodayCommuting(SqlSession session, Map<String, Object> param);
+	Integer selectTotalOvertimeHour(SqlSession session, Map<String, Object> param);
+	List<Approval> selectVacationList(SqlSession session, Map<String, Object> param);
+	int countVacationList(SqlSession session, Map<String, Object> param);
 }

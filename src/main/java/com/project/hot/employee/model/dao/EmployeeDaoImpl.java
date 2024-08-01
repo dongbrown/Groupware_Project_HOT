@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.approval.model.dto.Approval;
 import com.project.hot.employee.model.dto.Commuting;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -87,6 +88,27 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	@Override
 	public List<String> selectAllEmployeeId(SqlSession session) {
 		return session.selectList("employee.selectAllEmployeeId");
+	}
+
+	@Override
+	public Commuting selectTodayCommuting(SqlSession session, Map<String, Object> param) {
+		return session.selectOne("employee.selectTodayCommuting", param);
+	}
+
+	@Override
+	public Integer selectTotalOvertimeHour(SqlSession session, Map<String, Object> param) {
+		Integer result=session.selectOne("employee.selectTotalOvertimeHour", param);
+		return result==null?0:result;
+	}
+
+	@Override
+	public List<Approval> selectVacationList(SqlSession session, Map<String, Object> param) {
+		return session.selectList("employee.selectVacationList", param);
+	}
+
+	@Override
+	public int countVacationList(SqlSession session, Map<String, Object> param) {
+		return session.selectOne("employee.countVacationList", param);
 	}
 
 }

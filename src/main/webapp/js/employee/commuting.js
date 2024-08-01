@@ -84,7 +84,7 @@ function makeCommutingCard(commuting){
 	$('.work-time').html('').append($goWorkTime).append($leaveWork);
 
 	//근무 일수
-	const $totalWorkDay=$('<span>').text(commuting.totalWorkDay+'시간');
+	const $totalWorkDay=$('<span>').text(commuting.totalWorkDay+'일');
 	//연장 근무 시간
 	const $totalExWorkTime=$('<span>').text(commuting.totalExWorkTime+'시간');
 	//총 근무 시간
