@@ -70,6 +70,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		//결재 문서 리스트 가져오기
 		result.put("totalPage", Math.ceil((double)dao.selectApprovalAllCount(session, (int)param.get("no"))/10));
 		result.put("approvals", dao.selectApprovalAllList(session, param));
+
 		return result;
 	}
 

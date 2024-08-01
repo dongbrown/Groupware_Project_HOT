@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const msg = new CommonMessage("enter", loginEmployeeNo).convert()
 		chatServer.send(msg);
 	}
+
 	// 핫톡 사원 리스트 가져오기
 	function employeeList(){
 		$("#option-result").text("");
@@ -550,6 +551,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	// HotTalk Close 시
 	chatServer.onclsoe = (e) =>{
 		console.log("WebSocket 연결 종료 : ", e);
+		console.log("WebSocket 재연결 시도 중");
+		setTimeout(function() {
+            connect();
+        }, 5000);
 	}
 	// Error 발생 시
 	chatServer.onerror = (error) =>{

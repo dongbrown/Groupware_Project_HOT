@@ -33,7 +33,7 @@ public class ApprovalRestController {
 		Map<String, Object> param=new HashMap<>();
 		param.put("no", no);
 		param.put("cPage", cPage);
-		param.put("numPerpage", 10);
+		param.put("numPerpage", 5);
 		return service.getApprovalsCountAndList(param);
 	}
 
