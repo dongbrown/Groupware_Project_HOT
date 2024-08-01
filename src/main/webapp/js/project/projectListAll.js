@@ -89,14 +89,14 @@
 					let $joinBtn;
 					let joinMembers = p.memberEmployeeNos.split(',');
 					let photos = p.memberPhotos.split(',');
-					let remainMember=photos.length-3;
+					let remainMember=joinMembers.length-3;
 					let $addEmpCount='';
 					let $projectInMember='';
 					let $projectAtag='';
 
 
 					const $projectDiv=$('<div>',{class:'elemento__cartao--fundo',css:{backgroundImage:'url(https://images.unsplash.com/photo-1604147706283-d7119b5b822c?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)'}});
-					const $projectDiv2=$('<div>',{class:'elemento__cartao--conteudo'});
+					const $projectDiv2=$('<div>',{class:'elemento__cartao--conteudo',id:'selectProejctInfo'});
 					const $projectPtag=$('<p>',{class:'elemento__cartao--texto-categoria'}).html('프로젝트 번호 : <span id="requestProjectNo">'+p.projectNo+'</span><span id="requestProjectEmployeeNo" style="display:none;">'+p.employeeNo+'</span>');
 					const $projectH3tag=$('<h3>',{class:'elemento__cartao--texto-titulo'}).text(p.projectTitle);
 					const $projectMemberWrab=$('<div>',{class:'container'});
@@ -111,11 +111,12 @@
 						$joinBtn=$('<button>',{type: 'button', id: 'refusedBtn', class: 'btn btn-danger', text: '참여 거절됨','data-bs-toggle': 'modal', 'data-bs-target': '#refusedModal','data-id':p.projectRefuseContent});
 					//프로젝트 참여 요청 버튼
 					}else{
-						$projectAtag=$('<a>',{id:"projectListInfo",class:'elemento__cartao', href:'#', 'data-project-no': p.projectNo});
+						$projectAtag=$('<div>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 						$joinBtn=$('<button>',{type: 'button', id: 'joinBtn', class: 'btn btn-primary', text: '참여 요청', 'data-bs-toggle': 'modal', 'data-bs-target': '#joinModal'});
 						//본인 참여 프로젝트 표시 && 참여버튼 삭제
 						for(i=0;i<joinMembers.length;i++){
 							if(empNo==Number(joinMembers[i])){
+						$projectAtag=$('<a>',{id:"projectListInfo",class:'elemento__cartao', href:'#', 'data-project-no': p.projectNo});
 								$projectInMember=$('<div>',{class:'memberIcon'});
 								$joinBtn='';
 							}else if(empNo!=Number(joinMembers[i])){
@@ -329,5 +330,6 @@ function makeProjectList2(projects) {
 //프로젝트 전체 조회에서 프로젝트 클릭시 모달에 해당 프로젝트 정보 표시
 	$(document).on('click', '#projectListInfo', function(e) {
 		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
-		 location.assign("/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+empNo);
+		let employeeNo = $(this).closest('.elemento__cartao').find('#requestProjectEmployeeNo').text();
+		 location.assign("/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+employeeNo);
 	})
