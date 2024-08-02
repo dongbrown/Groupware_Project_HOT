@@ -9,6 +9,7 @@
         <result property="emailSendDate" column="EMAIL_SEND_DATE"/>
         <result property="emailCategoryNo" column="EMAIL_CATEGORY_NO"/>
         <result property="emailIsDelete" column="EMAIL_ISDELETE"/>
+	    <result property="hasAttachment" column="EMAIL_HAS_ATT" jdbcType="NUMERIC" javaType="java.lang.Boolean"/>
         <association property="sender" javaType="employee">
             <id property="employeeNo" column="SENDER_NO"/>
             <result property="employeeId" column="SENDER_ID"/>
@@ -27,6 +28,13 @@
             </association>
         </collection>
     </resultMap>
+
+    <resultMap id="emailAttResultMap" type="emailAtt">
+	    <id property="emailAttNo" column="EMAIL_ATT_NO"/>
+	    <result property="emailNo" column="EMAIL_NO"/>
+	    <result property="emailAttOriginalFilename" column="EMAIL_ATT_ORIGINAL_FILENAME"/>
+	    <result property="emailAttRenamedFilename" column="EMAIL_ATT_RENAMED_FILENAME"/>
+	</resultMap>
 
     <!-- 받은 메일함 조회 -->
     <select id="selectInboxEmails" parameterType="int" resultMap="emailResultMap">
@@ -115,6 +123,7 @@
         JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
         WHERE er.EMPLOYEE_NO = #{employeeNo}
         AND er.EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+        AND er.EMAIL_RECEIVER_ISDELETE = 'N'
         ORDER BY e.EMAIL_SEND_DATE DESC
     </select>
 
@@ -161,14 +170,30 @@
         WHERE e.EMAIL_NO = #{emailNo}
     </select>
 
-    <!-- 새 이메일 저장 -->
-    <insert id="insertEmail" parameterType="email" useGeneratedKeys="true" keyProperty="emailNo">
-        <selectKey keyProperty="emailNo" resultType="int" order="BEFORE">
-            SELECT EMAIL_SEQ.NEXTVAL FROM DUAL
-        </selectKey>
-        INSERT INTO EMAIL (EMAIL_NO, EMPLOYEE_NO, EMAIL_TITLE, EMAIL_CONTENT, EMAIL_SEND_DATE, EMAIL_CATEGORY_NO)
-        VALUES (#{emailNo}, #{sender.employeeNo}, #{emailTitle}, #{emailContent}, SYSDATE, #{emailCategoryNo})
-    </insert>
+	<!-- 새 이메일 저장 -->
+	<insert id="insertEmail" parameterType="email" useGeneratedKeys="true" keyProperty="emailNo">
+	    <selectKey keyProperty="emailNo" resultType="int" order="BEFORE">
+	        SELECT EMAIL_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO EMAIL (
+	        EMAIL_NO,
+	        EMPLOYEE_NO,
+	        EMAIL_TITLE,
+	        EMAIL_CONTENT,
+	        EMAIL_SEND_DATE,
+	        EMAIL_CATEGORY_NO,
+	        EMAIL_HAS_ATT
+	    )
+	    VALUES (
+	        #{emailNo},
+	        #{sender.employeeNo},
+	        #{emailTitle},
+	        #{emailContent},
+	        SYSDATE,
+	        #{emailCategoryNo},
+	        #{hasAttachment}
+	    )
+	</insert>
 
     <!-- 이메일 수신자 정보 저장 -->
 	<insert id="insertEmailReceiver" parameterType="emailReceiver">
@@ -288,29 +313,84 @@
         AND EMAIL_RECEIVER_ISDELETE = 'Y'
     </update>
 
-    <delete id="deletePermanently" parameterType="list">
-        DELETE FROM EMAIL
-        WHERE EMAIL_NO IN
-        <foreach item="emailNo" collection="list" open="(" separator="," close=")">
-            #{emailNo}
-        </foreach>
-    </delete>
+	<delete id="deletePermanently" parameterType="map">
+	    DELETE FROM EMAIL
+	    WHERE EMAIL_NO IN
+	    <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+	        #{emailNo}
+	    </foreach>
+	    AND EMAIL_NO IN (
+	        SELECT EMAIL_NO
+	        FROM EMAIL_RECEIVER
+	        WHERE EMPLOYEE_NO = #{employeeNo}
+	        AND EMAIL_RECEIVER_ISDELETE = 'Y'
+	    )
+	</delete>
 
-    <update id="restoreFromTrash" parameterType="list">
-        UPDATE EMAIL_RECEIVER
-        SET EMAIL_RECEIVER_ISDELETE = 'N'
-        WHERE EMAIL_NO IN
-        <foreach item="emailNo" collection="list" open="(" separator="," close=")">
-            #{emailNo}
-        </foreach>
-    </update>
+	<delete id="deleteAttachments" parameterType="int">
+    	DELETE FROM EMAIL_ATT WHERE EMAIL_NO = #{emailNo}
+	</delete>
 
-    <select id="selectAttachment" parameterType="int" resultType="emailAtt">
-        SELECT * FROM EMAIL_ATT WHERE EMAIL_ATT_NO = #{attachmentId}
-    </select>
+	<update id="restoreFromTrash" parameterType="map">
+	    UPDATE EMAIL_RECEIVER
+	    SET EMAIL_RECEIVER_ISDELETE = 'N'
+	    WHERE EMAIL_NO IN
+	    <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+	        #{emailNo}
+	    </foreach>
+	    AND EMPLOYEE_NO = #{employeeNo}
+	    AND EMAIL_RECEIVER_ISDELETE = 'Y'
+	</update>
 
-    <select id="selectEmailAttachments" parameterType="int" resultType="emailAtt">
-        SELECT * FROM EMAIL_ATT WHERE EMAIL_NO = #{emailNo}
-    </select>
+	<select id="selectAttachment" parameterType="int" resultMap="emailAttResultMap">
+	    SELECT EMAIL_ATT_NO,
+	           EMAIL_NO,
+	           EMAIL_ATT_ORIGINAL_FILENAME,
+	           EMAIL_ATT_RENAMED_FILENAME
+	    FROM EMAIL_ATT
+	    WHERE EMAIL_ATT_NO = #{attachmentId}
+	</select>
+
+	<select id="selectEmailAttachments" parameterType="int" resultMap="emailAttResultMap">
+	    SELECT EMAIL_ATT_NO,
+	           EMAIL_NO,
+	           EMAIL_ATT_ORIGINAL_FILENAME,
+	           EMAIL_ATT_RENAMED_FILENAME
+	    FROM EMAIL_ATT
+	    WHERE EMAIL_NO = #{emailNo}
+	</select>
+
+	<select id="getInboxUnreadCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER
+		WHERE EMPLOYEE_NO = #{employeeNo}
+		AND EMAIL_RECEIVER_ISDELETE = 'N'
+		AND EMAIL_RECEIVER_ISREAD = 'N'
+	</select>
+
+	<select id="getSelfUnreadCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER er
+		JOIN EMAIL e ON e.EMAIL_NO = er.EMAIL_NO
+		WHERE er.EMPLOYEE_NO = #{employeeNo}
+		AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+		AND er.EMAIL_RECEIVER_ISREAD = 'N'
+		AND e.EMPLOYEE_NO = #{employeeNo}
+	</select>
+
+	<select id="getImportantUnreadCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER
+		WHERE EMPLOYEE_NO = #{employeeNo}
+		AND EMAIL_RECEIVER_ISDELETE = 'N'
+		AND EMAIL_RECEIVER_ISREAD = 'N'
+		AND EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+	</select>
+
+	<select id="getTrashCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER
+		WHERE EMPLOYEE_NO = #{employeeNo}
+		AND EMAIL_RECEIVER_ISDELETE = 'Y'
+		AND EMAIL_RECEIVER_ISREAD = 'N'
+	</select>
+
+
 
 </mapper>
