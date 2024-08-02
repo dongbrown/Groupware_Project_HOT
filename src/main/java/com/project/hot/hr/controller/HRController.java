@@ -21,6 +21,7 @@ import com.project.hot.employee.model.service.EmployeeService;
 import com.project.hot.hr.model.dto.OrgData;
 import com.project.hot.hr.model.dto.RequestCommuting;
 import com.project.hot.hr.model.dto.RequestDepartment;
+import com.project.hot.hr.model.dto.SearchVacationData;
 import com.project.hot.hr.model.service.HRService;
 
 import lombok.RequiredArgsConstructor;
@@ -196,5 +197,16 @@ public class HRController {
 	@GetMapping("/selectOrgData")
 	public OrgData selectDeptAndEmployee(){
 		return HRService.selectOrgData();
+	}
+
+	@GetMapping("/selectAllEmpVacation")
+	public Map<String, Object> selectAllEmpVacation(
+			@RequestParam int cPage,
+			@ModelAttribute SearchVacationData svd){
+		Map<String, Object> param=new HashMap<>();
+		param.put("cPage", cPage);
+		param.put("numPerpage", 10);
+		param.put("svd", svd);
+		return HRService.selectAllEmpVacation(param);
 	}
 }

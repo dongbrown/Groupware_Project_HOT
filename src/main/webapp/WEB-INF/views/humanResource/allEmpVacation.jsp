@@ -9,30 +9,35 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link href="${path }/css/humanResource/allEmpVacation.css" rel="stylesheet" ty	pe="text/css">
 <section class="allEmpVacation-section">
-	<div class="allEmpVacation-div">
-		<h2>전 사원 휴가내역</h2>
-		<div class="search-div">
+	<div class="allEmpVacation-div shadow bg-body rounded">
+		<h2 class="mb-5">전 사원 휴가내역</h2>
+		<div class="search-div mb-3">
 			<form id="searchForm" class="search-form">
-				<input type="date" name="searchDate" class="mr-1">
-				<select id="department" name="departmentCode" class="mr-1">
-					<option value="0">부서 전체</option>
-				</select>
-				<select id="status" name="status" class="mr-1">
-					<option value="">전체</option>
-					<option value="연차">연차</option>
-					<option value="반차">반차</option>
-					<option value="병가">병가</option>
-					<option value="육아휴직">육아휴직</option>
-					<option value="출산휴가">출산휴가</option>
-				</select>
-                <div class="input-group">
-                    <input type="text" name="employeeName" class="form-control bg-light border-0 small" placeholder="이름 검색"
-                        aria-label="Search" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" onclick="">
-                            <i class="fas fa-search fa-sm"></i>
-                        </button>
-                    </div>
+				<div class="mb-1">
+					휴가 시작일 : <input type="date" name="startDate" class="mr-1">
+					~ 휴가 종료일 : <input type="date" name="endDate" class="mr-1">
+				</div>
+				<div style="display: flex;">
+					<select id="department" name="code" class="mr-1">
+						<option value="">부서 전체</option>
+					</select>
+					<select id="status" name="type" class="mr-1">
+						<option value="">종류 전체</option>
+						<option value="연차">연차</option>
+						<option value="반차">반차</option>
+						<option value="병가">병가</option>
+						<option value="육아휴직">육아휴직</option>
+						<option value="출산휴가">출산휴가</option>
+					</select>
+	                <div class="input-group">
+	                    <input type="text" name="name" class="form-control bg-light border-0 small" placeholder="이름 검색"
+	                        aria-label="Search" aria-describedby="basic-addon2">
+	                    <div class="input-group-append">
+	                        <button class="btn btn-primary" type="button" onclick="getEmpVacation(1)">
+	                            <i class="fas fa-search fa-sm"></i>
+	                        </button>
+	                    </div>
+	                </div>
                 </div>
 			</form>
 		</div>

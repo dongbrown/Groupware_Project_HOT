@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.project.hot.approval.model.dto.Approval;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.employee.model.dto.SearchEmployeeData;
@@ -83,6 +84,17 @@ public class HRDaoImpl implements HRDao {
 	@Override
 	public List<Employee> selectAllEmp(SqlSession session) {
 		return session.selectList("employee.selectAllEmployee");
+	}
+
+	@Override
+	public List<Approval> selectAllEmpVacation(SqlSession session, Map<String, Object> param) {
+		return session.selectList("hr.selectAllEmpVacation", param,
+				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
+	}
+
+	@Override
+	public int countAllEmpVacation(SqlSession session, Map<String, Object> param) {
+		return session.selectOne("hr.countAllEmpVacation", param);
 	}
 
 }

@@ -175,6 +175,7 @@ public class HRServiceImpl implements HRService {
 		return result;
 	}
 
+	// 조직도 사원 밑에 사원 넣기
 	private void insertChildren(OrgData od, Employee e) {
 		if(od.getChildren() == null) {
 			od.setChildren(new ArrayList<OrgData>());
@@ -190,4 +191,14 @@ public class HRServiceImpl implements HRService {
 			insertChildren(od.getChildren().get(0),e);
 		}
 	}
+
+	@Override
+	public Map<String, Object> selectAllEmpVacation(Map<String, Object> param) {
+		Map<String, Object> result=new HashMap<>();
+		result.put("totalPage", Math.ceil((double)hrDao.countAllEmpVacation(session, param)/10));
+		result.put("vacations", hrDao.selectAllEmpVacation(session, param));
+		return result;
+	}
+
+
 }

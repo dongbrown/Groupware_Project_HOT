@@ -4,11 +4,15 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StringToIntConverter implements Converter<String, Integer> {
+public class StringToIntegerConverter implements Converter<String, Integer> {
 
 	@Override
 	public Integer convert(String source) {
-		return (source == null || source.trim().isEmpty()) ? null : Integer.parseInt(source);
+		if (source == null || source.trim().isEmpty()) {
+			return null;
+		}else {
+			return Integer.parseInt(source);
+		}
 	}
 
 }

@@ -10,8 +10,10 @@
 .allEmpVacation-div {
 	display: flex;
     flex-direction: column;
-    background-color: white;
     width: 95%;
+    height: 87vh;
+    padding: 2%;
+    position: relative;
 }
 
 .search-div {
@@ -20,5 +22,15 @@
 }
 
 .search-form {
-	display: flex;	
+	display: flex;
+	flex-direction: column;
+}
+
+.pagebar-div {
+	display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }

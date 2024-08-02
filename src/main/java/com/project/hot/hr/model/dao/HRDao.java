@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.project.hot.approval.model.dto.Approval;
 import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.employee.model.dto.RequestEmployee;
 import com.project.hot.hr.model.dto.RequestCommuting;
@@ -26,4 +27,6 @@ public interface HRDao {
 	int deleteCommuting(SqlSession session, int no);
 	int updateCommuting(SqlSession session, RequestCommuting rc);
 	List<Employee> selectAllEmp(SqlSession session);
+	List<Approval> selectAllEmpVacation(SqlSession session, Map<String, Object> param);
+	int countAllEmpVacation(SqlSession session, Map<String, Object> param);
 }

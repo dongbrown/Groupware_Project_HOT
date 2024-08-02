@@ -19,4 +19,5 @@ public interface HRService {
 	int deleteCommuting(int no);
 	int updateCommuting(RequestCommuting rc);
 	OrgData selectOrgData();
+	Map<String, Object> selectAllEmpVacation(Map<String, Object> param);
 }
