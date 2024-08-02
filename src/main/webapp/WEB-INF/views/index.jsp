@@ -37,7 +37,8 @@
                     </div>
 
                 <div id="mail-card">
-                <p style="font-weight:bolder; font-size:17px; margin:10px; text-align:center; color:#4E73DF;">신규 커뮤니티 목록</p>
+                <div class="moreSmallBtn"><a href="#" style="">more+</a></div>
+                <p style="font-weight:bolder; font-size:17px; margin:10px;color:#4E73DF;">신규 커뮤니티 목록</p>
                 	<div>
 						<table class="table table-hover table-striped" >
 						  <thead>
@@ -74,6 +75,7 @@
 						</div>
 					</div>
 					<div id="mainAprrovalTable">
+					<div class="moreBtn"><a href="#" style="">more+</a></div>
 						<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 결재 문서</p>
 	                	<div>
 							<table class="table table-hover table-striped" >
@@ -94,10 +96,13 @@
 
                     <div id="projectBox">
                     <p style="font-weight:bolder; font-size:20px; margin:10px;color:#4E73DF;">프로젝트현황</p>
+                    <div class="moreProjectBtn"><a href="#" style="">more+</a></div>
 					        <div class="donut-chart" data-percent="50">
 					            <svg width="100%" height="100%" viewBox="0 0 42 42">
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#3498db" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="projectChart1" style="text-align:center;">프로젝트 1</div>
+					                <div id="projectChartEmp1" style="text-align:center;">담당자 : 이홍보</div>
 					            </svg>
 					            <div class="percent">0%</div>
 					        </div>
@@ -105,6 +110,8 @@
 					            <svg width="100%" height="100%" viewBox="0 0 42 42">
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#2980b9" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="projectChart2" style="text-align:center;">프로젝트 1</div>
+					                <div id="projectChartEmp2" style="text-align:center;">담당자 : 이홍보</div>
 					            </svg>
 					            <div class="percent">0%</div>
 					        </div>
@@ -112,15 +119,45 @@
 					            <svg width="100%" height="100%" viewBox="0 0 42 42">
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#1abc9c" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="projectChart3" style="text-align:center;">프로젝트 1</div>
+					                <div id="projectChartEmp3" style="text-align:center;">담당자 : 이홍보</div>
 					            </svg>
 					            <div class="percent">0%</div>
 					        </div>
                     </div>
-                    <div>작업 현황</div>
+                    <div id="projectBox">
+						<p style="font-weight:bolder; font-size:20px; margin:10px;color:#4E73DF;">작업현황</p>
+						<div class="moreProjectBtn"><a href="#" style="">more+</a></div>
+					        <div class="donut-chart" data-percent="90">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#3498db" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="workChart1" style="text-align:center;">작업 1</div>
+					            </svg>
+					            <div class="percent">0%</div>
+					        </div>
+					        <div class="donut-chart" data-percent="30">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#2980b9" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="workChart2" style="text-align:center;">작업 1</div>
+					            </svg>
+					            <div class="percent">0%</div>
+
+					        </div>
+					        <div class="donut-chart" data-percent="50">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#1abc9c" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="workChart3" style="text-align:center;">작업 1</div>
+					            </svg>
+					            <div class="percent">0%</div>
+					        </div>
+					</div>
                 </div>
             <div id="agenda-card">
-
-            <p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 메일함</p>
+            	<div class="moreBtn"><a href="#" style="">more+</a></div>
+            	<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 메일함</p>
 					<table class="table table-hover">
 					  <thead>
 					    <tr>
