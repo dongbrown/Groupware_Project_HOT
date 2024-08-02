@@ -27,5 +27,7 @@ public interface ScheduleService {
 
 	void addCompanySchedule(Schedule schedule);
 
+	List<Schedule> getTodaySchedules(int employeeNo);
+
 
 }

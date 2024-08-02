@@ -11,6 +11,8 @@ import com.project.hot.employee.model.dto.Employee;
 import com.project.hot.schedule.model.dto.Schedule;
 import com.project.hot.schedule.model.dto.ScheduleEmployee;
 
+import jakarta.mail.Session;
+
 @Repository
 public class ScheduleDaoImpl implements ScheduleDao {
 
@@ -79,6 +81,11 @@ public class ScheduleDaoImpl implements ScheduleDao {
 	@Override
 	public List<Schedule> getCompanySchedule(SqlSession session) {
 		return session.selectList("schedule.getCompanySchedule");
+	}
+
+	@Override
+	public List<Schedule> getTodaySchedules(SqlSession session, int employeeNo) {
+		return session.selectList("schedule.getTodaySchedule", employeeNo);
 	}
 
 }

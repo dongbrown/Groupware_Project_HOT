@@ -27,28 +27,28 @@
         </div>
     </div>
 
-	<div class="email-view-footer">
-	    <c:if test="${not empty attachments}">
-	        <div class="email-attachments">
-	            <h3>첨부 파일</h3>
-	            <ul id="attachmentList" class="attachment-list">
-	                <c:forEach items="${attachments}" var="attachment">
-	                    <li class="attachment-item">
-	                        <span class="attachment-icon">
-	                            <i class="fas fa-file"></i>
-	                        </span>
-	                        <span class="attachment-name">${attachment.emailAttOriginalFilename}</span>
-	                        <a href="${pageContext.request.contextPath}/email/download/${attachment.emailAttNo}"
-	                           class="btn btn-sm btn-primary download-btn"
-	                           download="${attachment.emailAttOriginalFilename}">
-	                            <i class="fas fa-download"></i> 다운로드
-	                        </a>
-	                    </li>
-	                </c:forEach>
-	            </ul>
-	        </div>
-	    </c:if>
-	</div>
+    <div class="email-view-footer">
+        <c:if test="${not empty attachments}">
+            <div class="email-attachments">
+                <h3>첨부 파일</h3>
+                <ul id="attachmentList" class="attachment-list">
+                    <c:forEach items="${attachments}" var="attachment">
+                        <li class="attachment-item">
+                            <span class="attachment-icon">
+                                <i class="fas fa-file"></i>
+                            </span>
+                            <span class="attachment-name">${attachment.emailAttOriginalFilename}</span>
+                            <a href="${pageContext.request.contextPath}/email/download/${attachment.emailAttNo}"
+                               class="btn btn-sm btn-primary download-btn"
+                               download="${attachment.emailAttOriginalFilename}">
+                                <i class="fas fa-download"></i> 다운로드
+                            </a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
+    </div>
 
     <div class="email-actions-bottom">
         <button class="btn btn-primary btn-reply">
@@ -69,5 +69,4 @@ $(document).ready(function() {
     EmailCommon.initAttachments();
 });
 </script>
-<script src="${pageContext.request.contextPath}/js/email-common.js"></script>
-<script src="${pageContext.request.contextPath}/js/view.js"></script>
+<script src="${pageContext.request.contextPath}/js/email/email-common.js"></script>

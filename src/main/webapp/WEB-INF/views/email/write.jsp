@@ -5,19 +5,19 @@
 <div class="email-write-container">
     <h2 class="email-write-title">새 메일 작성</h2>
     <form id="emailForm" class="email-write-form">
-     	<div class="form-group">
-		    <label for="receivers">받는 사람:</label>
-		    <input type="text" id="receivers" name="receivers" class="form-control">
-		    <div id="receiversList" class="receivers-list"></div>
-		    <div id="selectedReceivers" class="selected-receivers"></div>
-		</div>
+        <div class="form-group">
+            <label for="receivers">받는 사람:</label>
+            <input type="text" id="receivers" name="receivers" class="form-control" value="${receiverEmail}">
+            <div id="receiversList" class="receivers-list"></div>
+            <div id="selectedReceivers" class="selected-receivers"></div>
+        </div>
         <div class="form-group">
             <label for="emailTitle">제목:</label>
-            <input type="text" id="emailTitle" name="emailTitle" class="form-control" required>
+            <input type="text" id="emailTitle" name="emailTitle" class="form-control" required value="${email.emailTitle}">
         </div>
         <div class="form-group">
             <label for="summernote">내용:</label>
-            <textarea id="summernote" name="content"></textarea>
+            <textarea id="summernote" name="content">${email.emailContent}</textarea>
         </div>
         <div class="form-group">
             <label for="attachment">첨부 파일:</label>
@@ -29,7 +29,6 @@
         </div>
         <div class="button-group">
             <button type="submit" class="btn btn-primary">보내기</button>
-            <!-- <button type="button" class="btn btn-secondary" id="saveAsDraft">임시 저장</button> -->
             <button type="button" class="btn btn-danger" id="cancel">취소</button>
         </div>
     </form>
@@ -50,6 +49,12 @@ $(document).ready(function() {
             EmailCommon.initFileAttachment();
             EmailCommon.fileAttachmentInitialized = true;
         }
+    }
+
+    // 받는 사람 이메일 주소가 있으면 선택된 수신자로 추가
+    var receiverEmail = "${receiverEmail}";
+    if (receiverEmail) {
+        EmailCommon.addSelectedReceiver(receiverEmail, receiverEmail.split('@')[0]);
     }
 });
 </script>
