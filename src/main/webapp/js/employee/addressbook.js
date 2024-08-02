@@ -10,7 +10,16 @@ $(document).ready(() => {
 		searchEmployee(1);
 	}
 	getDepartmentList();
+
+	$('.search-name').on('keydown', function(event) {
+		if (event.key === 'Enter') {
+			event.preventDefault(); // 폼 제출 방지
+			$('.search-btn').click(); // 버튼 클릭
+		}
+	});
 });
+
+
 
 //해당 페이지에 필요한 사원 데이터 가져와서 페이지구성
 function getEmployeeList(cPage) {
@@ -88,7 +97,8 @@ function changeTitle(e){
 //검색 처리 함수
 function searchEmployee(cPage){
 	const name=$('.search-name').val().trim();
-	const title=$('.department-menu-title').text().trim();
+	let title=$('.department-menu-title').text().trim();
+	if(title == '부서선택') title='';
 	$('.card-div').html('');
 	showLoadingSpinner($('.card-div'));
 	fetch(`${path}/api/employee/employeeList?cPage=${cPage}&name=${name}&title=${title}`)
