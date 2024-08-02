@@ -167,29 +167,44 @@ public class EmailController {
 
     @GetMapping("/write")
     public String showWriteForm(@RequestParam(required = false) String action,
-                                @RequestParam(required = false) String to,
-                                @RequestParam(required = false) String subject,
-                                @RequestParam(required = false) String content,
+                                @RequestParam(required = false) Integer emailNo,
                                 Model model) {
         Email email = new Email();
 
-        if ("reply".equals(action) || "forward".equals(action)) {
-            email.setEmailTitle(subject);
-            email.setEmailContent(content);
+        if (emailNo != null) {
+            Email originalEmail = service.getEmailByNo(emailNo);
 
-            if ("reply".equals(action) && to != null && !to.isEmpty()) {
-                String employeeId = to.replaceAll("[<>]", "").split("@")[0];
-                Employee receiver = service.findEmployeeByEmployeeId(employeeId);
-                if (receiver != null) {
-                    EmailReceiver emailReceiver = EmailReceiver.builder()
-                        .employee(receiver)
-                        .emailReceiverCategory(1)
-                        .emailReceiverIsRead("N")
-                        .emailReceiverIsDelete("N")
-                        .emailReceiverIsImportant("N")
-                        .build();
-                    email.setReceivers(Arrays.asList(emailReceiver));
-                }
+            if ("reply".equals(action)) {
+                // 답장 처리
+                email.setEmailTitle("Re: " + originalEmail.getEmailTitle());
+                EmailReceiver receiver = EmailReceiver.builder()
+                    .employee(originalEmail.getSender())
+                    .emailReceiverCategory(1)
+                    .emailReceiverIsRead("N")
+                    .emailReceiverIsDelete("N")
+                    .emailReceiverIsImportant("N")
+                    .build();
+                email.setReceivers(Arrays.asList(receiver));
+
+                String quotedContent = "\n\n-------- 원본 메시지 --------\n" +
+                                       "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
+                                       "날짜: " + originalEmail.getEmailSendDate() + "\n" +
+                                       "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                       originalEmail.getEmailContent();
+                email.setEmailContent(quotedContent);
+
+                // 받는 사람 이메일 주소를 모델에 추가
+                model.addAttribute("receiverEmail", originalEmail.getSender().getEmployeeId() + "@hot.com");
+            } else if ("forward".equals(action)) {
+                // 전달 처리
+                email.setEmailTitle("Fwd: " + originalEmail.getEmailTitle());
+                String forwardedContent = "\n\n-------- 전달된 메시지 --------\n" +
+                                          "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
+                                          "날짜: " + originalEmail.getEmailSendDate() + "\n" +
+                                          "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                          originalEmail.getEmailContent();
+                email.setEmailContent(forwardedContent);
+                email.setHasAttachment(originalEmail.hasAttachment());
             }
         }
 

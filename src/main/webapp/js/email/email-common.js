@@ -3,7 +3,6 @@ var EmailCommon = {
     files: [],
     initialized: false,
 
-    // 초기화 함수
     init: function(contextPath) {
         if (this.initialized) return;
         this.initialized = true;
@@ -11,16 +10,11 @@ var EmailCommon = {
         this.contextPath = contextPath;
         this.bindEvents();
 
-        // 초기 로드 시 안 읽은 메일 개수 업데이트
         this.updateUnreadCounts();
-
-        // 3초마다 안 읽은 메일 개수 업데이트
         setInterval(this.updateUnreadCounts.bind(this), 3000);
     },
 
-    // 이벤트 바인딩
     bindEvents: function() {
-        // 메일함 선택 이벤트
         $(document).off('click', '.list-group-item').on('click', '.list-group-item', function(e) {
             e.preventDefault();
             $('.list-group-item').removeClass('active');
@@ -29,7 +23,6 @@ var EmailCommon = {
             EmailCommon.loadMailbox(mailbox);
         });
 
-        // 영구삭제 버튼 이벤트
         $(document).off('click', '#permanentDeleteBtn').on('click', '#permanentDeleteBtn', function() {
             var selectedEmails = EmailCommon.getSelectedEmails();
             if (selectedEmails.length === 0) {
@@ -41,42 +34,36 @@ var EmailCommon = {
             }
         });
 
-        // 메일 쓰기 버튼 이벤트
-		$(document).off('click', '#writeBtn, #writeEmailBtn').on('click', '#writeBtn, #writeEmailBtn', function(e) {
-		      e.preventDefault();
-		      if (!$(this).data('clicked')) {
-		          $(this).data('clicked', true);
-		          EmailCommon.showWriteForm();
-		          setTimeout(() => $(this).data('clicked', false), 1000); // 1초 후 재클릭 가능
-		      }
-		});
+        $(document).off('click', '#writeBtn, #writeEmailBtn').on('click', '#writeBtn, #writeEmailBtn', function(e) {
+            e.preventDefault();
+            if (!$(this).data('clicked')) {
+                $(this).data('clicked', true);
+                EmailCommon.showWriteForm();
+                setTimeout(() => $(this).data('clicked', false), 1000);
+            }
+        });
 
-        // 내게 쓰기 버튼 이벤트
-    	$(document).off('click', '#write-selfBtn, #writeSelfEmailBtn').on('click', '#write-selfBtn, #writeSelfEmailBtn', function(e) {
-        e.preventDefault();
-        if (!$(this).data('clicked')) {
-            $(this).data('clicked', true);
-            EmailCommon.showSelfWriteForm();
-            setTimeout(() => $(this).data('clicked', false), 1000); // 1초 후 재클릭 가능
-	        }
-	    });
+        $(document).off('click', '#write-selfBtn, #writeSelfEmailBtn').on('click', '#write-selfBtn, #writeSelfEmailBtn', function(e) {
+            e.preventDefault();
+            if (!$(this).data('clicked')) {
+                $(this).data('clicked', true);
+                EmailCommon.showSelfWriteForm();
+                setTimeout(() => $(this).data('clicked', false), 1000);
+            }
+        });
 
-        // 전체 선택 체크박스 이벤트
         $(document).off('change', '#select-all').on('change', '#select-all', function() {
             $('.mail-item-checkbox').prop('checked', $(this).prop('checked'));
         });
 
-        // 개별 체크박스 이벤트
         $(document).off('change', '.mail-item-checkbox').on('change', '.mail-item-checkbox', function() {
             var allChecked = $('.mail-item-checkbox:checked').length === $('.mail-item-checkbox').length;
             $('#select-all').prop('checked', allChecked);
         });
 
-        // 삭제 버튼 이벤트
         $(document).off('click', '#deleteBtn').on('click', '#deleteBtn', function() {
             var selectedEmails = EmailCommon.getSelectedEmails();
             if (selectedEmails.length === 0) {
-
                 return;
             }
             EmailCommon.moveEmailsToTrash(selectedEmails, function() {
@@ -84,7 +71,6 @@ var EmailCommon = {
             });
         });
 
-        // 검색 버튼 이벤트
         $(document).off('click', '#searchBtn').on('click', '#searchBtn', function() {
             var keyword = $('#searchInput').val();
             if (keyword.trim() === '') {
@@ -94,23 +80,20 @@ var EmailCommon = {
             EmailCommon.searchEmails(keyword);
         });
 
-        // 검색 입력창 엔터 키 이벤트
         $(document).off('keypress', '#searchInput').on('keypress', '#searchInput', function(e) {
-            if (e.which == 13) {  // 엔터 키
+            if (e.which == 13) {
                 e.preventDefault();
                 $('#searchBtn').click();
             }
         });
 
-        // 이메일 항목 클릭 이벤트
         $(document).off('click', '.email-item').on('click', '.email-item', function(e) {
             if (!$(e.target).is('input:checkbox') && !$(e.target).is('.toggle-important')) {
                 var emailNo = $(this).data('email-no');
-                EmailCommon.viewEmail(emailNo);
+                EmailCommon.loadEmailContent(emailNo);
             }
         });
 
-        // 파일 드래그 앤 드롭 이벤트
         $(document).off('dragover', '#dropZone').on('dragover', '#dropZone', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -130,7 +113,6 @@ var EmailCommon = {
             EmailCommon.handleFiles(e.originalEvent.dataTransfer.files);
         });
 
-        // 파일 선택 이벤트
         $(document).off('click', '#dropZone').on('click', '#dropZone', function() {
             $('#fileInput').click();
         });
@@ -139,49 +121,22 @@ var EmailCommon = {
             EmailCommon.handleFiles(this.files);
         });
 
-        // 파일 삭제 이벤트
         $(document).off('click', '.remove-file').on('click', '.remove-file', function() {
             var index = $(this).data('index');
             EmailCommon.files.splice(index, 1);
             EmailCommon.updateFileList();
         });
 
-        // 이메일 전송 이벤트
         $(document).off('submit', '#emailForm').on('submit', '#emailForm', function(e) {
             e.preventDefault();
             EmailCommon.saveEmail(false);
         });
 
-        // 임시저장 버튼 이벤트
         $(document).off('click', '#saveDraftBtn').on('click', '#saveDraftBtn', function(e) {
             e.preventDefault();
             EmailCommon.saveEmail(true);
         });
 
-        // 수신자 입력창 키보드 이벤트
-        $(document).off('keydown', '#receivers').on('keydown', '#receivers', function(e) {
-            var $receiversList = $('#receiversList');
-            var $highlighted = $receiversList.find('.keyboard-selected');
-
-            switch(e.which) {
-                case 40: // 방향키 내리기
-                    e.preventDefault();
-                    EmailCommon.moveSelection($highlighted, 'down');
-                    break;
-                case 38: // 방향키 올리기
-                    e.preventDefault();
-                    EmailCommon.moveSelection($highlighted, 'up');
-                    break;
-                case 13: // enter
-                    e.preventDefault();
-                    if ($highlighted.length > 0) {
-                        $highlighted.click();
-                    }
-                    break;
-            }
-        });
-
-        // 중요 메일 토글 이벤트
         $(document).off('click', '.toggle-important').on('click', '.toggle-important', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -189,14 +144,12 @@ var EmailCommon = {
             EmailCommon.toggleImportant(emailNo);
         });
 
-        // 사이드바 메일함 링크 클릭 이벤트
         $(document).off('click', '.email-link').on('click', '.email-link', function(e) {
             e.preventDefault();
             var mailbox = $(this).data('mailbox');
             EmailCommon.loadMailbox(mailbox);
         });
 
-        // 복구 버튼 이벤트
         $(document).off('click', '#restoreBtn').on('click', '#restoreBtn', function() {
             var selectedEmails = EmailCommon.getSelectedEmails();
             if (selectedEmails.length === 0) {
@@ -205,16 +158,30 @@ var EmailCommon = {
             }
             EmailCommon.restoreFromTrash(selectedEmails);
         });
+
+        // EmailView에서 가져온 이벤트 바인딩
+        $(document).on('click', '.btn-reply', function() {
+            var emailNo = $('#emailNo').val();
+            EmailCommon.replyEmail(emailNo);
+        });
+
+        $(document).on('click', '.btn-forward', function() {
+            var emailNo = $('#emailNo').val();
+            EmailCommon.forwardEmail(emailNo);
+        });
+
+        $(document).on('click', '.btn-delete', function() {
+            var emailNo = $('#emailNo').val();
+            EmailCommon.deleteEmail(emailNo);
+        });
     },
 
-    // 선택된 이메일 가져오기
     getSelectedEmails: function() {
         return $('.email-checkbox:checked').map(function() {
             return $(this).val();
         }).get();
     },
 
-    // 키보드 선택 이동 함수
     moveSelection: function($highlighted, direction) {
         var $items = $('#receiversList').find('.receiver-item');
         var currentIndex = $items.index($highlighted);
@@ -230,7 +197,6 @@ var EmailCommon = {
         this.ensureVisible($items.eq(currentIndex));
     },
 
-    // 선택된 항목이 보이도록 스크롤 조정
     ensureVisible: function($element) {
         var container = $('#receiversList');
         var containerTop = container.scrollTop();
@@ -244,23 +210,22 @@ var EmailCommon = {
             container.scrollTop(elemBottom - container.height());
         }
     },
-    // 메일함 로드 함수
-	loadMailbox: function(mailbox) {
-	    $.ajax({
-	        url: this.contextPath + '/' + mailbox,
-	        type: 'GET',
-	        success: function(response) {
-	            $('#mailContent').html(response);
-	            EmailCommon.initializeMailboxFunctions(mailbox);
-	            history.pushState(null, '', EmailCommon.contextPath + '/' + mailbox);
-	        },
-	        error: function() {
-	            alert(mailbox + ' 메일함을 로드하는데 실패했습니다.');
-	        }
-	    });
-	},
 
-    // 메일함별 초기화 함수
+    loadMailbox: function(mailbox) {
+        $.ajax({
+            url: this.contextPath + '/' + mailbox,
+            type: 'GET',
+            success: function(response) {
+                $('#mailContent').html(response);
+                EmailCommon.initializeMailboxFunctions(mailbox);
+                history.pushState(null, '', EmailCommon.contextPath + '/' + mailbox);
+            },
+            error: function() {
+                alert(mailbox + ' 메일함을 로드하는데 실패했습니다.');
+            }
+        });
+    },
+
     initializeMailboxFunctions: function(mailbox) {
         switch(mailbox) {
             case 'inbox':
@@ -278,18 +243,14 @@ var EmailCommon = {
         }
     },
 
-    // 받은 메일함 초기화
     initInbox: function() {
         this.reattachEventListeners();
     },
 
-    // 보낸 메일함 초기화
     initSent: function() {
-        // 보낸 메일함 특정 초기화 로직
         this.reattachEventListeners();
     },
 
-    // 메일 쓰기 폼 초기화
     initWriteForm: function() {
         if ($('#summernote').length) {
             this.initSummernote();
@@ -299,12 +260,10 @@ var EmailCommon = {
         }
     },
 
-    // 휴지통 초기화
     initTrash: function() {
         this.reattachEventListeners();
     },
 
-    // 휴지통으로 이동
     moveEmailsToTrash: function(emailNos, callback) {
         if (!Array.isArray(emailNos)) {
             emailNos = [emailNos];
@@ -328,7 +287,6 @@ var EmailCommon = {
         });
     },
 
-    // 이메일 검색
     searchEmails: function(keyword) {
         $.ajax({
             url: this.contextPath + '/search',
@@ -338,7 +296,6 @@ var EmailCommon = {
                 $('#mailContent').html(response);
                 EmailCommon.reattachEventListeners();
 
-                // 검색 결과 개수 표시 (옵션)
                 var resultCount = $('#emailList tr').length;
                 $('.search-result-count').text('검색 결과: ' + resultCount + '개');
             },
@@ -349,53 +306,51 @@ var EmailCommon = {
         });
     },
 
-    // 이메일 보기
-    viewEmail: function(emailNo) {
+    loadEmailContent: function(emailNo) {
         $.ajax({
             url: this.contextPath + '/view/' + emailNo,
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
-                EmailCommon.markEmailAsRead(emailNo);
+                EmailCommon.loadEmailAttachments(emailNo);
+                EmailCommon.markAsRead(emailNo);
             },
             error: function() {
-                alert('이메일을 불러오는데 실패했습니다.');
+                alert('이메일 내용을 불러오는데 실패했습니다.');
             }
         });
     },
 
-    // 메일 쓰기 폼 표시
     showWriteForm: function() {
-	    $.ajax({
-	        url: this.contextPath + '/write',
-	        type: 'GET',
-	        success: function(response) {
-	            $('#mailContent').html(response);
-	            EmailCommon.initializeMailboxFunctions('write');
-	            history.pushState(null, '', EmailCommon.contextPath + '/write');
-	        },
-	        error: function() {
-	            alert('메일 작성 폼을 불러오는데 실패했습니다.');
-	        }
-	    });
-	},
+        $.ajax({
+            url: this.contextPath + '/write',
+            type: 'GET',
+            success: function(response) {
+                $('#mailContent').html(response);
+                EmailCommon.initializeMailboxFunctions('write');
+                history.pushState(null, '', EmailCommon.contextPath + '/write');
+            },
+            error: function() {
+                alert('메일 작성 폼을 불러오는데 실패했습니다.');
+            }
+        });
+    },
 
-	showSelfWriteForm: function() {
-	    $.ajax({
-	        url: this.contextPath + '/write-self',
-	        type: 'GET',
-	        success: function(response) {
-	            $('#mailContent').html(response);
-	            EmailCommon.initializeMailboxFunctions('write-self');
-	            history.pushState(null, '', EmailCommon.contextPath + '/write-self');
-	        },
-	        error: function() {
-	            alert('내게 쓰기 폼을 불러오는데 실패했습니다.');
-	        }
-	    });
-	},
+    showSelfWriteForm: function() {
+        $.ajax({
+            url: this.contextPath + '/write-self',
+            type: 'GET',
+            success: function(response) {
+                $('#mailContent').html(response);
+                EmailCommon.initializeMailboxFunctions('write-self');
+                history.pushState(null, '', EmailCommon.contextPath + '/write-self');
+            },
+            error: function() {
+                alert('내게 쓰기 폼을 불러오는데 실패했습니다.');
+            }
+        });
+    },
 
-    // Summernote 에디터 초기화
     initSummernote: function() {
         $('#summernote').summernote({
             height: 300,
@@ -416,7 +371,6 @@ var EmailCommon = {
         });
     },
 
-    // 파일 처리
     handleFiles: function(newFiles) {
         for (var i = 0; i < newFiles.length; i++) {
             if (!this.files.some(f => f.name === newFiles[i].name)) {
@@ -426,7 +380,6 @@ var EmailCommon = {
         this.updateFileList();
     },
 
-    // 파일 목록 업데이트
     updateFileList: function() {
         var fileList = $('#fileList');
         fileList.empty();
@@ -438,15 +391,15 @@ var EmailCommon = {
             fileList.append(fileItem);
         }
     },
-    // 이메일 저장 (전송 또는 임시저장)
+
     saveEmail: function(isDraft) {
-		if (this.isSaving) return; // 이미 저장 중이면 중복 실행 방지
-    	this.isSaving = true;
+        if (this.isSaving) return;
+        this.isSaving = true;
 
         var formData = new FormData($('#emailForm')[0]);
 
-		var receivers = this.getSelectedReceivers();
-		formData.set('receivers', receivers);
+        var receivers = this.getSelectedReceivers();
+        formData.set('receivers', receivers);
 
         if (!formData.get('receivers')) {
             formData.set('receivers', $('#receivers').val());
@@ -481,11 +434,13 @@ var EmailCommon = {
             error: function(xhr, status, error) {
                 console.error("Email save error:", xhr.responseText);
                 alert((isDraft ? '임시저장' : '메일 전송') + '에 실패했습니다. 오류: ' + error);
+            },
+            complete: function() {
+                EmailCommon.isSaving = false;
             }
         });
     },
 
-    // 수신자 자동완성 초기화
     initReceiverAutocomplete: function() {
         var $receivers = $('#receivers');
         var $receiversList = $('#receiversList');
@@ -541,7 +496,6 @@ var EmailCommon = {
         });
     },
 
-    // 선택된 수신자 추가
     addSelectedReceiver: function(email, name) {
         var $selectedReceivers = $('#selectedReceivers');
         var $tag = $('<span class="selected-receiver"></span>')
@@ -551,14 +505,12 @@ var EmailCommon = {
         $selectedReceivers.append($tag);
     },
 
-    // 선택된 수신자 목록 가져오기
     getSelectedReceivers: function() {
         return $('#selectedReceivers .selected-receiver').map(function() {
             return $(this).data('email');
         }).get();
     },
 
-    // 사원 검색
     searchEmployees: function(keyword) {
         $.ajax({
             url: this.contextPath + '/search-employees',
@@ -574,7 +526,6 @@ var EmailCommon = {
         });
     },
 
-    // 직원 목록 표시
     displayEmployeeList: function(employees) {
         var $receiversList = $('#receiversList');
         $receiversList.empty();
@@ -600,8 +551,7 @@ var EmailCommon = {
         $receiversList.show();
     },
 
-    // 이메일을 읽음으로 표시
-    markEmailAsRead: function(emailNo) {
+    markAsRead: function(emailNo) {
         $.ajax({
             url: this.contextPath + '/mark-as-read/' + emailNo,
             type: 'POST',
@@ -615,20 +565,19 @@ var EmailCommon = {
         });
     },
 
-    // 중요 메일 토글
     toggleImportant: function(emailNo) {
         $.ajax({
             url: this.contextPath + '/toggle-important/' + emailNo,
             type: 'POST',
             success: function(response) {
-                EmailCommon.loadMailbox('inbox'); // 메일함 새로고침
+                EmailCommon.loadMailbox('inbox');
             },
             error: function(xhr, status, error) {
                 console.error('중요 표시 변경 실패:', error);
             }
         });
     },
-    // 답장 폼 표시
+
     replyEmail: function(emailNo) {
         $.ajax({
             url: this.contextPath + '/reply/' + emailNo,
@@ -636,6 +585,7 @@ var EmailCommon = {
             success: function(response) {
                 $('#mailContent').html(response);
                 EmailCommon.initializeMailboxFunctions('write');
+                history.pushState(null, '', EmailCommon.contextPath + '/reply/' + emailNo);
             },
             error: function() {
                 alert('답장 폼을 불러오는데 실패했습니다.');
@@ -643,7 +593,6 @@ var EmailCommon = {
         });
     },
 
-    // 전달 폼 표시
     forwardEmail: function(emailNo) {
         $.ajax({
             url: this.contextPath + '/forward/' + emailNo,
@@ -651,6 +600,7 @@ var EmailCommon = {
             success: function(response) {
                 $('#mailContent').html(response);
                 EmailCommon.initializeMailboxFunctions('write');
+                history.pushState(null, '', EmailCommon.contextPath + '/forward/' + emailNo);
             },
             error: function() {
                 alert('전달 폼을 불러오는데 실패했습니다.');
@@ -658,7 +608,24 @@ var EmailCommon = {
         });
     },
 
-    // 읽지 않은 메일 수 업데이트
+    deleteEmail: function(emailNo) {
+        if (confirm('이 이메일을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: this.contextPath + '/delete',
+                type: 'POST',
+                data: JSON.stringify([emailNo]),
+                contentType: 'application/json',
+                success: function(response) {
+                    alert('이메일이 삭제되었습니다.');
+                    EmailCommon.loadMailbox('inbox');
+                },
+                error: function() {
+                    alert('이메일 삭제에 실패했습니다.');
+                }
+            });
+        }
+    },
+
     updateUnreadCounts: function() {
         $.ajax({
             url: this.contextPath + '/unread-counts',
@@ -676,7 +643,6 @@ var EmailCommon = {
         });
     },
 
-    // 임시저장 메일함 로드
     loadDrafts: function() {
         $.ajax({
             url: this.contextPath + '/drafts',
@@ -691,7 +657,6 @@ var EmailCommon = {
         });
     },
 
-    // 임시저장 메일 편집
     editDraft: function(emailNo) {
         $.ajax({
             url: this.contextPath + '/edit-draft/' + emailNo,
@@ -706,12 +671,11 @@ var EmailCommon = {
         });
     },
 
-    // 이벤트 리스너 재연결
     reattachEventListeners: function() {
         $('.email-item').off('click').on('click', function(e) {
             if (!$(e.target).is('input:checkbox') && !$(e.target).is('.toggle-important')) {
                 var emailNo = $(this).data('email-no');
-                EmailCommon.viewEmail(emailNo);
+                EmailCommon.loadEmailContent(emailNo);
             }
         });
 
@@ -732,7 +696,6 @@ var EmailCommon = {
         });
     },
 
-    // 휴지통 메일을 읽음으로 표시
     markTrashAsRead: function(emailNos) {
         $.ajax({
             url: this.contextPath + '/trash/mark-as-read',
@@ -749,98 +712,46 @@ var EmailCommon = {
         });
     },
 
-    // 메일 영구 삭제
-    deletePermanently: function(emailNos, callback) {
-	    if (!Array.isArray(emailNos)) {
-	        emailNos = [emailNos];
-	    }
+    deletePermanently: function(emailNos) {
+        if (!Array.isArray(emailNos)) {
+            emailNos = [emailNos];
+        }
 
-	    $.ajax({
-	        url: this.contextPath + '/trash/delete-permanently',
-	        type: 'POST',
-	        contentType: 'application/json',
-	        data: JSON.stringify(emailNos),
-	        success: function(response) {
-	            if (callback) callback(response);
-	            EmailCommon.loadMailbox('trash');
-	        },
-	        error: function(xhr, status, error) {
-	            alert("영구 삭제 중 오류가 발생했습니다: " + xhr.responseText);
-	        }
-	    });
-	},
-
-	restoreFromTrash: function(emailNos, callback) {
-	    if (!Array.isArray(emailNos)) {
-	        emailNos = [emailNos];
-	    }
-
-	    $.ajax({
-	        url: this.contextPath + '/trash/restore',
-	        type: 'POST',
-	        contentType: 'application/json',
-	        data: JSON.stringify(emailNos),
-	        success: function(response) {
-	            if (callback) callback(response);
-	            EmailCommon.loadMailbox('trash');
-	        },
-	        error: function(xhr, status, error) {
-	            alert("복구 중 오류가 발생했습니다: " + xhr.responseText);
-	        }
-	    });
-	},
-
-    // 첨부파일 다운로드
-    downloadAttachment: function(attachmentId, filename) {
-        var url = this.contextPath + '/download/' + attachmentId;
-
-        fetch(url)
-            .then(response => response.blob())
-            .then(blob => {
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-            })
-            .catch(error => {
-                console.error('파일 다운로드 중 오류 발생:', error);
-                alert('파일 다운로드에 실패했습니다.');
-            });
+        $.ajax({
+            url: this.contextPath + '/trash/delete-permanently',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(emailNos),
+            success: function(response) {
+                alert(response);
+                EmailCommon.loadMailbox('trash');
+            },
+            error: function(xhr, status, error) {
+                alert("영구 삭제 중 오류가 발생했습니다: " + xhr.responseText);
+            }
+        });
     },
 
-    // 답장 함수
-	replyEmail: function(emailNo) {
-	    $.ajax({
-	        url: this.contextPath + '/reply/' + emailNo,
-	        type: 'GET',
-	        success: function(response) {
-	            $('#mailContent').html(response);
-	            EmailCommon.initializeMailboxFunctions('write');
-	            history.pushState(null, '', EmailCommon.contextPath + '/reply/' + emailNo);
-	        },
-	        error: function() {
-	            alert('답장 폼을 불러오는데 실패했습니다.');
-	        }
-	    });
-	},
+    restoreFromTrash: function(emailNos) {
+        if (!Array.isArray(emailNos)) {
+            emailNos = [emailNos];
+        }
 
-	// 전달 함수
-	forwardEmail: function(emailNo) {
-	    $.ajax({
-	        url: this.contextPath + '/forward/' + emailNo,
-	        type: 'GET',
-	        success: function(response) {
-	            $('#mailContent').html(response);
-	            EmailCommon.initializeMailboxFunctions('write');
-	            history.pushState(null, '', EmailCommon.contextPath + '/forward/' + emailNo);
-	        },
-	        error: function() {
-	            alert('전달 폼을 불러오는데 실패했습니다.');
-	        }
-		});
-	},
+        $.ajax({
+            url: this.contextPath + '/trash/restore',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(emailNos),
+            success: function(response) {
+                alert(response);
+                EmailCommon.loadMailbox('trash');
+            },
+            error: function(xhr, status, error) {
+                alert("복구 중 오류가 발생했습니다: " + xhr.responseText);
+            }
+        });
+    },
 
-    // 이메일 첨부파일 목록 로드
     loadEmailAttachments: function(emailNo) {
         $.ajax({
             url: this.contextPath + '/attachments/' + emailNo,
@@ -865,6 +776,47 @@ var EmailCommon = {
                 console.error('첨부 파일 목록을 불러오는데 실패했습니다.');
             }
         });
+    },
+downloadAttachment: function(attachmentId, filename) {
+        var url = this.contextPath + '/download/' + attachmentId;
+
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+            })
+            .catch(error => {
+                console.error('파일 다운로드 중 오류 발생:', error);
+                alert('파일 다운로드에 실패했습니다.');
+            });
+    },
+
+    reattachEventListeners: function() {
+        $('.email-item').off('click').on('click', function(e) {
+            if (!$(e.target).is('input:checkbox') && !$(e.target).is('.toggle-important')) {
+                var emailNo = $(this).data('email-no');
+                EmailCommon.loadEmailContent(emailNo);
+            }
+        });
+
+        $('.toggle-important').off('click').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var emailNo = $(this).closest('.email-item').data('email-no');
+            EmailCommon.toggleImportant(emailNo);
+        });
+
+        $('.mail-item-checkbox').off('change').on('change', function() {
+            var allChecked = $('.mail-item-checkbox:checked').length === $('.mail-item-checkbox').length;
+            $('#select-all').prop('checked', allChecked);
+        });
+
+        $('#select-all').off('change').on('change', function() {
+            $('.mail-item-checkbox').prop('checked', $(this).prop('checked'));
+        });
     }
 };
 
@@ -874,11 +826,11 @@ $(document).ready(function() {
     EmailCommon.init(contextPath);
     $('#writeBtn').click(function(e) {
         e.preventDefault();
-        EmailCommon.showWriteForm(false);
+        EmailCommon.showWriteForm();
     });
 
     $('#write-selfBtn').click(function(e) {
         e.preventDefault();
-        EmailCommon.showWriteForm(true);
+        EmailCommon.showSelfWriteForm();
     });
 });

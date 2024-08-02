@@ -70,4 +70,3 @@ $(document).ready(function() {
 });
 </script>
 <script src="${pageContext.request.contextPath}/js/email/email-common.js"></script>
-<script src="${pageContext.request.contextPath}/js/email/view.js"></script>
