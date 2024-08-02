@@ -134,10 +134,15 @@
 				    <div class="bg-white py-2 collapse-inner rounded">
 				        <h6 class="collapse-header">메일 조회</h6>
 						<a class="collapse-item" href="${path }/email?mailbox=inbox">받은메일함</a>
+						<span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
 						<a class="collapse-item" href="${path }/email?mailbox=sent">보낸메일함</a>
+						<span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
 						<a class="collapse-item" href="${path }/email?mailbox=self">내게쓴메일함</a>
+						<span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
 				        <a class="collapse-item" href="${path }/email?mailbox=important">중요메일함</a>
+				        <span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
 				        <a class="collapse-item" href="${path }/email?mailbox=trash">휴지통</a>
+				        <span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
 				        <br>
 				        <h6 class="collapse-header">메일 발송</h6>
 						<a class="collapse-item" href="${path }/email?mailbox=write">메일 쓰기</a>

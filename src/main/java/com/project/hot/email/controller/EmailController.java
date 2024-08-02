@@ -159,12 +159,6 @@ public class EmailController {
         return "email/view";
     }
 
-//    @GetMapping("/write")
-//    public String showWriteForm(Model model) {
-//        model.addAttribute("email", new Email());
-//        return "email/write";
-//    }
-
     @GetMapping("/write")
     public String showWriteForm(@RequestParam(required = false) String action,
                                 @RequestParam(required = false) Integer emailNo,
@@ -175,7 +169,6 @@ public class EmailController {
             Email originalEmail = service.getEmailByNo(emailNo);
 
             if ("reply".equals(action)) {
-                // 답장 처리
                 email.setEmailTitle("Re: " + originalEmail.getEmailTitle());
                 EmailReceiver receiver = EmailReceiver.builder()
                     .employee(originalEmail.getSender())
@@ -193,10 +186,8 @@ public class EmailController {
                                        originalEmail.getEmailContent();
                 email.setEmailContent(quotedContent);
 
-                // 받는 사람 이메일 주소를 모델에 추가
                 model.addAttribute("receiverEmail", originalEmail.getSender().getEmployeeId() + "@hot.com");
             } else if ("forward".equals(action)) {
-                // 전달 처리
                 email.setEmailTitle("Fwd: " + originalEmail.getEmailTitle());
                 String forwardedContent = "\n\n-------- 전달된 메시지 --------\n" +
                                           "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
@@ -324,18 +315,21 @@ public class EmailController {
     }
 
     @GetMapping("/search")
-    public String searchEmails(@RequestParam String keyword, Model model) {
+    public String searchEmails(@RequestParam String keyword,
+                               @RequestParam(defaultValue = "1") int page,
+                               @RequestParam(defaultValue = "10") int size,
+                               Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
-        List<Email> searchResults = service.searchEmails(employeeNo, keyword);
-        model.addAttribute("emails", searchResults);
+        Map<String, Object> result = service.searchEmails(employeeNo, keyword, page, size);
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
 
         return "email/inbox-list";
     }
-
-
 
     @GetMapping("/unread-counts")
     @ResponseBody

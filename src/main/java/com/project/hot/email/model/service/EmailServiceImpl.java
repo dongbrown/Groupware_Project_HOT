@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.ibatis.session.SqlSession;
@@ -70,13 +72,52 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public List<Email> getInboxEmails(int employeeNo) {
-        return dao.selectInboxEmails(employeeNo, sqlSession);
+    public Map<String, Object> getInboxEmails(int employeeNo, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Email> emails = dao.selectInboxEmails(employeeNo, offset, size, sqlSession);
+        int totalEmails = dao.countInboxEmails(employeeNo, sqlSession);
+        return createPaginatedResult(emails, page, size, totalEmails);
     }
 
     @Override
-    public List<Email> getTrashEmails(int employeeNo) {
-        return dao.selectTrashEmails(sqlSession, employeeNo);
+    public Map<String, Object> getTrashEmails(int employeeNo, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Email> emails = dao.selectTrashEmails(employeeNo, offset, size, sqlSession);
+        int totalEmails = dao.countTrashEmails(employeeNo, sqlSession);
+        return createPaginatedResult(emails, page, size, totalEmails);
+    }
+
+    @Override
+    public Map<String, Object> getSentEmails(int employeeNo, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Email> emails = dao.selectSentEmails(employeeNo, offset, size, sqlSession);
+        int totalEmails = dao.countSentEmails(employeeNo, sqlSession);
+        return createPaginatedResult(emails, page, size, totalEmails);
+    }
+
+    @Override
+    public Map<String, Object> getImportantEmails(int employeeNo, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Email> emails = dao.selectImportantEmails(employeeNo, offset, size, sqlSession);
+        int totalEmails = dao.countImportantEmails(employeeNo, sqlSession);
+        return createPaginatedResult(emails, page, size, totalEmails);
+    }
+
+    @Override
+    public Map<String, Object> getSelfEmails(int employeeNo, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Email> emails = dao.selectSelfEmails(employeeNo, offset, size, sqlSession);
+        int totalEmails = dao.countSelfEmails(employeeNo, sqlSession);
+        return createPaginatedResult(emails, page, size, totalEmails);
+    }
+
+    private Map<String, Object> createPaginatedResult(List<Email> emails, int page, int size, int totalEmails) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("emails", emails);
+        result.put("currentPage", page);
+        result.put("totalPages", (int) Math.ceil((double) totalEmails / size));
+        result.put("totalEmails", totalEmails);
+        return result;
     }
 
     @Override
@@ -89,9 +130,9 @@ public class EmailServiceImpl implements EmailService {
         return dao.findEmployeeByEmployeeId(employeeId, sqlSession);
     }
 
+    @Override
     public void saveEmail(Email email, MultipartFile[] attachments) throws IOException {
         try {
-            // 첨부 파일 여부 설정
             boolean hasAttachment = attachments != null && attachments.length > 0;
             email.setHasAttachment(hasAttachment);
 
@@ -133,11 +174,6 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public List<Email> getSentEmails(int employeeNo) {
-        return dao.selectSentEmails(employeeNo, sqlSession);
-    }
-
-    @Override
     @Transactional
     public void deleteEmails(List<Integer> emailNos) {
         dao.deleteEmails(emailNos, sqlSession);
@@ -149,10 +185,9 @@ public class EmailServiceImpl implements EmailService {
         if (attachment == null) {
             throw new IOException("Attachment not found");
         }
-        // 실제 파일 시스템에서 파일을 읽어 byte[]로 변환하는 로직 구현 필요
-        return new byte[0]; // 임시 반환값
+        Path filePath = Paths.get(fileUploadPath, attachment.getEmailAttRenamedFilename());
+        return Files.readAllBytes(filePath);
     }
-
 
     @Override
     public EmailAtt saveImage(MultipartFile file) throws IOException {
@@ -178,10 +213,12 @@ public class EmailServiceImpl implements EmailService {
         return emailAtt;
     }
 
-
     @Override
-    public List<Email> searchEmails(int employeeNo, String keyword) {
-        return dao.searchEmails(employeeNo, keyword, sqlSession);
+    public Map<String, Object> searchEmails(int employeeNo, String keyword, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Email> emails = dao.searchEmails(employeeNo, keyword, offset, size, sqlSession);
+        int totalEmails = dao.countSearchEmails(employeeNo, keyword, sqlSession);
+        return createPaginatedResult(emails, page, size, totalEmails);
     }
 
     @Override
@@ -222,86 +259,164 @@ public class EmailServiceImpl implements EmailService {
         return dao.toggleImportantEmail(emailNo, employeeNo, sqlSession);
     }
 
-	@Override
-	public int markTrashAsRead(List<Integer> emailNos) {
-		return dao.markTrashAsRead(emailNos, sqlSession);
-	}
+    @Override
+    public int markTrashAsRead(List<Integer> emailNos) {
+        return dao.markTrashAsRead(emailNos, sqlSession);
+    }
 
-	@Override
-	@Transactional
-	public int deletePermanently(List<Integer> emailNos, int employeeNo) {
-	    int deletedCount = dao.deletePermanently(emailNos, employeeNo, sqlSession);
-	    if (deletedCount > 0) {
-	        deleteAttachments(emailNos);
-	    }
-	    return deletedCount;
-	}
+    @Override
+    @Transactional
+    public int deletePermanently(List<Integer> emailNos, int employeeNo) {
+        int deletedCount = dao.deletePermanently(emailNos, employeeNo, sqlSession);
+        if (deletedCount > 0) {
+            deleteAttachments(emailNos);
+        }
+        return deletedCount;
+    }
 
-	private void deleteAttachments(List<Integer> emailNos) {
-	    for (Integer emailNo : emailNos) {
-	        List<EmailAtt> attachments = dao.getEmailAttachments(emailNo, sqlSession);
-	        if (attachments != null) {
-	            for (EmailAtt attachment : attachments) {
-	                if (attachment != null && attachment.getEmailAttRenamedFilename() != null) {
-	                    File file = new File(fileUploadDir, attachment.getEmailAttRenamedFilename());
-	                    if (file.exists()) {
-	                        file.delete();
-	                    }
-	                }
-	            }
-	            dao.deleteAttachments(emailNo, sqlSession);
-	        }
-	    }
-	}
+    private void deleteAttachments(List<Integer> emailNos) {
+        for (Integer emailNo : emailNos) {
+            List<EmailAtt> attachments = dao.getEmailAttachments(emailNo, sqlSession);
+            if (attachments != null) {
+                for (EmailAtt attachment : attachments) {
+                    if (attachment != null && attachment.getEmailAttRenamedFilename() != null) {
+                        File file = new File(fileUploadDir, attachment.getEmailAttRenamedFilename());
+                        if (file.exists()) {
+                            file.delete();
+                        }
+                    }
+                }
+                dao.deleteAttachments(emailNo, sqlSession);
+            }
+        }
+    }
+    @Override
+    @Transactional
+    public int restoreFromTrash(List<Integer> emailNos, int employeeNo) {
+        return dao.restoreFromTrash(emailNos, employeeNo, sqlSession);
+    }
 
-	@Override
-	@Transactional
-	public int restoreFromTrash(List<Integer> emailNos, int employeeNo) {
-	    return dao.restoreFromTrash(emailNos, employeeNo, sqlSession);
-	}
+    @Override
+    public EmailAtt getAttachment(int attachmentId) {
+        return dao.getAttachmentById(attachmentId, sqlSession);
+    }
 
-	@Override
-	public List<Email> getImportantEmails(int employeeNo) {
-		return dao.getImportantEmails(employeeNo, sqlSession);
-	}
+    @Override
+    public List<EmailAtt> getEmailAttachments(int emailNo) {
+        return dao.getEmailAttachments(emailNo, sqlSession);
+    }
 
-	@Override
-	public List<Email> getSelfEmails(int employeeNo) {
-		return dao.getSelfEmails(employeeNo, sqlSession);
-	}
+    @Override
+    public Integer getInboxUnreadCount(int employeeNo) {
+        return dao.getInboxUnreadCount(employeeNo, sqlSession);
+    }
 
-	@Override
-	public EmailAtt getAttachment(int attachmentId) {
-		return dao.getAttachmentById(attachmentId, sqlSession);
-	}
+    @Override
+    public Integer getSelfUnreadCount(int employeeNo) {
+        return dao.getSelfUnreadCount(employeeNo, sqlSession);
+    }
 
-	@Override
-	public List<EmailAtt> getEmailAttachments(int emailNo) {
-	    List<EmailAtt> attachments = dao.getEmailAttachments(emailNo, sqlSession);
-	    log.info("Attachments for email {}: {}", emailNo, attachments);
-	    return attachments;
-	}
+    @Override
+    public Integer getImportantUnreadCount(int employeeNo) {
+        return dao.getImportantUnreadCount(employeeNo, sqlSession);
+    }
 
-	@Override
-	public Integer getInboxUnreadCount(int employeeNo) {
-		return dao.getInboxUnreadCount(employeeNo, sqlSession);
-	}
+    @Override
+    public Integer getTrashCount(int employeeNo) {
+        return dao.getTrashCount(employeeNo, sqlSession);
+    }
 
-	@Override
-	public Integer getSelfUnreadCount(int employeeNo) {
-		return dao.getSelfUnreadCount(employeeNo, sqlSession);
-	}
+    // 추가적인 유틸리티 메서드
 
-	@Override
-	public Integer getImportantUnreadCount(int employeeNo) {
-		return dao.getImportantUnreadCount(employeeNo, sqlSession);
-	}
+    private void ensureDirectoryExists(String path) {
+        File directory = new File(path);
+        if (!directory.exists()) {
+            if (directory.mkdirs()) {
+                log.info("Directory created: {}", path);
+            } else {
+                log.error("Failed to create directory: {}", path);
+            }
+        }
+    }
 
-	@Override
-	public Integer getTrashCount(int employeeNo) {
-		return dao.getTrashCount(employeeNo, sqlSession);
-	}
+    private String generateUniqueFilename(String originalFilename) {
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        return UUID.randomUUID().toString() + extension;
+    }
 
+    // 페이징 관련 유틸리티 메서드
+    private int calculateTotalPages(int totalItems, int pageSize) {
+        return (int) Math.ceil((double) totalItems / pageSize);
+    }
 
+    private int calculateOffset(int page, int size) {
+        return (page - 1) * size;
+    }
+
+    // 에러 처리 메서드
+    private void handleDatabaseError(Exception e, String operation) {
+        log.error("Database error during {}: {}", operation, e.getMessage());
+        throw new RuntimeException("Database operation failed: " + operation, e);
+    }
+
+    private void handleFileOperationError(Exception e, String operation, String filename) {
+        log.error("File operation error during {} for file {}: {}", operation, filename, e.getMessage());
+        throw new RuntimeException("File operation failed: " + operation, e);
+    }
+
+    // 추가적인 비즈니스 로직 메서드
+    public void updateEmailContent(int emailNo, String newContent) {
+        try {
+            dao.updateEmailContent(emailNo, newContent, sqlSession);
+        } catch (Exception e) {
+            handleDatabaseError(e, "updating email content");
+        }
+    }
+
+    public void updateEmailTitle(int emailNo, String newTitle) {
+        try {
+            dao.updateEmailTitle(emailNo, newTitle, sqlSession);
+        } catch (Exception e) {
+            handleDatabaseError(e, "updating email title");
+        }
+    }
+
+    @Transactional
+    public void moveEmailToFolder(int emailNo, int folderId, int employeeNo) {
+        try {
+            dao.moveEmailToFolder(emailNo, folderId, employeeNo, sqlSession);
+        } catch (Exception e) {
+            handleDatabaseError(e, "moving email to folder");
+        }
+    }
+
+    public List<Map<String, Object>> getEmailStatistics(int employeeNo) {
+        try {
+            return dao.getEmailStatistics(employeeNo, sqlSession);
+        } catch (Exception e) {
+            handleDatabaseError(e, "fetching email statistics");
+            return null;
+        }
+    }
+
+    @Transactional
+    public void batchUpdateEmails(List<Email> emails) {
+        try {
+            for (Email email : emails) {
+                dao.updateEmail(email, sqlSession);
+            }
+        } catch (Exception e) {
+            handleDatabaseError(e, "batch updating emails");
+        }
+    }
+
+    public List<Email> getRecentEmails(int employeeNo, int limit) {
+        try {
+            return dao.getRecentEmails(employeeNo, limit, sqlSession);
+        } catch (Exception e) {
+            handleDatabaseError(e, "fetching recent emails");
+            return null;
+        }
+    }
 
 }

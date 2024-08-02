@@ -11,7 +11,7 @@ var EmailCommon = {
         this.bindEvents();
 
         this.updateUnreadCounts();
-        setInterval(this.updateUnreadCounts.bind(this), 3000);
+        setInterval(this.updateUnreadCounts.bind(this), 30000);
     },
 
     bindEvents: function() {
@@ -211,14 +211,15 @@ var EmailCommon = {
         }
     },
 
-    loadMailbox: function(mailbox) {
+	loadMailbox: function(mailbox, page = 1) {
         $.ajax({
             url: this.contextPath + '/' + mailbox,
             type: 'GET',
+            data: { page: page },
             success: function(response) {
                 $('#mailContent').html(response);
                 EmailCommon.initializeMailboxFunctions(mailbox);
-                history.pushState(null, '', EmailCommon.contextPath + '/' + mailbox);
+                history.pushState(null, '', EmailCommon.contextPath + '/' + mailbox + '?page=' + page);
             },
             error: function() {
                 alert(mailbox + ' 메일함을 로드하는데 실패했습니다.');
