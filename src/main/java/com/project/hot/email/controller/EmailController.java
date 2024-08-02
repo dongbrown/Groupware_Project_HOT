@@ -2,11 +2,11 @@ package com.project.hot.email.controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,8 +160,46 @@ public class EmailController {
     }
 
     @GetMapping("/write")
-    public String showWriteForm(Model model) {
-        model.addAttribute("email", new Email());
+    public String showWriteForm(@RequestParam(required = false) String action,
+                                @RequestParam(required = false) Integer emailNo,
+                                Model model) {
+        Email email = new Email();
+
+        if (emailNo != null) {
+            Email originalEmail = service.getEmailByNo(emailNo);
+
+            if ("reply".equals(action)) {
+                email.setEmailTitle("Re: " + originalEmail.getEmailTitle());
+                EmailReceiver receiver = EmailReceiver.builder()
+                    .employee(originalEmail.getSender())
+                    .emailReceiverCategory(1)
+                    .emailReceiverIsRead("N")
+                    .emailReceiverIsDelete("N")
+                    .emailReceiverIsImportant("N")
+                    .build();
+                email.setReceivers(Arrays.asList(receiver));
+
+                String quotedContent = "\n\n-------- 원본 메시지 --------\n" +
+                                       "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
+                                       "날짜: " + originalEmail.getEmailSendDate() + "\n" +
+                                       "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                       originalEmail.getEmailContent();
+                email.setEmailContent(quotedContent);
+
+                model.addAttribute("receiverEmail", originalEmail.getSender().getEmployeeId() + "@hot.com");
+            } else if ("forward".equals(action)) {
+                email.setEmailTitle("Fwd: " + originalEmail.getEmailTitle());
+                String forwardedContent = "\n\n-------- 전달된 메시지 --------\n" +
+                                          "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
+                                          "날짜: " + originalEmail.getEmailSendDate() + "\n" +
+                                          "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                          originalEmail.getEmailContent();
+                email.setEmailContent(forwardedContent);
+                email.setHasAttachment(originalEmail.hasAttachment());
+            }
+        }
+
+        model.addAttribute("email", email);
         return "email/write";
     }
 
@@ -277,31 +315,20 @@ public class EmailController {
     }
 
     @GetMapping("/search")
-    public String searchEmails(@RequestParam String keyword, Model model) {
+    public String searchEmails(@RequestParam String keyword,
+                               @RequestParam(defaultValue = "1") int page,
+                               @RequestParam(defaultValue = "10") int size,
+                               Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
-        List<Email> searchResults = service.searchEmails(employeeNo, keyword);
-        model.addAttribute("emails", searchResults);
+        Map<String, Object> result = service.searchEmails(employeeNo, keyword, page, size);
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
 
         return "email/inbox-list";
-    }
-
-    @GetMapping("/reply/{emailNo}")
-    public String showReplyForm(@PathVariable int emailNo, Model model) {
-        Email originalEmail = service.getEmailByNo(emailNo);
-        Email replyEmail = service.prepareReplyEmail(originalEmail);
-        model.addAttribute("email", replyEmail);
-        return "email/write :: #emailForm";
-    }
-
-    @GetMapping("/forward/{emailNo}")
-    public String showForwardForm(@PathVariable int emailNo, Model model) {
-        Email originalEmail = service.getEmailByNo(emailNo);
-        Email forwardEmail = service.prepareForwardEmail(originalEmail);
-        model.addAttribute("email", forwardEmail);
-        return "email/write";
     }
 
     @GetMapping("/unread-counts")
@@ -422,6 +449,57 @@ public class EmailController {
         return service.getEmailAttachments(emailNo);
     }
 
+    @GetMapping("/reply/{emailNo}")
+    public String showReplyForm(@PathVariable int emailNo, Model model) {
+        Email originalEmail = service.getEmailByNo(emailNo);
+        Email replyEmail = new Email();
 
+        // 원본 이메일의 발신자를 수신자로 설정
+        EmailReceiver receiver = EmailReceiver.builder()
+            .employee(originalEmail.getSender())
+            .emailReceiverCategory(1) // 예: 1은 '받는 사람'을 의미한다고 가정
+            .emailReceiverIsRead("N")
+            .emailReceiverIsDelete("N")
+            .emailReceiverIsImportant("N")
+            .build();
+        replyEmail.setReceivers(Arrays.asList(receiver));
+
+        // 제목에 "Re: " 추가
+        replyEmail.setEmailTitle("Re: " + originalEmail.getEmailTitle());
+
+        // 원본 이메일 내용을 인용 형식으로 본문에 추가
+        String quotedContent = "\n\n-------- 원본 메시지 --------\n" +
+                               "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
+                               "날짜: " + originalEmail.getEmailSendDate() + "\n" +
+                               "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                               originalEmail.getEmailContent();
+        replyEmail.setEmailContent(quotedContent);
+
+        model.addAttribute("email", replyEmail);
+        return "email/write";
+    }
+
+    @GetMapping("/forward/{emailNo}")
+    public String showForwardForm(@PathVariable int emailNo, Model model) {
+        Email originalEmail = service.getEmailByNo(emailNo);
+        Email forwardEmail = new Email();
+
+        // 제목에 "Fwd: " 추가
+        forwardEmail.setEmailTitle("Fwd: " + originalEmail.getEmailTitle());
+
+        // 원본 이메일 내용을 포워딩 형식으로 본문에 추가
+        String forwardedContent = "\n\n-------- 전달된 메시지 --------\n" +
+                                  "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
+                                  "날짜: " + originalEmail.getEmailSendDate() + "\n" +
+                                  "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                  originalEmail.getEmailContent();
+        forwardEmail.setEmailContent(forwardedContent);
+
+        // 첨부 파일 정보 복사
+        forwardEmail.setHasAttachment(originalEmail.hasAttachment());
+
+        model.addAttribute("email", forwardEmail);
+        return "email/write";
+    }
 
 }

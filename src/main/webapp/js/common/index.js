@@ -1,4 +1,5 @@
 function connectSse() {
+
 	const loginEmployeeNo = $('#header-empNo').data('employeeNo');
 	const eventSource = new EventSource(`/subscribe/${loginEmployeeNo}`);
 	// console.log(loginEmployeeNo);
@@ -65,24 +66,3 @@ function connectSse() {
 }
 
 window.onload=connectSse;
-//메인 프로젝트 그래프
-$(document).ready(function() {
-            $('.donut-chart').each(function() {
-                var $this = $(this);
-                var targetPercent = $this.data('percent');
-                var $circle = $this.find('.donut');
-                var $percentText = $this.find('.percent');
-
-                $({ percent: 0 }).animate({ percent: targetPercent }, {
-                    duration: 1500,
-                    step: function(now) {
-                        var offset = 100 - (now);
-                        $circle.css({ strokeDashoffset: offset });
-                        $percentText.text(Math.round(now) + '%');
-                    },
-                    complete: function() {
-                        $percentText.text(targetPercent + '%');
-                    }
-                });
-            });
-        });

@@ -63,6 +63,33 @@ public class ScheduleController {
         return events;
     }
 
+	@GetMapping("/today")
+	@ResponseBody
+	public List<Map<String, Object>> getTodaySchedules(){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Employee loginEmployee = (Employee) auth.getPrincipal();
+		int employeeNo = loginEmployee.getEmployeeNo();
+		List<Schedule> schedules = service.getTodaySchedules(employeeNo);
+		List<Map<String, Object>> events = new ArrayList<>();
+
+        for (Schedule schedule : schedules) {
+            Map<String, Object> event = new HashMap<>();
+            event.put("id", schedule.getId());
+            event.put("title", schedule.getTitle());
+            event.put("location", schedule.getLocation());
+            event.put("description", schedule.getDescription());
+            event.put("type", schedule.getDescription());
+            event.put("start", schedule.getStart());
+            event.put("end", schedule.getEnd());
+            event.put("allDay", schedule.isAllDay());
+            event.put("color", schedule.getColor());
+
+            events.add(event);
+        }
+
+        return events;
+	}
+
 
 	@PostMapping("/addSchedule")
 	@ResponseBody

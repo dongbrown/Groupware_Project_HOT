@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="email">
+
+    <resultMap id="emailResultMap" type="email">
+<<<<<<< HEAD
+        <!-- 기존 resultMap 내용 유지 -->
+    </resultMap>
+
+    <resultMap id="emailAttResultMap" type="emailAtt">
+        <!-- 기존 emailAttResultMap 내용 유지 -->
+    </resultMap>
+
+    <!-- 받은 메일함 조회 (페이징 적용) -->
+    <select id="selectInboxEmails" parameterType="map" resultMap="emailResultMap">
+        SELECT * FROM (
+            SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+                   emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+                   emp_sender.EMPLOYEE_ID as SENDER_ID,
+                   er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+                   er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+                   er.EMAIL_RECEIVER_ISIMPORTANT,
+                   emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+                   emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+                   emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+                   ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+            FROM EMAIL e
+            JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+            JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+            JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+            WHERE er.EMPLOYEE_NO = #{employeeNo}
+            AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 받은 메일함 총 개수 -->
+    <select id="countInboxEmails" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+=======
+        <id property="emailNo" column="EMAIL_NO"/>
+        <result property="emailTitle" column="EMAIL_TITLE"/>
+        <result property="emailContent" column="EMAIL_CONTENT"/>
+        <result property="emailSendDate" column="EMAIL_SEND_DATE"/>
+        <result property="emailCategoryNo" column="EMAIL_CATEGORY_NO"/>
+        <result property="emailIsDelete" column="EMAIL_ISDELETE"/>
+	    <result property="hasAttachment" column="EMAIL_HAS_ATT" jdbcType="NUMERIC" javaType="java.lang.Boolean"/>
+        <association property="sender" javaType="employee">
+            <id property="employeeNo" column="SENDER_NO"/>
+            <result property="employeeId" column="SENDER_ID"/>
+            <result property="employeeName" column="SENDER_NAME"/>
+        </association>
+        <collection property="receivers" ofType="emailReceiver">
+            <id property="emailReceiverNo" column="EMAIL_RECEIVER_NO"/>
+            <result property="emailReceiverCategory" column="EMAIL_RECEIVER_CATEGORY"/>
+            <result property="emailReceiverIsRead" column="EMAIL_RECEIVER_ISREAD"/>
+            <result property="emailReceiverIsDelete" column="EMAIL_RECEIVER_ISDELETE"/>
+            <result property="emailReceiverIsImportant" column="EMAIL_RECEIVER_ISIMPORTANT"/>
+            <association property="employee" javaType="employee">
+                <id property="employeeNo" column="RECEIVER_NO"/>
+                <result property="employeeId" column="RECEIVER_ID"/>
+                <result property="employeeName" column="RECEIVER_NAME"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <resultMap id="emailAttResultMap" type="emailAtt">
+	    <id property="emailAttNo" column="EMAIL_ATT_NO"/>
+	    <result property="emailNo" column="EMAIL_NO"/>
+	    <result property="emailAttOriginalFilename" column="EMAIL_ATT_ORIGINAL_FILENAME"/>
+	    <result property="emailAttRenamedFilename" column="EMAIL_ATT_RENAMED_FILENAME"/>
+	</resultMap>
+
+    <!-- 받은 메일함 조회 -->
+    <select id="selectInboxEmails" parameterType="int" resultMap="emailResultMap">
+        SELECT e.*,
+               emp_sender.EMPLOYEE_NO as SENDER_NO,
+               emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+               emp_sender.EMPLOYEE_ID as SENDER_ID,
+               er.EMAIL_RECEIVER_NO,
+               er.EMAIL_RECEIVER_CATEGORY,
+               er.EMAIL_RECEIVER_ISREAD,
+               er.EMAIL_RECEIVER_ISDELETE,
+               er.EMAIL_RECEIVER_ISIMPORTANT,
+               emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+               emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+               emp_receiver.EMPLOYEE_ID as RECEIVER_ID
+>>>>>>> b1f863812e229d4295f330c792c6b47ca8017e08
+        FROM EMAIL e
+        JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+        AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+    </select>
+
+    <!-- 보낸 메일함 조회 (페이징 적용) -->
+    <select id="selectSentEmails" parameterType="map" resultMap="emailResultMap">
+        SELECT * FROM (
+            SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+                   emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+                   emp_sender.EMPLOYEE_ID as SENDER_ID,
+                   er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+                   er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+                   er.EMAIL_RECEIVER_ISIMPORTANT,
+                   emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+                   emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+                   emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+                   ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+            FROM EMAIL e
+            JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+            LEFT JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+            LEFT JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+            WHERE e.EMPLOYEE_NO = #{employeeNo}
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 보낸 메일함 총 개수 -->
+    <select id="countSentEmails" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM EMAIL
+        WHERE EMPLOYEE_NO = #{employeeNo}
+    </select>
+
+    <!-- 휴지통 조회 (페이징 적용) -->
+    <select id="selectTrashEmails" parameterType="map" resultMap="emailResultMap">
+        SELECT * FROM (
+            SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+                   emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+                   emp_sender.EMPLOYEE_ID as SENDER_ID,
+                   er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+                   er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+                   er.EMAIL_RECEIVER_ISIMPORTANT,
+                   emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+                   emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+                   emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+                   ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+            FROM EMAIL e
+            JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+            JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+            JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+            WHERE er.EMPLOYEE_NO = #{employeeNo}
+            AND er.EMAIL_RECEIVER_ISDELETE = 'Y'
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 휴지통 총 개수 -->
+    <select id="countTrashEmails" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM EMAIL_RECEIVER
+        WHERE EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_RECEIVER_ISDELETE = 'Y'
+    </select>
+
+    <!-- 중요 메일함 조회 (페이징 적용) -->
+    <select id="selectImportantEmails" parameterType="map" resultMap="emailResultMap">
+        SELECT * FROM (
+            SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+                   emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+                   emp_sender.EMPLOYEE_ID as SENDER_ID,
+                   er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+                   er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+                   er.EMAIL_RECEIVER_ISIMPORTANT,
+                   emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+                   emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+                   emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+                   ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+            FROM EMAIL e
+            JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+            JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+            JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+            WHERE er.EMPLOYEE_NO = #{employeeNo}
+            AND er.EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+            AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 중요 메일함 총 개수 -->
+    <select id="countImportantEmails" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM EMAIL_RECEIVER
+        WHERE EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+        AND EMAIL_RECEIVER_ISDELETE = 'N'
+    </select>
+
+    <!-- 내게 쓴 메일함 조회 (페이징 적용) -->
+    <select id="selectSelfEmails" parameterType="map" resultMap="emailResultMap">
+        SELECT * FROM (
+            SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+                   emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+                   emp_sender.EMPLOYEE_ID as SENDER_ID,
+                   er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+                   er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+                   er.EMAIL_RECEIVER_ISIMPORTANT,
+                   emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+                   emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+                   emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+                   ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+            FROM EMAIL e
+            JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+            JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+            JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+            WHERE er.EMPLOYEE_NO = #{employeeNo}
+            AND e.EMPLOYEE_NO = #{employeeNo}
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 내게 쓴 메일함 총 개수 -->
+    <select id="countSelfEmails" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM EMAIL e
+        JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+<<<<<<< HEAD
+=======
+        JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+        AND er.EMAIL_RECEIVER_ISDELETE = 'Y'
+        ORDER BY e.EMAIL_SEND_DATE DESC
+    </select>
+
+    <select id="selectImportantEmails" parameterType="int" resultMap="emailResultMap">
+		SELECT e.*,
+               emp_sender.EMPLOYEE_NO as SENDER_NO,
+               emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+               emp_sender.EMPLOYEE_ID as SENDER_ID,
+               er.EMAIL_RECEIVER_NO,
+               er.EMAIL_RECEIVER_CATEGORY,
+               er.EMAIL_RECEIVER_ISREAD,
+               er.EMAIL_RECEIVER_ISDELETE,
+               er.EMAIL_RECEIVER_ISIMPORTANT,
+               emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+               emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+               emp_receiver.EMPLOYEE_ID as RECEIVER_ID
+        FROM EMAIL e
+        JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+        JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+        JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+        AND er.EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+        AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+        ORDER BY e.EMAIL_SEND_DATE DESC
+    </select>
+
+    <select id="selectSelfEmails" parameterType="int" resultMap="emailResultMap">
+		SELECT e.*,
+               emp_sender.EMPLOYEE_NO as SENDER_NO,
+               emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+               emp_sender.EMPLOYEE_ID as SENDER_ID,
+               er.EMAIL_RECEIVER_NO,
+               er.EMAIL_RECEIVER_CATEGORY,
+               er.EMAIL_RECEIVER_ISREAD,
+               er.EMAIL_RECEIVER_ISDELETE,
+               er.EMAIL_RECEIVER_ISIMPORTANT,
+               emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+               emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+               emp_receiver.EMPLOYEE_ID as RECEIVER_ID
+        FROM EMAIL e
+        JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+        JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+        JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+>>>>>>> b1f863812e229d4295f330c792c6b47ca8017e08
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+        AND e.EMPLOYEE_NO = #{employeeNo}
+    </select>
+
+<<<<<<< HEAD
+    <!-- 이메일 검색 (페이징 적용) -->
+=======
+    <!-- 특정 이메일 상세 조회 -->
+    <select id="selectEmailByNo" parameterType="int" resultMap="emailResultMap">
+        SELECT e.*,
+               emp_sender.EMPLOYEE_NO as SENDER_NO,
+               emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+               emp_sender.EMPLOYEE_ID as SENDER_ID,
+               er.EMAIL_RECEIVER_NO,
+               er.EMAIL_RECEIVER_CATEGORY,
+               er.EMAIL_RECEIVER_ISREAD,
+               er.EMAIL_RECEIVER_ISDELETE,
+               er.EMAIL_RECEIVER_ISIMPORTANT,
+               emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+               emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+               emp_receiver.EMPLOYEE_ID as RECEIVER_ID
+        FROM EMAIL e
+        JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+        JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+        JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+        WHERE e.EMAIL_NO = #{emailNo}
+    </select>
+
+	<!-- 새 이메일 저장 -->
+	<insert id="insertEmail" parameterType="email" useGeneratedKeys="true" keyProperty="emailNo">
+	    <selectKey keyProperty="emailNo" resultType="int" order="BEFORE">
+	        SELECT EMAIL_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO EMAIL (
+	        EMAIL_NO,
+	        EMPLOYEE_NO,
+	        EMAIL_TITLE,
+	        EMAIL_CONTENT,
+	        EMAIL_SEND_DATE,
+	        EMAIL_CATEGORY_NO,
+	        EMAIL_HAS_ATT
+	    )
+	    VALUES (
+	        #{emailNo},
+	        #{sender.employeeNo},
+	        #{emailTitle},
+	        #{emailContent},
+	        SYSDATE,
+	        #{emailCategoryNo},
+	        #{hasAttachment}
+	    )
+	</insert>
+
+    <!-- 이메일 수신자 정보 저장 -->
+	<insert id="insertEmailReceiver" parameterType="emailReceiver">
+        INSERT INTO EMAIL_RECEIVER (
+            EMAIL_RECEIVER_NO,
+            EMAIL_NO,
+            EMPLOYEE_NO,
+            EMAIL_RECEIVER_CATEGORY,
+            EMAIL_RECEIVER_ISREAD,
+            EMAIL_RECEIVER_ISDELETE,
+            EMAIL_RECEIVER_ISIMPORTANT,
+            EMAIL_CATEGORY_NO
+        )
+        VALUES (
+            SEQ_EMAIL_RECEIVER.NEXTVAL,
+            #{emailNo},
+            #{employee.employeeNo},
+            #{emailReceiverCategory},
+            #{emailReceiverIsRead},
+            #{emailReceiverIsDelete},
+            #{emailReceiverIsImportant},
+            #{emailCategoryNo}
+        )
+    </insert>
+
+    <!-- 이메일 첨부 파일 정보 저장 -->
+    <insert id="insertAttachment" parameterType="emailAtt">
+        INSERT INTO EMAIL_ATT (EMAIL_ATT_NO, EMAIL_NO, EMAIL_ATT_ORIGINAL_FILENAME, EMAIL_ATT_RENAMED_FILENAME)
+        VALUES (SEQ_EMAIL_ATT.NEXTVAL, #{emailNo}, #{emailAttOriginalFilename}, #{emailAttRenamedFilename})
+    </insert>
+
+    <!-- 이메일 검색 -->
+>>>>>>> b1f863812e229d4295f330c792c6b47ca8017e08
+    <select id="searchEmails" parameterType="map" resultMap="emailResultMap">
+        SELECT * FROM (
+            SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+                   emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+                   emp_sender.EMPLOYEE_ID as SENDER_ID,
+                   er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+                   er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+                   er.EMAIL_RECEIVER_ISIMPORTANT,
+                   emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+                   emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+                   emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+                   ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+            FROM EMAIL e
+            JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+            JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+            JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+            WHERE er.EMPLOYEE_NO = #{employeeNo}
+            AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+            AND (e.EMAIL_TITLE LIKE '%' || #{keyword} || '%'
+                 OR e.EMAIL_CONTENT LIKE '%' || #{keyword} || '%')
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 이메일 검색 결과 총 개수 -->
+    <select id="countSearchEmails" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM EMAIL e
+        JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+        AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+        AND (e.EMAIL_TITLE LIKE '%' || #{keyword} || '%'
+             OR e.EMAIL_CONTENT LIKE '%' || #{keyword} || '%')
+    </select>
+
+    <!-- 이메일 내용 업데이트 -->
+    <update id="updateEmailContent" parameterType="map">
+        UPDATE EMAIL
+        SET EMAIL_CONTENT = #{content}
+        WHERE EMAIL_NO = #{emailNo}
+    </update>
+
+    <!-- 이메일 제목 업데이트 -->
+    <update id="updateEmailTitle" parameterType="map">
+        UPDATE EMAIL
+        SET EMAIL_TITLE = #{title}
+        WHERE EMAIL_NO = #{emailNo}
+    </update>
+
+    <!-- 이메일을 특정 폴더로 이동 -->
+    <update id="moveEmailToFolder" parameterType="map">
+        UPDATE EMAIL_RECEIVER
+        SET EMAIL_CATEGORY_NO = #{folderId}
+        WHERE EMAIL_NO = #{emailNo}
+        AND EMPLOYEE_NO = #{employeeNo}
+    </update>
+
+    <!-- 이메일 통계 조회 -->
+    <select id="getEmailStatistics" parameterType="int" resultType="map">
+        SELECT
+            COUNT(CASE WHEN er.EMAIL_RECEIVER_ISREAD = 'N' THEN 1 END) as unread_count,
+            COUNT(CASE WHEN er.EMAIL_RECEIVER_ISIMPORTANT = 'Y' THEN 1 END) as important_count,
+            COUNT(CASE WHEN er.EMAIL_RECEIVER_ISDELETE = 'Y' THEN 1 END) as trash_count
+        FROM EMAIL_RECEIVER er
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+    </select>
+
+    <!-- 이메일 일괄 업데이트 -->
+    <update id="updateEmail" parameterType="email">
+        UPDATE EMAIL
+        SET EMAIL_TITLE = #{emailTitle},
+            EMAIL_CONTENT = #{emailContent},
+            EMAIL_CATEGORY_NO = #{emailCategoryNo},
+            EMAIL_HAS_ATT = #{hasAttachment}
+        WHERE EMAIL_NO = #{emailNo}
+    </update>
+
+<!-- 최근 이메일 조회 -->
+<select id="getRecentEmails" parameterType="map" resultMap="emailResultMap">
+    <![CDATA[
+    SELECT * FROM (
+        SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+               emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+               emp_sender.EMPLOYEE_ID as SENDER_ID,
+               er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+               er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+               er.EMAIL_RECEIVER_ISIMPORTANT,
+               emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+               emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+               emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+               ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+        FROM EMAIL e
+        JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+        JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+        JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+        AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+    )
+    WHERE rn <= #{limit}
+    ]]>
+</select>
+
+    <!-- 이메일 일괄 삽입 -->
+    <insert id="batchInsertEmails" parameterType="java.util.List">
+        INSERT ALL
+        <foreach collection="list" item="email" separator=" ">
+            INTO EMAIL (
+                EMAIL_NO, EMPLOYEE_NO, EMAIL_TITLE, EMAIL_CONTENT,
+                EMAIL_SEND_DATE, EMAIL_CATEGORY_NO, EMAIL_HAS_ATT
+            ) VALUES (
+                EMAIL_SEQ.NEXTVAL, #{email.sender.employeeNo}, #{email.emailTitle},
+                #{email.emailContent}, SYSDATE, #{email.emailCategoryNo},
+                #{email.hasAttachment}
+            )
+        </foreach>
+        SELECT * FROM DUAL
+    </insert>
+
+    <!-- 이메일 상태 일괄 업데이트 -->
+    <update id="batchUpdateEmailStatuses" parameterType="map">
+        UPDATE EMAIL_RECEIVER
+        SET EMAIL_RECEIVER_ISREAD = #{status}
+        WHERE EMAIL_NO IN
+        <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+            #{emailNo}
+        </foreach>
+    </update>
+
+    <!-- 특정 폴더의 이메일 조회 (페이징 적용) -->
+    <select id="getEmailsByFolder" parameterType="map" resultMap="emailResultMap">
+        SELECT * FROM (
+            SELECT e.*, emp_sender.EMPLOYEE_NO as SENDER_NO,
+                   emp_sender.EMPLOYEE_NAME as SENDER_NAME,
+                   emp_sender.EMPLOYEE_ID as SENDER_ID,
+                   er.EMAIL_RECEIVER_NO, er.EMAIL_RECEIVER_CATEGORY,
+                   er.EMAIL_RECEIVER_ISREAD, er.EMAIL_RECEIVER_ISDELETE,
+                   er.EMAIL_RECEIVER_ISIMPORTANT,
+                   emp_receiver.EMPLOYEE_NO as RECEIVER_NO,
+                   emp_receiver.EMPLOYEE_NAME as RECEIVER_NAME,
+                   emp_receiver.EMPLOYEE_ID as RECEIVER_ID,
+                   ROW_NUMBER() OVER (ORDER BY e.EMAIL_SEND_DATE DESC) AS rn
+            FROM EMAIL e
+            JOIN EMPLOYEE emp_sender ON e.EMPLOYEE_NO = emp_sender.EMPLOYEE_NO
+            JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+            JOIN EMPLOYEE emp_receiver ON er.EMPLOYEE_NO = emp_receiver.EMPLOYEE_NO
+            WHERE er.EMPLOYEE_NO = #{employeeNo}
+            AND er.EMAIL_CATEGORY_NO = #{folderId}
+            AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+        )
+        WHERE rn BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 특정 폴더의 이메일 총 개수 -->
+    <select id="countEmailsByFolder" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM EMAIL_RECEIVER
+        WHERE EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_CATEGORY_NO = #{folderId}
+        AND EMAIL_RECEIVER_ISDELETE = 'N'
+    </select>
+
+    <!-- 폴더 생성 -->
+    <insert id="createFolder" parameterType="map">
+        INSERT INTO EMAIL_CATEGORY (EMAIL_CATEGORY_NO, EMAIL_CATEGORY_NAME, EMPLOYEE_NO)
+        VALUES (EMAIL_CATEGORY_SEQ.NEXTVAL, #{folderName}, #{employeeNo})
+    </insert>
+
+<<<<<<< HEAD
+    <!-- 폴더 삭제 -->
+    <delete id="deleteFolder" parameterType="map">
+        DELETE FROM EMAIL_CATEGORY
+        WHERE EMAIL_CATEGORY_NO = #{folderId}
+        AND EMPLOYEE_NO = #{employeeNo}
+    </delete>
+
+    <!-- 폴더 목록 조회 -->
+    <select id="getFolders" parameterType="int" resultType="map">
+        SELECT EMAIL_CATEGORY_NO as folderId, EMAIL_CATEGORY_NAME as folderName
+        FROM EMAIL_CATEGORY
+        WHERE EMPLOYEE_NO = #{employeeNo}
+    </select>
+
+    <!-- 기존의 다른 쿼리들 (selectEmailByNo, insertEmail, insertEmailReceiver, insertAttachment 등) -->
+    <!-- ... -->
+
+    <!-- 읽지 않은 이메일 수 조회 (각 메일함별) -->
+    <select id="getInboxUnreadCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM EMAIL_RECEIVER
+        WHERE EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_RECEIVER_ISDELETE = 'N'
+        AND EMAIL_RECEIVER_ISREAD = 'N'
+    </select>
+
+    <select id="getSelfUnreadCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM EMAIL_RECEIVER er
+        JOIN EMAIL e ON e.EMAIL_NO = er.EMAIL_NO
+        WHERE er.EMPLOYEE_NO = #{employeeNo}
+        AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+        AND er.EMAIL_RECEIVER_ISREAD = 'N'
+        AND e.EMPLOYEE_NO = #{employeeNo}
+    </select>
+
+    <select id="getImportantUnreadCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM EMAIL_RECEIVER
+        WHERE EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_RECEIVER_ISDELETE = 'N'
+        AND EMAIL_RECEIVER_ISREAD = 'N'
+        AND EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+    </select>
+
+    <select id="getTrashCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM EMAIL_RECEIVER
+        WHERE EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_RECEIVER_ISDELETE = 'Y'
+    </select>
+=======
+	<delete id="deletePermanently" parameterType="map">
+	    DELETE FROM EMAIL
+	    WHERE EMAIL_NO IN
+	    <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+	        #{emailNo}
+	    </foreach>
+	    AND EMAIL_NO IN (
+	        SELECT EMAIL_NO
+	        FROM EMAIL_RECEIVER
+	        WHERE EMPLOYEE_NO = #{employeeNo}
+	        AND EMAIL_RECEIVER_ISDELETE = 'Y'
+	    )
+	</delete>
+
+	<delete id="deleteAttachments" parameterType="int">
+    	DELETE FROM EMAIL_ATT WHERE EMAIL_NO = #{emailNo}
+	</delete>
+
+	<update id="restoreFromTrash" parameterType="map">
+	    UPDATE EMAIL_RECEIVER
+	    SET EMAIL_RECEIVER_ISDELETE = 'N'
+	    WHERE EMAIL_NO IN
+	    <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+	        #{emailNo}
+	    </foreach>
+	    AND EMPLOYEE_NO = #{employeeNo}
+	    AND EMAIL_RECEIVER_ISDELETE = 'Y'
+	</update>
+
+	<select id="selectAttachment" parameterType="int" resultMap="emailAttResultMap">
+	    SELECT EMAIL_ATT_NO,
+	           EMAIL_NO,
+	           EMAIL_ATT_ORIGINAL_FILENAME,
+	           EMAIL_ATT_RENAMED_FILENAME
+	    FROM EMAIL_ATT
+	    WHERE EMAIL_ATT_NO = #{attachmentId}
+	</select>
+
+	<select id="selectEmailAttachments" parameterType="int" resultMap="emailAttResultMap">
+	    SELECT EMAIL_ATT_NO,
+	           EMAIL_NO,
+	           EMAIL_ATT_ORIGINAL_FILENAME,
+	           EMAIL_ATT_RENAMED_FILENAME
+	    FROM EMAIL_ATT
+	    WHERE EMAIL_NO = #{emailNo}
+	</select>
+
+	<select id="getInboxUnreadCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER
+		WHERE EMPLOYEE_NO = #{employeeNo}
+		AND EMAIL_RECEIVER_ISDELETE = 'N'
+		AND EMAIL_RECEIVER_ISREAD = 'N'
+	</select>
+
+	<select id="getSelfUnreadCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER er
+		JOIN EMAIL e ON e.EMAIL_NO = er.EMAIL_NO
+		WHERE er.EMPLOYEE_NO = #{employeeNo}
+		AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+		AND er.EMAIL_RECEIVER_ISREAD = 'N'
+		AND e.EMPLOYEE_NO = #{employeeNo}
+	</select>
+
+	<select id="getImportantUnreadCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER
+		WHERE EMPLOYEE_NO = #{employeeNo}
+		AND EMAIL_RECEIVER_ISDELETE = 'N'
+		AND EMAIL_RECEIVER_ISREAD = 'N'
+		AND EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+	</select>
+
+	<select id="getTrashCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM EMAIL_RECEIVER
+		WHERE EMPLOYEE_NO = #{employeeNo}
+		AND EMAIL_RECEIVER_ISDELETE = 'Y'
+		AND EMAIL_RECEIVER_ISREAD = 'N'
+	</select>
+
+
+>>>>>>> b1f863812e229d4295f330c792c6b47ca8017e08
+
+</mapper>

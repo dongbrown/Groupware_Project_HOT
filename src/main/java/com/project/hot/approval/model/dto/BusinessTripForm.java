@@ -1,6 +1,7 @@
 package com.project.hot.approval.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,4 +20,6 @@ public class BusinessTripForm {
 	private Date businessTripEndDate;
 	private String businessTripDestination;
 	private String businessTripEmergency;
+
+	private List<BusinessTripPartner> businessTripPartners;
 }
