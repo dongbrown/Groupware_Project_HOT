@@ -80,7 +80,7 @@
 <script type="text/javascript" src="${path}/js/email/email-common.js"></script>
 
 <script>
-var contextPath = '${pageContext.request.contextPath}/email';
+let contextPath = '${pageContext.request.contextPath}/email';
 let path = '${pageContext.request.contextPath}';
 var EmailApp = {
     init: function() {
