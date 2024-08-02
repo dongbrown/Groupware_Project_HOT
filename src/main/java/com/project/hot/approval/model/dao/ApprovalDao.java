@@ -6,12 +6,11 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.project.hot.approval.model.dto.Approval;
-import com.project.hot.approval.model.dto.BusinessTripForm;
 import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.OvertimeForm;
-import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.RequestBusinessTrip;
 import com.project.hot.approval.model.dto.RequestExpenditure;
+import com.project.hot.approval.model.dto.ResponseSpecificApproval;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
@@ -35,4 +34,9 @@ public interface ApprovalDao {
 	int insertBusinessPartner(SqlSession session, RequestBusinessTrip rbt);
 	int insertExpenditureForm(SqlSession session, RequestExpenditure re);
 	int insertExpenditureItem(SqlSession session, RequestExpenditure re);
+	List<Approval> selectApprovalWaitList(SqlSession session, Map<String, Object> param);
+	List<Approval> selectApprovalCompleteList(SqlSession session, Map<String, Object> param);
+	List<Approval> selectApprovalProcessList(SqlSession session, Map<String, Object> param);
+	List<Approval> selectApprovalPendingList(SqlSession session, Map<String, Object> param);
+	List<ResponseSpecificApproval> getSpecificApproval(SqlSession session, String targetNo);
 }

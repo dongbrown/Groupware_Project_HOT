@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="schedule">
+	<resultMap id="scheduleResultMap"
+		type="com.project.hot.schedule.model.dto.Schedule">
+		<id property="id" column="SCHEDULE_NO" />
+		<result property="title" column="SCHEDULE_TITLE" />
+		<result property="description" column="SCHEDULE_CONTENT" />
+		<result property="color" column="SCHEDULE_LABEL" />
+		<result property="location" column="SCHEDULE_PLACE" />
+		<result property="type" column="SCHEDULE_TYPE" />
+		<result property="start" column="SCHEDULE_START_DATE" />
+		<result property="end" column="SCHEDULE_END_DATE" />
+		<!-- <result property="allDay" column="SCHEDULE_ALL_DAY"/> -->
+	</resultMap>
+
+	<resultMap id="departmentMap" type="department">
+		<id column="DEPARTMENT_CODE" property="departmentCode" />
+		<result column="DEPARTMENT_HIGH_CODE" property="departmentHighCode"/>
+		<result column="DEPARTMENT_TITLE" property="departmentTitle"/>
+		<result column="DEPARTMENT_AUTHORITY" property="departmentAuthority"/>
+	</resultMap>
+
+	<resultMap id="employeeMap" type="employee">
+		<id column="EMPLOYEE_NO" property="employeeNo"/>
+		<result column="EMPLOYEE_NAME" property="employeeName"/>
+		<result column="EMPLOYEE_PHONE" property="employeePhone"/>
+		<result column="EMPLOYEE_PASSWORD" property="employeePassword"/>
+		<result column="EMPLOYEE_ID" property="employeeId"/>
+		<result column="EMPLOYEE_ADDRESS" property="employeeAddress"/>
+		<result column="EMPLOYEE_BIRTH_DAY" property="employeeBirthDay"/>
+		<result column="EMPLOYEE_SSN" property="employeeSsn"/>
+		<result column="EMPLOYEE_HIRE_DATE" property="employeeHireDate"/>
+		<result column="EMPLOYEE_SALARY" property="employeeSalary"/>
+		<result column="EMPLOYEE_PHOTO" property="employeePhoto"/>
+		<result column="EMPLOYEE_RESIGNATION_DAY" property="employeeResignationDay"/>
+		<result column="EMPLOYEE_TOTAL_VACATION" property="employeeTotalVacation"/>
+		<association property="departmentCode" resultMap="departmentMap"/>
+	</resultMap>
+
+	<select id="getSchedule" resultMap="scheduleResultMap">
+		SELECT
+		s.SCHEDULE_NO,
+		s.SCHEDULE_TITLE,
+		s.SCHEDULE_CONTENT,
+		s.SCHEDULE_LABEL,
+		s.SCHEDULE_PLACE,
+		s.SCHEDULE_TYPE,
+		s.SCHEDULE_START_DATE,
+		s.SCHEDULE_END_DATE
+		FROM SCHEDULE s
+		JOIN SCHEDULE_EMPLOYEE se ON s.SCHEDULE_NO = se.SCHEDULE_NO
+		WHERE se.EMPLOYEE_NO = #{employeeNo}
+	</select>
+
+	<insert id="addSchedule" parameterType="map">
+	    <selectKey keyProperty="schedule.id" resultType="int" order="BEFORE">
+	        SELECT SEQ_SCHEDULE.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO SCHEDULE (
+	        SCHEDULE_NO,
+	        SCHEDULE_TITLE,
+	        SCHEDULE_CONTENT,
+	        SCHEDULE_LABEL,
+	        SCHEDULE_PLACE,
+	        SCHEDULE_TYPE,
+	        SCHEDULE_START_DATE,
+	        SCHEDULE_END_DATE
+	    ) VALUES (
+	        #{schedule.id},
+	        #{schedule.title},
+	        #{schedule.description, jdbcType=VARCHAR},
+	        #{schedule.color},
+	        #{schedule.location, jdbcType=VARCHAR},
+	        #{schedule.type},
+	        #{schedule.start},
+	        #{schedule.end}
+	    )
+	</insert>
+
+	<insert id="addScheduleEmployee" parameterType="com.project.hot.schedule.model.dto.ScheduleEmployee">
+        INSERT INTO SCHEDULE_EMPLOYEE (
+            SCHEDULE_EMPLOYEE_NO,
+            EMPLOYEE_NO,
+            SCHEDULE_NO
+        ) VALUES (
+            SEQ_SCHEDULE_EMPLOYEE.NEXTVAL,
+            #{employeeNo},
+            #{scheduleNo}
+        )
+    </insert>
+
+	<insert id="addCompanySchedule" parameterType="com.project.hot.schedule.model.dto.Schedule">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+        SELECT SEQ_SCHEDULE.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO SCHEDULE (
+        SCHEDULE_NO,
+        SCHEDULE_TITLE,
+        SCHEDULE_CONTENT,
+        SCHEDULE_LABEL,
+        SCHEDULE_PLACE,
+        SCHEDULE_TYPE,
+        SCHEDULE_START_DATE,
+        SCHEDULE_END_DATE
+    ) VALUES (
+        #{id},
+        #{title},
+        #{description, jdbcType=VARCHAR},
+        #{color, jdbcType=VARCHAR},
+        #{location, jdbcType=VARCHAR},
+        'company',
+        #{start},
+        #{end, jdbcType=DATE}
+    )
+</insert>
+
+    <update id="updateScheduleByDrag" parameterType="com.project.hot.schedule.model.dto.Schedule">
+	    UPDATE SCHEDULE
+	    SET SCHEDULE_START_DATE = #{start},
+	        SCHEDULE_END_DATE = #{end}
+	    WHERE SCHEDULE_NO = #{id}
+	</update>
+
+	<update id="updateSchedule" parameterType="com.project.hot.schedule.model.dto.Schedule">
+	    UPDATE SCHEDULE
+	    SET SCHEDULE_TITLE = #{title},
+	        SCHEDULE_CONTENT = #{description, jdbcType=VARCHAR},
+	        SCHEDULE_LABEL = #{color},
+	        SCHEDULE_PLACE = #{location, jdbcType=VARCHAR},
+	        SCHEDULE_TYPE = #{type},
+	        SCHEDULE_START_DATE = #{start},
+	        SCHEDULE_END_DATE = #{end}
+	    WHERE SCHEDULE_NO = #{id}
+	</update>
+
+
+
+	<delete id="deleteSchedule">
+		DELETE FROM SCHEDULE WHERE SCHEDULE_NO = #{id}
+	</delete>
+
+
+	<delete id="deleteScheduleEmployee">
+		DELETE FROM SCHEDULE_EMPLOYEE WHERE SCHEDULE_NO = #{id}
+	</delete>
+
+
+	<select id="getEmployeesByDepartment" parameterType="string" resultMap="employeeMap">
+	    SELECT
+	        E.EMPLOYEE_NO,
+	        E.EMPLOYEE_NAME
+<!-- 	    E.EMPLOYEE_PHONE,
+	        E.EMPLOYEE_PASSWORD,
+	        E.EMPLOYEE_ID,
+	        E.EMPLOYEE_ADDRESS,
+	        E.EMPLOYEE_BIRTH_DAY,
+	        E.EMPLOYEE_SSN,
+	        E.EMPLOYEE_HIRE_DATE,
+	        E.EMPLOYEE_SALARY,
+	        E.EMPLOYEE_PHOTO,
+	        E.EMPLOYEE_RESIGNATION_DAY,
+	        E.EMPLOYEE_TOTAL_VACATION,
+	        D.DEPARTMENT_CODE,
+	        D.DEPARTMENT_HIGH_CODE,
+	        D.DEPARTMENT_TITLE,
+	        D.DEPARTMENT_AUTHORITY -->
+	    FROM
+	        EMPLOYEE E
+	    JOIN
+	        DEPARTMENT D ON E.DEPARTMENT_CODE = D.DEPARTMENT_CODE
+	    WHERE
+	        E.DEPARTMENT_CODE = #{deptCode}
+	    ORDER BY
+	        E.EMPLOYEE_NAME
+	</select>
+
+	<select id="getMySchedule" resultMap="scheduleResultMap">
+		SELECT
+		s.SCHEDULE_NO,
+		s.SCHEDULE_TITLE,
+		s.SCHEDULE_CONTENT,
+		s.SCHEDULE_LABEL,
+		s.SCHEDULE_PLACE,
+		s.SCHEDULE_TYPE,
+		s.SCHEDULE_START_DATE,
+		s.SCHEDULE_END_DATE
+		FROM SCHEDULE s
+		JOIN SCHEDULE_EMPLOYEE se ON s.SCHEDULE_NO = se.SCHEDULE_NO
+		WHERE se.EMPLOYEE_NO = #{employeeNo}
+				AND s.SCHEDULE_TYPE = 'my'
+	</select>
+
+	<select id="getShareSchedule" resultMap="scheduleResultMap">
+		SELECT
+		s.SCHEDULE_NO,
+		s.SCHEDULE_TITLE,
+		s.SCHEDULE_CONTENT,
+		s.SCHEDULE_LABEL,
+		s.SCHEDULE_PLACE,
+		s.SCHEDULE_TYPE,
+		s.SCHEDULE_START_DATE,
+		s.SCHEDULE_END_DATE
+		FROM SCHEDULE s
+		JOIN SCHEDULE_EMPLOYEE se ON s.SCHEDULE_NO = se.SCHEDULE_NO
+		WHERE se.EMPLOYEE_NO = #{employeeNo}
+				AND s.SCHEDULE_TYPE = 'share'
+	</select>
+
+	<select id="getCompanySchedule" resultMap="scheduleResultMap">
+		SELECT * FROM SCHEDULE WHERE SCHEDULE_TYPE = 'company'
+	</select>
+
+
+</mapper>

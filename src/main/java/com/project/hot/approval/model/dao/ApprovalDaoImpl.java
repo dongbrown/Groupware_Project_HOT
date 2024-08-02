@@ -1,5 +1,6 @@
 package com.project.hot.approval.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,17 +9,14 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.project.hot.approval.model.dto.Approval;
-import com.project.hot.approval.model.dto.BusinessTripForm;
 import com.project.hot.approval.model.dto.CommutingTimeForm;
 import com.project.hot.approval.model.dto.OvertimeForm;
-import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.RequestBusinessTrip;
 import com.project.hot.approval.model.dto.RequestExpenditure;
+import com.project.hot.approval.model.dto.ResponseSpecificApproval;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.employee.model.dto.Department;
 import com.project.hot.employee.model.dto.Employee;
-
-import lombok.RequiredArgsConstructor;
 
 @Repository
 public class ApprovalDaoImpl implements ApprovalDao {
@@ -108,6 +106,41 @@ public class ApprovalDaoImpl implements ApprovalDao {
 	@Override
 	public int insertExpenditureItem(SqlSession session, RequestExpenditure re) {
 		return session.insert("approval.insertExpenditureItem", re);
+	}
+
+	@Override
+	public List<Approval> selectApprovalWaitList(SqlSession session, Map<String, Object> param) {
+		return session.selectList("approval.selectApprovalWaitList", param,
+				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
+	}
+
+	@Override
+	public List<Approval> selectApprovalCompleteList(SqlSession session, Map<String, Object> param) {
+		return session.selectList("approval.selectApprovalCompleteList", param,
+				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
+	}
+
+	@Override
+	public List<Approval> selectApprovalProcessList(SqlSession session, Map<String, Object> param) {
+		return session.selectList("approval.selectApprovalProcessList", param,
+				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
+	}
+
+	@Override
+	public List<Approval> selectApprovalPendingList(SqlSession session, Map<String, Object> param) {
+		return session.selectList("approval.selectApprovalPendingList", param,
+				new RowBounds(((int)param.get("cPage")-1)*(int)param.get("numPerpage"), (int)param.get("numPerpage")));
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getSpecificApproval(SqlSession session, String targetNo) {
+		String no = targetNo.substring(0, 1);
+		Map<String, String> param = new HashMap<>();
+		param.put("no", no);
+		param.put("targetNo", targetNo);
+		System.out.println("no : " + no);
+		List<ResponseSpecificApproval> result = session.selectList("approval.getSpecificApproval", param);
+		return session.selectList("approval.getSpecificApproval", param);
 	}
 
 }

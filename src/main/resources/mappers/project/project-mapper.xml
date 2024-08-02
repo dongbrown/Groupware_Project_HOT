@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN " "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="project">
+
+
+	<resultMap type="department" id="departmentMap">
+		<id column="DEPARTMENT_CODE" property="departmentCode" />
+		<result column="DEPARTMENT_HIGH_CODE" property="departmentHighCode"/>
+		<result column="DEPARTMENT_TITLE" property="departmentTitle"/>
+		<result column="DEPARTMENT_AUTHORITY" property="departmentAuthority"/>
+	</resultMap>
+
+	<resultMap type="position" id="positionMap">
+		<id column="POSITION_CODE" property="positionCode"/>
+		<result column="POSITION_TITLE" property="positionTitle"/>
+		<result column="POSITION_AUTHORITY" property="positionAuthority"/>
+	</resultMap>
+
+	<resultMap id="employeeMap" type="employee">
+		<id column="EMPLOYEE_NO" property="employeeNo"/>
+		<result column="EMPLOYEE_NAME" property="employeeName"/>
+		<result column="EMPLOYEE_PHONE" property="employeePhone"/>
+		<result column="EMPLOYEE_PASSWORD" property="employeePassword"/>
+		<result column="EMPLOYEE_ID" property="employeeId"/>
+		<result column="EMPLOYEE_ADDRESS" property="employeeAddress"/>
+		<result column="EMPLOYEE_BIRTH_DAY" property="employeeBirthDay"/>
+		<result column="EMPLOYEE_SSN" property="employeeSsn"/>
+		<result column="EMPLOYEE_HIRE_DATE" property="employeeHireDate"/>
+		<result column="EMPLOYEE_SALARY" property="employeeSalary"/>
+		<result column="EMPLOYEE_PHOTO" property="employeePhoto"/>
+		<result column="EMPLOYEE_RESIGNATION_DAY" property="employeeResignationDay"/>
+		<result column="EMPLOYEE_TOTAL_VACATION" property="employeeTotalVacation"/>
+		<association property="departmentCode" resultMap="departmentMap"/>
+		<association property="positionCode" resultMap="positionMap"/>
+	</resultMap>
+
+	<resultMap id="projectMap" type="project">
+		<id column="PROJECT_NO" property="projectNo"/>
+		<result column="RPOJECT_TITLE" property="projectTitle"/>
+		<result column="EMPLOYEE_NO" property="employeeNo"/>
+		<result column="PROJECT_RANK" property="projectRank"/>
+		<result column="PROJECT_CONTENT" property="projectContent"/>
+		<result column="PROJECT_BUDGET" property="projectBudget"/>
+		<result column="PROJECT_PROGRESS" property="projectProgress"/>
+		<result column="PROJECT_END_DATE" property="projectEndDate"/>
+		<result column="PROJECT_START_DATE" property="projectStartDate"/>
+		<result column="PROJECT_STATUS" property="projectStatus"/>
+		<association property="employeeCode" resultMap="employeeMap"/>
+	</resultMap>
+
+	<resultMap id="projectEmployeeMap" type="projectEmployee">
+		<id column="EMPLOYEE_NO" property="employeeNo"/>
+		<association property="employee" resultMap="employeeMap"/>
+		<association property="department" resultMap="departmentMap"/>
+	</resultMap>
+
+
+	<select id="selectEmpByDept" parameterType="map" resultMap="employeeMap">
+		SELECT *
+		FROM EMPLOYEE JOIN DEPARTMENT USING(DEPARTMENT_CODE)
+					  JOIN POSITION USING(POSITION_CODE)
+		WHERE DEPARTMENT_CODE=#{deptCode} AND EMPLOYEE_NO != #{empNo}
+	</select>
+
+	<select id="selectDeptAll" resultMap="departmentMap">
+		SELECT * FROM DEPARTMENT
+	</select>
+
+	<select id="selectProjectAllCount" resultType="_int">
+		SELECT COUNT(*) FROM PROJECT
+	</select>
+
+	<select id="selectProjectAll" resultMap="projectMap">
+		SELECT * FROM PROJECT LEFT JOIN EMPLOYEE USING(EMPLOYEE_NO) ORDER BY PROJECT_START_DATE DESC
+	</select>
+
+	<select id="selectProjectByNo" parameterType="_int" resultMap="projectMap">
+		SELECT PROJECT_NO, RPOJECT_TITLE, PROJECT_CONTENT, EMPLOYEE_NAME,EMPLOYEE_NO, PROJECT_END_DATE, PROJECT_BUDGET, PROJECT_RANK,PROJECT_PROGRESS
+				 FROM PROJECT LEFT JOIN EMPLOYEE USING(EMPLOYEE_NO) WHERE PROJECT_NO=${projectNo}
+	</select>
+
+	<select id="selectEmployeetByProjectNo" parameterType="map" resultMap="projectEmployeeMap">
+		 SELECT * FROM PROJECT_MEMBERS
+				JOIN EMPLOYEE USING(EMPLOYEE_NO)
+                JOIN DEPARTMENT USING (DEPARTMENT_CODE) WHERE PROJECT_NO=#{projectNo} AND EMPLOYEE_NO!=#{empNo}
+	</select>
+
+	<insert id="insertProject" parameterType="project">
+		INSERT INTO PROJECT VALUES
+			(SEQ_PROJECT.NEXTVAL,${employeeNo},#{projectTitle},#{projectContent},
+					DEFAULT,#{projectEndDate},${projectRank},DEFAULT,${projectBudget},DEFAULT)
+
+	 	<selectKey keyProperty="projectNo" resultType="int" order="AFTER">
+        	SELECT SEQ_PROJECT.CURRVAL FROM DUAL
+    	</selectKey>
+	</insert>
+
+	<insert id="insertProjectEmp" parameterType="map">
+		INSERT INTO PROJECT_MEMBERS VALUES(#{projectNo}, #{empNo})
+	</insert>
+<!-- 업테이트 시 사용하는 쿼리문 -->
+	<update id="updateProject" parameterType="project">
+		UPDATE PROJECT SET
+			RPOJECT_TITLE=#{projectTitle}, PROJECT_CONTENT=#{projectContent}, PROJECT_END_DATE=#{projectEndDate}, PROJECT_RANK=${projectRank},
+			PROJECT_PROGRESS=${projectProgress}, PROJECT_BUDGET=${projectBudget}
+			WHERE PROJECT_NO = ${projectNo}
+	</update>
+
+	<delete id="updateProjectDeleteEmp" parameterType="_int">
+		DELETE FROM PROJECT_MEMBERS WHERE PROJECT_NO = ${projectNo}
+	</delete>
+
+<!-- ///////////////////////////////////////////////////////// -->
+
+</mapper>

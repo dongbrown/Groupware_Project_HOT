@@ -4,21 +4,23 @@
 
 $(document).ready(()=>{
 	//문서 종류별 개수 가져오기
-	getApprovalCountAndList(1);
+	getApprovalCountAndList(1,10);
 });
 
 $("#selectType").on("change", e=>{
 	const approvalType=e.target.value;
+	getApprovalCountAndList(1,approvalType)
 });
 
-function getApprovalCountAndList(cPage){
+function getApprovalCountAndList(cPage, approvalType){
 	const no=$('#header-empNo').data('employee-no');
 	//$('#header-empNo').data('employeeNo');
 
-	fetch(path+'/api/approval/getApprovalsCountAndList?no='+no)
+	fetch(path+'/api/approval/getApprovalsCountAndList?no='+no+'&approvalType='+approvalType)
 	.then(response=>response.json())
 	.then(data=>{
 		const $pageBar=createPagination(cPage,data.totalPage,'getApprovalCountAndList');
+		$("#pagebar-div").empty();
 		$("#pagebar-div").append($pageBar);
 		//결재 카운트들 태그에 값 넣기
 		makeCountText(data.rac);
@@ -26,7 +28,7 @@ function getApprovalCountAndList(cPage){
 		let dataArray = Array.from(data.approvals);
 		// Target Table에 해당되는 정보 append
 		const $body=$("#approvalBody");
-		if(data.approvals)
+		$body.empty();
 		dataArray.forEach((d)=>{
 			let type;
 			let status;
@@ -44,6 +46,10 @@ function getApprovalCountAndList(cPage){
 				case 4: status="반려"; break;
 			}
 			const $tr=$("<tr>");
+			$tr.on("click", e=>{
+				const targetNo = e.target.parentElement.firstChild.innerText;
+				specificApproval(targetNo);
+			})
 			const $appNo=$("<td>").text(d.approvalNo);
 			const $appType=$("<td>").text(type);
 			const $appTitle=$("<td>").text(d.approvalTitle);
@@ -68,4 +74,8 @@ function makeCountText(rac){
 	$('.approvalStatusTable span').eq(1).text(rac.processCount);
 	$('.approvalStatusTable span').eq(2).text(rac.pendingCount);
 	$('.approvalStatusTable span').eq(3).text(rac.completeCount);
+}
+
+function specificApproval(targetNo){
+	location.assign(path+"/approval/specApproval.do?targetNo="+targetNo);
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="feed">
+
+    <resultMap id="feedResultMap" type="com.project.hot.feed.model.dto.Feed">
+        <id property="feedNo" column="FEED_NO"/>
+        <result property="feedContent" column="FEED_CONTENT"/>
+        <result property="feedEnrollDate" column="FEED_ENROLLDATE"/>
+        <result property="communityNo" column="COMMUNITY_NO"/>
+        <result property="employeeNo" column="EMPLOYEE_NO"/>
+        <result property="employeeName" column="EMPLOYEE_NAME" />
+        <result property="likeCount" column="LIKE_COUNT" />
+        <result property="commentCount" column="COMMENT_COUNT" />
+        <result property="isLiked" column="IS_LIKED" />
+
+    </resultMap>
+
+    <resultMap id="feedCommentResultMap" type="com.project.hot.feed.model.dto.FeedComment">
+	    <id property="feedCommentNo" column="FEED_COMMENT_NO"/>
+	    <result property="feedCommentContent" column="FEED_COMMENT_CONTENT"/>
+	    <result property="feedCommentEnrolldate" column="FEED_COMMENT_ENROLLDATE"/>
+	    <result property="feedNo" column="FEED_NO"/>
+	    <result property="employeeNo" column="EMPLOYEE_NO"/>
+	    <result property="feedCommentParentNo" column="FEED_COMMENT_PARENT_NO"/>
+	    <result property="employeeName" column="EMPLOYEE_NAME"/>
+	</resultMap>
+
+    <select id="getFeeds" resultMap="feedResultMap" parameterType="map">
+        SELECT f.FEED_NO, f.FEED_CONTENT, f.FEED_ENROLLDATE, f.COMMUNITY_NO, f.EMPLOYEE_NO, e.EMPLOYEE_NAME,
+               (SELECT COUNT(*) FROM FEED_LIKE fl WHERE fl.FEED_NO = f.FEED_NO) AS LIKE_COUNT,
+               (SELECT COUNT(*) FROM FEED_COMMENT fc WHERE fc.FEED_NO = f.FEED_NO) AS COMMENT_COUNT,
+               CASE WHEN EXISTS (SELECT 1 FROM FEED_LIKE fl WHERE fl.FEED_NO = f.FEED_NO AND fl.EMPLOYEE_NO = #{currentEmployeeNo})
+                    THEN 1 ELSE 0 END AS IS_LIKED
+        FROM FEED f
+        JOIN EMPLOYEE e ON f.EMPLOYEE_NO = e.EMPLOYEE_NO
+        WHERE f.COMMUNITY_NO = #{communityNo}
+        ORDER BY f.FEED_ENROLLDATE DESC
+    </select>
+
+
+    <insert id="insertFeed" parameterType="com.project.hot.feed.model.dto.Feed">
+        INSERT INTO FEED (FEED_NO, FEED_CONTENT, FEED_ENROLLDATE, COMMUNITY_NO, EMPLOYEE_NO)
+        VALUES (SEQ_FEED.NEXTVAL, #{feedContent}, SYSDATE, #{communityNo}, #{employeeNo})
+    </insert>
+
+    <update id="updateFeed" parameterType="com.project.hot.feed.model.dto.Feed">
+        UPDATE FEED
+        SET FEED_CONTENT = #{feedContent}
+        WHERE FEED_NO = #{feedNo}
+    </update>
+
+    <delete id="deleteFeed" parameterType="int">
+        DELETE FROM FEED
+        WHERE FEED_NO = #{feedNo}
+    </delete>
+
+    <select id="getFeedLike" resultType="com.project.hot.feed.model.dto.FeedLike">
+        SELECT * FROM FEED_LIKE
+        WHERE FEED_NO = #{feedNo} AND EMPLOYEE_NO = #{employeeNo}
+    </select>
+
+    <insert id="insertFeedLike">
+        INSERT INTO FEED_LIKE (FEED_LIKE_NO, EMPLOYEE_NO, FEED_NO)
+        VALUES (SEQ_FEED_LIKE.NEXTVAL, #{employeeNo}, #{feedNo})
+    </insert>
+
+    <delete id="deleteFeedLike">
+        DELETE FROM FEED_LIKE
+        WHERE FEED_NO = #{feedNo} AND EMPLOYEE_NO = #{employeeNo}
+    </delete>
+
+	<select id="getComments" resultMap="feedCommentResultMap">
+	    SELECT fc.FEED_COMMENT_NO, fc.FEED_COMMENT_CONTENT, fc.FEED_COMMENT_ENROLLDATE,
+	           fc.FEED_NO, fc.EMPLOYEE_NO, fc.FEED_COMMENT_PARENT_NO, e.EMPLOYEE_NAME
+	    FROM FEED_COMMENT fc
+	    JOIN EMPLOYEE e ON fc.EMPLOYEE_NO = e.EMPLOYEE_NO
+	    WHERE fc.FEED_NO = #{feedNo}
+	    ORDER BY fc.FEED_COMMENT_ENROLLDATE
+	</select>
+
+    <insert id="insertComment" parameterType="com.project.hot.feed.model.dto.FeedComment">
+        INSERT INTO FEED_COMMENT (FEED_COMMENT_NO, FEED_COMMENT_CONTENT, FEED_COMMENT_ENROLLDATE, FEED_NO, EMPLOYEE_NO, FEED_COMMENT_PARENT_NO)
+        VALUES (SEQ_FEED_COMMENT.NEXTVAL, #{feedCommentContent}, SYSDATE, #{feedNo}, #{employeeNo}, #{feedCommentParentNo})
+    </insert>
+
+    <update id="updateComment" parameterType="com.project.hot.feed.model.dto.FeedComment">
+        UPDATE FEED_COMMENT
+        SET FEED_COMMENT_CONTENT = #{feedCommentContent}
+        WHERE FEED_COMMENT_NO = #{feedCommentNo}
+        AND EMPLOYEE_NO = #{employeeNo}
+    </update>
+
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM FEED_COMMENT
+        WHERE FEED_COMMENT_NO = #{feedCommentNo}
+    </delete>
+
+</mapper>

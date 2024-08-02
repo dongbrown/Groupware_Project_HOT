@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +23,7 @@ import com.project.hot.approval.model.dto.RequestApproval;
 import com.project.hot.approval.model.dto.RequestBusinessTrip;
 import com.project.hot.approval.model.dto.RequestExpenditure;
 import com.project.hot.approval.model.dto.ResponseApprovalsCount;
+import com.project.hot.approval.model.dto.ResponseSpecificApproval;
 import com.project.hot.approval.model.dto.VacationForm;
 import com.project.hot.common.exception.ApprovalException;
 import com.project.hot.employee.model.dto.Department;
@@ -59,7 +59,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public Map<String, Object> getApprovalsCountAndList(Map<String, Object> param) {
 		Map<String, Object> result=new HashMap<>();
-
+		int approvalType = (Integer)(param.get("approvalType"));
 		//각 결재문서 카운트
 		ResponseApprovalsCount rac=new ResponseApprovalsCount();
 		rac.setWaitCount(dao.selectApprovalWaitCount(session, (int)param.get("no")));
@@ -69,8 +69,29 @@ public class ApprovalServiceImpl implements ApprovalService {
 		result.put("rac", rac);
 
 		//결재 문서 리스트 가져오기
-		result.put("totalPage", Math.ceil((double)dao.selectApprovalAllCount(session, (int)param.get("no"))/10));
-		result.put("approvals", dao.selectApprovalAllList(session, param));
+		switch(approvalType) {
+			case 10:	// 전체 문서
+				result.put("totalPage", Math.ceil((double)dao.selectApprovalAllCount(session, (int)param.get("no"))/5));
+				result.put("approvals", dao.selectApprovalAllList(session, param));
+			break;
+			case 1:	// 대기 문서
+				result.put("totalPage", Math.ceil((double)rac.getWaitCount()/5));
+				result.put("approvals", dao.selectApprovalWaitList(session, param));
+			break;
+			case 2:	// 예정 문서
+				result.put("totalPage", Math.ceil((double)rac.getProcessCount()/5));
+				result.put("approvals", dao.selectApprovalPendingList(session, param));
+			break;
+			case 3:	// 진행 문서
+				result.put("totalPage", Math.ceil((double)rac.getPendingCount()/5));
+				result.put("approvals", dao.selectApprovalProcessList(session, param));
+			break;
+			case 4:	// 완료 문서
+				result.put("totalPage", Math.ceil((double)rac.getCompleteCount()/5));
+				result.put("approvals", dao.selectApprovalCompleteList(session, param));
+			break;
+		}
+
 
 		return result;
 	}
@@ -201,6 +222,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}else {
 			throw new ApprovalException("결재문서 insert 실패");
 		}
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getSpecificApproval(String targetNo) {
+
+		return dao.getSpecificApproval(session, targetNo);
 	}
 
 

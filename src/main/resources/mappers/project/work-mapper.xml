@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN " "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="work">
+
+	<resultMap type="work" id="workMap">
+		<id column="PROJECT_WORK_NO" property="projectWorkNo"/>
+		<result column="PROJECT_NO" property="projectNo"/>
+		<result column="EMPLOYEE_NO" property="employeeNo"/>
+		<result column="PROJECT_WORK_TITLE" property="projectWorkTitle"/>
+		<result column="PROJECT_WORK_CONTENT" property="projectWorkContent"/>
+		<result column="PROJECT_WORK_START_DATE" property="projectWorkStartDate"/>
+		<result column="PROJECT_WORK_RANK" property="projectWorkRank"/>
+		<result column="PROJECT_WORK_END_DATE" property="projectWorkEndDate"/>
+		<result column="PROJECT_WORK_PROGRESS" property="projectWorkProgress"/>
+		<result column="PROJECT_WORK_STATUS" property="projectWorkStatus"/>
+		<collection property="projectAtt" resultMap="projectAttachmentMap"/>
+	</resultMap>
+
+	<resultMap type="projectAttachment" id="projectAttachmentMap">
+		<id column="ATT_NO" property="attNo"/>
+		<result column="PROJECT_WORK_NO" property="projectWorkNo"/>
+		<result column="EMPLOYEE_NO" property="employeeNo"/>
+		<result column="ATT_ORIGINALNAME" property="attOriginalname"/>
+		<result column="ATT_RENAME" property="attRename"/>
+		<result column="ATT_UPLOAD_DATE" property="attUploadDate"/>
+	</resultMap>
+
+	<insert id="insertWork" parameterType="work">
+		INSERT INTO PROJECT_WORK VALUES(
+			SEQ_PROJECT_WORK.NEXTVAL,${projectNo},${employeeNo},#{projectWorkTitle},#{projectWorkContent},${projectWorkRank},DEFAULT,#{projectWorkEndDate},0,0,'진행중')
+
+		<selectKey keyProperty="projectWorkNo" resultType="int" order="AFTER">
+			SELECT SEQ_PROJECT_WORK.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<insert id="insertWorkAtt" parameterType="map">
+		INSERT INTO PROJECT_ATT VALUES(SEQ_PROJECT_ATT.NEXTVAL,#{projectWorkNo},${employeeNo},'${fileName}','${rename}',DEFAULT)
+	</insert>
+
+	<select id="selectWorkAllByEmpNo" parameterType="map" resultMap="workMap">
+		SELECT * FROM PROJECT_WORK WHERE EMPLOYEE_NO=#{employeeNo}
+	</select>
+
+	<select id="selectWorkAll" resultMap="workMap">
+		SELECT * FROM PROJECT_WORK
+	</select>
+
+	<select id="selectworkAllCountByEmpNo" parameterType="map" resultType="_int">
+		SELECT COUNT(*) FROM PROJECT_WORK WHERE EMPLOYEE_NO=#{employeeNo}
+	</select>
+
+	<select id="selectworkAllCount" resultType="_int">
+		SELECT COUNT(*) FROM PROJECT_WORK
+	</select>
+
+	<select id="selectWorkByWorkNo" parameterType="_int" resultMap="workMap">
+		SELECT * FROM PROJECT_WORK P
+			LEFT JOIN PROJECT_ATT A ON P.PROJECT_WORK_NO=A.PROJECT_WORK_NO WHERE P.PROJECT_WORK_NO = #{workNo}
+	</select>
+
+	<update id="updateWorkDetail" parameterType="work">
+		UPDATE PROJECT_WORK SET
+			 PROJECT_WORK_TITLE=#{projectWorkTitle}
+			,PROJECT_WORK_CONTENT=#{projectWorkContent}
+			,PROJECT_WORK_RANK=#{projectWorkRank}
+			,PROJECT_WORK_END_DATE=#{projectWorkEndDate}
+			,PROJECT_WORK_PROGRESS=#{projectWorkProgress}
+		WHERE PROJECT_WORK_NO=#{projectWorkNo}
+	</update>
+
+	<delete id="deleteWorkAtt" parameterType="list">
+		DELETE FROM PROJECT_ATT WHERE ATT_RENAME IN
+		<foreach collection="list" item="f" open="(" close=")" separator=",">
+			'${f}'
+		</foreach>
+	</delete>
+
+
+</mapper>
