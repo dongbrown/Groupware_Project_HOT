@@ -118,7 +118,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">캘린더</h6>
-                        <a class="collapse-item" href="${path }/schedule/">내 일정 / 공유 일정</a>
+                        <a class="collapse-item" href="${path }/schedule/">일정 관리</a>
 <%--                         <a class="collapse-item" href="${path }/schedule/">공유 캘린더</a> --%>
                     </div>
                 </div>
@@ -130,34 +130,20 @@
 			        <i class="fas fa-envelope"></i>
 			        <span>메일</span>
 			    </a>
-			    <div id="email" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-			        <div class="bg-white py-2 collapse-inner rounded">
-			            <h6 class="collapse-header">메일 조회</h6>
-			            <a class="collapse-item email-link" href="#" data-mailbox="inbox">
-			                받은 메일함 <span class="badge bg-primary rounded-pill" id="inboxUnreadCount"></span>
-			            </a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="sent">
-			                보낸 메일함
-			            </a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="self">
-			                내게 쓴 메일함 <span class="badge bg-secondary rounded-pill" id="selfUnreadCount"></span>
-			            </a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="important">
-			                중요 메일함 <span class="badge bg-warning rounded-pill" id="importantUnreadCount"></span>
-			            </a>
-			            <a class="collapse-item email-link" href="#" data-mailbox="trash">
-			                휴지통 <span class="badge bg-danger rounded-pill" id="trashCount"></span>
-			            </a>
-			            <br>
-			            <h6 class="collapse-header">메일 발송</h6>
-			            <a class="collapse-item" href="#" id="sidebarWriteBtn">
-			                메일 발송
-			            </a>
-			            <a class="collapse-item" href="#" id="sidebarWriteSelfBtn">
-			                내게 쓰기
-			            </a>
-			        </div>
-			    </div>
+			   <div id="email" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+				    <div class="bg-white py-2 collapse-inner rounded">
+				        <h6 class="collapse-header">메일 조회</h6>
+						<a class="collapse-item" href="${path }/email?mailbox=inbox">받은메일함</a>
+						<a class="collapse-item" href="${path }/email?mailbox=sent">보낸메일함</a>
+						<a class="collapse-item" href="${path }/email?mailbox=self">내게쓴메일함</a>
+				        <a class="collapse-item" href="${path }/email?mailbox=important">중요메일함</a>
+				        <a class="collapse-item" href="${path }/email?mailbox=trash">휴지통</a>
+				        <br>
+				        <h6 class="collapse-header">메일 발송</h6>
+						<a class="collapse-item" href="${path }/email?mailbox=write">메일 쓰기</a>
+						<a class="collapse-item" href="${path }/email?mailbox=write-self">내게 쓰기</a>
+				    </div>
+				</div>
 			</li>
 
             <!--
@@ -260,9 +246,12 @@
 
         </ul>
         <!-- End of Sidebar -->
-        <script src="${pageContext.request.contextPath}/js/email-common.js"></script>
+<script src="${pageContext.request.contextPath}/js/email-common.js"></script>
 <script>
+var contextPath = '${pageContext.request.contextPath}/email';
 $(document).ready(function() {
+    EmailCommon.init(contextPath);
+
     // 이메일 링크 클릭 이벤트
     $('.email-link').click(function(e) {
         e.preventDefault();
@@ -279,7 +268,7 @@ $(document).ready(function() {
     // 내게 쓰기 버튼 클릭 이벤트
     $('#sidebarWriteSelfBtn').click(function(e) {
         e.preventDefault();
-        EmailCommon.showWriteSelfForm();
+        EmailCommon.showSelfWriteForm();
     });
 
     // 초기 로드 시 안 읽은 메일 개수 업데이트

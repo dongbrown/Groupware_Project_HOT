@@ -10,6 +10,8 @@ import com.project.hot.schedule.model.dto.ScheduleEmployee;
 
 public interface ScheduleDao {
 
+	List<Schedule> getTodaySchedules = null;
+
 	List<Schedule> getSchedules(SqlSession session, int employeeNo);
 
 	int addSchedule(Schedule schedule, SqlSession session, int employeeNo);
@@ -33,6 +35,8 @@ public interface ScheduleDao {
 	List<Schedule> getShareSchedule(SqlSession session, int employeeNo);
 
 	List<Schedule> getCompanySchedule(SqlSession session);
+
+	List<Schedule> getTodaySchedules(SqlSession session, int employeeNo);
 
 
 }

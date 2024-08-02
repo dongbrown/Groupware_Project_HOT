@@ -245,19 +245,20 @@ var EmailCommon = {
         }
     },
     // 메일함 로드 함수
-    loadMailbox: function(mailbox) {
-        $.ajax({
-            url: this.contextPath + '/' + mailbox,
-            type: 'GET',
-            success: function(response) {
-                $('#mailContent').html(response);
-                EmailCommon.initializeMailboxFunctions(mailbox);
-            },
-            error: function() {
-                alert(mailbox + ' 메일함을 로드하는데 실패했습니다.');
-            }
-        });
-    },
+	loadMailbox: function(mailbox) {
+	    $.ajax({
+	        url: this.contextPath + '/' + mailbox,
+	        type: 'GET',
+	        success: function(response) {
+	            $('#mailContent').html(response);
+	            EmailCommon.initializeMailboxFunctions(mailbox);
+	            history.pushState(null, '', EmailCommon.contextPath + '/' + mailbox);
+	        },
+	        error: function() {
+	            alert(mailbox + ' 메일함을 로드하는데 실패했습니다.');
+	        }
+	    });
+	},
 
     // 메일함별 초기화 함수
     initializeMailboxFunctions: function(mailbox) {
@@ -364,35 +365,35 @@ var EmailCommon = {
     },
 
     // 메일 쓰기 폼 표시
-    showWriteForm: function(isSelf) {
-        var url = contextPath + '/email/write' + (isSelf ? '?self=true' : '');
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(data) {
-                $('#mailContent').html(data);
-                history.pushState(null, '', url);
-            },
-            error: function() {
-                alert('메일 작성 폼을 불러오는데 실패했습니다.');
-            }
-        });
-    },
+    showWriteForm: function() {
+	    $.ajax({
+	        url: this.contextPath + '/write',
+	        type: 'GET',
+	        success: function(response) {
+	            $('#mailContent').html(response);
+	            EmailCommon.initializeMailboxFunctions('write');
+	            history.pushState(null, '', EmailCommon.contextPath + '/write');
+	        },
+	        error: function() {
+	            alert('메일 작성 폼을 불러오는데 실패했습니다.');
+	        }
+	    });
+	},
 
-    // 내게 쓰기 폼 표시
-    showSelfWriteForm: function() {
-        $.ajax({
-            url: this.contextPath + '/write-self',
-            type: 'GET',
-            success: function(response) {
-                $('#mailContent').html(response);
-                EmailCommon.initializeMailboxFunctions('write-self');
-            },
-            error: function() {
-                alert('메일 작성 폼을 불러오는데 실패했습니다.');
-            }
-        });
-    },
+	showSelfWriteForm: function() {
+	    $.ajax({
+	        url: this.contextPath + '/write-self',
+	        type: 'GET',
+	        success: function(response) {
+	            $('#mailContent').html(response);
+	            EmailCommon.initializeMailboxFunctions('write-self');
+	            history.pushState(null, '', EmailCommon.contextPath + '/write-self');
+	        },
+	        error: function() {
+	            alert('내게 쓰기 폼을 불러오는데 실패했습니다.');
+	        }
+	    });
+	},
 
     // Summernote 에디터 초기화
     initSummernote: function() {
@@ -806,6 +807,38 @@ var EmailCommon = {
                 alert('파일 다운로드에 실패했습니다.');
             });
     },
+
+    // 답장 함수
+	replyEmail: function(emailNo) {
+	    $.ajax({
+	        url: this.contextPath + '/reply/' + emailNo,
+	        type: 'GET',
+	        success: function(response) {
+	            $('#mailContent').html(response);
+	            EmailCommon.initializeMailboxFunctions('write');
+	            history.pushState(null, '', EmailCommon.contextPath + '/reply/' + emailNo);
+	        },
+	        error: function() {
+	            alert('답장 폼을 불러오는데 실패했습니다.');
+	        }
+	    });
+	},
+
+	// 전달 함수
+	forwardEmail: function(emailNo) {
+	    $.ajax({
+	        url: this.contextPath + '/forward/' + emailNo,
+	        type: 'GET',
+	        success: function(response) {
+	            $('#mailContent').html(response);
+	            EmailCommon.initializeMailboxFunctions('write');
+	            history.pushState(null, '', EmailCommon.contextPath + '/forward/' + emailNo);
+	        },
+	        error: function() {
+	            alert('전달 폼을 불러오는데 실패했습니다.');
+	        }
+		});
+	},
 
     // 이메일 첨부파일 목록 로드
     loadEmailAttachments: function(emailNo) {

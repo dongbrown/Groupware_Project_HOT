@@ -2,22 +2,40 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<%
+String action = request.getParameter("action");
+String to = request.getParameter("to");
+String subject = request.getParameter("subject");
+String content = request.getParameter("content");
+
+if ("reply".equals(action)) {
+    // 답장 처리
+    // 'to' 필드에 원본 발신자 이메일 설정
+    // 'subject' 필드에 'Re: ' 제목 설정
+    // 'content' 필드에 원본 내용 설정 (인용 형식으로)
+} else if ("forward".equals(action)) {
+    // 전달 처리
+    // 'subject' 필드에 'Fwd: ' 제목 설정
+    // 'content' 필드에 원본 내용 설정
+}
+%>
+
 <div class="email-write-container">
     <h2 class="email-write-title">새 메일 작성</h2>
     <form id="emailForm" class="email-write-form">
-     	<div class="form-group">
-		    <label for="receivers">받는 사람:</label>
-		    <input type="text" id="receivers" name="receivers" class="form-control">
-		    <div id="receiversList" class="receivers-list"></div>
-		    <div id="selectedReceivers" class="selected-receivers"></div>
-		</div>
+        <div class="form-group">
+            <label for="receivers">받는 사람:</label>
+            <input type="text" id="receivers" name="receivers" class="form-control" value="<%= to != null ? to : "" %>">
+            <div id="receiversList" class="receivers-list"></div>
+            <div id="selectedReceivers" class="selected-receivers"></div>
+        </div>
         <div class="form-group">
             <label for="emailTitle">제목:</label>
-            <input type="text" id="emailTitle" name="emailTitle" class="form-control" required>
+            <input type="text" id="emailTitle" name="emailTitle" class="form-control" required value="<%= subject != null ? subject : "" %>">
         </div>
         <div class="form-group">
             <label for="summernote">내용:</label>
-            <textarea id="summernote" name="content"></textarea>
+            <textarea id="summernote" name="content"><%= content != null ? content : "" %></textarea>
         </div>
         <div class="form-group">
             <label for="attachment">첨부 파일:</label>

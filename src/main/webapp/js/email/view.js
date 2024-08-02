@@ -42,11 +42,25 @@ var EmailView = {
     },
 
     replyEmail: function(emailNo) {
-        EmailCommon.replyEmail(emailNo);
+        var senderEmail = $('.sender-email').text().trim();
+        var emailTitle = $('.email-title').text().trim();
+        var emailContent = $('.email-content').html();
+
+        // URL에서 .jsp 제거 및 파라미터 인코딩
+        window.location.href = EmailCommon.contextPath + '/write?action=reply' +
+                               '&to=' + encodeURIComponent(senderEmail) +
+                               '&subject=' + encodeURIComponent('Re: ' + emailTitle) +
+                               '&content=' + encodeURIComponent(emailContent);
     },
 
     forwardEmail: function(emailNo) {
-        EmailCommon.forwardEmail(emailNo);
+        var emailTitle = $('.email-title').text().trim();
+        var emailContent = $('.email-content').html();
+
+        // URL에서 .jsp 제거 및 파라미터 인코딩
+        window.location.href = EmailCommon.contextPath + '/write?action=forward' +
+                               '&subject=' + encodeURIComponent('Fwd: ' + emailTitle) +
+                               '&content=' + encodeURIComponent(emailContent);
     },
 
     deleteEmail: function(emailNo) {
@@ -65,6 +79,38 @@ var EmailView = {
                 }
             });
         }
+    },
+
+    markAsRead: function(emailNo) {
+        $.ajax({
+            url: EmailCommon.contextPath + '/email/mark-as-read/' + emailNo,
+            type: 'POST',
+            success: function(response) {
+                console.log('이메일이 읽음 상태로 변경되었습니다.');
+                // 필요한 경우 UI 업데이트
+            },
+            error: function() {
+                console.error('이메일 상태 변경에 실패했습니다.');
+            }
+        });
+    },
+
+    toggleImportant: function(emailNo) {
+        $.ajax({
+            url: EmailCommon.contextPath + '/email/toggle-important/' + emailNo,
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+                // 필요한 경우 UI 업데이트
+            },
+            error: function() {
+                console.error('중요 표시 변경에 실패했습니다.');
+            }
+        });
+    },
+
+    downloadAttachment: function(attachmentId, filename) {
+        window.location.href = EmailCommon.contextPath + '/email/download/' + attachmentId;
     }
 };
 
