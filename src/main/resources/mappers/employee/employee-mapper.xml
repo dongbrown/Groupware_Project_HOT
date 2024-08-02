@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN " "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="employee">
+
+	<resultMap type="commuting" id="commutingMap">
+		<id column="COMMUTING_NO" property="commuting_no"/>
+		<result column="COMMUTING_DATE" property="commutingDate"/>
+		<result column="COMMUTING_GO_WORK_TIME" property="commutingGoWorkTime"/>
+		<result column="COMMUTING_LEAVE_WORK_TIME" property="commutingLeaveWorkTime"/>
+		<result column="COMMUTING_STATUS" property="commutingStatus"/>
+		<association property="employeeNo" resultMap="employeeMap"/>
+	</resultMap>
+
+	<resultMap type="department" id="departmentMap">
+		<id column="DEPARTMENT_CODE" property="departmentCode" />
+		<result column="DEPARTMENT_HIGH_CODE" property="departmentHighCode"/>
+		<result column="DEPARTMENT_TITLE" property="departmentTitle"/>
+		<result column="DEPARTMENT_AUTHORITY" property="departmentAuthority"/>
+	</resultMap>
+
+	<resultMap type="position" id="positionMap">
+		<id column="POSITION_CODE" property="positionCode"/>
+		<result column="POSITION_TITLE" property="positionTitle"/>
+		<result column="POSITION_AUTHORITY" property="positionAuthority"/>
+	</resultMap>
+
+	<resultMap id="employeeMap" type="employee">
+		<id column="EMPLOYEE_NO" property="employeeNo"/>
+		<result column="EMPLOYEE_NAME" property="employeeName"/>
+		<result column="EMPLOYEE_PHONE" property="employeePhone"/>
+		<result column="EMPLOYEE_PASSWORD" property="employeePassword"/>
+		<result column="EMPLOYEE_ID" property="employeeId"/>
+		<result column="EMPLOYEE_ADDRESS" property="employeeAddress"/>
+		<result column="EMPLOYEE_BIRTH_DAY" property="employeeBirthDay"/>
+		<result column="EMPLOYEE_SSN" property="employeeSsn"/>
+		<result column="EMPLOYEE_HIRE_DATE" property="employeeHireDate"/>
+		<result column="EMPLOYEE_SALARY" property="employeeSalary"/>
+		<result column="EMPLOYEE_PHOTO" property="employeePhoto"/>
+		<result column="EMPLOYEE_RESIGNATION_DAY" property="employeeResignationDay"/>
+		<result column="EMPLOYEE_TOTAL_VACATION" property="employeeTotalVacation"/>
+		<association property="departmentCode" resultMap="departmentMap"/>
+		<association property="positionCode" resultMap="positionMap"/>
+	</resultMap>
+
+	<select id="selectEmployeeById" parameterType="string" resultMap="employeeMap">
+		SELECT *
+		FROM EMPLOYEE
+			JOIN DEPARTMENT USING(DEPARTMENT_CODE)
+			JOIN POSITION USING(POSITION_CODE)
+		WHERE EMPLOYEE_ID=#{id}
+	</select>
+
+	<select id="countEmployeeTotalData" resultType="_int">
+      	SELECT COUNT(*)
+       	FROM EMPLOYEE
+       		LEFT JOIN DEPARTMENT USING(DEPARTMENT_CODE)
+       		JOIN POSITION USING(POSITION_CODE)
+       	<where>
+       		<if test="sed.no != null and sed.no != ''">
+       			AND EMPLOYEE_NO = #{sed.no}
+       		</if>
+		    <if test="sed.name != null and sed.name != ''">
+		    	AND EMPLOYEE_NAME LIKE '%${sed.name}%'
+		    </if>
+		    <if test="sed.title != null and sed.title != ''">
+		    	AND DEPARTMENT_TITLE LIKE '${sed.title}%'
+		    </if>
+		    <if test="sed.positions !=null and sed.positions !=''">
+				AND POSITION_CODE IN
+				<foreach collection="sed.positions" item="p" open="(" close=")" separator=",">
+					#{p}
+				</foreach>
+			</if>
+			<if test='sed.minSalary != null and sed.minSalary != ""'>
+				AND EMPLOYEE_SALARY >= #{sed.minSalary}
+			</if>
+			<if test='sed.maxSalary != null and sed.maxSalary != ""'>
+				AND EMPLOYEE_SALARY &lt;= #{sed.maxSalary}
+			</if>
+			<if test='sed.minHire != null'>
+				AND TRUNC(EMPLOYEE_HIRE_DATE) >= TRUNC(#{sed.minHire})
+			</if>
+			<if test='sed.maxHire != null'>
+				AND TRUNC(EMPLOYEE_HIRE_DATE) &lt;= TRUNC(#{sed.maxHire})
+			</if>
+			<if test='sed.minResign != null'>
+				AND TRUNC(EMPLOYEE_RESIGNATION_DAY) >= TRUNC(#{sed.minResign})
+			</if>
+			<if test='sed.maxResign != null'>
+				AND TRUNC(EMPLOYEE_RESIGNATION_DAY) &lt;= TRUNC(#{sed.maxResign})
+			</if>
+		</where>
+    </select>
+
+    <select id="selectAllEmployee" resultMap="employeeMap">
+    	SELECT EMPLOYEE_NO, EMPLOYEE_NAME, DEPARTMENT_CODE, DEPARTMENT_HIGH_CODE, DEPARTMENT_TITLE, POSITION_CODE, POSITION_TITLE, EMPLOYEE_PHOTO, EMPLOYEE_ID
+    	FROM EMPLOYEE
+    		JOIN DEPARTMENT USING(DEPARTMENT_CODE)
+            JOIN POSITION USING(POSITION_CODE)
+        WHERE EMPLOYEE_RESIGNATION_DAY IS NULL
+        ORDER BY EMPLOYEE_NO
+    </select>
+
+    <select id="selectEmployees" resultMap="employeeMap">
+       	SELECT *
+       	FROM EMPLOYEE
+       		LEFT JOIN DEPARTMENT USING(DEPARTMENT_CODE)
+            JOIN POSITION USING(POSITION_CODE)
+        <where>
+       		<if test="sed.no != null and sed.no != ''">
+       			AND EMPLOYEE_NO = #{sed.no}
+       		</if>
+		    <if test="sed.name != null and sed.name != ''">
+		    	AND EMPLOYEE_NAME LIKE '%${sed.name}%'
+		    </if>
+		    <if test="sed.title != null and sed.title != ''">
+		    	AND DEPARTMENT_TITLE LIKE '${sed.title}%'
+		    </if>
+		    <if test="sed.positions !=null and sed.positions !=''">
+				AND POSITION_CODE IN
+				<foreach collection="sed.positions" item="p" open="(" close=")" separator=",">
+					#{p}
+				</foreach>
+			</if>
+			<if test='sed.minSalary != null and sed.minSalary != ""'>
+				AND EMPLOYEE_SALARY >= #{sed.minSalary}
+			</if>
+			<if test='sed.maxSalary != null and sed.maxSalary != ""'>
+				AND EMPLOYEE_SALARY &lt;= #{sed.maxSalary}
+			</if>
+			<if test='sed.minHire != null'>
+				AND TRUNC(EMPLOYEE_HIRE_DATE) >= TRUNC(#{sed.minHire})
+			</if>
+			<if test='sed.maxHire != null'>
+				AND TRUNC(EMPLOYEE_HIRE_DATE) &lt;= TRUNC(#{sed.maxHire})
+			</if>
+			<if test='sed.minResign != null'>
+				AND TRUNC(EMPLOYEE_RESIGNATION_DAY) >= TRUNC(#{sed.minResign})
+			</if>
+			<if test='sed.maxResign != null'>
+				AND TRUNC(EMPLOYEE_RESIGNATION_DAY) &lt;= TRUNC(#{sed.maxResign})
+			</if>
+		</where>
+       	ORDER BY EMPLOYEE_NO
+    </select>
+
+    <select id="selectDepartmentList" resultMap="departmentMap">
+		SELECT DEPARTMENT_CODE, DEPARTMENT_HIGH_CODE, DEPARTMENT_TITLE
+		FROM DEPARTMENT
+		START WITH DEPARTMENT_HIGH_CODE IS NULL
+		CONNECT BY PRIOR DEPARTMENT_CODE = DEPARTMENT_HIGH_CODE
+		ORDER SIBLINGS BY DEPARTMENT_TITLE
+    </select>
+
+    <select id="selectCommutingList" resultMap="commutingMap">
+    	SELECT COMMUTING_DATE, COMMUTING_GO_WORK_TIME, COMMUTING_LEAVE_WORK_TIME, COMMUTING_STATUS
+		FROM COMMUTING
+		WHERE EMPLOYEE_NO=#{employeeNo}
+		  AND COMMUTING_DATE &gt;= TO_DATE(#{year} || '-' || #{month} || '-01', 'YYYY-MM-DD')
+          AND COMMUTING_DATE &lt; TO_DATE(#{year} || '-' || #{month} || '-01', 'YYYY-MM-DD') + INTERVAL '1' MONTH
+        ORDER BY COMMUTING_DATE DESC
+    </select>
+
+    <select id="countCommutingTotalData" resultType="_int">
+		SELECT COUNT(*)
+		FROM COMMUTING
+		WHERE EMPLOYEE_NO=#{employeeNo}
+		AND COMMUTING_DATE &gt;= TO_DATE(#{year} || '-' || #{month} || '-01', 'YYYY-MM-DD')
+		AND COMMUTING_DATE &lt; TO_DATE(#{year} || '-' || #{month} || '-01', 'YYYY-MM-DD') + INTERVAL '1' MONTH
+    </select>
+
+    <update id="updateEmployeePhoto">
+    	UPDATE EMPLOYEE SET EMPLOYEE_PHOTO=#{rename} WHERE EMPLOYEE_NO=#{employeeNo}
+    </update>
+
+    <update id="updateEmployee" parameterType="com.project.hot.employee.model.dto.RequestEmployee">
+    	UPDATE EMPLOYEE
+		<set>
+			<if test="departmentCode != null and departmentCode != ''">
+				DEPARTMENT_CODE=#{departmentCode},
+			</if>
+			<if test="positionCode != null and positionCode != ''">
+				POSITION_CODE=#{positionCode},
+			</if>
+			<if test="employeeName != null and employeeName != ''">
+				EMPLOYEE_NAME=#{employeeName},
+			</if>
+			<if test="employeePhone != null and employeePhone != ''">
+				EMPLOYEE_PHONE=#{employeePhone},
+			</if>
+			<if test="employeePassword != null and employeePassword != ''">
+				EMPLOYEE_PASSWORD=#{employeePassword},
+			</if>
+			<if test="employeeId != null and employeeId != ''">
+				EMPLOYEE_ID=#{employeeId},
+			</if>
+			<if test="employeeAddress != null and employeeAddress != ''">
+				EMPLOYEE_ADDRESS=#{employeeAddress},
+			</if>
+			<if test="employeeSalary != null and employeeSalary != ''">
+				EMPLOYEE_SALARY=#{employeeSalary},
+			</if>
+			<if test="employeeResignationDay != null and employeeResignationDay != ''">
+				EMPLOYEE_RESIGNATION_DAY=#{employeeResignationDay},
+			</if>
+			<if test="employeeTotalVacation != null and employeeTotalVacation != ''">
+				EMPLOYEE_TOTAL_VACATION=#{employeeTotalVacation},
+			</if>
+		</set>
+    	WHERE EMPLOYEE_NO=#{employeeNo}
+    </update>
+
+    <insert id="insertCommuting">
+    	INSERT INTO COMMUTING VALUES(SEQ_COMMUTING.NEXTVAL, #{employeeNo}, SYSDATE, '', #{status}, SYSDATE)
+    </insert>
+
+    <update id="updateCommuting">
+    	UPDATE COMMUTING
+    	SET COMMUTING_LEAVE_WORK_TIME=SYSDATE
+    	WHERE EMPLOYEE_NO=#{employeeNo} AND TRUNC(COMMUTING_DATE) = TRUNC(SYSDATE)
+    </update>
+
+    <select id="commutingProcedure" statementType="CALLABLE" parameterType="java.util.HashMap">
+		{call COMMUTING_PROCEDURE(#{result, mode=OUT, jdbcType=INTEGER})}
+    </select>
+
+    <select id="selectCommutingByName" parameterType="string" resultMap="commutingMap">
+    	SELECT COMMUTING_GO_WORK_TIME, COMMUTING_LEAVE_WORK_TIME, COMMUTING_STATUS, COMMUTING_DATE
+		FROM COMMUTING JOIN EMPLOYEE USING(EMPLOYEE_NO)
+		WHERE EMPLOYEE_ID=#{employeeId} AND TRUNC(COMMUTING_DATE)=TRUNC(SYSDATE)
+    </select>
+
+    <select id="selectAllEmployeeId" resultType="string">
+    	SELECT EMPLOYEE_ID FROM EMPLOYEE
+    </select>
+</mapper>

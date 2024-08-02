@@ -39,13 +39,12 @@
 
 		<div class="search-bar">
 			<select id="selectType">
-				<option>전체</option>
+				<option value="10">전체</option>
 				<option value="1">결재대기</option>
 				<option value="2">결재진행</option>
-				<option value="6">결재예정</option>
-				<option value="3">결재완료</option>
+				<option value="3">결재예정</option>
+				<option value="4">결재완료</option>
 			</select>
-			<input type="text" id="searchType" placeholder="검색어를 입력하세요" oninput="filterList()">
 		</div>
 
 		<table class="documentList" border="1">

@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN " "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hottalk">
+	<resultMap id="employee" type="employee">
+		<id property="employeeNo" column="EMPLOYEE_NO"/>
+		<result property="employeeName" column="EMPLOYEE_NAME"/>
+		<result property="employeePhoto" column="EMPLOYEE_PHOTO"/>
+		<association property="departmentCode" resultMap="department"/>
+	</resultMap>
+
+	<resultMap id="department" type="department">
+		<id property="departmentCode" column="DEPARTMENT_CODE"/>
+		<result property="departmentTitle" column="DEPARTMENT_TITLE"/>
+	</resultMap>
+
+	<!-- HOT_TALK_CONTENT (채팅 내용 테이블) -->
+ 	<resultMap id="hotTalkContentMap" type="hotTalkContent">
+        <id property="hotTalkContentNo" column="HOT_TALK_CONTENT_NO"/>
+        <result property="hotTalkNo" column="HOT_TALK_NO"/>
+        <result property="hotTalkContent" column="HOT_TALK_CONTENT" jdbcType="CLOB"/>
+        <result property="hotTalkContentDate" column="HOT_TALK_CONTENT_DATE"/>
+        <association property="hotTalkContentSender" resultMap="hotTalkMemberMap"/>
+        <collection property="hotTalkReceiver" resultMap="hotTalkMemberMap"/>
+    </resultMap>
+
+	<!-- HOT_TALK_MEMBER (채팅방 멤버 테이블) -->
+	<resultMap id="hotTalkMemberMap" type="hotTalkMember">
+	    <id property="hotTalkNo" column="HOT_TALK_NO"/>
+	    <result property="hotTalkLeader" column="HOT_TALK_LEADER"/>
+	    <result property="hotTalkEnterDate" column="HOT_TALK_ENTERDATE"/>
+	    <association property="hotTalkMember" resultMap="employee"/>
+	    <association property="department" resultMap="department"/>
+	    <association property="hotTalkStatus" resultMap="hotTalkStatusMap"/>
+	</resultMap>
+
+	<!-- HOT_TALK_RECEIVER (메시지 수신자 테이블) -->
+	<resultMap id="hotTalkReceiverMap" type="hotTalkReceiver">
+		<id property="hotTalkContentNo" column="HOT_TALK_CONTENT_NO"/>
+	    <result property="hotTalkContentIsread" column="HOT_TALK_CONTENT_ISREAD"/>
+	    <association property="hotTalkReceiver" javaType="hotTalkMember">
+		    <id property="hotTalkNo" column="HOT_TALK_NO"/>
+		    <result property="hotTalkLeader" column="HOT_TALK_LEADER"/>
+		    <result property="hotTalkEnterDate" column="HOT_TALK_ENTERDATE"/>
+		    <association property="hotTalkMember" javaType="employee">
+				<id property="employeeNo" column="RECEIVER_NO"/>
+				<result property="employeeName" column="RECEIVER_NAME"/>
+				<result property="employeePhoto" column="RECEIVER_PHOTO"/>
+		    </association>
+			<association property="department" javaType="department">
+				<id property="departmentCode" column="RECEIVER_DEPT_CODE"/>
+				<result property="departmentTitle" column="RECEIVER_DEPT_TITLE"/>
+			</association>
+			<association property="hotTalkStatus" javaType="hotTalkStatus">
+				<result property="hotTalkStatus" column="RECEIVER_STATUS"/>
+				<result property="hotTalkStatusMessage" column="RECEIVER_STATUS_MESSAGE"/>
+			</association>
+	    </association>
+	</resultMap>
+
+	<!-- HOT_TALK_ATT (첨부 파일 테이블) -->
+	<resultMap id="hotTalkAttMap" type="hotTalkAtt">
+	    <id property="hotTalkAttNo" column="HOT_TALK_ATT_NO"/>
+	    <result property="hotTalkNo" column="HOT_TALK_NO"/>
+	    <result property="hotTalkOriginalFilename" column="HOT_TALK_ORIGINAL_FILENAME"/>
+	    <result property="hotTalkRenamedFilename" column="HOT_TALK_RENAMED_FILENAME"/>
+	    <result property="hotTalkAttSender" column="HOT_TALK_ATT_SENDER"/>
+	</resultMap>
+
+	<!-- HOT_TALK_STATUS -->
+	<resultMap id="hotTalkStatusMap" type="hotTalkStatus">
+		<result property="employeeNo" column="EMPLOYEE_NO"/>
+		<result property="hotTalkStatus" column="HOT_TALK_STATUS"/>
+		<result property="hotTalkStatusMessage" column="HOT_TALK_STATUS_MESSAGE"/>
+	</resultMap>
+	<!-- Final 때 만들기 시작한 Mapper -->
+
+	<!-- ResponseEmployeeDTO ResultMap -->
+	<resultMap id="hotTalkMemberListMap" type="hotTalkMemberList">
+		<association property="sender" javaType="employee">
+			<id property="employeeNo" column="SENDER_NO"/>
+			<result property="employeeName" column="SENDER_NAME"/>
+			<result property="employeePhoto" column="SENDER_PHOTO"/>
+			<association property="departmentCode" resultMap="department">
+				<id property="departmentCode" column="SENDER_DEPT_CODE"/>
+				<result property="departmentTitle" column="SENDER_DEPT_TITLE"/>
+			</association>
+		</association>
+		<association property="senderStatus" javaType="hotTalkStatus">
+			<result property="employeeNo" column="SENDER_NO"/>
+			<result property="hotTalkStatus" column="SENDER_STATUS"/>
+			<result property="hotTalkStatusMessage" column="SENDER_STATUS_MESSAGE"/>
+		</association>
+		<association property="senderDept" javaType="department">
+			<id property="departmentCode" column="SENDER_DEPT_CODE"/>
+			<result property="departmentTitle" column="SENDER_DEPT_TITLE"/>
+		</association>
+		<collection property="receiver" ofType="others">
+			<association property="receiver" javaType="employee">
+				<id property="employeeNo" column="RECEIVER_NO"/>
+				<result property="employeeName" column="RECEIVER_NAME"/>
+				<result property="employeePhoto" column="RECEIVER_PHOTO"/>
+				<association property="departmentCode" javaType="department">
+					<id property="departmentCode" column="RECEIVER_DEPT_CODE"/>
+					<result property="departmentTitle" column="RECEIVER_DEPT_TITLE"/>
+				</association>
+			</association>
+			<association property="receiverStatus" javaType="hotTalkStatus">
+				<result property="employeeNo" column="RECEIVER_NO"/>
+				<result property="hotTalkStatus" column="RECEIVER_STATUS"/>
+				<result property="hotTalkStatusMessage" column="RECEIVER_STATUS_MESSAGE"/>
+			</association>
+			<association property="receiverDept" javaType="department">
+				<id property="departmentCode" column="RECEIVER_DEPT_CODE"/>
+				<result property="departmentTitle" column="RECEIVER_DEPT_TITLE"/>
+			</association>
+		</collection>
+
+	</resultMap>
+	<!-- ResponseHotTalkListDTO ResultMap -->
+	<resultMap id="hotTalkList" type="hotTalkList">
+		<id property="hotTalkNo" column="HOT_TALK_NO"/>
+		<result property="hotTalkIsgroup" column="HOT_TALK_ISGROUP"/>
+		<result property="hotTalkTitle" column="HOT_TALK_TITLE"/>
+		<result property="hotTalkContentDate" column="HOT_TALK_CONTENT_DATE"/>
+		<result property="receiverName" column="RECEIVER_NAME"/>
+		<result property="receiverNo" column="RECEIVER_NO"/>
+		<result property="senderName" column="SENDER_NAME"/>
+		<result property="senderNo" column="SENDER_NO"/>
+		<association property="hotTalkContent" resultMap="hotTalkContentMap"/>
+ 	</resultMap>
+
+	<!-- ResponseHotTalkContentDTO ResultMap -->
+	<resultMap id="openRoomContents" type="hotTalk">
+	    <id property="hotTalkNo" column="HOT_TALK_NO"/>
+	    <result property="hotTalkTitle" column="HOT_TALK_TITLE"/>
+	    <result property="hotTalkIsGroup" column="HOT_TALK_ISGROUP"/>
+	    <result property="hotTalkContentDate" column="HOT_TALK_CONTENT_DATE"/>
+
+	    <collection property="contents" ofType="hotTalkContent">
+	    	<id property="hotTalkContentNo" column="HOT_TALK_CONTENT_NO"/>
+			<result property="hotTalkNo" column="HOT_TALK_NO"/>
+			<result property="hotTalkContent" column="HOT_TALK_CONTENT"/>
+			<result property="hotTalkContentDate" column="HOT_TALK_CONTENT_DATE"/>
+
+			<association property="hotTalkContentSender" javaType="hotTalkMember">
+		        <result property="hotTalkLeader" column="SENDER_ISLEADER"/>
+		        <result property="hotTalkEnterDate" column="SENDER_ENTER_DATE"/>
+				<association property="hotTalkMember" javaType="employee">
+					<id property="employeeNo" column="SENDER_NO"/>
+					<result property="employeeName" column="SENDER_NAME"/>
+					<result property="employeePhoto" column="SENDER_PHOTO"/>
+				</association>
+				<association property="department">
+					<id property="departmentCode" column="SENDER_DEPT_CODE"/>
+					<result property="departmentTitle" column="SENDER_DEPT_TITLE"/>
+				</association>
+				<association property="hotTalkStatus" javaType="hotTalkStatus">
+					<result property="employeeNo" column="SENDER_NO"/>
+					<result property="hotTalkStatus" column="SENDER_STATUS"/>
+					<result property="hotTalkStatusMessage" column="SENDER_STATUS_MESSAGE"/>
+				</association>
+			</association>
+
+			<collection property="hotTalkReceiver" resultMap="hotTalkReceiverMap"/>
+	    </collection>
+	    <collection property="attachments" resultMap="hotTalkAttMap"/>
+
+	</resultMap>
+
+	<resultMap id="commonMessageMap" type="com.project.hot.chatting.model.dto.CommonMessageDTO">
+		<id property="hotTalkNo" column="HOT_TALK_NO"/>
+		<result property="sender" column="EMPLOYEE_NO"/>
+		<result property="receiverNo" column="RECEIVER_NO"/>
+		<result property="msg" column="HOT_TALK_CONTENT"/>
+	</resultMap>
+
+	<insert id="insertMessageSender" parameterType="com.project.hot.chatting.model.dto.CommonMessageDTO">
+		INSERT INTO HOT_TALK_CONTENT VALUES (SEQ_HOT_TALK_CONTENT_NO.NEXTVAL, #{hotTalkNo}, #{sender}, #{msg}, SYSDATE)
+	</insert>
+
+	<insert id="insertMessageReceiver" parameterType="com.project.hot.chatting.model.dto.CommonMessageDTO">
+	    INSERT INTO HOT_TALK_RECEIVER (HOT_TALK_CONTENT_NO, RECEIVER_NO, HOT_TALK_CONTENT_ISREAD)
+	    SELECT SEQ_HOT_TALK_CONTENT_NO.CURRVAL, EMPLOYEE_NO, 'N'
+	    FROM HOT_TALK_MEMBER
+	    WHERE HOT_TALK_NO = #{hotTalkNo}
+	    AND EMPLOYEE_NO != #{sender}
+	</insert>
+
+	<select id="getHotTalkMemberList" resultMap="hotTalkMemberListMap" parameterType="_int">
+		WITH SENDER AS (
+		    SELECT
+		        sender.EMPLOYEE_NO AS SENDER_NO,
+		        sender.EMPLOYEE_NAME AS SENDER_NAME,
+		        d.DEPARTMENT_TITLE AS SENDER_DEPT_TITLE,
+		        d.DEPARTMENT_CODE AS SENDER_DEPT_CODE,
+		        sender.EMPLOYEE_PHOTO AS SENDER_PHOTO,
+		        s.HOT_TALK_STATUS AS SENDER_STATUS,
+		        s.HOT_TALK_STATUS_MESSAGE AS SENDER_STATUS_MESSAGE
+		    FROM
+		        EMPLOYEE sender
+		    JOIN
+		        DEPARTMENT d ON sender.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+		    LEFT JOIN
+		        HOT_TALK_STATUS s ON sender.EMPLOYEE_NO = s.EMPLOYEE_NO
+		    WHERE
+		        sender.EMPLOYEE_NO = #{empNo}
+		),
+		RECEIVERS AS (
+		    SELECT
+		        receiver.EMPLOYEE_NO AS RECEIVER_NO,
+		        receiver.EMPLOYEE_NAME AS RECEIVER_NAME,
+		        rd.DEPARTMENT_TITLE AS RECEIVER_DEPT_TITLE,
+		        rd.DEPARTMENT_CODE AS RECEIVER_DEPT_CODE,
+		        receiver.EMPLOYEE_PHOTO AS RECEIVER_PHOTO,
+		        rs.HOT_TALK_STATUS AS RECEIVER_STATUS,
+		        rs.HOT_TALK_STATUS_MESSAGE AS RECEIVER_STATUS_MESSAGE
+		    FROM
+		        EMPLOYEE receiver
+		    JOIN
+		        DEPARTMENT rd ON rd.DEPARTMENT_CODE = receiver.DEPARTMENT_CODE
+		    LEFT JOIN
+		        HOT_TALK_STATUS rs ON rs.EMPLOYEE_NO = receiver.EMPLOYEE_NO
+		    WHERE
+		        receiver.EMPLOYEE_NO != #{empNo}
+		)
+		SELECT
+		    SENDER_NO, SENDER_NAME, SENDER_DEPT_TITLE, SENDER_DEPT_CODE,
+		    SENDER_PHOTO, SENDER_STATUS, SENDER_STATUS_MESSAGE,
+		    NULL AS RECEIVER_NO, NULL AS RECEIVER_NAME, NULL AS RECEIVER_DEPT_TITLE,
+		    NULL AS RECEIVER_DEPT_CODE, NULL AS RECEIVER_PHOTO, NULL AS RECEIVER_STATUS,
+		    NULL AS RECEIVER_STATUS_MESSAGE
+		FROM
+		    SENDER
+
+		UNION ALL
+
+		SELECT
+		    SENDER_NO, SENDER_NAME, SENDER_DEPT_TITLE, SENDER_DEPT_CODE,
+		    SENDER_PHOTO, SENDER_STATUS, SENDER_STATUS_MESSAGE,
+		    RECEIVER_NO, RECEIVER_NAME, RECEIVER_DEPT_TITLE, RECEIVER_DEPT_CODE,
+		    RECEIVER_PHOTO, RECEIVER_STATUS, RECEIVER_STATUS_MESSAGE
+		FROM
+		    SENDER
+		CROSS JOIN
+		    RECEIVERS
+		ORDER BY
+			RECEIVER_NO
+	</select>
+
+	<select id="getPrivateHotTalkList" resultMap="hotTalkList" parameterType="_int">
+		WITH RankedResults AS (
+		    SELECT
+		        t.HOT_TALK_NO, t.HOT_TALK_ISGROUP, t.HOT_TALK_TITLE,
+		        c.EMPLOYEE_NO AS SENDER_NO, c.HOT_TALK_CONTENT_DATE, e.EMPLOYEE_NAME AS RECEIVER_NAME,
+		        r.RECEIVER_NO, re.EMPLOYEE_NAME AS SENDER_NAME, r.HOT_TALK_CONTENT_ISREAD,
+		        c.HOT_TALK_CONTENT, c.HOT_TALK_CONTENT_NO,
+		        s.HOT_TALK_STATUS AS RECEIVER_STATUS, s.HOT_TALK_STATUS_MESSAGE AS RECEIVER_STATUS_MESSAGE,
+		        ROW_NUMBER() OVER (PARTITION BY t.HOT_TALK_NO, c.HOT_TALK_CONTENT_NO ORDER BY r.RECEIVER_NO) AS rn
+		    FROM
+		        HOT_TALK t
+		    LEFT JOIN
+		        HOT_TALK_CONTENT c ON t.HOT_TALK_NO = c.HOT_TALK_NO
+		    LEFT JOIN
+		        HOT_TALK_MEMBER m ON t.HOT_TALK_NO = m.HOT_TALK_NO
+		    LEFT JOIN
+		        EMPLOYEE e ON e.EMPLOYEE_NO = c.EMPLOYEE_NO
+		    LEFT JOIN
+		        HOT_TALK_RECEIVER r ON c.HOT_TALK_CONTENT_NO = r.HOT_TALK_CONTENT_NO
+            LEFT JOIN
+		        EMPLOYEE re ON re.EMPLOYEE_NO = r.RECEIVER_NO
+		    LEFT JOIN
+		        HOT_TALK_STATUS s ON s.EMPLOYEE_NO = re.EMPLOYEE_NO
+		    WHERE
+		        c.HOT_TALK_CONTENT_DATE = (
+		            SELECT MAX(HOT_TALK_CONTENT_DATE)
+		            FROM HOT_TALK_CONTENT
+		            WHERE HOT_TALK_NO = t.HOT_TALK_NO
+		        )
+		        AND m.EMPLOYEE_NO = #{employeeNo}
+		        AND HOT_TALK_ISGROUP = 'N'
+		)
+		SELECT
+		    HOT_TALK_NO, HOT_TALK_ISGROUP, HOT_TALK_TITLE,
+		    SENDER_NO, HOT_TALK_CONTENT_DATE, SENDER_NAME,
+		    RECEIVER_NO, RECEIVER_NAME ,HOT_TALK_CONTENT_ISREAD,
+		    HOT_TALK_CONTENT, HOT_TALK_CONTENT_NO,
+		    RECEIVER_STATUS, RECEIVER_STATUS_MESSAGE
+		FROM
+		    RankedResults
+		WHERE
+		    rn = 1
+		ORDER BY
+		    HOT_TALK_CONTENT_DATE DESC
+	</select>
+	<select id="getGroupHotTalkList" resultMap="hotTalkList" parameterType="_int">
+		WITH RankedResults AS (
+		    SELECT
+		        t.HOT_TALK_NO, t.HOT_TALK_ISGROUP, t.HOT_TALK_TITLE,
+		        c.EMPLOYEE_NO, c.HOT_TALK_CONTENT_DATE, e.EMPLOYEE_NAME,
+		        r.RECEIVER_NO, r.HOT_TALK_CONTENT_ISREAD,
+		        c.HOT_TALK_CONTENT, c.HOT_TALK_CONTENT_NO,
+		        s.HOT_TALK_STATUS, s.HOT_TALK_STATUS_MESSAGE,
+		        ROW_NUMBER() OVER (PARTITION BY t.HOT_TALK_NO, c.HOT_TALK_CONTENT_NO ORDER BY r.RECEIVER_NO) AS rn
+		    FROM
+		        HOT_TALK t
+		    LEFT JOIN
+		        HOT_TALK_CONTENT c ON t.HOT_TALK_NO = c.HOT_TALK_NO
+		    LEFT JOIN
+		        HOT_TALK_MEMBER m ON t.HOT_TALK_NO = m.HOT_TALK_NO
+		    LEFT JOIN
+		        EMPLOYEE e ON e.EMPLOYEE_NO = c.EMPLOYEE_NO
+		    LEFT JOIN
+		        HOT_TALK_RECEIVER r ON c.HOT_TALK_CONTENT_NO = r.HOT_TALK_CONTENT_NO
+		    LEFT JOIN
+		        HOT_TALK_STATUS s ON s.EMPLOYEE_NO = e.EMPLOYEE_NO
+		    WHERE
+		        c.HOT_TALK_CONTENT_DATE = (
+		            SELECT MAX(HOT_TALK_CONTENT_DATE)
+		            FROM HOT_TALK_CONTENT
+		            WHERE HOT_TALK_NO = t.HOT_TALK_NO
+		        )
+		        AND m.EMPLOYEE_NO = #{employeeNo}
+		        AND HOT_TALK_ISGROUP = 'Y'
+		)
+		SELECT
+		    HOT_TALK_NO, HOT_TALK_ISGROUP, HOT_TALK_TITLE,
+		    EMPLOYEE_NO, HOT_TALK_CONTENT_DATE, EMPLOYEE_NAME,
+		    RECEIVER_NO, HOT_TALK_CONTENT_ISREAD,
+		    HOT_TALK_CONTENT, HOT_TALK_CONTENT_NO,
+		    HOT_TALK_STATUS, HOT_TALK_STATUS_MESSAGE
+		FROM
+		    RankedResults
+		WHERE
+		    rn = 1
+		ORDER BY
+		    HOT_TALK_CONTENT_DATE DESC
+	</select>
+
+	<select id="getHotTalkContents" resultMap="openRoomContents" parameterType="map">
+ 		SELECT * FROM (
+	        SELECT
+	            c.EMPLOYEE_NO AS SENDER_NO
+	            , receiver.EMPLOYEE_NO AS RECEIVER_NO
+	            , sender.EMPLOYEE_NAME AS SENDER_NAME
+	            , receiver.EMPLOYEE_NAME AS RECEIVER_NAME
+	            , t.HOT_TALK_ISGROUP
+	            , c.HOT_TALK_NO
+	            , HOT_TALK_TITLE
+	            , HOT_TALK_CONTENT
+	            , HOT_TALK_CONTENT_DATE
+	            , c.EMPLOYEE_NO
+	            , sender.EMPLOYEE_PHOTO AS SENDER_PHOTO
+	            , receiver.EMPLOYEE_PHOTO AS RECEIVER_PHOTO
+	            , s.HOT_TALK_STATUS AS RECEIVER_STATUS
+	            , s.HOT_TALK_STATUS_MESSAGE AS RECEIVER_STATUS_MESSAGE
+	            , ROW_NUMBER() OVER (PARTITION BY c.HOT_TALK_CONTENT_NO ORDER BY r.RECEIVER_NO) AS rn
+	            , ss.HOT_TALK_STATUS AS SENDER_STATUS
+	            , ss.HOT_TALK_STATUS_MESSAGE AS SENDER_STATUS_MESSAGE
+                , a.HOT_TALK_ORIGINAL_FILENAME
+                , a.HOT_TALK_RENAMED_FILENAME
+	        FROM
+	            HOT_TALK_CONTENT c
+	        LEFT JOIN
+	            HOT_TALK t ON c.HOT_TALK_NO = t.HOT_TALK_NO
+	        LEFT JOIN
+	            EMPLOYEE sender ON c.EMPLOYEE_NO = sender.EMPLOYEE_NO
+	        LEFT JOIN
+	        	HOT_TALK_STATUS ss ON sender.EMPLOYEE_NO = ss.EMPLOYEE_NO
+	        LEFT JOIN
+	            HOT_TALK_RECEIVER r ON r.HOT_TALK_CONTENT_NO = c.HOT_TALK_CONTENT_NO
+	        LEFT JOIN
+	            EMPLOYEE receiver ON r.RECEIVER_NO = receiver.EMPLOYEE_NO
+	        LEFT JOIN
+	            HOT_TALK_STATUS s ON s.EMPLOYEE_NO = receiver.EMPLOYEE_NO
+            LEFT JOIN
+                HOT_TALK_ATT a ON a.HOT_TALK_RENAMED_FILENAME = TO_CHAR(c.HOT_TALK_CONTENT)
+	        WHERE
+	            t.HOT_TALK_NO = #{openHotTalkNo}
+	            AND (t.HOT_TALK_ISGROUP = 'Y' OR (t.HOT_TALK_ISGROUP = 'N'))
+	    )
+	    WHERE
+	        (HOT_TALK_ISGROUP = 'Y' AND rn = 1)
+	        OR (HOT_TALK_ISGROUP = 'N' AND rn=1)
+	    ORDER BY
+	        HOT_TALK_CONTENT_DATE
+	</select>
+	<update id="updateHotTalkStatus" parameterType="hotTalkStatus">
+		UPDATE
+			HOT_TALK_STATUS
+		SET
+			HOT_TALK_STATUS = #{hotTalkStatus}
+		WHERE
+			EMPLOYEE_NO = #{employeeNo}
+	</update>
+	<update id="updateHotTalkStatusMessage" parameterType="hotTalkStatus">
+		UPDATE
+			HOT_TALK_STATUS
+		SET
+			HOT_TALK_STATUS_MESSAGE = #{hotTalkStatusMessage}
+		WHERE
+			EMPLOYEE_NO = #{employeeNo}
+	</update>
+	<insert id="insertHotTalkAtt" parameterType="hotTalkAtt">
+		INSERT INTO
+			HOT_TALK_ATT
+		VALUES
+			(SEQ_HOT_TALK_ATT_NO.nextval, #{hotTalkNo}, #{hotTalkOriginalFilename}, #{hotTalkRenamedFilename}, #{hotTalkAttSender})
+	</insert>
+	<select id="getHotTalkNo" parameterType="map" resultType="_int">
+		WITH CLICK AS
+		    (SELECT *
+		    FROM
+		        HOT_TALK
+		    JOIN
+		        HOT_TALK_MEMBER USING(HOT_TALK_NO)
+		    WHERE
+		        EMPLOYEE_NO=#{clickedNo} AND HOT_TALK_ISGROUP='N'),
+	    LOGIN AS
+		    (SELECT *
+		    FROM
+		        HOT_TALK
+		    JOIN
+		        HOT_TALK_MEMBER USING(HOT_TALK_NO)
+		    WHERE
+		        EMPLOYEE_NO=#{loginEmployeeNo} AND HOT_TALK_ISGROUP='N')
+	   SELECT HOT_TALK_NO FROM CLICK JOIN LOGIN USING(HOT_TALK_NO)
+	</select>
+	<select id="getGroupTalkNo" parameterType="com.project.hot.chatting.model.dto.CommonMessageDTO" resultType="_int">
+	    SELECT DISTINCT
+	    	t.HOT_TALK_NO
+	    FROM
+	    	HOT_TALK t
+	    JOIN
+	    	HOT_TALK_MEMBER m ON t.HOT_TALK_NO = m.HOT_TALK_NO
+	    WHERE
+	    	t.HOT_TALK_ISGROUP = 'Y' AND m.EMPLOYEE_NO IN
+	    <foreach item="receiverNo" collection="receivers" open="(" separator="," close=")">
+	        #{receiverNo}
+	    </foreach>
+	    GROUP BY t.HOT_TALK_NO
+	    HAVING COUNT(DISTINCT m.EMPLOYEE_NO) = #{receivers.size()}
+	</select>
+	<select id="selectMember" parameterType="_int" resultMap="hotTalkMemberMap">
+		SELECT
+		    e.EMPLOYEE_NO, e.EMPLOYEE_NAME, s.HOT_TALK_STATUS, s.HOT_TALK_STATUS_MESSAGE, d.DEPARTMENT_CODE, d.DEPARTMENT_TITLE, e.EMPLOYEE_PHOTO
+		FROM
+		    EMPLOYEE e
+		LEFT JOIN
+		    HOT_TALK_STATUS s ON e.EMPLOYEE_NO=s.EMPLOYEE_NO
+		JOIN
+		    DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+		WHERE
+		    e.EMPLOYEE_NO = #{employeeNo}
+	</select>
+
+    <insert id="insertNewChatRoom" parameterType="com.project.hot.chatting.model.dto.CommonMessageDTO">
+	    <if test="title == null or title == ''">
+	        INSERT INTO HOT_TALK VALUES (SEQ_HOT_TALK.nextval, '개인핫톡', 'N', SYSDATE)
+	    </if>
+	    <if test="title != null and title != ''">
+	        INSERT INTO HOT_TALK VALUES (SEQ_HOT_TALK.nextval, #{title}, 'Y', SYSDATE)
+	    </if>
+	    <selectKey keyProperty="hotTalkNo" resultType="_int" order="AFTER">
+	        SELECT SEQ_HOT_TALK.CURRVAL FROM DUAL
+	    </selectKey>
+    </insert>
+    <insert id="insertNewChatRoomMember" parameterType="com.project.hot.chatting.model.dto.CommonMessageDTO">
+        <selectKey keyProperty="hotTalkNo" order="BEFORE" resultType="_int">
+            SELECT SEQ_HOT_TALK.CURRVAL FROM DUAL
+        </selectKey>
+        INSERT ALL
+        INTO HOT_TALK_MEMBER VALUES (#{sender}, #{hotTalkNo}, 'Y', SYSDATE)
+        <foreach collection="receivers" item="receiver">
+            INTO HOT_TALK_MEMBER VALUES (#{receiver}, #{hotTalkNo}, 'N', SYSDATE)
+        </foreach>
+        SELECT * FROM DUAL
+    </insert>
+
+    <insert id="insertNewChatRoomContents" parameterType="com.project.hot.chatting.model.dto.CommonMessageDTO">
+    	<selectKey keyProperty="hotTalkNo" order="BEFORE" resultType="_int">
+            SELECT SEQ_HOT_TALK.CURRVAL FROM DUAL
+        </selectKey>
+    	INSERT INTO HOT_TALK_CONTENT VALUES(SEQ_HOT_TALK_CONTENT_NO.nextval, #{hotTalkNo}, #{sender}, #{msg}, SYSDATE)
+    </insert>
+
+    <insert id="insertNewChatRoomReceiver" parameterType="com.project.hot.chatting.model.dto.CommonMessageDTO">
+    	<selectKey keyProperty="hotTalkContentNo" order="BEFORE" resultType="_int">
+            SELECT SEQ_HOT_TALK_CONTENT_NO.CURRVAL FROM DUAL
+       </selectKey>
+        INSERT ALL
+        <foreach collection="receivers" item="receiverNo">
+            INTO HOT_TALK_RECEIVER VALUES (#{hotTalkContentNo}, #{receiverNo}, 'N')
+        </foreach>
+        SELECT * FROM DUAL
+    </insert>
+
+    <select id="selectMyMessage" parameterType="_int" resultType="HotTalkContent">
+    	WITH RankedMessages AS (
+	    SELECT
+	        c.HOT_TALK_CONTENT,
+	        c.HOT_TALK_CONTENT_DATE,
+	        ROW_NUMBER() OVER (ORDER BY c.HOT_TALK_CONTENT_DATE DESC) AS rn
+	    FROM
+	        HOT_TALK_RECEIVER r
+	        JOIN HOT_TALK_CONTENT c ON r.HOT_TALK_CONTENT_NO = c.HOT_TALK_CONTENT_NO
+	    WHERE
+	        r.HOT_TALK_CONTENT_ISREAD = 'N'
+	        AND r.RECEIVER_NO = #{employeeNo}
+		),
+		MessageCount AS (
+		    SELECT COUNT(*) AS noReadCount
+		    FROM HOT_TALK_RECEIVER
+		    WHERE HOT_TALK_CONTENT_ISREAD = 'N' AND RECEIVER_NO = #{employeeNo}
+		)
+		SELECT
+		    mc.noReadCount,
+		    rm.HOT_TALK_CONTENT AS hotTalkContent,
+		    rm.HOT_TALK_CONTENT_DATE AS hotTalkContentDate
+		FROM
+		    MessageCount mc
+		    CROSS JOIN RankedMessages rm
+		WHERE
+		    RM.rn &lt;=5
+		ORDER BY
+		    RM.HOT_TALK_CONTENT_DATE DESC
+    </select>
+
+    <update id="updateIsReadByNo" parameterType="map">
+		UPDATE
+		    (SELECT HOT_TALK_CONTENT_ISREAD
+		    FROM HOT_TALK_CONTENT c
+		    JOIN HOT_TALK_RECEIVER r ON c.HOT_TALK_CONTENT_NO=r.HOT_TALK_CONTENT_NO
+		    WHERE HOT_TALK_NO=#{roomNo} AND RECEIVER_NO=#{empNo})
+		SET HOT_TALK_CONTENT_ISREAD = 'Y'
+    </update>
+
+    <select id="getReceivers" parameterType="_int" resultType="_int">
+		SELECT DISTINCT RECEIVER_NO
+		FROM HOT_TALK_RECEIVER
+		JOIN HOT_TALK_CONTENT USING(HOT_TALK_CONTENT_NO)
+		WHERE HOT_TALK_NO = #{hotTalkNo}
+    </select>
+
+    <insert id="insertHotTalkStatus" parameterType="map">
+    	INSERT INTO HOT_TALK_STATUS
+    	VALUES (#{employeeNo}, #{status}, NULL)
+    </insert>
+
+        <insert id="insertHotTalkStatusMessage" parameterType="map">
+    	INSERT INTO HOT_TALK_STATUS
+    	VALUES (#{employeeNo}, DEFAULT, #{statusMsg})
+    </insert>
+</mapper>

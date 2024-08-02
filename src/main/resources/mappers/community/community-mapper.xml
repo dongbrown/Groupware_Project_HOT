@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="community">
+
+    <resultMap id="communityResultMap" type="Community">
+        <id property="communityNo" column="COMMUNITY_NO" />
+        <result property="communityTitle" column="COMMUNITY_TITLE" />
+        <result property="communityIntroduce" column="COMMUNITY_INTRODUCE" />
+        <result property="communityIsOpen" column="COMMUNITY_IS_OPEN" />
+		<result property="employeePhotos" column="EMPLOYEE_PHOTOS" />
+        <collection property="members" ofType="CommunityUser">
+            <result property="employeeNo" column="EMPLOYEE_NO" />
+            <result property="communityUserIsAccept" column="COMMUNITY_USER_IS_ACCEPT" />
+            <result property="communityUserBookmark" column="COMMUNITY_USER_BOOKMARK" />
+            <association property="employee" javaType="Employee">
+                <id property="employeeNo" column="EMPLOYEE_NO" />
+                <result property="employeeName" column="EMPLOYEE_NAME" />
+                <result property="employeePhone" column="EMPLOYEE_PHONE" />
+                <result property="employeeId" column="EMPLOYEE_ID" />
+				<result property="employeePhoto" column="EMPLOYEE_PHOTO" />
+                <association property="departmentCode" javaType="Department">
+                    <id property="departmentCode" column="DEPARTMENT_CODE" />
+                    <result property="departmentTitle" column="DEPARTMENT_TITLE" />
+                </association>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="getCommunities" resultMap="communityResultMap" parameterType="int">
+        SELECT
+            c.COMMUNITY_NO,
+            c.COMMUNITY_TITLE,
+            c.COMMUNITY_INTRODUCE,
+            c.COMMUNITY_IS_OPEN,
+            cu.EMPLOYEE_NO,
+            cu.COMMUNITY_USER_IS_ACCEPT,
+            cu.COMMUNITY_USER_BOOKMARK,
+            e.EMPLOYEE_NAME,
+            e.EMPLOYEE_PHONE,
+            e.EMPLOYEE_ID,
+            d.DEPARTMENT_CODE,
+            d.DEPARTMENT_TITLE
+        FROM
+            COMMUNITY c
+        JOIN
+            COMMUNITY_USER cu ON c.COMMUNITY_NO = cu.COMMUNITY_NO
+        JOIN
+            EMPLOYEE e ON cu.EMPLOYEE_NO = e.EMPLOYEE_NO
+        JOIN
+            DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+        WHERE
+            cu.EMPLOYEE_NO = #{employeeNo}
+    </select>
+
+    <insert id="insertCommunity" parameterType="Community">
+        <selectKey keyProperty="communityNo" resultType="int" order="BEFORE">
+            SELECT SEQ_COMMUNITY.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO COMMUNITY
+        (COMMUNITY_NO, COMMUNITY_TITLE, COMMUNITY_INTRODUCE, COMMUNITY_IS_OPEN)
+        VALUES
+        (#{communityNo}, #{communityTitle}, #{communityIntroduce}, #{communityIsOpen})
+    </insert>
+
+    <insert id="insertCommunityUser" parameterType="CommunityUser">
+        INSERT INTO COMMUNITY_USER
+        (EMPLOYEE_NO, COMMUNITY_NO, COMMUNITY_USER_IS_ACCEPT, COMMUNITY_USER_BOOKMARK)
+        VALUES
+        (#{employeeNo}, #{communityNo}, #{communityUserIsAccept}, #{communityUserBookmark})
+    </insert>
+
+    <update id="toggleBookmark" parameterType="map">
+        UPDATE COMMUNITY_USER
+        SET COMMUNITY_USER_BOOKMARK =
+        CASE
+            WHEN COMMUNITY_USER_BOOKMARK = 'Y' THEN 'N'
+            ELSE 'Y'
+        END
+        WHERE COMMUNITY_NO = #{communityNo} AND EMPLOYEE_NO = #{employeeNo}
+    </update>
+
+    <select id="getCommunityByNo" parameterType="int" resultMap="communityResultMap">
+        SELECT
+            c.COMMUNITY_NO,
+            c.COMMUNITY_TITLE,
+            c.COMMUNITY_INTRODUCE,
+            c.COMMUNITY_IS_OPEN,
+            cu.EMPLOYEE_NO,
+            cu.COMMUNITY_USER_IS_ACCEPT,
+            cu.COMMUNITY_USER_BOOKMARK,
+            e.EMPLOYEE_NAME,
+            e.EMPLOYEE_PHONE,
+            e.EMPLOYEE_ID,
+            d.DEPARTMENT_CODE,
+            d.DEPARTMENT_TITLE
+        FROM
+            COMMUNITY c
+        LEFT JOIN
+            COMMUNITY_USER cu ON c.COMMUNITY_NO = cu.COMMUNITY_NO
+        LEFT JOIN
+            EMPLOYEE e ON cu.EMPLOYEE_NO = e.EMPLOYEE_NO
+        LEFT JOIN
+            DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+        WHERE
+            c.COMMUNITY_NO = #{communityNo}
+    </select>
+
+    <insert id="inviteParticipants" parameterType="map">
+        INSERT ALL
+        <foreach collection="list" item="participant" separator=" ">
+            INTO COMMUNITY_USER
+            (EMPLOYEE_NO, COMMUNITY_NO, COMMUNITY_USER_IS_ACCEPT, COMMUNITY_USER_BOOKMARK)
+            VALUES
+            (#{participant.id}, #{communityNo}, 'N', 'N')
+        </foreach>
+        SELECT * FROM DUAL
+    </insert>
+
+    <select id="getCommunityList" resultMap="communityResultMap">
+        SELECT
+            c.COMMUNITY_NO,
+            c.COMMUNITY_TITLE,
+            c.COMMUNITY_INTRODUCE,
+            c.COMMUNITY_IS_OPEN,
+            cu.EMPLOYEE_NO,
+            cu.COMMUNITY_USER_IS_ACCEPT,
+            cu.COMMUNITY_USER_BOOKMARK,
+            e.EMPLOYEE_NAME,
+            e.EMPLOYEE_PHONE,
+            e.EMPLOYEE_ID,
+            d.DEPARTMENT_CODE,
+            d.DEPARTMENT_TITLE
+        FROM
+            COMMUNITY c
+        LEFT JOIN
+            COMMUNITY_USER cu ON c.COMMUNITY_NO = cu.COMMUNITY_NO
+        LEFT JOIN
+            EMPLOYEE e ON cu.EMPLOYEE_NO = e.EMPLOYEE_NO
+        LEFT JOIN
+            DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+        ORDER BY COMMUNITY_NO
+    </select>
+
+    <select id="getNonParticipants" parameterType="int" resultType="Employee">
+        SELECT
+            e.EMPLOYEE_NO AS employeeNo,
+            e.EMPLOYEE_NAME AS employeeName,
+            e.EMPLOYEE_PHONE AS employeePhone,
+            e.EMPLOYEE_ID AS employeeId,
+            d.DEPARTMENT_CODE AS "departmentCode.departmentCode",
+            d.DEPARTMENT_TITLE AS "departmentCode.departmentTitle"
+        FROM
+            EMPLOYEE e
+        JOIN
+            DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+        WHERE
+            e.EMPLOYEE_NO NOT IN (
+                SELECT EMPLOYEE_NO
+                FROM COMMUNITY_USER
+                WHERE COMMUNITY_NO = #{communityNo}
+            )
+        ORDER BY
+            e.EMPLOYEE_NAME
+    </select>
+
+    <insert id="joinCommunity" parameterType="CommunityUser">
+        INSERT INTO COMMUNITY_USER
+        (EMPLOYEE_NO, COMMUNITY_NO, COMMUNITY_USER_IS_ACCEPT, COMMUNITY_USER_BOOKMARK)
+        VALUES
+        (#{employeeNo}, #{communityNo}, #{communityUserIsAccept}, #{communityUserBookmark})
+    </insert>
+
+    <delete id="deleteCommunityUser" parameterType="map">
+        DELETE FROM COMMUNITY_USER
+        WHERE COMMUNITY_NO = #{communityNo} AND EMPLOYEE_NO = #{employeeNo}
+    </delete>
+
+	<select id="getCommunitiesWithEmployeePhotos" resultMap="communityResultMap" parameterType="int">
+	    SELECT
+	        c.COMMUNITY_NO,
+	        c.COMMUNITY_TITLE,
+	        c.COMMUNITY_INTRODUCE,
+	        c.COMMUNITY_IS_OPEN,
+	        cu.EMPLOYEE_NO,
+	        cu.COMMUNITY_USER_IS_ACCEPT,
+	        cu.COMMUNITY_USER_BOOKMARK,
+	        NVL(
+	            (
+	                SELECT LISTAGG(NVL(e2.EMPLOYEE_PHOTO, 'NULL'), ',') WITHIN GROUP (ORDER BY e2.EMPLOYEE_NO)
+	                FROM COMMUNITY_USER cu2
+	                LEFT JOIN EMPLOYEE e2 ON e2.EMPLOYEE_NO = cu2.EMPLOYEE_NO
+	                WHERE cu2.COMMUNITY_NO = c.COMMUNITY_NO
+	            ),
+	            NULL
+	        ) AS EMPLOYEE_PHOTOS
+	    FROM
+	        COMMUNITY c
+	    JOIN
+	        COMMUNITY_USER cu ON c.COMMUNITY_NO = cu.COMMUNITY_NO
+	    JOIN
+	        EMPLOYEE e ON cu.EMPLOYEE_NO = e.EMPLOYEE_NO
+	    WHERE
+	        cu.EMPLOYEE_NO = #{employeeNo}
+	</select>
+
+</mapper>

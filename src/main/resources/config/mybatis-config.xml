@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+
+	<typeAliases>
+		<!-- 김명준 -->
+		<typeAlias type="com.project.hot.chatting.model.dto.HotTalkContent" alias="hotTalkContent"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.HotTalkMember" alias="hotTalkMember"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.HotTalkReceiver" alias="hotTalkReceiver"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.HotTalkAtt" alias="hotTalkAtt"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.HotTalkStatus" alias="hotTalkStatus"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.ResponseHotTalkContentDTO" alias="hotTalk"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.ResponseLoginEmployeeDTO" alias="hotTalkMemberList"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.ResponseHotTalkListDTO" alias="hotTalkList"/>
+		<typeAlias type="com.project.hot.chatting.model.dto.ResponseOtherEmployeeDTO" alias="others"/>
+		<!-- 고재현 -->
+  		<typeAlias type="com.project.hot.employee.model.dto.Employee" alias="employee"/>
+      	<typeAlias type="com.project.hot.employee.model.dto.Department" alias="department"/>
+     	<typeAlias type="com.project.hot.employee.model.dto.Position" alias="position"/>
+     	<typeAlias type="com.project.hot.employee.model.dto.Commuting" alias="commuting"/>
+      	<typeAlias type="com.project.hot.hr.model.dto.ResponseDepartment" alias="responseDepartment"/>
+      	<typeAlias type="com.project.hot.hr.model.dto.RequestDepartment" alias="requestDepartment"/>
+		<!-- 임성욱 -->
+		<typeAlias type="com.project.hot.approval.model.dto.Approval" alias="approval"/>
+		<!-- 김동훈 -->
+ 		<typeAlias type="com.project.hot.community.model.dto.Community" alias="community"/>
+	    <typeAlias type="com.project.hot.community.model.dto.CommunityUser" alias="communityUser"/>
+	    <typeAlias type="com.project.hot.feed.model.dto.Feed" alias="feed"/>
+	    <typeAlias type="com.project.hot.schedule.model.dto.Schedule" alias="schedule"/>
+	    <typeAlias type="com.project.hot.email.model.dto.Email" alias="email"/>
+	    <typeAlias type="com.project.hot.email.model.dto.EmailReceiver" alias="emailReceiver"/>
+	    <typeAlias type="com.project.hot.email.model.dto.EmailAtt" alias="emailAtt"/>
+		<!-- 최선웅 -->
+		<typeAlias type="com.project.hot.project.model.dto.Project" alias="project"/>
+        <typeAlias type="com.project.hot.project.model.dto.ProjectEmployee" alias="projectEmployee"/>
+        <typeAlias type="com.project.hot.project.model.dto.Work" alias="work"/>
+        <typeAlias type="com.project.hot.project.model.dto.ProjectAttachment" alias="projectAttachment"/>
+        <typeAlias type="com.project.hot.project.model.dto.RequestProject" alias="requestProject"/>
+        <!-- <typeAlias type="com.project.hot.project.model.dto.RequestProject" alias="requestProject"/> -->
+	</typeAliases>
+
+	<typeHandlers>
+	    <typeHandler handler="org.apache.ibatis.type.ClobTypeHandler" jdbcType="CLOB" javaType="java.lang.String"/>
+	</typeHandlers>
+
+</configuration>

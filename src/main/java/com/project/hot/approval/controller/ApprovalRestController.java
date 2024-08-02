@@ -32,8 +32,9 @@ public class ApprovalRestController {
 	private final ApprovalService service;
 
 	@GetMapping("/getApprovalsCountAndList")
-	public Map<String, Object> getApprovalsCountAndList(@RequestParam int no, @RequestParam(defaultValue = "1") int cPage) {
+	public Map<String, Object> getApprovalsCountAndList(@RequestParam int no, @RequestParam(defaultValue = "1") int cPage, @RequestParam(defaultValue="10") int approvalType) {
 		Map<String, Object> param=new HashMap<>();
+		param.put("approvalType", approvalType);
 		param.put("no", no);
 		param.put("cPage", cPage);
 		param.put("numPerpage", 5);

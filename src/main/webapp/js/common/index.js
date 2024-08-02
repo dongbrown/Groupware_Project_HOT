@@ -1,4 +1,5 @@
 function connectSse() {
+
 	const loginEmployeeNo = $('#header-empNo').data('employeeNo');
 	const eventSource = new EventSource(`/subscribe/${loginEmployeeNo}`);
 	// console.log(loginEmployeeNo);
