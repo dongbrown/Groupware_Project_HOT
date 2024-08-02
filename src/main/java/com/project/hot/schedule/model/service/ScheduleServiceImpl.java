@@ -95,6 +95,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return dao.getCompanySchedule(session);
 	}
 
+	@Override
+	public List<Schedule> getTodaySchedules(int employeeNo) {
+		return dao.getTodaySchedules(session, employeeNo);
+	}
+
 
 
 }
