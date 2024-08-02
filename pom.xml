@@ -129,11 +129,10 @@
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
+		<finalName>GDJ79_HOT_final</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -149,5 +148,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>

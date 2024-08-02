@@ -139,7 +139,6 @@ public class ApprovalDaoImpl implements ApprovalDao {
 		param.put("no", no);
 		param.put("targetNo", targetNo);
 		System.out.println("no : " + no);
-		System.out.println("ㅋㅋ");
 		List<ResponseSpecificApproval> result = session.selectList("approval.getSpecificApproval", param);
 		return session.selectList("approval.getSpecificApproval", param);
 	}

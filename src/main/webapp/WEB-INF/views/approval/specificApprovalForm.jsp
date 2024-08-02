@@ -100,15 +100,15 @@
                     <table>
                         <tr>
                             <th>초과 근무일</th>
-                            <td>2024-08-05</td>
+                            <td id="overtimeDate"></td>
                         </tr>
                         <tr>
                             <th>초과 근무 시작시간</th>
-                            <td>18:00</td>
+                            <td id="overtimeStartTime"></td>
                         </tr>
                         <tr>
                             <th>초과 근무 종료시간</th>
-                            <td>21:00</td>
+                            <td id="overtimeEndTime"></td>
                         </tr>
                     </table>
                 </div>
@@ -182,13 +182,14 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script>
+	const approvalNo = '${approvalInfo[0].approval.approvalNo}';
 	const path ="${path}";
     const approvalInfoJson = '${approvalInfo}';
     const references = JSON.parse('${references}');
     const approvers = JSON.parse('${approvers}');
 	const type = '${appType}';
     const approvalInfo = JSON.parse(approvalInfoJson);
-    console.log(approvalInfo);
+    console.log(approvalInfo[0]);
     $("#approvalName").append(approvalInfo[0].approval.employeeNo.employeeName);
     $("#approvalDepartmentTitle").append(approvalInfo[0].approval.employeeNo.departmentCode.departmentTitle);
 	$("#referencers").append(references.join(', '));
@@ -215,6 +216,9 @@
 			)
 		})
 	} else if(type==3){
+    	const date=$("#overtimeDate");
+    	const start=$("#overtimeStartTime");
+    	const end=$("#overtimeEndTime");
 
 	}
 </script>
