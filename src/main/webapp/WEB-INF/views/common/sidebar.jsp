@@ -242,7 +242,7 @@
 	                        <a class="collapse-item" href="${path }/hr/employee">사원 관리</a>
 	                        <a class="collapse-item" href="${path }/hr/department">부서관리</a>
 	                        <a class="collapse-item" href="${path }/hr/allEmpCommuting">전 사원 근태내역</a>
-	                        <a class="collapse-item" href="#">전 사원 휴가 내역</a>
+	                        <a class="collapse-item" href="${path }/hr/allEmpVacation">전 사원 휴가 내역</a>
 	                        <a class="collapse-item" href="${path }/hr/createEmployee">사원 계정 생성</a>
 	                    </div>
 	                </div>

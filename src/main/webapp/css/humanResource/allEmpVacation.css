@@ -1,0 +1,36 @@
+/*
+	전 사원 휴가내역용 css~
+*/
+
+.allEmpVacation-section {
+	display: flex;
+    justify-content: center;
+}
+
+.allEmpVacation-div {
+	display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 87vh;
+    padding: 2%;
+    position: relative;
+}
+
+.search-div {
+	display: flex;
+    flex-direction: row;
+}
+
+.search-form {
+	display: flex;
+	flex-direction: column;
+}
+
+.pagebar-div {
+	display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}

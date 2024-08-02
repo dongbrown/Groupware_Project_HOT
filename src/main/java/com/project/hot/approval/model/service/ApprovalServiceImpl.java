@@ -76,7 +76,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public String insertApproval(Map<String, Object> param) {
 		//결재문서 고유번호 생성
@@ -168,38 +168,27 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return dao.insertOvertime(session, of);
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int insertBusinessTrip(RequestBusinessTrip rbt) {
 		int result=dao.insertBusinessTrip(session, rbt);
-		if(result>0) {
-			if(rbt.getPartnerNo()!=null) {
-				return dao.insertBusinessPartner(session, rbt);
-			}else {
-				return result;
-			}
+		if(rbt.getPartnerNo()!=null) {
+			return dao.insertBusinessPartner(session, rbt);
 		}else {
-			throw new ApprovalException("결재문서 insert 실패");
+			return result;
 		}
+
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int insertExpenditure(RequestExpenditure re) {
 		int result=dao.insertExpenditureForm(session, re);
-		if(result>0) {
-			if(re.getItems().stream().anyMatch(e->e.isEmpty()==false)) {
-				result=dao.insertExpenditureItem(session, re);
-				if(result>0) {
-					return result;
-				}else {
-					throw new ApprovalException("결재문서 insert 실패");
-				}
-			}else {
-				return result;
-			}
+
+		if(re.getItems().stream().anyMatch(e->e.isEmpty()==false)) {
+			return dao.insertExpenditureItem(session, re);
 		}else {
-			throw new ApprovalException("결재문서 insert 실패");
+			return result;
 		}
 	}
 

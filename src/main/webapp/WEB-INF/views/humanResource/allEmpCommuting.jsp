@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link href="${path }/css/humanResource/allEmpCommuting.css" rel="stylesheet" type="text/css">
 <section class="allEmpCommuting">
-	<div class="allEmpCommuting-div shadow bg-body rounded">
+	<div class="allEmpCommuting-div shadow bg-body rounded p-3">
 		<h2>전 사원 근태 내역</h2>
 		<div class="search-div">
 			<form id="searchForm" class="search-form">

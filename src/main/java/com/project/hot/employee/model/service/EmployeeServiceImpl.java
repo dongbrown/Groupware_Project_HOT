@@ -61,27 +61,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<Commuting> c=dao.selectCommutingList(session, param);
 
 		//오늘 출퇴근시간 저장
-		c.stream().filter(f->f.getCommutingDate().toLocalDate().equals(LocalDateTime.now().toLocalDate())).forEach(e->{
-			if(e.getCommutingGoWorkTime()!=null) rc.setTodayGoWorkTime(e.getCommutingGoWorkTime());
-			if(e.getCommutingLeaveWorkTime()!=null) rc.setTodayLeaveWorkTime(e.getCommutingLeaveWorkTime());
-		});
+		Commuting today=dao.selectTodayCommuting(session, param);
+		if(today.getCommutingGoWorkTime()!=null) rc.setTodayGoWorkTime(today.getCommutingGoWorkTime());
+		if(today.getCommutingLeaveWorkTime()!=null) rc.setTodayLeaveWorkTime(today.getCommutingLeaveWorkTime());
+
 
 		//이번달 근무일수 저장
 		rc.setTotalWorkDay((int)c.stream().filter(f->!(f.getCommutingStatus().equals("연차")||f.getCommutingStatus().equals("결근"))).count());
 
 		//총 근무시간, 총 연장근무시간 저장
 		// 연차, 결근인 날 빼고 나머지 상태만 계산
-		// 18시 이후는 연장근무시간에 포함 - 바뀔예정...
-		c.stream().filter(f->!(f.getCommutingStatus().equals("연차")||f.getCommutingStatus().equals("결근"))).forEach(e->{
-			if(e.getCommutingGoWorkTime()!=null&&e.getCommutingLeaveWorkTime()!=null) {
-				rc.setTotalWorkTime(rc.getTotalWorkTime()
-										+ (int)Duration.between(e.getCommutingGoWorkTime(), e.getCommutingLeaveWorkTime()).toMinutes()
-										  / 60);
-				rc.setTotalExWorkTime(rc.getTotalExWorkTime()
-										+ (int)Duration.between(LocalDateTime.of(e.getCommutingLeaveWorkTime().toLocalDate(), LocalTime.of(18, 0)), e.getCommutingLeaveWorkTime()).toMinutes()
-										  / 60);
-			}
+		c.stream().filter(f->
+			f.getCommutingStatus().equals("정상")
+			|| f.getCommutingStatus().equals("지각")
+			|| f.getCommutingStatus().equals("반차"))
+			.forEach(e->{
+				if(e.getCommutingGoWorkTime()!=null&&e.getCommutingLeaveWorkTime()!=null) {
+					rc.setTotalWorkTime(rc.getTotalWorkTime()
+											+ (int)Duration.between(e.getCommutingGoWorkTime(), e.getCommutingLeaveWorkTime()).toMinutes()
+											  / 60);
+				}
 		});
+		int totalOvertimeHour=dao.selectTotalOvertimeHour(session, param);
+		rc.setTotalExWorkTime(totalOvertimeHour);
+		rc.setTotalWorkTime(rc.getTotalWorkTime()+totalOvertimeHour);
 
 		//지각, 결근, 연차 일 수 저장
 		rc.setTardy((int)c.stream().filter(f->f.getCommutingStatus().equals("지각")).count());
@@ -148,6 +151,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public List<String> selectAllEmployeeId() {
 		return dao.selectAllEmployeeId(session);
+	}
+
+	@Override
+	public Map<String, Object> selectVacationList(Map<String, Object> param) {
+		Map<String, Object> result=new HashMap<>();
+		result.put("totalPage", Math.ceil((double)dao.countVacationList(session, param)/10));
+		result.put("vacations", dao.selectVacationList(session, param));
+		result.put("totalVacationDay", dao.sumVacationDay(session, param));
+		result.put("employeeTotalVacation", dao.selectEmployeeTotalVacation(session, param));
+		return result;
 	}
 
 }

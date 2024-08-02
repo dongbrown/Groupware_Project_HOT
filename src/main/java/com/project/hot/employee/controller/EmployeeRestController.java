@@ -77,6 +77,21 @@ public class EmployeeRestController {
 		return service.selectCommutingList(param);
 	}
 
+	// 사원 휴가 내역 데이터 불러오기
+	@GetMapping("/selectVacationList/{no}")
+	public Map<String, Object> selectVacationList(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam String month,
+			@PathVariable(name="no") int employeeNo){
+		Map<String, Object> param=new HashMap<>();
+		param.put("employeeNo", employeeNo);
+		param.put("year", LocalDate.now().getYear());
+		param.put("month", month);
+		param.put("cPage", cPage);
+		param.put("numPerpage", 10);
+		return service.selectVacationList(param);
+	}
+
 	// 사원 이미지 업데이트
 	@PostMapping("/updateEmployeePhoto")
 	public ResponseEntity<String> updateEmployeePhoto(
@@ -205,4 +220,6 @@ public class EmployeeRestController {
 			return false;
 		}
 	}
+
+
 }

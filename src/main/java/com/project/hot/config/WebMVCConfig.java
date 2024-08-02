@@ -5,7 +5,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.project.hot.common.converter.StringToIntConverter;
+import com.project.hot.common.converter.StringToIntegerConverter;
 import com.project.hot.common.converter.StringToSqlDateConverter;
 
 @Configuration
@@ -28,13 +28,14 @@ public class WebMVCConfig implements WebMvcConfigurer{
 		registry.addViewController("/hr/employee").setViewName("humanResource/employee");
 		registry.addViewController("/hr/createEmployee").setViewName("humanResource/createEmployee");
 		registry.addViewController("/hr/allEmpCommuting").setViewName("humanResource/allEmpCommuting");
+		registry.addViewController("/hr/allEmpVacation").setViewName("humanResource/allEmpVacation");
 		registry.addViewController("/approval/approvalAllList").setViewName("approval/approvalAllList");
 	}
 
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
 		registry.addConverter(new StringToSqlDateConverter());
-		registry.addConverter(new StringToIntConverter());
+		registry.addConverter(new StringToIntegerConverter());
 	}
 
 
