@@ -55,7 +55,7 @@
 .commuting-table-div {
 	width: 90%;
     background-color: white;
-    height: 50vh;
+    min-height: 50vh;
 }
 
 .commuting-table-title-div {

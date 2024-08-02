@@ -12,6 +12,7 @@
 	    <result property="approvalStatus" column="APPROVAL_STATUS"/>
 	    <result property="approvalSecurity" column="APPROVAL_SECURITY"/>
 	    <association property="employeeNo" resultMap="employee.employeeMap"/>
+	    <association property="vacationForm" resultMap="vacationFormMap"/>
 	    <collection property="approvers" resultMap="approverMap"/>
 	</resultMap>
 
@@ -85,7 +86,7 @@
 	</resultMap>
 
 	<resultMap id="vacationFormMap" type="com.project.hot.approval.model.dto.VacationForm">
-		<id property="vacationForm" column="VACATION_FORM_NO"/>
+		<id property="vacationFormNo" column="VACATION_FORM_NO"/>
 		<result property="approvalNo" column="APPROVAL_NO"/>
 		<result property="vacationStart" column="VACATION_START"/>
 		<result property="vacationEnd" column="VACATION_END"/>
@@ -352,7 +353,7 @@
 		WHERE APPROVAL_STATUS = 3 AND b.EMPLOYEE_NO = #{no}
 		ORDER BY a.APPROVAL_DATE DESC
 	</select>
-<!--
+
  	<insert id="insertExpenditureForm" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
 		INSERT INTO EXPENDITURE_FORM VALUES
 		(SEQ_EXPENDITURE_FORM.NEXTVAL, #{approvalNo}, #{expenditureDate}, #{expenditureAmount})
@@ -361,15 +362,25 @@
 		</selectKey>
 	</insert>
 
- 	<insert id="insertExpenditureItem" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
-		INSERT ALL
-		<foreach collection="expenditureName" item="name" index="i">
-			INTO EXPENDITURE_ITEM VALUES (SEQ_EXPENDITURE_ITEM.NEXTVAL, #{expenditureFormNo}, #{name}, #{expenditureSpec[i]},
-			#{expenditureUnit[i]}, #{expenditureQuantity[i]}, #{expenditurePrice[i]}, #{expenditureRemark[i]})
-		</foreach>
-		SELECT * FROM DUAL
+	<insert id="insertExpenditureItem" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
+		INSERT INTO EXPENDITURE_ITEM
+		(EXPENDITURE_ITEM_NO, EXPENDITURE_FORM_NO, EXPENDITURE_NAME, EXPENDITURE_SPEC, EXPENDITURE_UNIT, EXPENDITURE_QUANTITY,
+		EXPENDITURE_PRICE, EXPENDITURE_REMARK)
+		SELECT SEQ_EXPENDITURE_ITEM.NEXTVAL AS EXPENDITURE_ITEM_NO, I.*
+		FROM(
+			<foreach collection="items" item="i" separator="UNION ALL ">
+				SELECT #{expenditureFormNo} AS EXPENDITURE_FORM_NO,
+					   #{i.expenditureName} AS EXPENDITURE_NAME,
+					   #{i.expenditureSpec} AS EXPENDITURE_SPEC,
+					   #{i.expenditureUnit} AS EXPENDITURE_UNIT,
+					   #{i.expenditureQuantity} AS EXPENDITURE_QUANTITY,
+					   #{i.expenditurePrice} AS EXPENDITURE_PRICE,
+					   #{i.expenditureRemark} AS EXPENDITURE_REMARK
+				FROM DUAL
+			</foreach>
+		) I
 	</insert>
--->
+
 	<select id="getSpecificApproval" resultMap="responseSpecificApprovalMap" parameterType="map">
 		SELECT	a.*
 				, e.*
