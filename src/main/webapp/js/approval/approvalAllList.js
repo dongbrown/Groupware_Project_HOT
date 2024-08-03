@@ -4,18 +4,18 @@
 
 $(document).ready(()=>{
 	//문서 종류별 개수 가져오기
-	getApprovalCountAndList(1,10);
+	getApprovalCountAndList(1);
 });
 
 $("#selectType").on("change", e=>{
-	const approvalType=e.target.value;
-	getApprovalCountAndList(1,approvalType)
+	getApprovalCountAndList(1);
 });
 
-function getApprovalCountAndList(cPage, approvalType){
+function getApprovalCountAndList(cPage){
 	const no=$('#header-empNo').data('employee-no');
+	const approvalType=$('#selectType').val();
 
-	fetch(path+'/api/approval/getApprovalsCountAndList?no='+no+'&approvalType='+approvalType)
+	fetch(path+'/api/approval/getApprovalsCountAndList?cPage='+cPage+'&no='+no+'&approvalType='+approvalType)
 	.then(response=>response.json())
 	.then(data=>{
 		const $pageBar=createPagination(cPage,data.totalPage,'getApprovalCountAndList');
