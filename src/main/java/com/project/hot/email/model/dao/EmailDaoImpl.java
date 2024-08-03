@@ -296,7 +296,7 @@ public class EmailDaoImpl implements EmailDao {
         throw new RuntimeException("Database operation failed: " + operation, e);
     }
 
-    // 추가적인 비즈니스 로직 메서드
+
     public void batchInsertEmails(List<Email> emails, SqlSession session) {
         try {
             for (Email email : emails) {

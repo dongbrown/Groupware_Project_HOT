@@ -143,6 +143,7 @@ public class EmailController {
                                        "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
                                        "날짜: " + originalEmail.getEmailSendDate() + "\n" +
                                        "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                       "\n" +
                                        originalEmail.getEmailContent();
                 email.setEmailContent(quotedContent);
 
@@ -153,6 +154,7 @@ public class EmailController {
                                           "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
                                           "날짜: " + originalEmail.getEmailSendDate() + "\n" +
                                           "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                          "\n" +
                                           originalEmail.getEmailContent();
                 email.setEmailContent(forwardedContent);
                 email.setHasAttachment(originalEmail.hasAttachment());

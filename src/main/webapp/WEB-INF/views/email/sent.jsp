@@ -53,7 +53,57 @@
                     </tbody>
                 </table>
             </div>
+            <!-- 페이지바를 위한 div -->
+            <div id="pageBar" class="d-flex justify-content-center mt-3"></div>
         </div>
     </div>
 </div>
 
+<script src="${pageContext.request.contextPath}/js/pagebar.js"></script>
+<script>
+    let currentPage = ${currentPage};
+    const totalPages = ${totalPages};
+
+    function goToPage(page) {
+        console.log('goToPage called with page:', page);
+        $.ajax({
+            url: '${pageContext.request.contextPath}/email/${mailbox}',
+            data: { page: page },
+            success: function(response) {
+                console.log('AJAX success, response:', response);
+                $('#emailList').html($(response).find('#emailList').html());
+                history.pushState(null, '', '${pageContext.request.contextPath}/email/${mailbox}?page=' + page);
+                currentPage = page;  // 현재 페이지 업데이트
+                createPageBar();  // 페이지바 다시 생성
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('AJAX error:', textStatus, errorThrown);
+                alert('페이지 로드 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    function createPageBar() {
+        const $pageBar = createPagination(currentPage, totalPages, 'goToPage');
+        $('#pageBar').html($pageBar);
+    }
+
+    $(document).ready(function() {
+        createPageBar();
+
+        $(document).on('click', '#pageBar .page-link', function(e) {
+            e.preventDefault();
+            let page = $(this).text();
+            if (page === '이전') {
+                page = Math.max(1, currentPage - 1);
+            } else if (page === '다음') {
+                page = Math.min(totalPages, currentPage + 1);
+            } else {
+                page = parseInt(page);
+            }
+            if (page !== currentPage) {
+                goToPage(page);
+            }
+        });
+    });
+</script>

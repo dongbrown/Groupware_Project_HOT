@@ -12,7 +12,6 @@
     <link href="${path}/css/email/email.css" rel="stylesheet">
     <link href="${path}/css/email/trash.css" rel="stylesheet">
     <link href="${path}/css/email/write.css" rel="stylesheet">
-    <link href="${path}/css/email/email-view.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -78,6 +77,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script type="text/javascript" src="${path}/js/email/email-common.js"></script>
+<script type="text/javascript" src="${path}/js/common/pagebar.js"></script>
 
 <script>
 let contextPath = '${pageContext.request.contextPath}/email';

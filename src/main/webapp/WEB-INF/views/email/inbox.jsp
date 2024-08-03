@@ -4,32 +4,28 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <div class="container-fluid">
-    <h2 class="mb-4">받은 메일함<span class="email-count">${emails.size()}</span></h2>
+    <h2 class="mb-4">
+        <c:choose>
+            <c:when test="${mailbox eq 'inbox'}">받은 메일함</c:when>
+            <c:when test="${mailbox eq 'sent'}">보낸 메일함</c:when>
+            <c:when test="${mailbox eq 'important'}">중요 메일함</c:when>
+            <c:when test="${mailbox eq 'self'}">내게 쓴 메일함</c:when>
+            <c:when test="${mailbox eq 'trash'}">휴지통</c:when>
+            <c:otherwise>메일함</c:otherwise>
+        </c:choose>
+        <span class="email-count">${fn:length(emails)}</span>
+    </h2>
 
-    <!-- 검색 폼 include -->
-    <jsp:include page="search.jsp" />
-
-    <!-- 이메일 목록 -->
     <div class="card">
         <div class="card-body">
-
-            <div class="d-flex justify-content-between mb-3">
-                <div>
-                    <button id="readBtn" class="btn btn-sm btn-secondary">읽음</button>
-                    <button id="deleteBtn" class="btn btn-sm btn-danger">삭제</button>
-                </div>
-
-            </div>
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>
-                                <input type="checkbox" id="select-all">
-                            </th>
+                            <th><input type="checkbox" id="select-all"></th>
                             <th>중요</th>
                             <th>읽음</th>
-                            <th>보낸 사람</th>
+                            <th>${mailbox eq 'sent' ? '받는 사람' : '보낸 사람'}</th>
                             <th>제목</th>
                             <th>날짜</th>
                         </tr>
@@ -48,7 +44,7 @@
                                 <td>
                                     <i class="fas ${email.receivers[0].emailReceiverIsRead eq 'Y' ? 'fa-envelope-open' : 'fa-envelope'} ${email.receivers[0].emailReceiverIsRead eq 'Y' ? 'text-muted' : 'text-primary'}"></i>
                                 </td>
-                                <td>${email.sender.employeeName}</td>
+                                <td>${mailbox eq 'sent' ? email.receivers[0].employee.employeeName : email.sender.employeeName}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${fn:length(email.emailTitle) > 30}">
@@ -58,6 +54,9 @@
                                             ${email.emailTitle}
                                         </c:otherwise>
                                     </c:choose>
+                                    <c:if test="${email.hasAttachment}">
+                                        <i class="fas fa-paperclip ml-2"></i>
+                                    </c:if>
                                 </td>
                                 <td>
                                     <fmt:formatDate value="${email.emailSendDate}" pattern="yyyy-MM-dd HH:mm"/>
@@ -67,83 +66,57 @@
                     </tbody>
                 </table>
             </div>
+            <!-- 페이지바를 위한 div -->
+            <div id="pageBar" class="d-flex justify-content-center mt-3"></div>
         </div>
-    </div>
-
-    <!-- 페이지네이션 (필요한 경우) -->
-    <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <!-- 페이지네이션 로직 구현 -->
-        </ul>
-    </nav>
-
-    <!-- 작업 버튼 -->
-    <div class="mt-3">
-
     </div>
 </div>
 
+script src="${pageContext.request.contextPath}/js/pagebar.js"></script>
 <script>
-$(document).ready(function() {
-    // 이메일 항목 클릭 이벤트
-    $(document).on('click', '.email-item', function(e) {
-        if (!$(e.target).is('input:checkbox') && !$(e.target).is('.toggle-important')) {
-            var emailNo = $(this).data('email-no');
-            EmailCommon.viewEmail(emailNo);
-        }
-    });
+    let currentPage = ${currentPage};
+    const totalPages = ${totalPages};
 
-    // 중요 표시 토글 이벤트
-    $(document).on('click', '.toggle-important', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var emailNo = $(this).data('email-no');
-        EmailCommon.toggleImportant(emailNo);
-    });
+    function goToPage(page) {
+        console.log('goToPage called with page:', page);
+        $.ajax({
+            url: '${pageContext.request.contextPath}/email/${mailbox}',
+            data: { page: page },
+            success: function(response) {
+                console.log('AJAX success, response:', response);
+                $('#emailList').html($(response).find('#emailList').html());
+                history.pushState(null, '', '${pageContext.request.contextPath}/email/${mailbox}?page=' + page);
+                currentPage = page;  // 현재 페이지 업데이트
+                createPageBar();  // 페이지바 다시 생성
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('AJAX error:', textStatus, errorThrown);
+                alert('페이지 로드 중 오류가 발생했습니다.');
+            }
+        });
+    }
 
-    // 검색 버튼 클릭 이벤트
-    $('#searchBtn').click(function() {
-        var keyword = $('#searchInput').val();
-        if (keyword.trim() !== '') {
-            EmailCommon.searchEmails(keyword);
-        }
-    });
+    function createPageBar() {
+        const $pageBar = createPagination(currentPage, totalPages, 'goToPage');
+        $('#pageBar').html($pageBar);
+    }
 
-    // 검색 입력 필드에서 엔터 키 이벤트
-    $('#searchInput').keypress(function(e) {
-        if (e.which == 13) {  // 엔터 키의 keyCode는 13입니다.
+    $(document).ready(function() {
+        createPageBar();
+
+        $(document).on('click', '#pageBar .page-link', function(e) {
             e.preventDefault();
-            $('#searchBtn').click();
-        }
+            let page = $(this).text();
+            if (page === '이전') {
+                page = Math.max(1, currentPage - 1);
+            } else if (page === '다음') {
+                page = Math.min(totalPages, currentPage + 1);
+            } else {
+                page = parseInt(page);
+            }
+            if (page !== currentPage) {
+                goToPage(page);
+            }
+        });
     });
-
-    // 전체 선택 체크박스 이벤트
-    $('#select-all').change(function() {
-        $('.mail-item-checkbox').prop('checked', $(this).prop('checked'));
-    });
-
-    // 개별 체크박스 변경 시 전체 선택 체크박스 상태 업데이트
-    $(document).on('change', '.mail-item-checkbox', function() {
-        var allChecked = $('.mail-item-checkbox:checked').length === $('.mail-item-checkbox').length;
-        $('#select-all').prop('checked', allChecked);
-    });
-
-    // 삭제 버튼 클릭 이벤트
-    $('#deleteBtn').click(function() {
-        var selectedEmails = $('.mail-item-checkbox:checked').map(function() {
-            return $(this).val();
-        }).get();
-
-        if (selectedEmails.length === 0) {
-            alert('삭제할 메일을 선택하세요.');
-            return;
-        }
-
-        if (confirm('선택한 메일을 삭제하시겠습니까?')) {
-            EmailCommon.moveEmailsToTrash(selectedEmails, function() {
-                EmailCommon.loadMailbox('inbox');
-            });
-        }
-    });
-});
 </script>
