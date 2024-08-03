@@ -51,11 +51,11 @@ public interface EmailDao {
     Integer getImportantUnreadCount(int employeeNo, SqlSession sqlSession);
     Integer getTrashCount(int employeeNo, SqlSession sqlSession);
 
-    // 추가된 메서드들
     void updateEmailContent(int emailNo, String newContent, SqlSession session);
     void updateEmailTitle(int emailNo, String newTitle, SqlSession session);
     void moveEmailToFolder(int emailNo, int folderId, int employeeNo, SqlSession session);
     List<Map<String, Object>> getEmailStatistics(int employeeNo, SqlSession session);
     void updateEmail(Email email, SqlSession session);
     List<Email> getRecentEmails(int employeeNo, int limit, SqlSession session);
+	List<Email> selectRecentInboxEmails(int employeeNo, int limit, SqlSession sqlSession);
 }

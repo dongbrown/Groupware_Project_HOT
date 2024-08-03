@@ -211,7 +211,27 @@ var EmailCommon = {
         }
     },
 
-	loadMailbox: function(mailbox, page = 1) {
+loadInbox: function(page = 1) {
+        this.loadMailboxContent('inbox', page);
+    },
+
+    loadSent: function(page = 1) {
+        this.loadMailboxContent('sent', page);
+    },
+
+    loadSelf: function(page = 1) {
+        this.loadMailboxContent('self', page);
+    },
+
+    loadImportant: function(page = 1) {
+        this.loadMailboxContent('important', page);
+    },
+
+    loadTrash: function(page = 1) {
+        this.loadMailboxContent('trash', page);
+    },
+
+    loadMailboxContent: function(mailbox, page) {
         $.ajax({
             url: this.contextPath + '/' + mailbox,
             type: 'GET',

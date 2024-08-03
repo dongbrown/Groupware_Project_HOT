@@ -716,4 +716,19 @@
              OR emp_sender.EMPLOYEE_ID LIKE '%' || #{keyword} || '%')
     </select>
 
+	<select id="selectRecentInboxEmails" parameterType="map" resultMap="emailResultMap">
+		<![CDATA[
+		SELECT * FROM (
+		SELECT e.*, emp.EMPLOYEE_NAME as SENDER_NAME
+		FROM EMAIL e
+		JOIN EMPLOYEE emp ON e.EMPLOYEE_NO = emp.EMPLOYEE_NO
+		JOIN EMAIL_RECEIVER er ON e.EMAIL_NO = er.EMAIL_NO
+		WHERE er.EMPLOYEE_NO = #{employeeNo}
+		AND er.EMAIL_RECEIVER_ISDELETE = 'N'
+		ORDER BY e.EMAIL_SEND_DATE DESC
+		)
+		WHERE ROWNUM <= #{limit}
+		]]>
+	</select>
+
 </mapper>

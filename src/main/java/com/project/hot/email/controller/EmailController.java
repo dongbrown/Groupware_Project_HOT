@@ -101,6 +101,86 @@ public class EmailController {
         return "email/" + mailbox;
     }
 
+    @GetMapping("/inbox")
+    public String inbox(@RequestParam(defaultValue = "1") int page,
+                        @RequestParam(defaultValue = "10") int size,
+                        Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        Map<String, Object> result = service.getInboxEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "inbox");
+
+        return "email/email";
+    }
+
+    @GetMapping("/sent")
+    public String sent(@RequestParam(defaultValue = "1") int page,
+                       @RequestParam(defaultValue = "10") int size,
+                       Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        Map<String, Object> result = service.getSentEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "sent");
+
+        return "email/email";
+    }
+
+    @GetMapping("/self")
+    public String self(@RequestParam(defaultValue = "1") int page,
+                       @RequestParam(defaultValue = "10") int size,
+                       Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        Map<String, Object> result = service.getSelfEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "self");
+
+        return "email/email";
+    }
+
+    @GetMapping("/important")
+    public String important(@RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "10") int size,
+                            Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        Map<String, Object> result = service.getImportantEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "important");
+
+        return "email/email";
+    }
+
+    @GetMapping("/trash")
+    public String trash(@RequestParam(defaultValue = "1") int page,
+                        @RequestParam(defaultValue = "10") int size,
+                        Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        Map<String, Object> result = service.getTrashEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "trash");
+
+        return "email/email";
+    }
+
     @GetMapping("/view/{emailNo}")
     public String viewEmail(@PathVariable int emailNo, Model model) {
         Email email = service.getEmailByNo(emailNo);
@@ -162,7 +242,8 @@ public class EmailController {
         }
 
         model.addAttribute("email", email);
-        return "email/write";
+        model.addAttribute("mailbox", "write");
+        return "email/email";
     }
 
     @GetMapping("/write-self")
@@ -171,7 +252,8 @@ public class EmailController {
         Employee loginEmployee = (Employee) auth.getPrincipal();
         model.addAttribute("email", new Email());
         model.addAttribute("loginEmployee", loginEmployee);
-        return "email/write-self";
+        model.addAttribute("mailbox", "write-self");
+        return "email/email";
     }
 
     @PostMapping("/send")

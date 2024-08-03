@@ -270,20 +270,20 @@
 		    AND TRUNC(vf.VACATION_START) &lt; TO_DATE(#{year} || '-' || #{month} || '-01', 'YYYY-MM-DD') + INTERVAL '1' MONTH
 		ORDER BY vf.VACATION_START DESC
     </select>
-    
+
     <select id="sumVacationDay" resultType="_double">
-    	SELECT SUM(VACATION_DAY) 
-		FROM APPROVAL 
+    	SELECT SUM(VACATION_DAY)
+		FROM APPROVAL
 			JOIN VACATION_FORM USING (APPROVAL_NO)
-		WHERE EMPLOYEE_NO=#{employeeNo} 
-			AND APPROVAL_STATUS = 3 
+		WHERE EMPLOYEE_NO=#{employeeNo}
+			AND APPROVAL_STATUS = 3
 			AND TO_CHAR(VACATION_START, 'YYYY') = TO_CHAR(SYSDATE, 'YYYY')
 			AND (VACATION_TYPE = '연차' OR VACATION_TYPE = '반차')
     </select>
-    
+
     <select id="selectEmployeeTotalVacation" resultType="_int">
-    	SELECT EMPLOYEE_TOTAL_VACATION 
-    	FROM EMPLOYEE 
+    	SELECT EMPLOYEE_TOTAL_VACATION
+    	FROM EMPLOYEE
     	WHERE EMPLOYEE_NO=#{employeeNo}
     </select>
 </mapper>

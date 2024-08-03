@@ -155,21 +155,23 @@
 					        </div>
 					</div>
                 </div>
-            <div id="agenda-card">
-            	<div class="moreBtn"><a href="#" style="">more+</a></div>
-            	<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 메일함</p>
-					<table class="table table-hover">
-					  <thead>
-					    <tr>
-					      <th scope="col">no</th>
-					      <th scope="col">발신자</th>
-					      <th scope="col">제목</th>
-					    </tr>
-					  </thead>
-					  <tbody id="mainMailList">
-					  </tbody>
-					</table>
-			</div>
+				<div id="agenda-card">
+					<div class="moreBtn">
+					    <a href="${path}/email/inbox?page=1" id="moreMailBtn" style="">more+</a>
+					</div>
+					<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 메일함</p>
+				    <table class="table table-hover">
+				        <thead>
+				            <tr>
+				                <th scope="col" style="width: 10%;">no</th>
+				                <th scope="col" style="width: 20%;">발신자</th>
+				                <th scope="col" style="width: 70%;">제목</th>
+				            </tr>
+				        </thead>
+				        <tbody id="mainMailList">
+				        </tbody>
+				    </table>
+				</div>
              </div>
             <!-- 세번째 줄 wrap (켈린더, 오늘의 일정, 홍보배너, 회사점심식단표) -->
              <div id="third-wrap">
@@ -297,9 +299,17 @@
         </div>
 </section>
 </div>
+
+<script src="${path }/email/email-common.js"></script>
 <script>
 	const path='${path}';
 	const no=${loginEmployee.employeeNo};
+    $(document).ready(function() {
+        $('#moreMailBtn').click(function(e) {
+            e.preventDefault();
+            window.location.href = '${path}/email/inbox';
+        });
+    });
 </script>
 <script src="${path }/js/index.js"></script>
 <c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
