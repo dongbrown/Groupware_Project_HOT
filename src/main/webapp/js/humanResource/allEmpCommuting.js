@@ -106,7 +106,9 @@ function searchEmpCommuting(cPage){
 	}
 
 	const reqPath='/api/hr/selectAllEmpCommuting';
-	const url=new URL(reqPath, window.location.origin);
+	const projectName = 'GDJ79_HOT_final';
+	const baseUrl = `${window.location.origin}/${projectName}`;
+	const url = new URL(reqPath, baseUrl);
 	url.search=query.toString();
 
 	fetch(url)
