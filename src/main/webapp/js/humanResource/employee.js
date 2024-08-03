@@ -102,14 +102,7 @@ function searchEmployee(cPage){
 		}
 	}
 
-	const reqPath='/api/hr/getEmployeeList';
-	const projectName = 'GDJ79_HOT_final';
-	const baseUrl = `${window.location.origin}/${projectName}`;
-	const url = new URL(reqPath, baseUrl);
-	url.search = query.toString();
-
-
-	fetch(url)
+	fetch(path+`/api/hr/getEmployeeList?${query.toString()}`)
 		.then(response => response.json())
 		.then(data => {
 			makeEmployeeTable(data.employees);
