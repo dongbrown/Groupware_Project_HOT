@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
@@ -459,4 +460,438 @@
 		SET APPROVAL_STATUS = #{approvalStatus}
 		WHERE APPROVAL_NO = #{approvalNo}
 	</update>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="approval">
+
+	<resultMap id="approvalMap" type="com.project.hot.approval.model.dto.Approval">
+	    <id property="approvalNo" column="APPROVAL_NO"/>
+	    <result property="approvalDate" column="APPROVAL_DATE"/>
+	    <result property="approvalPeriod" column="APPROVAL_PERIOD"/>
+	    <result property="approvalTitle" column="APPROVAL_TITLE"/>
+	    <result property="approvalContent" column="APPROVAL_CONTENT"/>
+	    <result property="approvalStatus" column="APPROVAL_STATUS"/>
+	    <result property="approvalSecurity" column="APPROVAL_SECURITY"/>
+	    <association property="employeeNo" resultMap="employee.employeeMap"/>
+	    <association property="vacationForm" resultMap="vacationFormMap"/>
+	    <collection property="approvers" resultMap="approverMap"/>
+	</resultMap>
+
+	<resultMap id="approverMap" type="com.project.hot.approval.model.dto.Approver">
+		<id property="approverNo" column="APPROVER_NO"/>
+		<result property="approverStatus" column="APPROVER_STATUS"/>
+		<result property="approverDate" column="APPROVER_DATE"/>
+		<result property="approverReject" column="APPROVER_REJECT"/>
+		<result property="approverLevel" column="APPROVER_LEVEL"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<association property="employeeNo" resultMap="employee.employeeMap"/>
+	</resultMap>
+
+	<resultMap id="approvalAttMap" type="com.project.hot.approval.model.dto.ApprovalAtt">
+		<id property="approvalAttNo" column="APPROVAL_ATT_NO"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<result property="approvalAttOriginalFilename" column="APPROVAL_ATT_ORIGINAL_FILENAME"/>
+		<result property="approvalAttRenameFilename" column="APPROVAL_ATT_RENAME_FILENAME"/>
+		<result property="approvalAttDate" column="APPROVAL_ATT_DATE"/>
+	</resultMap>
+
+	<resultMap id="responseSpecificApprovalMap" type="com.project.hot.approval.model.dto.ResponseSpecificApproval">
+		<id property="approvalNo" column="APPROVAL_NO"/>
+		<association property="approval" resultMap="approvalMap"/>
+		<association property="btf" resultMap="businessTripFormMap"/>
+		<association property="vf" resultMap="vacationFormMap"/>
+		<association property="otf" resultMap="overtimeFormMap"/>
+		<association property="edf" resultMap="expenditureFormMap"/>
+		<association property="ctf" resultMap="commutingTimeFormMap"/>
+		<collection property="referenceEmployee" ofType="com.project.hot.approval.model.dto.Reference">
+		  <association property="employeeNo" javaType="com.project.hot.employee.model.dto.Employee">
+		    <result property="employeeName" column="REFERENCE_EMPLOYEE_NAME"/>
+		    <association property="departmentCode" javaType="com.project.hot.employee.model.dto.Department">
+		      <result property="departmentTitle" column="REFERENCE_DEPARTMENT_TITLE"/>
+		    </association>
+		  </association>
+		</collection>
+		<collection property="approverEmployee" ofType="com.project.hot.approval.model.dto.Approver">
+			<result property="approverLevel" column="APPROVER_APPROVER_LEVEL"/>
+			<association property="employeeNo" javaType="com.project.hot.employee.model.dto.Employee">
+				<result property="employeeName" column="APPROVER_EMPLOYEE_NAME"/>
+				<association property="departmentCode" javaType="com.project.hot.employee.model.dto.Department">
+					<result property="departmentTitle" column="APPROVER_DEPARTMENT_TITLE"/>
+				</association>
+			</association>
+		</collection>
+		<collection property="edi" resultMap="expenditureItemMap"/>
+		<collection property="atts" resultMap="approvalAttMap"/>
+	</resultMap>
+
+
+	<resultMap id="referenceMap" type="com.project.hot.approval.model.dto.Reference">
+		<id property="referenceNo" column="REFERENCE_NO"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<result property="referenceType" column="REFERENCE_TYPE"/>
+		<result property="referenceStatus" column="REFERENCE_STATUS"/>
+		<association property="employeeNo" resultMap="employee.employeeMap"/>
+	</resultMap>
+
+	<resultMap id="businessTripFormMap" type="com.project.hot.approval.model.dto.BusinessTripForm">
+		<id property="businessTripFormNo" column="BUSINESS_TRIP_FORM_NO"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<result property="businessTripStartDate" column="BUSINESS_TRIP_START_DATE"/>
+		<result property="businessTripEndDate" column="BUSINESS_TRIP_END_DATE"/>
+		<result property="businessTripDestination" column="BUSINESS_TRIP_DESTINATION"/>
+		<result property="businessTripEmergency" column="BUSINESS_TRIP_EMERGENCY"/>
+		<collection property="businessTripPartners" ofType="com.project.hot.approval.model.dto.BusinessTripPartner">
+			<id property="businessTripFormNo" column="BUSINESS_TRIP_FORM_NO"/>
+			<association property="employeeNo" resultMap="employee.employeeMap"/>
+		</collection>
+	</resultMap>
+
+	<resultMap id="vacationFormMap" type="com.project.hot.approval.model.dto.VacationForm">
+		<id property="vacationFormNo" column="VACATION_FORM_NO"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<result property="vacationStart" column="VACATION_START"/>
+		<result property="vacationEnd" column="VACATION_END"/>
+		<result property="vacationDay" column="VACATION_DAY"/>
+		<result property="vacationType" column="VACATION_TYPE"/>
+		<result property="vacationEmergency" column="VACATION_EMERGENCY"/>
+	</resultMap>
+
+	<resultMap id="overtimeFormMap" type="com.project.hot.approval.model.dto.OvertimeForm">
+		<id property="overtimeFormNo" column="OVERTIME_FROM_NO"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<result property="overtimeDate" column="OVERTIME_DATE"/>
+		<result property="overtimeStartTime" column="OVERTIME_START_TIME"/>
+		<result property="overtimeEndTime" column="OVERTIME_END_TIME"/>
+		<result property="overtimeHours" column="OVERTIME_HOURS"/>
+	</resultMap>
+
+	<resultMap id="expenditureFormMap" type="com.project.hot.approval.model.dto.ExpenditureForm">
+		<id property="expenditureFormNo" column="EXPENDITURE_FORM_NO"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<result property="expenditureDate" column="EXPENDITURE_DATE"/>
+		<result property="expenditureAmount" column="EXPENDITURE_AMOUNT"/>
+	</resultMap>
+
+	<resultMap id="commutingTimeFormMap" type="com.project.hot.approval.model.dto.CommutingTimeForm">
+		<id property="commutingTimeFormNo" column="COMMUTING_TIME_FORM_NO"/>
+		<result property="approvalNo" column="APPROVAL_NO"/>
+		<result property="commutingWorkDate" column="COMMUTING_WORK_DATE"/>
+		<result property="commutingType" column="COMMUTING_TYPE"/>
+		<result property="commutingEditTime" column="COMMUTING_EDIT_TIME"/>
+	</resultMap>
+
+	<resultMap id="expenditureItemMap" type="com.project.hot.approval.model.dto.ExpenditureItem">
+		<id property="expenditureItemNo" column="EXPENDITURE_ITEM_NO"/>
+		<result property="expenditureFormNo" column="EXPENDITURE_FORM_NO"/>
+		<result property="expenditureName" column="EXPENDITURE_NAME"/>
+		<result property="expenditureSpec" column="EXPENDITURE_SPEC"/>
+		<result property="expenditureUnit" column="EXPENDITURE_UNIT"/>
+		<result property="expenditureQuantity" column="EXPENDITURE_QUANTITY"/>
+		<result property="expenditurePrice" column="EXPENDITURE_PRICE"/>
+		<result property="expenditureRemark" column="EXPENDITURE_REMARK"/>
+	</resultMap>
+
+
+	<!-- 결재문서 가져오기 -->
+	<select id="approvalAll" resultMap="approvalMap">
+	    SELECT a.approval_no, a.approval_title, a.approval_content,a.approval_draft_date,
+               e.employee_no, e.employee_name, d.department_title
+        FROM Approval a
+        JOIN Employee e ON a.employee_no = e.employee_no
+        JOIN Department d ON e.department_code = d.department_code
+        ORDER BY a.approval_draft_date DESC
+	</select>
+
+	<select id="getEmployeesByDepartment" resultMap="employee.employeeMap">
+	    SELECT e.*, d.*, p.*
+		    FROM Employee e
+		    JOIN Department d ON e.department_code = d.department_code
+		    JOIN Position p ON e.position_code = p.position_code
+		WHERE e.department_code = #{departmentCode}
+	</select>
+
+	<select id="selectDepartmentList" resultMap="employee.departmentMap">
+	    SELECT * FROM Department
+	</select>
+
+	<!-- 결재 대기 카운트 -->
+	<select id="selectApprovalWaitCount" resultType="_int">
+		SELECT COUNT(DISTINCT a.APPROVAL_NO)
+		FROM APPROVAL a
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE b.EMPLOYEE_NO = #{no}
+			AND b.APPROVER_STATUS = 4
+			AND (
+				    b.APPROVER_LEVEL = 1
+				    OR
+			    (
+			        EXISTS (
+			            SELECT 1
+			            FROM APPROVER s
+			            WHERE s.APPROVAL_NO = b.APPROVAL_NO
+				            AND s.APPROVER_LEVEL = b.APPROVER_LEVEL - 1
+				            AND s.APPROVER_STATUS = 1
+			        )
+			        AND b.APPROVER_STATUS = 4
+			    )
+			)
+	</select>
+	<!-- 결재 진행 카운트 -->
+	<select id="selectApprovalProcessCount" resultType="_int">
+		SELECT COUNT(DISTINCT a.APPROVAL_NO)
+		FROM APPROVAL a
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE b.EMPLOYEE_NO = #{no}
+			AND b.APPROVER_STATUS = 1
+			AND a.APPROVAL_STATUS = 2
+	</select>
+	<!-- 결재 예정 카운트 -->
+	<select id="selectApprovalPendingCount" resultType="_int">
+		SELECT COUNT(DISTINCT a.APPROVAL_NO)
+		FROM APPROVAL a
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE b.EMPLOYEE_NO = #{no}
+			AND b.APPROVER_STATUS = 4
+			AND a.APPROVAL_STATUS IN (1, 2)
+			AND EXISTS (
+			    SELECT 1
+			    FROM APPROVER s
+			    WHERE s.APPROVAL_NO = b.APPROVAL_NO
+			    AND s.APPROVER_STATUS = 4
+			    AND s.APPROVER_LEVEL &lt; b.APPROVER_LEVEL
+			)
+	</select>
+	<!-- 결재 완료 카운트 -->
+	<select id="selectApprovalCompleteCount" resultType="_int">
+		SELECT COUNT(DISTINCT a.APPROVAL_NO)
+		FROM APPROVAL a
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE APPROVAL_STATUS = 3 AND b.EMPLOYEE_NO = #{no}
+	</select>
+
+	<select id="selectApprovalAllCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM APPROVAL a
+			JOIN EMPLOYEE e ON a.EMPLOYEE_NO = e.EMPLOYEE_NO
+			JOIN DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+			JOIN POSITION p ON e.POSITION_CODE = p.POSITION_CODE
+			JOIN APPROVER r ON a.APPROVAL_NO = r.APPROVAL_NO
+		WHERE r.EMPLOYEE_NO = #{no}
+	</select>
+
+	<select id="selectApprovalAllList" resultMap="approvalMap">
+		SELECT *
+		FROM APPROVAL a
+			JOIN EMPLOYEE e ON a.EMPLOYEE_NO = e.EMPLOYEE_NO
+			JOIN DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+			JOIN POSITION p ON e.POSITION_CODE = p.POSITION_CODE
+			JOIN APPROVER r ON a.APPROVAL_NO = r.APPROVAL_NO
+		WHERE r.EMPLOYEE_NO = #{no}
+		ORDER BY a.APPROVAL_DATE DESC
+	</select>
+
+	<select id="insertApprovalProcedure" statementType="CALLABLE" parameterType="java.util.HashMap">
+		{call INSERT_APPROVAL(
+			#{ra.approvalNo, mode=IN, jdbcType=VARCHAR},
+			#{ra.approvalEmpNo, mode=IN, jdbcType=INTEGER},
+			#{ra.approvalDate, mode=IN, jdbcType=DATE},
+			#{ra.approvalStatus, mode=IN, jdbcType=INTEGER},
+			#{ra.title, mode=IN, jdbcType=VARCHAR},
+			#{ra.content, mode=IN, jdbcType=VARCHAR},
+			#{ra.period, mode=IN, jdbcType=DATE},
+			#{ra.security, mode=IN, jdbcType=VARCHAR},
+			#{receiverNo, mode=IN, jdbcType=VARCHAR},
+			#{refererNo, mode=IN, jdbcType=VARCHAR},
+			#{ra.middleApproverNo, mode=IN, jdbcType=INTEGER},
+			#{ra.finalApproverNo, mode=IN, jdbcType=INTEGER},
+			#{rename, mode=IN, jdbcType=VARCHAR},
+			#{oriname, mode=IN, jdbcType=VARCHAR},
+			#{newApprovalNo, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}
+		)}
+	</select>
+
+	<insert id="insertVacation" parameterType="com.project.hot.approval.model.dto.VacationForm">
+		INSERT INTO VACATION_FORM VALUES
+		(SEQ_VACATION_FORM.NEXTVAL, #{approvalNo}, #{vacationStart}, #{vacationEnd},
+		#{vacationEnd}-#{vacationStart}, #{vacationType}, #{vacationEmergency})
+	</insert>
+
+	<insert id="insertCommuting" parameterType="com.project.hot.approval.model.dto.CommutingTimeForm">
+		INSERT INTO COMMUTING_TIME_FORM VALUES
+		(SEQ_COMMUTING_TIME_FORM.NEXTVAL, #{approvalNo}, #{commutingWorkDate}, #{commutingType}, #{commutingEditTime})
+	</insert>
+
+	<insert id="insertOvertime" parameterType="com.project.hot.approval.model.dto.OvertimeForm">
+		INSERT INTO OVERTIME_FORM VALUES
+		(SEQ_OVERTIME_FORM.NEXTVAL, #{approvalNo}, #{overtimeDate}, #{overtimeStartTime}, #{overtimeEndTime}, #{overtimeHours})
+	</insert>
+
+	<insert id="insertBusinessTrip" parameterType="com.project.hot.approval.model.dto.RequestBusinessTrip">
+		INSERT INTO BUSINESS_TRIP_FORM VALUES
+		(SEQ_BUSINESS_TRIP_FORM.NEXTVAL, #{approvalNo}, #{businessTripStartDate}, #{businessTripEndDate},
+					#{businessTripDestination}, #{businessTripEmergency})
+		<selectKey resultType="int" order="AFTER" keyProperty="businessTripFormNo">
+			SELECT SEQ_BUSINESS_TRIP_FORM.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<insert id="insertBusinessPartner" parameterType="com.project.hot.approval.model.dto.RequestBusinessTrip">
+		INSERT ALL
+		<foreach collection="partnerNo" item="no">
+			INTO BUSINESS_TRIP_PARTNER VALUES (#{businessTripFormNo}, #{no})
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+
+	<!-- 결재 유형별 결재 리스트 -->
+	<!-- 결재 대기 -->
+	<select id="selectApprovalWaitList" resultMap="approvalMap">
+		SELECT *
+		FROM APPROVAL a
+			JOIN EMPLOYEE e ON a.EMPLOYEE_NO = e.EMPLOYEE_NO
+			JOIN DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+			JOIN POSITION p ON e.POSITION_CODE = p.POSITION_CODE
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE b.EMPLOYEE_NO = #{no}
+			AND b.APPROVER_STATUS = 4
+			AND (
+				    b.APPROVER_LEVEL = 1
+				    OR
+			    (
+			        EXISTS (
+			            SELECT 1
+			            FROM APPROVER s
+			            WHERE s.APPROVAL_NO = b.APPROVAL_NO
+				            AND s.APPROVER_LEVEL = b.APPROVER_LEVEL - 1
+				            AND s.APPROVER_STATUS = 1
+			        )
+			        AND b.APPROVER_STATUS = 4
+			    )
+			)
+		ORDER BY a.APPROVAL_DATE DESC
+	</select>
+	<!-- 결재 진행 -->
+	<select id="selectApprovalProcessList" resultMap="approvalMap">
+		SELECT *
+		FROM APPROVAL a
+			JOIN EMPLOYEE e ON a.EMPLOYEE_NO = e.EMPLOYEE_NO
+			JOIN DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+			JOIN POSITION p ON e.POSITION_CODE = p.POSITION_CODE
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE b.EMPLOYEE_NO = #{no}
+			AND b.APPROVER_STATUS = 1
+			AND a.APPROVAL_STATUS = 2
+		ORDER BY a.APPROVAL_DATE DESC
+	</select>
+	<!-- 결재 예정 -->
+	<select id="selectApprovalPendingList" resultMap="approvalMap">
+		SELECT *
+		FROM APPROVAL a
+			JOIN EMPLOYEE e ON a.EMPLOYEE_NO = e.EMPLOYEE_NO
+			JOIN DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+			JOIN POSITION p ON e.POSITION_CODE = p.POSITION_CODE
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE b.EMPLOYEE_NO = #{no}
+			AND b.APPROVER_STATUS = 4
+			AND a.APPROVAL_STATUS IN (1, 2)
+			AND EXISTS (
+			    SELECT 1
+			    FROM APPROVER s
+			    WHERE s.APPROVAL_NO = b.APPROVAL_NO
+			    AND s.APPROVER_STATUS = 4
+			    AND s.APPROVER_LEVEL &lt; b.APPROVER_LEVEL
+			)
+		ORDER BY a.APPROVAL_DATE DESC
+	</select>
+	<!-- 결재 완료 -->
+	<select id="selectApprovalCompleteList" resultMap="approvalMap">
+		SELECT *
+		FROM APPROVAL a
+			JOIN EMPLOYEE e ON a.EMPLOYEE_NO = e.EMPLOYEE_NO
+			JOIN DEPARTMENT d ON e.DEPARTMENT_CODE = d.DEPARTMENT_CODE
+			JOIN POSITION p ON e.POSITION_CODE = p.POSITION_CODE
+			JOIN APPROVER b ON a.APPROVAL_NO = b.APPROVAL_NO
+		WHERE APPROVAL_STATUS = 3 AND b.EMPLOYEE_NO = #{no}
+		ORDER BY a.APPROVAL_DATE DESC
+	</select>
+	<insert id="insertExpenditureForm" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
+		INSERT INTO EXPENDITURE_FORM VALUES (SEQ_EXPENDITURE_FORM.NEXTVAL, #{approvalNo}, #{expenditureDate}, #{expenditureAmount})
+		<selectKey resultType="int" order="AFTER" keyProperty="expenditureFormNo"> SELECT SEQ_EXPENDITURE_FORM.CURRVAL FROM DUAL </selectKey>
+	</insert>
+
+ 	<insert id="insertExpenditureItem" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
+		INSERT INTO EXPENDITURE_ITEM (EXPENDITURE_ITEM_NO, EXPENDITURE_FORM_NO, EXPENDITURE_NAME, EXPENDITURE_SPEC, EXPENDITURE_UNIT, EXPENDITURE_QUANTITY, EXPENDITURE_PRICE, EXPENDITURE_REMARK) SELECT SEQ_EXPENDITURE_ITEM.NEXTVAL AS EXPENDITURE_ITEM_NO, I.* FROM(
+		<foreach collection="items" item="i" separator="UNION ALL "> SELECT #{expenditureFormNo} AS EXPENDITURE_FORM_NO, #{i.expenditureName} AS EXPENDITURE_NAME, #{i.expenditureSpec} AS EXPENDITURE_SPEC, #{i.expenditureUnit} AS EXPENDITURE_UNIT, #{i.expenditureQuantity} AS EXPENDITURE_QUANTITY, #{i.expenditurePrice} AS EXPENDITURE_PRICE, #{i.expenditureRemark} AS EXPENDITURE_REMARK FROM DUAL </foreach>
+		) I
+	</insert>
+
+	<select id="getSpecificApproval" resultMap="responseSpecificApprovalMap" parameterType="map">
+		SELECT	a.*
+				, e.*
+				, dept.*
+				, att.*
+				, ap.APPROVER_LEVEL AS APPROVER_APPROVER_LEVEL
+				, ref_emp.EMPLOYEE_NO AS REFERENCE_EMPLOYEE_NO
+				, ref_emp.EMPLOYEE_NAME AS REFERENCE_EMPLOYEE_NAME
+				, ref_dept.DEPARTMENT_TITLE AS REFERENCE_DEPARTMENT_TITLE
+				, approver.EMPLOYEE_NO AS APPROVER_EMPLOYEE_NO
+				, approver.EMPLOYEE_NAME AS APPROVER_EMPLOYEE_NAME
+				, approverdept.DEPARTMENT_TITLE AS APPROVER_DEPARTMENT_TITLE
+		<if test="targetNo != null and targetNo.length() > 0">
+	        <choose>
+	            <when test='no.equals("1")'>
+	            , ctf.*
+	            FROM APPROVAL a
+	                LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
+	            </when>
+	        	<when test='no.equals("2")'>
+	        	, vf.*
+	        	FROM APPROVAL a
+	                LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
+	            </when>
+	            <when test='no.equals("3")'>
+	            , otf.*
+	            FROM APPROVAL a
+	                LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
+	            </when>
+	            <when test='no.equals("4")'>
+	            , ef.*
+				, ei.*
+	            FROM APPROVAL a
+	                LEFT JOIN EXPENDITURE_FORM ef ON ef.APPROVAL_NO = a.APPROVAL_NO
+	                LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
+	            </when>
+	            <otherwise>
+	            , btf.*
+	            , btp.*
+	            FROM APPROVAL a
+	                LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
+	                LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
+	            </otherwise>
+	        </choose>
+    	</if>
+    	LEFT JOIN
+    		EMPLOYEE e ON e.EMPLOYEE_NO=a.EMPLOYEE_NO
+		JOIN
+			DEPARTMENT dept ON dept.DEPARTMENT_CODE=e.DEPARTMENT_CODE
+		LEFT JOIN
+		    APPROVAL_ATT att ON att.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN
+		    REFERENCE rf ON rf.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN
+			APPROVER ap ON ap.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN
+		    EMPLOYEE approver ON approver.EMPLOYEE_NO=ap.EMPLOYEE_NO
+		LEFT JOIN
+		    DEPARTMENT approverdept ON approverdept.DEPARTMENT_CODE=approver.DEPARTMENT_CODE
+		LEFT JOIN
+		    EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
+		LEFT JOIN
+		    DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
+		WHERE
+		    a.APPROVAL_NO=#{targetNo}
+	</select>
+>>>>>>> kmj
 </mapper>

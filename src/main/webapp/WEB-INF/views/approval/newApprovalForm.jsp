@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.time.LocalDate"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp" />
-<c:import url="${path }/WEB-INF/views/common/header.jsp" />
+<c:import url="/WEB-INF/views/common/sidebar.jsp" />
+<c:import url="/WEB-INF/views/common/header.jsp" />
 <%
 LocalDate currentDate = LocalDate.now();
 String formattedDate = currentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -836,4 +836,4 @@ request.setAttribute("currentDate", formattedDate);
 	const path = '${path}';
 </script>
 <script src='${path }/js/approval/newApprovalForm.js'></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp" />
+<c:import url="/WEB-INF/views/common/footer.jsp" />

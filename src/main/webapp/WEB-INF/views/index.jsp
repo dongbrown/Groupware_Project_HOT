@@ -4,8 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
-<c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:import url="/WEB-INF/views/common/sidebar.jsp"/>
+<c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link href="${path}/css/common/index.css" rel="stylesheet" type="text/css">
@@ -302,4 +302,4 @@
 	const no=${loginEmployee.employeeNo};
 </script>
 <script src="${path }/js/index.js"></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
+<c:import url="/WEB-INF/views/common/footer.jsp"/>

@@ -68,19 +68,14 @@
                 <div id="approval" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">결재함</h6>
-                        <a class="collapse-item" href="${path}/approval/approvalAllList">전체</a>
-                        <a class="collapse-item" href="${path}/approval/approvalWait">결재대기</a>
-                        <a class="collapse-item" href="${path}/approval/approvalProcess">결재진행</a>
-                        <a class="collapse-item" href="${path}/approval/approvalPending">결재예정</a>
-                        <a class="collapse-item" href="${path}/approval/approvalComplete">결재완료</a><br>
-
+                        <a class="collapse-item" href="${path}/approval/approvalAllList">전체 조회</a>
+                        <br>
                         <h6 class="collapse-header">문서함</h6>
-                        <a class="collapse-item" href="${path}/approval/allDocument">전체문서</a>
-                        <a class="collapse-item" href="${path}/approval/myDocument">내 기안문서</a>
-                        <a class="collapse-item" href="${path}/approval/receivedDocument">수신문서</a>
-                        <a class="collapse-item" href="${path}/approval/referenceDocument">참조문서</a>
-                        <a class="collapse-item" href="${path}/approval/viewDocument">열람문서</a>
-                        <a class="collapse-item" href="${path}/approval/temporaryDocument">임시저장</a>
+                        <a class="collapse-item" href="${path}/myapproval/myDocument?employeeNo=${loginEmployee.employeeNo}">내 기안문서</a>
+                        <a class="collapse-item" href="${path}/myapproval/receivedDocument?employeeNo=${loginEmployee.employeeNo}">수신문서</a>
+                        <a class="collapse-item" href="${path}/myapproval/referenceDocument?employeeNo=${loginEmployee.employeeNo}">참조문서</a>
+                        <a class="collapse-item" href="${path}/myapproval/viewDocument?employeeNo=${loginEmployee.employeeNo}">열람문서</a>
+                        <a class="collapse-item" href="${path}/myapproval/temporaryDocument?employeeNo=${loginEmployee.employeeNo}">임시저장</a>
                     </div>
                 </div>
             </li>
