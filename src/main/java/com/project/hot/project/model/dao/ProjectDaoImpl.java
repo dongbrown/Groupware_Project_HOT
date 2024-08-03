@@ -40,7 +40,7 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param) {
 		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
-		List<Project> result=session.selectList("project.selectProjectAll",null,rb);
+		List<Project> result=session.selectList("project.selectProjectAll",param,rb);
 		return result;
 	}
 
