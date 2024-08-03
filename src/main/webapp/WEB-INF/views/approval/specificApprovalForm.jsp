@@ -4,8 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
-<c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:import url="/WEB-INF/views/common/sidebar.jsp"/>
+<c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="${path }/css/approval/specificApprovalForm.css" rel="stylesheet" type="text/css">
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
@@ -56,15 +56,15 @@
                     <table>
                         <tr>
                             <th>정정 일자</th>
-                            <td></td>
+                            <td id="commutingWorkDate"></td>
                         </tr>
                         <tr>
                             <th>정정 타입</th>
-                            <td></td>
+                            <td id="commutingType"></td>
                         </tr>
                         <tr>
                             <th>정정 시간</th>
-                            <td></td>
+                            <td id="commutingEditTime"></td>
                         </tr>
                     </table>
                 </div>
@@ -193,7 +193,8 @@
 	    console.error("JSON 파싱 오류:", error);
 	}
 	const approvalNo = approvalInfo[0].approval.approvalNo;
-
+	const info = approvalInfo[0];
+	/* 결재 문서 공통 부분 출력 */
     $("#approvalName").append(approvalInfo[0].approval.employeeNo.employeeName);
     $("#approvalDepartmentTitle").append(approvalInfo[0].approval.employeeNo.departmentCode.departmentTitle);
 	$("#referencers").append(references.join(', '));
@@ -208,7 +209,21 @@
 	atts.forEach(att=>{
 		$("#attachmentsAtt").append($("<li>").append($("<a>").attr("href", path+'/upload/approval/'+att.approvalAttRenameFilename).attr("download", att.approvalAttOriginalFilename).append(att.approvalAttOriginalFilename)))
 	})
-	if(type==4){
+	/* 문서 종류 별 출력 */
+	if(type==1){
+		$("#commutingWorkDate").append(info.ctf.commutingWorkDate);
+		$("#commutingType").append(info.ctf.commutingType);
+		$("#commutingEditTime").append(info.ctf.commutingEditTime.split('T')[1]);
+	} else if(type==2){
+		 $("#vacationType").append(info.vf.vacationType+"휴가");
+		 $("#vacationStart").append(info.vf.vacationStart);
+		 $("#vacationEnd").append(info.vf.vacationEnd);
+		 $("#emergencyPhone").append(info.vf.vacationEmergency);
+	} else if(type==3){
+	     $("#overtimeDate").append(info.otf.overtimeDate);
+	     $("#overtimeStartTime").append((info.otf.overtimeStartTime).split('T')[1]);
+	     $("#overtimeEndTime").append((info.otf.overtimeEndTime).split('T')[1]);
+	} else if(type==4){
 		const edi = approvalInfo[0].edi;
 		const edf = approvalInfo[0].edf;
 		edi.forEach(p =>{
@@ -219,8 +234,13 @@
 					.append($("<td>").append(p.expenditureRemark))
 			)
 		})
-	} else if(type==3){
-
+	} else if(type==5) {
+		$("#businessStart").append(info.btf.businessTripStartDate);
+		$("#businessEnd").append(info.btf.businessTripEndDate);
+		$("#businessDestination").append(info.btf.businessTripDestination);
+		$("#businessEmergency").append(info.btf.businessTripEmergency);
+		const partners = info.btf.businessTripPartners[0].employeeNo
+		$("#partners").append($("<td>").append(partners.employeeName));
 	}
 </script>
 </html>
