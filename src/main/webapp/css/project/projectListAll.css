@@ -36,6 +36,14 @@
 #joinBtn{
 	position: absolute;
     right: 20px;
+    bottom: 0;
+    margin-bottom: 15px;
+}
+#refusedBtn{
+	position: absolute;
+    right: 20px;
+    bottom: 0;
+    margin-bottom: 15px;
 }
 
 .conteudo__geral>div:first-child {
@@ -99,7 +107,8 @@
 .conteudo__cartoes-grid:hover > .elemento__cartao:not(:hover) .elemento__cartao--fundo,
 .conteudo__cartoes-grid:hover > .elemento__cartao:not(:hover) .container,
 .conteudo__cartoes-grid:hover > .elemento__cartao:not(:hover) .elemento__cartao--conteudo,
-.conteudo__cartoes-grid:hover > .elemento__cartao:not(:hover) #joinBtn {
+.conteudo__cartoes-grid:hover > .elemento__cartao:not(:hover) #joinBtn,
+.conteudo__cartoes-grid:hover > .elemento__cartao:not(:hover) #refusedBtn {
     filter: brightness(0.5) saturate(0) contrast(1.2) blur(20px);
 }
 
@@ -320,9 +329,4 @@
 	display:flex;
 	flex-direction:column;
 	align-items:center;
-}
-
-#joinBtn{
-	bottom: 0;
-    margin-bottom: 15px;
 }

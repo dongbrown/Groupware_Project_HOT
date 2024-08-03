@@ -47,6 +47,7 @@
 		<result column="PROJECT_STATUS" property="projectStatus"/>
 		<result column="EMPLOYEE_PHOTOS" property="memberPhotos"/>
 		<result column="EMPLOYEE_NAMES" property="memberEmployeeNos"/>
+		<result column="EMPLOYEE_NOS" property="employeeNos"/>
 		<result column="PROJECT_REQUEST_STATUS" property="projectRequestStatus"/>
 		<result column="PROJECT_REQUEST_EMPLOYEE" property="projectRequestEmployee"/>
 		<result column="PROJECT_REFUSE_CONTENT" property="projectRefuseContent"/>
@@ -104,21 +105,29 @@
 		SELECT COUNT(*) FROM PROJECT WHERE EMPLOYEE_NO=${employeeNo}
 	</select>
 
-	<select id="selectProjectAll" resultMap="projectMap">
-		    SELECT
-			    P.PROJECT_NO,
-			    P.RPOJECT_TITLE,
-			    LISTAGG(E.EMPLOYEE_NAME, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_NAMES,
-			    LISTAGG(NVL(E.EMPLOYEE_PHOTO, 'NULL'), ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_PHOTOS
-			FROM
-			    PROJECT P
-			    LEFT JOIN PROJECT_MEMBERS PM ON P.PROJECT_NO = PM.PROJECT_NO
-			    LEFT JOIN EMPLOYEE E ON PM.EMPLOYEE_NO = E.EMPLOYEE_NO
-			GROUP BY
-			    P.PROJECT_NO,
-			    P.RPOJECT_TITLE
-			ORDER BY
-			    P.PROJECT_NO DESC
+	<select id="selectProjectAll" resultMap="projectMap" parameterType="map">
+		SELECT
+		    P.PROJECT_NO,
+		    P.RPOJECT_TITLE,
+		    CASE
+		        WHEN PR.PROJECT_REQUEST_STATUS IS NULL AND INSTR(LISTAGG(E.EMPLOYEE_NO, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NO), '${employeeNo}') > 0
+		        THEN '참여'
+		        ELSE PR.PROJECT_REQUEST_STATUS
+		    END AS PROJECT_REQUEST_STATUS,
+		    LISTAGG(E.EMPLOYEE_NAME, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_NAMES,
+		    LISTAGG(E.EMPLOYEE_NO, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NO) AS EMPLOYEE_NOS,
+		    LISTAGG(COALESCE(E.EMPLOYEE_PHOTO, 'NULL'), ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_PHOTOS
+		FROM
+		    PROJECT P
+		    LEFT JOIN PROJECT_MEMBERS PM ON P.PROJECT_NO = PM.PROJECT_NO
+		    LEFT JOIN EMPLOYEE E ON PM.EMPLOYEE_NO = E.EMPLOYEE_NO
+		    LEFT JOIN PROJECT_REQUEST PR ON P.PROJECT_NO = PR.PROJECT_NO AND PR.PROJECT_REQUEST_EMPLOYEE = #{employeeNo}
+		GROUP BY
+		    P.PROJECT_NO,
+		    P.RPOJECT_TITLE,
+		    PR.PROJECT_REQUEST_STATUS
+		ORDER BY
+		    P.PROJECT_NO DESC
 
 	</select>
 

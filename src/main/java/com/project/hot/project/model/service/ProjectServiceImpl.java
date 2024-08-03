@@ -63,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Map<String,Object> selectProjectAll(Map<String,Integer> param) {
 		Map<String,Object> result=new HashMap<>();
-		if(param.get("employeeNo")==0) {
+		if(param.get("status")==1) {
 			result.put("depts", dao.selectDeptAll(session));
 			result.put("projects", dao.selectProjectAll(session,param));
 			result.put("totalPage",Math.ceil((double)dao.selectProjectAllCount(session)/param.get("numPerpage")));
