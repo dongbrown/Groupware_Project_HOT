@@ -153,4 +153,29 @@ public class ApprovalDaoImpl implements ApprovalDao {
 		return session.update("approval.updateApprovalStatus", param);
 	}
 
+	@Override
+	public List<ResponseSpecificApproval> getMyApproval(SqlSession session, int empNo) {
+		return session.selectList("approval.getMyApproval", empNo);
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getReceivedApproval(SqlSession session, int empNo) {
+		return session.selectList("approval.getReceivedApproval", empNo);
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getReferenceDocuments(SqlSession session, int empNo) {
+		return session.selectList("approval.getReferenceDocuments", empNo);
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getDocumentsByPosition(SqlSession session, int empNo) {
+		return session.selectList("approval.getDocumentsByPosition", empNo);
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getTempDocuments(SqlSession session, int empNo) {
+		return session.selectList("approval.getTempDocuments", empNo);
+	}
+
 }

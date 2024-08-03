@@ -15,7 +15,6 @@ function connectSse() {
 	eventSource.addEventListener("Init", (e) => {
 		// console.log(loginEmployeeNo);
 		const hotTalkInfo = JSON.parse(e.data);
-		console.log(hotTalkInfo);
 
 	  	const hotTalkDivNotiBox = $(".hottalk-notify");
 	  	hotTalkDivNotiBox.empty();

@@ -84,7 +84,6 @@ public class ApprovalDocumentController {
     	    String approvalInfoJson = mapper.writeValueAsString(approvalInfo);
     	    String approverNames = mapper.writeValueAsString(approverName);
     	    String referenceNames = mapper.writeValueAsString(referenceName);
-    	    System.out.println("approvalInfoJson : "+approvalInfoJson);
     	    model.addAttribute("approvalInfo", approvalInfoJson);
     	    model.addAttribute("approvers", approverNames);
     	    model.addAttribute("references", referenceNames);

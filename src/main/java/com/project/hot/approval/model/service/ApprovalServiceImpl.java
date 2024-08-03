@@ -219,7 +219,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return dao.getSpecificApproval(session, targetNo);
 	}
 
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int updateApprovalStatus(Map<String, Object> param) {
@@ -228,8 +228,37 @@ public class ApprovalServiceImpl implements ApprovalService {
 			dao.updateApprovalStatus(session, param);
 			return 1;
 		}catch(Exception e) {
-			return 0;			
+			return 0;
 		}
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getMyApproval(int employeeNo) {
+		return dao.getMyApproval(session, employeeNo);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getReceivedApproval(int employeeNo) {
+		return dao.getReceivedApproval(session, employeeNo);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getReferenceDocuments(int employeeNo) {
+		return dao.getReferenceDocuments(session, employeeNo);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getDocumentsByPosition(int employeeNo) {
+		return dao.getDocumentsByPosition(session, employeeNo);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getTempDocuments(int employeeNo) {
+		return dao.getTempDocuments(session, employeeNo);
 	}
 
 

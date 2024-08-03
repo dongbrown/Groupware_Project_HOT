@@ -41,4 +41,9 @@ public interface ApprovalDao {
 	List<ResponseSpecificApproval> getSpecificApproval(SqlSession session, String targetNo);
 	int updateApprover (SqlSession session, Map<String, Object> param);
 	int updateApprovalStatus (SqlSession session, Map<String, Object> param);
+	List<ResponseSpecificApproval> getMyApproval(SqlSession session, int empNo);
+	List<ResponseSpecificApproval> getReceivedApproval(SqlSession session, int empNo);
+	List<ResponseSpecificApproval> getReferenceDocuments(SqlSession session, int empNo);
+	List<ResponseSpecificApproval> getDocumentsByPosition(SqlSession session, int empNo);
+	List<ResponseSpecificApproval> getTempDocuments(SqlSession session, int empNo);
 }
