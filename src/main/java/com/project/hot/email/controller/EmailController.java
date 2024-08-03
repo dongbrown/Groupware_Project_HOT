@@ -58,87 +58,47 @@ public class EmailController {
     public String showEmail() {
         return "email/email";
     }
+
     @GetMapping
     public String showEmailMain(@RequestParam(required = false, defaultValue = "inbox") String mailbox, Model model) {
-        // 여기서 기본 이메일 페이지를 로드하고, 필요한 데이터를 모델에 추가합니다.
         model.addAttribute("currentMailbox", mailbox);
-        return "email/email";  // 메인 이메일 페이지 뷰
+        return "email/email";
     }
 
     @GetMapping("/{mailbox}")
-    public String getMailboxContent(@PathVariable String mailbox, Model model) {
+    public String getMailboxContent(@PathVariable String mailbox,
+                                    @RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> emails;
+        Map<String, Object> result;
 
         switch (mailbox) {
             case "inbox":
-                emails = service.getInboxEmails(loginEmployee.getEmployeeNo());
+                result = service.getInboxEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "sent":
-                emails = service.getSentEmails(loginEmployee.getEmployeeNo());
+                result = service.getSentEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "important":
-                emails = service.getImportantEmails(loginEmployee.getEmployeeNo());
+                result = service.getImportantEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "self":
-                emails = service.getSelfEmails(loginEmployee.getEmployeeNo());
+                result = service.getSelfEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "trash":
-                emails = service.getTrashEmails(loginEmployee.getEmployeeNo());
+                result = service.getTrashEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             default:
                 return "redirect:/email?mailbox=inbox";
         }
 
-        model.addAttribute("emails", emails);
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", mailbox);
         return "email/" + mailbox;
-    }
-
-
-    @GetMapping("/inbox")
-    public String inbox(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> inboxEmails = service.getInboxEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", inboxEmails);
-        return "email/inbox";
-    }
-
-    @GetMapping("/sent")
-    public String sent(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> sentEmails = service.getSentEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", sentEmails);
-        return "email/sent";
-    }
-
-    @GetMapping("/important")
-    public String important(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> importantEmails = service.getImportantEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", importantEmails);
-        return "email/important";
-    }
-
-    @GetMapping("/self")
-    public String self(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> selfEmails = service.getSelfEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", selfEmails);
-        return "email/self";
-    }
-
-    @GetMapping("/trash")
-    public String trash(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> trashEmails = service.getTrashEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", trashEmails);
-        return "email/trash";
     }
 
     @GetMapping("/view/{emailNo}")
