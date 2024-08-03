@@ -23,7 +23,7 @@
 				const $EmployeeNo = $('<td>', { id: 'projectEmpNo', text: p.employeeCode.employeeNo, css: { display: 'none' } });
 				const $projectStartDate = $('<td>').text(p.projectStartDate);
 				const $projectNo = $('<td>').text(p.projectNo);
-				const $employeeName = $('<td>').text(p.projectEmployeeName);
+				const $employeeName = $('<td>').text(p.employeeCode.employeeName);
 				const $projectTitle = $('<td>').text(p.projectTitle);
 
 				//td 진행률

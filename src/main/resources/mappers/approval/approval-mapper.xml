@@ -85,7 +85,7 @@
 	</resultMap>
 
 	<resultMap id="vacationFormMap" type="com.project.hot.approval.model.dto.VacationForm">
-		<id property="vatationForm" column="VACATION_FORM_NO"/>
+		<id property="vacationForm" column="VACATION_FORM_NO"/>
 		<result property="approvalNo" column="APPROVAL_NO"/>
 		<result property="vacationStart" column="VACATION_START"/>
 		<result property="vacationEnd" column="VACATION_END"/>
@@ -385,14 +385,17 @@
 		<if test="targetNo != null and targetNo.length() > 0">
 	        <choose>
 	            <when test='no.equals("1")'>
+	            , ctf.*
 	            FROM APPROVAL a
 	                LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
 	            </when>
 	        	<when test='no.equals("2")'>
+	        	, vf.*
 	        	FROM APPROVAL a
 	                LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
 	            </when>
 	            <when test='no.equals("3")'>
+	            , otf.*
 	            FROM APPROVAL a
 	                LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
 	            </when>
@@ -404,6 +407,8 @@
 	                LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
 	            </when>
 	            <otherwise>
+	            , btf.*
+	            , btp.*
 	            FROM APPROVAL a
 	                LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
 	                LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO

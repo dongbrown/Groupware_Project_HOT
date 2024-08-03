@@ -56,12 +56,13 @@ public class ApprovalDocumentController {
     	int appType = Integer.parseInt(targetNo.substring(0,1));
     	String type="";
     	switch(appType) {
-    		case 1: type="출퇴근 정정 신청서"; model.addAttribute("type", type); break;
-    		case 2: type="휴가 신청서"; model.addAttribute("type", type); break;
-    		case 3: type="초과근무 신청서"; model.addAttribute("type", type); break;
-    		case 4: type="경비지출 신청서"; model.addAttribute("type", type); break;
-    		case 5: type="출장 신청서"; model.addAttribute("type", type); break;
+    		case 1: type="출퇴근 정정 신청서";  break;
+    		case 2: type="휴가 신청서"; break;
+    		case 3: type="초과근무 신청서";  break;
+    		case 4: type="경비지출 신청서";  break;
+    		case 5: type="출장 신청서";  break;
     	}
+    	model.addAttribute("type", type);
     	model.addAttribute("appType", appType);
     	List<ResponseSpecificApproval> approvalInfo = new ArrayList<>();
     	Map<String, String> approverName = new HashMap<>();
@@ -79,12 +80,13 @@ public class ApprovalDocumentController {
     	    		referenceName.add(reference);
     	    	});
     	    });
-    	    System.out.println();
+
     	    String approvalInfoJson = mapper.writeValueAsString(approvalInfo);
-    	    model.addAttribute("approvalInfo", approvalInfoJson);
     	    String approverNames = mapper.writeValueAsString(approverName);
-    	    model.addAttribute("approvers", approverNames);
     	    String referenceNames = mapper.writeValueAsString(referenceName);
+    	    System.out.println("approvalInfoJson : "+approvalInfoJson);
+    	    model.addAttribute("approvalInfo", approvalInfoJson);
+    	    model.addAttribute("approvers", approverNames);
     	    model.addAttribute("references", referenceNames);
     	} catch(Exception e){
     	    e.printStackTrace();

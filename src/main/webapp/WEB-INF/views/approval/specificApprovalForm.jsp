@@ -182,14 +182,18 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script>
-	const approvalNo = '${approvalInfo[0].approval.approvalNo}';
 	const path ="${path}";
-    const approvalInfoJson = '${approvalInfo}';
-    const references = JSON.parse('${references}');
-    const approvers = JSON.parse('${approvers}');
 	const type = '${appType}';
-    const approvalInfo = JSON.parse(approvalInfoJson);
-    console.log(approvalInfo[0]);
+	let approvalInfo, references, approvers;
+	try {
+	    approvalInfo = JSON.parse('${approvalInfo}'.replace(/&quot;/g, '"'));
+	    references = JSON.parse('${references}'.replace(/&quot;/g, '"'));
+	    approvers = JSON.parse('${approvers}'.replace(/&quot;/g, '"'));
+	} catch (error) {
+	    console.error("JSON 파싱 오류:", error);
+	}
+	const approvalNo = approvalInfo[0].approval.approvalNo;
+
     $("#approvalName").append(approvalInfo[0].approval.employeeNo.employeeName);
     $("#approvalDepartmentTitle").append(approvalInfo[0].approval.employeeNo.departmentCode.departmentTitle);
 	$("#referencers").append(references.join(', '));
@@ -216,13 +220,7 @@
 			)
 		})
 	} else if(type==3){
-    	const date=$("#overtimeDate");
-    	const start=$("#overtimeStartTime");
-    	const end=$("#overtimeEndTime");
 
 	}
 </script>
-
-
-
 </html>

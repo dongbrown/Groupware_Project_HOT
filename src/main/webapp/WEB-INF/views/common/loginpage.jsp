@@ -29,11 +29,11 @@
 
 <body>
 <div class="ring">
-  <i style="--clr:#ddfffb;"></i>
-  <i style="--clr:#002db5;"></i>
-  <i style="--clr:#5ffcff;"></i>
+  			<i style="--clr:#6e9bfb;"></i>
+         <i style="--clr:rgb(119, 0, 139);"></i>
+         <i style="--clr:#0000ff;"></i>
   <div class="login">
-    <h2>Hot Logo.</h2>
+    <img alt="" src="https://i.imgur.com/cCGzv9o.png" style="width:170px;">
     <form class="user" action="${path }/login" method="post" style="width:100%">
         <div class="inputBx">
         <input type="text" name="username" placeholder="ID">
@@ -46,8 +46,7 @@
         <div class="form-group" style="margin-top:10px ;">
             <div class="custom-control custom-checkbox small">
                 <input type="checkbox" class="custom-control-input" id="customCheck" name="remember-me">
-                <label class="custom-control-label" style="color:white; font-size:15px;" for="customCheck">Remember
-                    Me</label>
+                <label class="custom-control-label" style="color: rgb(0, 0, 160); font-size:15px; font-weight:bolder;" for="customCheck">로그인 유지</label>
             </div>
         </div>
         <div class="inputBx">
@@ -55,9 +54,6 @@
         </div>
     </form>
     <hr>
-    <div class="text-center">
-        <a id="forgotBtn" class="small" href="forgot-password.html">Forgot Password?</a>
-    </div>
   </div>
 </div>
 

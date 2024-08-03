@@ -156,7 +156,6 @@ $('.changeBtn').click(e=>{
 		fetch(path+'/api/approval/getApprovalsCountAndList?no='+no)
 		.then(response=>response.json())
 		.then(data=>{
-			console.log(data);
 			//결재 카운트들 태그에 값 넣기
 			insertCountText(data.rac);
 		})
@@ -187,3 +186,36 @@ fetch(path+'/index/inbox.do')
 		.catch(error => {
 			console.error('요청 실패:', error); // 요청 실패 시 에러 처리
 		});
+//메인 프로젝트 그래프
+$(document).ready(function() {
+            $('.donut-chart').each(function() {
+                var $this = $(this);
+                var targetPercent = $this.data('percent');
+                var $circle = $this.find('.donut');
+                var $percentText = $this.find('.percent');
+
+                $({ percent: 0 }).animate({ percent: targetPercent }, {
+                    duration: 1500,
+                    step: function(now) {
+                        var offset = 100 - (now);
+                        $circle.css({ strokeDashoffset: offset });
+                        $percentText.text(Math.round(now) + '%');
+                    },
+                    complete: function() {
+                        $percentText.text(targetPercent + '%');
+                    }
+                });
+            });
+        });
+//프로젝트 & 작업 정보 가져오기
+fetch('/project/projectlistallajax?cPage=1&employeeNo=0')
+				.then(response => response.json())
+				.then(data => {
+					data.forEach(e=>{
+					console.log(e);
+
+					})
+				})
+				.catch(error => {
+					console.error('요청 실패:', error); // 요청 실패 시 에러 처리
+				});

@@ -88,7 +88,7 @@
 				projects.forEach(p => {
 					let $joinBtn;
 					let joinMembers = p.memberEmployeeNos.split(',');
-					let photos = p.memberPhotos.split(',');
+					let photos = p.memberPhotos.split(',').map(photo => photo.trim());
 					let remainMember=joinMembers.length-3;
 					let $addEmpCount='';
 					let $projectInMember='';
@@ -128,11 +128,12 @@
 					}
 					//프로젝트 리스트 참여맴버 사진 출력문
 					for(i=0;i<3;i++){
+						console.log(photos[i]);
 						let $memberPhoto='';
-						if(photos[i]=='NULL'){
-							$memberPhoto=$('<div>',{class:'circle', css:{backgroundImage:"url(https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png)",backgroundSize:"100% 100% "}});
-						}else{
+						if(photos[i]!='NULL'){
 							$memberPhoto=$('<div>',{class:'circle', css:{backgroundImage:"url("+path+"/upload/employee/"+photos[i]+")",backgroundSize:"100% 100% "}});
+						}else{
+							$memberPhoto=$('<div>',{class:'circle', css:{backgroundImage:"url(https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png)",backgroundSize:"100% 100% "}});
 						}
 						$projectMemberWrab1.append($memberPhoto).append($addEmpCount);
 					};

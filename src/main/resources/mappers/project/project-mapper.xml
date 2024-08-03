@@ -45,13 +45,43 @@
 		<result column="PROJECT_END_DATE" property="projectEndDate"/>
 		<result column="PROJECT_START_DATE" property="projectStartDate"/>
 		<result column="PROJECT_STATUS" property="projectStatus"/>
+		<result column="EMPLOYEE_PHOTOS" property="memberPhotos"/>
+		<result column="EMPLOYEE_NAMES" property="memberEmployeeNos"/>
+		<result column="PROJECT_REQUEST_STATUS" property="projectRequestStatus"/>
+		<result column="PROJECT_REQUEST_EMPLOYEE" property="projectRequestEmployee"/>
+		<result column="PROJECT_REFUSE_CONTENT" property="projectRefuseContent"/>
+		<result column="PROJECT_EMPLOYEE_NAME" property="projectEmployeeName"/>
+		<result column="EMPLOYEE_NAME" property="employeeName"/>
+		<result column="DEPARTMENT_TITLE" property="departmentTitle"/>
 		<association property="employeeCode" resultMap="employeeMap"/>
+		<association property="requestProject" resultMap="requestProjectMap"/>
+		<collection property="employee" resultMap="projectEmployeeMap"/>
 	</resultMap>
 
 	<resultMap id="projectEmployeeMap" type="projectEmployee">
 		<id column="EMPLOYEE_NO" property="employeeNo"/>
 		<association property="employee" resultMap="employeeMap"/>
 		<association property="department" resultMap="departmentMap"/>
+	</resultMap>
+
+	<resultMap type="requestProject" id="requestProjectMap">
+		<id column="PROJECT_REQUEST_NO" property="projectRequestNo"/>
+		<result column="PROJECT_NO" property="projectNo"/>
+		<result column="EMPLOYEE_NO" property="employeeNo"/>
+		<result column="EMPLOYEE_NAME" property="employeeName"/>
+		<result column="PROJECT_EMPLOYEE_NO" property="projectEmployeeNo"/>
+		<result column="DEPARTMENT_TITLE" property="departmentTitle"/>
+		<result column="RPOJECT_TITLE" property="projectTitle"/>
+		<result column="EMPLOYEE_NAMES" property="memberEmployeeNos"/>
+		<result column="EMPLOYEE_PHOTOS" property="memberPhotos"/>
+		<result column="PROJECT_REQUEST_EMPLOYEE" property="projectRequestEmployee"/>
+		<result column="PROJECT_REQUEST_STATUS" property="projectRequestStatus"/>
+		<result column="PROJECT_REQUEST_DATE" property="projectRequestDate"/>
+		<result column="PROJECT_STATUS" property="projectStatus"/>
+		<result column="PROJECT_REFUSE_CONTENT" property="projectRefuseContent"/>
+		<result column="REQ_EMP_NAME" property="reqEmpName"/>
+		<result column="REQ_EMP_DEPT_TITLE" property="reqEmpDeptTitle"/>
+		<association property="employee" resultMap="employeeMap"/>
 	</resultMap>
 
 
@@ -70,9 +100,57 @@
 		SELECT COUNT(*) FROM PROJECT
 	</select>
 
-	<select id="selectProjectAll" resultMap="projectMap">
-		SELECT * FROM PROJECT LEFT JOIN EMPLOYEE USING(EMPLOYEE_NO) ORDER BY PROJECT_START_DATE DESC
+	<select id="selectProjectAllCountByEmpNo" resultType="_int" parameterType="map">
+		SELECT COUNT(*) FROM PROJECT WHERE EMPLOYEE_NO=${employeeNo}
 	</select>
+
+	<select id="selectProjectAll" resultMap="projectMap">
+		    SELECT
+			    P.PROJECT_NO,
+			    P.RPOJECT_TITLE,
+			    LISTAGG(E.EMPLOYEE_NAME, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_NAMES,
+			    LISTAGG(NVL(E.EMPLOYEE_PHOTO, 'NULL'), ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_PHOTOS
+			FROM
+			    PROJECT P
+			    LEFT JOIN PROJECT_MEMBERS PM ON P.PROJECT_NO = PM.PROJECT_NO
+			    LEFT JOIN EMPLOYEE E ON PM.EMPLOYEE_NO = E.EMPLOYEE_NO
+			GROUP BY
+			    P.PROJECT_NO,
+			    P.RPOJECT_TITLE
+			ORDER BY
+			    P.PROJECT_NO DESC
+
+	</select>
+
+	<select id="selectProjectAllByEmpNo" resultMap="projectMap" parameterType="map">
+		SELECT
+		    P.PROJECT_NO,
+		    P.EMPLOYEE_NO AS PROJECT_MANAGER_NO,
+		    PM.EMPLOYEE_NAME,
+		    P.RPOJECT_TITLE,
+		    P.PROJECT_START_DATE,
+		    P.PROJECT_PROGRESS,
+		    LISTAGG(E.EMPLOYEE_NAME, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_NAMES,
+		    LISTAGG(E.EMPLOYEE_NO, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NO) AS EMPLOYEE_NOS,
+		    LISTAGG(COALESCE(E.EMPLOYEE_PHOTO, 'NULL'), ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_PHOTOS
+		FROM
+		    PROJECT P
+		    LEFT JOIN EMPLOYEE PM ON P.EMPLOYEE_NO = PM.EMPLOYEE_NO
+		    LEFT JOIN PROJECT_MEMBERS PMM ON P.PROJECT_NO = PMM.PROJECT_NO
+		    LEFT JOIN EMPLOYEE E ON PMM.EMPLOYEE_NO = E.EMPLOYEE_NO
+		GROUP BY
+		    P.PROJECT_NO,
+		    P.EMPLOYEE_NO,
+		    PM.EMPLOYEE_NAME,
+		    P.RPOJECT_TITLE,
+		    P.PROJECT_START_DATE,
+		    P.PROJECT_PROGRESS
+		HAVING
+		    INSTR(LISTAGG(E.EMPLOYEE_NO, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NO), '${employeeNo}') > 0
+		ORDER BY
+		    P.PROJECT_NO DESC
+	</select>
+
 
 	<select id="selectProjectByNo" parameterType="_int" resultMap="projectMap">
 		SELECT PROJECT_NO, RPOJECT_TITLE, PROJECT_CONTENT, EMPLOYEE_NAME,EMPLOYEE_NO, PROJECT_END_DATE, PROJECT_BUDGET, PROJECT_RANK,PROJECT_PROGRESS
@@ -98,6 +176,10 @@
 	<insert id="insertProjectEmp" parameterType="map">
 		INSERT INTO PROJECT_MEMBERS VALUES(#{projectNo}, #{empNo})
 	</insert>
+
+	<insert id="requestJoinProject" parameterType="map">
+		INSERT INTO PROJECT_REQUEST VALUES(PROJECT_REQUEST_SEQ.NEXTVAL,${projectNo},${projectEmpNo},${empNo},DEFAULT,'요청',NULL)
+	</insert>
 <!-- 업테이트 시 사용하는 쿼리문 -->
 	<update id="updateProject" parameterType="project">
 		UPDATE PROJECT SET
@@ -106,10 +188,85 @@
 			WHERE PROJECT_NO = ${projectNo}
 	</update>
 
-	<delete id="updateProjectDeleteEmp" parameterType="_int">
-		DELETE FROM PROJECT_MEMBERS WHERE PROJECT_NO = ${projectNo}
+	<delete id="updateProjectDeleteEmp" parameterType="map">
+		DELETE FROM PROJECT_MEMBERS WHERE PROJECT_NO = ${projectNo} AND EMPLOYEE_NO!=${employeeNo}
 	</delete>
-
 <!-- ///////////////////////////////////////////////////////// -->
+<!-- 요청한 프로젝트 조회 -->
+	<select id="requestProjectlistall" parameterType="_int" resultMap="requestProjectMap">
+		       SELECT
+    PR.*,
+    P.RPOJECT_TITLE,
+    LISTAGG(E.EMPLOYEE_NAME, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_NAMES,
+    LISTAGG(NVL(E.EMPLOYEE_PHOTO, 'NULL'), ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NAME) AS EMPLOYEE_PHOTOS
+FROM
+    PROJECT_REQUEST PR
+    LEFT JOIN PROJECT P ON PR.PROJECT_NO = P.PROJECT_NO
+    LEFT JOIN PROJECT_MEMBERS PM ON P.PROJECT_NO = PM.PROJECT_NO
+    LEFT JOIN EMPLOYEE E ON PM.EMPLOYEE_NO = E.EMPLOYEE_NO
+WHERE
+    PROJECT_REQUEST_EMPLOYEE = #{employeeNo}
+GROUP BY
+PR.PROJECT_REQUEST_NO,
+    PR.PROJECT_NO,
+    PR.EMPLOYEE_NO,
+    PR.PROJECT_REQUEST_EMPLOYEE,
+    PR.PROJECT_REQUEST_DATE,
+    PR.PROJECT_REQUEST_STATUS,
+    PR.PROJECT_REFUSE_CONTENT,
+    P.RPOJECT_TITLE
+	</select>
 
+	<select id="requestProjectlistallCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM PROJECT P JOIN PROJECT_REQUEST PR USING(PROJECT_NO) WHERE PR.PROJECT_REQUEST_EMPLOYEE=#{employeeNo} AND PR.PROJECT_REQUEST_STATUS IN('요청','거절')
+	</select>
+
+<!-- 요청(온)!!! 프로젝트 조회 -->
+	<select id="responseProjectlistall" parameterType="_int" resultMap="requestProjectMap">
+		SELECT
+            P.PROJECT_NO,P.EMPLOYEE_NO,P.RPOJECT_TITLE,P.PROJECT_CONTENT,
+		    PR.PROJECT_REQUEST_STATUS,
+		    E.EMPLOYEE_NO AS PROJECT_EMPLOYEE_NO,
+		    NVL(E.EMPLOYEE_NAME, 'NULL') AS EMPLOYEE_NAME,
+		    NVL(D.DEPARTMENT_TITLE, 'NULL') AS DEPARTMENT_TITLE
+	    FROM
+	        PROJECT_REQUEST PR
+	    LEFT JOIN
+	        PROJECT P ON PR.PROJECT_NO=P.PROJECT_NO
+	    LEFT JOIN
+			EMPLOYEE E ON PR.PROJECT_REQUEST_EMPLOYEE = E.EMPLOYEE_NO
+		LEFT JOIN
+			DEPARTMENT D ON E.DEPARTMENT_CODE = D.DEPARTMENT_CODE
+		WHERE
+            PR.PROJECT_REQUEST_STATUS='요청' AND PR.EMPLOYEE_NO=#{employeeNo}
+	</select>
+
+	<select id="responseProjectlistallCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM PROJECT P JOIN PROJECT_REQUEST PR USING(PROJECT_NO) WHERE PR.EMPLOYEE_NO=#{employeeNo} AND PR.PROJECT_REQUEST_STATUS='요청'
+	</select>
+<!-- 프로젝트 요청 승인 - PROJECT_MEMBERS테이블에 해당 직원 삽입 -->
+	<insert id="responseApprovalInsert" parameterType="map">
+		INSERT INTO PROJECT_MEMBERS VALUES(#{projectNo},#{empNo})
+	</insert>
+<!-- 프로젝트 요청 삭제 - 테이블에 해당 직원 삽입 -->
+	<delete id="responseApprovalDelete" parameterType="map">
+		DELETE FROM PROJECT_REQUEST WHERE PROJECT_NO=#{projectNo} AND PROJECT_REQUEST_EMPLOYEE=#{empNo}
+	</delete>
+<!-- 프로젝트 요청 거절 - PROJECT_REQUEST테이블 요청->거절 AND 거절코멘트 달기 -->
+	<update id="requestRefuseUpdate" parameterType="map">
+		UPDATE
+			PROJECT_REQUEST
+		SET
+			PROJECT_REQUEST_STATUS='거절', PROJECT_REFUSE_CONTENT=#{refuseComent}
+		WHERE
+			PROJECT_REQUEST_EMPLOYEE=#{empNo} AND PROJECT_NO=#{projectNo}
+	</update>
+<!-- 프로젝트 요청 거절 코멘트 확인 후 테이블에서 삭제 -->
+	<delete id="refusedCheckDelete" parameterType="map">
+		DELETE
+		FROM
+			PROJECT_REQUEST
+		WHERE
+			PROJECT_REQUEST_EMPLOYEE=#{empNo} AND PROJECT_NO=#{projectNo}
+	</delete>
 </mapper>
