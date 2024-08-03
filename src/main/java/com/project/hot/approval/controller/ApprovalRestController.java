@@ -162,4 +162,13 @@ public class ApprovalRestController {
 		}
 	}
 
+	@PostMapping("/updateApprovalStatus")
+	public String updateApprovalStatus(@RequestParam Map<String, Object> param) {
+		int result=service.updateApprovalStatus(param);
+		if(result>0) {
+			return "완료!";
+		}else {
+			return "실패!";
+		}
+	}
 }

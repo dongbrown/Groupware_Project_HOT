@@ -143,4 +143,14 @@ public class ApprovalDaoImpl implements ApprovalDao {
 		return session.selectList("approval.getSpecificApproval", param);
 	}
 
+	@Override
+	public int updateApprover(SqlSession session, Map<String, Object> param) {
+		return session.update("approval.updateApprover", param);
+	}
+
+	@Override
+	public int updateApprovalStatus(SqlSession session, Map<String, Object> param) {
+		return session.update("approval.updateApprovalStatus", param);
+	}
+
 }
