@@ -26,4 +26,5 @@ public interface ApprovalService {
 	int insertBusinessTrip(RequestBusinessTrip rbt);
 	int insertExpenditure(RequestExpenditure re);
 	List<ResponseSpecificApproval> getSpecificApproval(String targetNo);
+	int updateApprovalStatus(Map<String, Object> param);
 }

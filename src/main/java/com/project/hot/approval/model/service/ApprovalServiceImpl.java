@@ -219,5 +219,18 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return dao.getSpecificApproval(session, targetNo);
 	}
 
+	
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateApprovalStatus(Map<String, Object> param) {
+		try {
+			dao.updateApprover(session, param);
+			dao.updateApprovalStatus(session, param);
+			return 1;
+		}catch(Exception e) {
+			return 0;			
+		}
+	}
+
 
 }
