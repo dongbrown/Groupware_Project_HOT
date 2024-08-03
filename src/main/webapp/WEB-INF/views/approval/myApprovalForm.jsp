@@ -330,6 +330,13 @@
 					</c:forEach>
 	            </ul>
             </c:if>
+            <c:if test="${empty mydoc }">
+            	<ul class="draft-list">
+            		<li>
+            			임시 저장 문서가 없습니다.
+            		</li>
+            	</ul>
+            </c:if>
         </c:when>
     </c:choose>
     </div>
