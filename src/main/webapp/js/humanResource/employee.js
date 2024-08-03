@@ -102,12 +102,7 @@ function searchEmployee(cPage){
 		}
 	}
 
-	const reqPath='/api/hr/getEmployeeList';
-	const url = new URL(reqPath, window.location.origin);
-	url.search = query.toString();
-
-
-	fetch(url)
+	fetch(path+`/api/hr/getEmployeeList?${query.toString()}`)
 		.then(response => response.json())
 		.then(data => {
 			makeEmployeeTable(data.employees);
