@@ -52,7 +52,10 @@
 		</collection>
 		<collection property="approverEmployee" ofType="com.project.hot.approval.model.dto.Approver">
 			<result property="approverLevel" column="APPROVER_APPROVER_LEVEL"/>
+			<result property="approverStatus" column="APPROVER_APPROVER_STATUS"/>
+			<result property="approverDate" column="APPROVER_APPROVER_DATE"/>
 			<association property="employeeNo" javaType="com.project.hot.employee.model.dto.Employee">
+				<id property="employeeNo" column="APPROVER_EMPLOYEE_NO"/>
 				<result property="employeeName" column="APPROVER_EMPLOYEE_NAME"/>
 				<association property="departmentCode" javaType="com.project.hot.employee.model.dto.Department">
 					<result property="departmentTitle" column="APPROVER_DEPARTMENT_TITLE"/>
@@ -370,6 +373,8 @@
 				, dept.*
 				, att.*
 				, ap.APPROVER_LEVEL AS APPROVER_APPROVER_LEVEL
+				, ap.APPROVER_STATUS AS APPROVER_APPROVER_STATUS
+				, ap.APPROVER_DATE AS APPROVER_APPROVER_DATE
 				, ref_emp.EMPLOYEE_NO AS REFERENCE_EMPLOYEE_NO
 				, ref_emp.EMPLOYEE_NAME AS REFERENCE_EMPLOYEE_NAME
 				, ref_dept.DEPARTMENT_TITLE AS REFERENCE_DEPARTMENT_TITLE
@@ -432,7 +437,7 @@
 	</select>
 	<update id="updateApprover" >
 		UPDATE APPROVER
-		SET  APPROVER_STATUS = #{approverStatus}, APPROVER_REJECT = #{approverReject}
+		SET  APPROVER_STATUS = #{approverStatus}, APPROVER_REJECT = #{approverReject}, APPROVER_DATE = SYSDATE
 		WHERE APPROVAL_NO = #{approvalNo} AND EMPLOYEE_NO = #{employeeNo}
 	</update>
 
@@ -441,7 +446,6 @@
 		SET APPROVAL_STATUS = #{approvalStatus}
 		WHERE APPROVAL_NO = #{approvalNo}
 	</update>
-
 	<select id="getMyApproval" resultMap="responseSpecificApprovalMap" parameterType="_int">
 		SELECT	a.APPROVAL_TITLE
             , a.APPROVAL_NO

@@ -47,14 +47,15 @@ public class ProjectController {
 	@ResponseBody
 	@GetMapping("/projectlistallajax")
 	public Map<String,Object> projectListAll (@RequestParam(defaultValue = "1") int cPage
-												,@RequestParam int employeeNo) {
+												,@RequestParam int employeeNo
+												,@RequestParam int status) {
 		ObjectMapper mapper=new ObjectMapper();
 		try {
-			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo)));
+			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo,"status",status)));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
+		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo,"status",status));
 	}
 
 	@GetMapping("/projectinsert.do")

@@ -223,6 +223,18 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int updateApprovalStatus(Map<String, Object> param) {
+		int status=Integer.valueOf((String)param.get("approverStatus"));
+		int level=(int)param.get("level");
+		if(status == 3 || (level == 2 && status == 1)) {
+			//전결, 마지막 결재자의 승인 시 결재문서 상태 완료
+			param.put("approvalStatus", 3);
+		}else if(status == 2) {
+			//반려면 결재문서 상태 반려
+			param.put("approvalStatus", 4);
+		}else {
+			//결재문서 상태 진행
+			param.put("approvalStatus", 2);
+		}
 		try {
 			dao.updateApprover(session, param);
 			dao.updateApprovalStatus(session, param);

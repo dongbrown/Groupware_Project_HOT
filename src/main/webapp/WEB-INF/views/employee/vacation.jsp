@@ -4,8 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
-<c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:import url="/WEB-INF/views/common/sidebar.jsp"/>
+<c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="${path }/css/employee/vacation.css" rel="stylesheet" type="text/css">
 <section class="vacation-section">
 	<div class="vacation-div shadow-lg p-3 bg-body rounded">
@@ -47,4 +47,4 @@
 <script>const path='${path}'; const no=${loginEmployee.employeeNo};</script>
 <script src='${path }/js/employee/vacation.js'></script>
 <script src='${path }/js/common/pagebar.js'></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
+<c:import url="/WEB-INF/views/common/footer.jsp"/>

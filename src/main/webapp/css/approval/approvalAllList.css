@@ -7,11 +7,10 @@
 
 .document-div {
   width: 95%;
-  background-color: white;
   padding: 2%;
   min-height: 84vh;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .documentTitle {
@@ -101,12 +100,7 @@
 }
 
 #pagebar-div{
-  height: 100px;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  margin-top: auto;
 }

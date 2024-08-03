@@ -419,4 +419,9 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Override
+    public List<Email> getRecentInboxEmails(int employeeNo, int limit) {
+        return dao.selectRecentInboxEmails(employeeNo, limit, sqlSession);
+    }
+
 }
