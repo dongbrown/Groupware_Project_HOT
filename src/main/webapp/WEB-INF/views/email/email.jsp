@@ -37,31 +37,56 @@
 				        <button class="btn btn-primary flex-grow-1" id="write-selfBtn">내게 쓰기</button>
 				    </div>
 					<ul class="list-group">
-					    <li class="list-group-item" data-mailbox="inbox">
+					    <li class="list-group-item" onclick="EmailCommon.loadInbox()">
 					        <i class="fas fa-inbox me-2"></i>받은메일함
 					        <span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
 					    </li>
-					    <li class="list-group-item" data-mailbox="sent">
+					    <li class="list-group-item" onclick="EmailCommon.loadSent()">
 					        <i class="fas fa-paper-plane me-2"></i>보낸메일함
 					    </li>
-					    <li class="list-group-item" data-mailbox="self">
+					    <li class="list-group-item" onclick="EmailCommon.loadSelf()">
 					        <i class="fas fa-user me-2"></i>내게쓴메일함
 					        <span class="badge bg-secondary rounded-pill" id="selfUnreadCount">${selfUnreadCount}</span>
 					    </li>
-					    <li class="list-group-item" data-mailbox="important">
+					    <li class="list-group-item" onclick="EmailCommon.loadImportant()">
 					        <i class="fas fa-star me-2"></i>중요메일함
 					        <span class="badge bg-warning rounded-pill" id="importantUnreadCount">${importantUnreadCount}</span>
 					    </li>
-					    <li class="list-group-item" data-mailbox="trash">
+					    <li class="list-group-item" onclick="EmailCommon.loadTrash()">
 					        <i class="fas fa-trash me-2"></i>휴지통
 					        <span class="badge bg-danger rounded-pill" id="trashCount">${trashCount}</span>
 					    </li>
 					</ul>
 				</div>
                 </div>
-                <div class="col-md-10" id="mailContent">
-                    <!-- 메일 목록 또는 메일 쓰기 영역 -->
-                </div>
+				<div class="col-md-10" id="mailContent">
+				    <!-- 메일 목록 또는 메일 쓰기 영역 -->
+				    <c:if test="${not empty mailbox}">
+				        <c:choose>
+				            <c:when test="${mailbox eq 'inbox'}">
+				                <jsp:include page="inbox.jsp" />
+				            </c:when>
+				            <c:when test="${mailbox eq 'sent'}">
+				                <jsp:include page="sent.jsp" />
+				            </c:when>
+				            <c:when test="${mailbox eq 'self'}">
+				                <jsp:include page="self.jsp" />
+				            </c:when>
+				            <c:when test="${mailbox eq 'important'}">
+				                <jsp:include page="important.jsp" />
+				            </c:when>
+				            <c:when test="${mailbox eq 'trash'}">
+				                <jsp:include page="trash.jsp" />
+				            </c:when>
+				            <c:when test="${mailbox eq 'write'}">
+				                <jsp:include page="write.jsp" />
+				            </c:when>
+				            <c:when test="${mailbox eq 'write-self'}">
+				                <jsp:include page="write-self.jsp" />
+				            </c:when>
+				        </c:choose>
+				    </c:if>
+				</div>
             </div>
         </div>
         <!-- 페이지 콘텐츠 끝 -->

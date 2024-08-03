@@ -371,5 +371,11 @@ public class EmailDaoImpl implements EmailDao {
             return null;
         }
     }
+    public List<Email> selectRecentInboxEmails(int employeeNo, int limit, SqlSession session) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("employeeNo", employeeNo);
+        params.put("limit", limit);
+        return session.selectList("email.selectRecentInboxEmails", params);
+    }
 
 }

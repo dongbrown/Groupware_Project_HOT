@@ -40,4 +40,5 @@ public interface EmailService {
     Integer getSelfUnreadCount(int employeeNo);
     Integer getImportantUnreadCount(int employeeNo);
     Integer getTrashCount(int employeeNo);
+	List<Email> getRecentInboxEmails(int employeeNo, int i);
 }

@@ -52,8 +52,8 @@ public class IndexController {
     public List<Email> inbox() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> inboxEmails = service.getInboxEmails(loginEmployee.getEmployeeNo());
-        System.out.println("ddddddddddddddddddddddddddddddd"+inboxEmails);
+        // 최근 5개의 메일만 가져오도록 수정
+        List<Email> inboxEmails = service.getRecentInboxEmails(loginEmployee.getEmployeeNo(), 5);
         return inboxEmails;
     }
 }
