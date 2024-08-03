@@ -1,4 +1,5 @@
 package com.project.hot.approval.controller;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,14 +67,20 @@ public class ApprovalDocumentController {
     	model.addAttribute("appType", appType);
     	List<ResponseSpecificApproval> approvalInfo = new ArrayList<>();
     	Map<String, String> approverName = new HashMap<>();
+    	Map<String, Integer> approverNo = new HashMap<>();
+    	Map<String, Integer> approverStatus = new HashMap<>();
+    	Map<String, Date> approverDate = new HashMap<>();
     	Set<String> referenceName = new HashSet<>();
     	try {
     	    approvalInfo = service.getSpecificApproval(targetNo);
     	    approvalInfo.stream().forEach(rsa -> {
     	    	rsa.getApproverEmployee().stream().forEach(ae -> {
     	    		String approver = ae.getEmployeeNo().getEmployeeName();
-    	    		String approverLevel = ae.getApproverLevel();
-    	    		approverName.put(approverLevel, approver);
+    	    		int approverLevel = ae.getApproverLevel();
+    	    		approverName.put(String.valueOf(approverLevel), approver);
+    	    		approverNo.put(String.valueOf(approverLevel), ae.getEmployeeNo().getEmployeeNo());
+    	    		approverStatus.put(String.valueOf(approverLevel), ae.getApproverStatus());
+    	    		approverDate.put(String.valueOf(approverLevel), ae.getApproverDate());
     	    	});
     	    	rsa.getReferenceEmployee().stream().forEach(re->{
     	    		String reference = re.getEmployeeNo().getEmployeeName();
@@ -83,10 +90,16 @@ public class ApprovalDocumentController {
 
     	    String approvalInfoJson = mapper.writeValueAsString(approvalInfo);
     	    String approverNames = mapper.writeValueAsString(approverName);
+    	    String approverNos = mapper.writeValueAsString(approverNo);
+    	    String approverStatuses = mapper.writeValueAsString(approverStatus);
+    	    String approverDates = mapper.writeValueAsString(approverDate);
     	    String referenceNames = mapper.writeValueAsString(referenceName);
     	    System.out.println("approvalInfoJson : "+approvalInfoJson);
     	    model.addAttribute("approvalInfo", approvalInfoJson);
     	    model.addAttribute("approvers", approverNames);
+    	    model.addAttribute("approverNo", approverNos);
+    	    model.addAttribute("approverDate", approverDates);
+    	    model.addAttribute("approverStatus", approverStatuses);
     	    model.addAttribute("references", referenceNames);
     	} catch(Exception e){
     	    e.printStackTrace();
