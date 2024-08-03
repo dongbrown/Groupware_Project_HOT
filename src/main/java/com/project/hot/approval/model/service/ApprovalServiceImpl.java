@@ -263,8 +263,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 
 	@Override
-	public List<ResponseSpecificApproval> getDocumentsByPosition(int employeeNo) {
-		return dao.getDocumentsByPosition(session, employeeNo);
+	public List<ResponseSpecificApproval> getDocumentsByPosition(Map<String, Integer> param) {
+		return dao.getDocumentsByPosition(session, param);
 	}
 
 

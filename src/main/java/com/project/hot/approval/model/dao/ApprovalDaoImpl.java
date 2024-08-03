@@ -169,8 +169,8 @@ public class ApprovalDaoImpl implements ApprovalDao {
 	}
 
 	@Override
-	public List<ResponseSpecificApproval> getDocumentsByPosition(SqlSession session, int empNo) {
-		return session.selectList("approval.getDocumentsByPosition", empNo);
+	public List<ResponseSpecificApproval> getDocumentsByPosition(SqlSession session, Map<String, Integer> param) {
+		return session.selectList("approval.getDocumentsByPosition", param);
 	}
 
 	@Override

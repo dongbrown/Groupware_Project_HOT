@@ -74,7 +74,7 @@
                         <a class="collapse-item" href="${path}/myapproval/myDocument?employeeNo=${loginEmployee.employeeNo}">내 기안문서</a>
                         <a class="collapse-item" href="${path}/myapproval/receivedDocument?employeeNo=${loginEmployee.employeeNo}">수신문서</a>
                         <a class="collapse-item" href="${path}/myapproval/referenceDocument?employeeNo=${loginEmployee.employeeNo}">참조문서</a>
-                        <a class="collapse-item" href="${path}/myapproval/viewDocument?employeeNo=${loginEmployee.employeeNo}">열람문서</a>
+                        <a class="collapse-item" href="${path}/myapproval/viewDocument?employeeNo=${loginEmployee.employeeNo}&empPos=${loginEmployee.positionCode.positionAuthority}">열람문서</a>
                         <a class="collapse-item" href="${path}/myapproval/temporaryDocument?employeeNo=${loginEmployee.employeeNo}">임시저장</a>
                     </div>
                 </div>

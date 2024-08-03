@@ -34,7 +34,7 @@
 									<td>
 										<c:choose>
 											<c:when test="${doc.approvalNo.substring(0,1) eq '1'}">
-												출퇴근 정정결재
+												출퇴근 정정
 											</c:when>
 											<c:when test="${doc.approvalNo.substring(0,1) eq '2'}">
 												휴가 신청결재
@@ -98,7 +98,62 @@
 					</tr>
 				</thead>
 				<tbody id="approvalBody">
-
+					<c:if test="${not empty mydoc }">
+						<c:forEach var="doc" items="${mydoc }">
+								<tr onclick="location.assign('${path}/approval/specApproval.do?targetNo=${doc.approvalNo}')">
+									<td>${doc.approvalNo}</td>
+									<td>
+										<c:choose>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '1'}">
+												출퇴근 정정
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '2'}">
+												휴가 신청결재
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '3'}">
+												초과근무 결재
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '4'}">
+												경비지출 결재
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '5'}">
+												출장 신청결재
+											</c:when>
+										</c:choose>
+									</td>
+									<td>${doc.approval.approvalTitle}</td>
+									<td>${doc.approval.employeeNo.employeeName}</td>
+									<td>${doc.approval.employeeNo.departmentCode.departmentTitle}</td>
+									<td>${doc.approval.approvalDate}</td>
+									<td>
+										<c:forEach var="approver" items="${doc.approverEmployee}">
+									        ${approver.approverDate}
+									    </c:forEach>
+	    							</td>
+									<td>
+										<c:choose>
+											<c:when test="${doc.approval.approvalStatus eq '1'}">
+												대기
+											</c:when>
+											<c:when test="${doc.approval.approvalStatus eq '2'}">
+												진행 중
+											</c:when>
+											<c:when test="${doc.approval.approvalStatus eq '3'}">
+												완료
+											</c:when>
+											<c:when test="${doc.approval.approvalStatus eq '4'}">
+												반려
+											</c:when>
+										</c:choose>
+									</td>
+								</tr>
+						</c:forEach>
+					</c:if>
+					<c:if test="${empty mydoc }">
+						<td colspan="8" style="text-align: center;">
+							수신 받은 문서가 없습니다.
+						</td>
+					</c:if>
 				</tbody>
 			</table>
         </c:when>
@@ -118,7 +173,62 @@
 					</tr>
 				</thead>
 				<tbody id="approvalBody">
-
+					<c:if test="${not empty mydoc }">
+						<c:forEach var="doc" items="${mydoc }">
+								<tr onclick="location.assign('${path}/approval/specApproval.do?targetNo=${doc.approvalNo}')">
+									<td>${doc.approvalNo}</td>
+									<td>
+										<c:choose>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '1'}">
+												출퇴근 정정
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '2'}">
+												휴가 신청결재
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '3'}">
+												초과근무 결재
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '4'}">
+												경비지출 결재
+											</c:when>
+											<c:when test="${doc.approvalNo.substring(0,1) eq '5'}">
+												출장 신청결재
+											</c:when>
+										</c:choose>
+									</td>
+									<td>${doc.approval.approvalTitle}</td>
+									<td>${doc.approval.employeeNo.employeeName}</td>
+									<td>${doc.approval.employeeNo.departmentCode.departmentTitle}</td>
+									<td>${doc.approval.approvalDate}</td>
+									<td>
+										<c:forEach var="approver" items="${doc.approverEmployee}">
+									        ${approver.approverDate}
+									    </c:forEach>
+	    							</td>
+									<td>
+										<c:choose>
+											<c:when test="${doc.approval.approvalStatus eq '1'}">
+												대기
+											</c:when>
+											<c:when test="${doc.approval.approvalStatus eq '2'}">
+												진행 중
+											</c:when>
+											<c:when test="${doc.approval.approvalStatus eq '3'}">
+												완료
+											</c:when>
+											<c:when test="${doc.approval.approvalStatus eq '4'}">
+												반려
+											</c:when>
+										</c:choose>
+									</td>
+								</tr>
+						</c:forEach>
+					</c:if>
+					<c:if test="${empty mydoc }">
+						<td colspan="8" style="text-align: center;">
+							참조 받은 문서가 없습니다.
+						</td>
+					</c:if>
 				</tbody>
 			</table>
         </c:when>
@@ -138,33 +248,91 @@
 					</tr>
 				</thead>
 				<tbody id="approvalBody">
-
+					<c:if test="${not empty mydoc }">
+						<c:forEach var="doc" items="${mydoc }">
+							<c:if test="${doc.approval.approvalStatus != '5'}">
+							<tr onclick="location.assign('${path}/approval/specApproval.do?targetNo=${doc.approvalNo}')">
+								<td>${doc.approvalNo}</td>
+								<td>
+									<c:choose>
+										<c:when test="${doc.approvalNo.substring(0,1) eq '1'}">
+											출퇴근 정정
+										</c:when>
+										<c:when test="${doc.approvalNo.substring(0,1) eq '2'}">
+											휴가 신청결재
+										</c:when>
+										<c:when test="${doc.approvalNo.substring(0,1) eq '3'}">
+											초과근무 결재
+										</c:when>
+										<c:when test="${doc.approvalNo.substring(0,1) eq '4'}">
+											경비지출 결재
+										</c:when>
+										<c:when test="${doc.approvalNo.substring(0,1) eq '5'}">
+											출장 신청결재
+										</c:when>
+									</c:choose>
+								</td>
+								<td>${doc.approval.approvalTitle}</td>
+								<td>${doc.approval.employeeNo.employeeName}</td>
+								<td>${doc.approval.employeeNo.departmentCode.departmentTitle}</td>
+								<td>${doc.approval.approvalDate}</td>
+								<td>
+									<c:forEach var="approver" items="${doc.approverEmployee}">
+								        ${approver.approverDate}
+								    </c:forEach>
+    							</td>
+								<td>
+									<c:choose>
+										<c:when test="${doc.approval.approvalStatus eq '1'}">
+											대기
+										</c:when>
+										<c:when test="${doc.approval.approvalStatus eq '2'}">
+											진행 중
+										</c:when>
+										<c:when test="${doc.approval.approvalStatus eq '3'}">
+											완료
+										</c:when>
+										<c:when test="${doc.approval.approvalStatus eq '4'}">
+											반려
+										</c:when>
+									</c:choose>
+								</td>
+							</tr>
+							</c:if>
+						</c:forEach>
+					</c:if>
+					<c:if test="${empty mydoc }">
+						<td colspan="8" style="text-align: center;">
+							열람 가능한 문서가 없습니다.
+						</td>
+					</c:if>
 				</tbody>
 			</table>
         </c:when>
         <c:when test="${myapprovalType == 5}">
             <h2>임시저장 문서</h2>
-            <ul class="draft-list">
-                <li>
-                    <strong>휴가 신청서</strong><br>
-                    <span>최종 수정: 2024-07-30</span><br>
-                    <div class="btn-div">
-	                    <div>
-		                    <button class="edit-btn">수정</button>
-		                    <button class="submit-btn">제출</button>
-	                    </div>
-	                    <div>
-	                    	<button class="delete-btn">삭제</button>
-	                    </div>
-                    </div>
-                </li>
-                <!-- 추가 임시저장 문서 -->
-            </ul>
+            <c:if test="${not empty mydoc }">
+	            <ul class="draft-list">
+	            	<c:forEach var="doc" items="${mydoc}">
+		                <li>
+		                    <strong>${doc.approval.approvalTitle}</strong><br>
+		                    <span>최종 수정: ${doc.approval.approvalDate}</span><br>
+		                    <div class="btn-div">
+			                    <div>
+				                    <button class="edit-btn" onclick="location.assign('${path}/approval/specApproval.do?targetNo=${doc.approvalNo}')">수정</button>
+				                    <button class="submit-btn">제출</button>
+			                    </div>
+			                    <div>
+			                    	<button class="delete-btn">삭제</button>
+			                    </div>
+		                    </div>
+		                </li>
+					</c:forEach>
+	            </ul>
+            </c:if>
         </c:when>
     </c:choose>
     </div>
 </section>
 </div>
 <c:import url="/WEB-INF/views/common/footer.jsp"/>
-
-<script type="text/javascript" src="${path }/js/approval/myapproval.js"></script>

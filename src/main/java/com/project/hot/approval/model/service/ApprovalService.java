@@ -30,7 +30,7 @@ public interface ApprovalService {
 	List<ResponseSpecificApproval> getMyApproval(int employeeNo);
 	List<ResponseSpecificApproval> getReceivedApproval(int employeeNo);
 	List<ResponseSpecificApproval> getReferenceDocuments(int employeeNo);
-	List<ResponseSpecificApproval> getDocumentsByPosition(int employeeNo);
+	List<ResponseSpecificApproval> getDocumentsByPosition(Map<String, Integer> param);
 	List<ResponseSpecificApproval> getTempDocuments(int employeeNo);
 
 }

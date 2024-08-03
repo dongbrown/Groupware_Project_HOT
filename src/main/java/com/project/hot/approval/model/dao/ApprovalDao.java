@@ -44,6 +44,6 @@ public interface ApprovalDao {
 	List<ResponseSpecificApproval> getMyApproval(SqlSession session, int empNo);
 	List<ResponseSpecificApproval> getReceivedApproval(SqlSession session, int empNo);
 	List<ResponseSpecificApproval> getReferenceDocuments(SqlSession session, int empNo);
-	List<ResponseSpecificApproval> getDocumentsByPosition(SqlSession session, int empNo);
+	List<ResponseSpecificApproval> getDocumentsByPosition(SqlSession session, Map<String, Integer> param);
 	List<ResponseSpecificApproval> getTempDocuments(SqlSession session, int empNo);
 }
