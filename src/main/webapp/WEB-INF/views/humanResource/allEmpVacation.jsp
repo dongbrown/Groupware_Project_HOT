@@ -3,11 +3,11 @@
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
-<c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:import url="/WEB-INF/views/common/sidebar.jsp"/>
+<c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<link href="${path }/css/humanResource/allEmpVacation.css" rel="stylesheet" ty	pe="text/css">
+<link href="${path }/css/humanResource/allEmpVacation.css" rel="stylesheet" type="text/css">
 <section class="allEmpVacation-section">
 	<div class="allEmpVacation-div shadow bg-body rounded">
 		<h2 class="mb-5">전 사원 휴가내역</h2>
@@ -66,4 +66,4 @@
 <script>const path='${path}';</script>
 <script src='${path }/js/humanResource/allEmpVacation.js'></script>
 <script src='${path }/js/common/pagebar.js'></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
+<c:import url="/WEB-INF/views/common/footer.jsp"/>

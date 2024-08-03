@@ -7,8 +7,8 @@
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <c:set var="loginEmployee"
 	value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }" />
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp" />
-<c:import url="${path }/WEB-INF/views/common/header.jsp" />
+<c:import url="/WEB-INF/views/common/sidebar.jsp" />
+<c:import url="/WEB-INF/views/common/header.jsp" />
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -126,4 +126,4 @@
 	const employeePhoto = '${loginEmployee.employeePhoto}';
 </script>
 <script src='${path }/js/employee/profile.js'></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp" />
+<c:import url="/WEB-INF/views/common/footer.jsp" />

@@ -4,8 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
-<c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:import url="/WEB-INF/views/common/sidebar.jsp"/>
+<c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="${path }/css/employee/commuting.css" rel="stylesheet" type="text/css">
 <section class="commuting-section">
 	<h2 class="commuting-title-text"> 출퇴근 내역 </h2>
@@ -69,4 +69,4 @@
 <script src='${path }/js/employee/commuting.js'></script>
 <script src='${path }/js/common/pagebar.js'></script>
 <script src='${path }/js/common/loading.js'></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
+<c:import url="/WEB-INF/views/common/footer.jsp"/>
