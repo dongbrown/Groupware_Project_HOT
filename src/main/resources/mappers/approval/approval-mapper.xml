@@ -447,4 +447,16 @@
 		WHERE
 		    a.APPROVAL_NO=#{targetNo}
 	</select>
+	
+	<update id="updateApprover" >
+		UPDATE APPROVER 
+		SET  APPROVER_STATUS = #{approverStatus}, APPROVER_REJECT = #{approverReject}
+		WHERE APPROVAL_NO = #{approvalNo} AND EMPLOYEE_NO = #{employeeNo}
+	</update>
+	
+	<update id="updateApprovalStatus">
+		UPDATE APPROVAL 
+		SET APPROVAL_STATUS = #{approvalStatus}
+		WHERE APPROVAL_NO = #{approvalNo}
+	</update>
 </mapper>
