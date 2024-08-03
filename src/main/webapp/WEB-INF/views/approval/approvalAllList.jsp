@@ -15,6 +15,7 @@
 
 <section class="document-section">
 	<div class="document-div shadow bg-body rounded">
+		<div>
 		<div class="documentTitle">
 			<h3>전체 결재 문서</h3>
 			<a href="<c:url value='${path }/approval/newApproval.do' />">
@@ -47,7 +48,7 @@
 			</select>
 		</div>
 
-		<table class="documentList" border="1">
+		<table class="documentList mb-3" border="1">
 			<thead>
 				<tr>
 					<th style="width:10%;">결재번호</th>
@@ -64,6 +65,7 @@
 
 			</tbody>
 		</table>
+		</div>
 		<div id="pagebar-div">
 
 		</div>
