@@ -319,11 +319,10 @@
 		                    <span>최종 수정: ${doc.approval.approvalDate}</span><br>
 		                    <div class="btn-div">
 			                    <div>
-				                    <button class="edit-btn" onclick="location.assign('${path}/approval/specApproval.do?targetNo=${doc.approvalNo}')">수정</button>
-				                    <button class="submit-btn">제출</button>
 			                    </div>
 			                    <div>
-			                    	<button class="delete-btn">삭제</button>
+				                    <button class="edit-btn" onclick="location.assign('${path}/approval/newApproval.do?approvalNo=${doc.approvalNo}')">수정</button>
+			                    	<button class="delete-btn" onclick="deleteApproval('${doc.approvalNo}')">삭제</button>
 			                    </div>
 		                    </div>
 		                </li>
@@ -342,4 +341,6 @@
     </div>
 </section>
 </div>
+<script>const path='${path}';</script>
+<script src='${path }/js/approval/myApprovalForm.js'></script>
 <c:import url="/WEB-INF/views/common/footer.jsp"/>

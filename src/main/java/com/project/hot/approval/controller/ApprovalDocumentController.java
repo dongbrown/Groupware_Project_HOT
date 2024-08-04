@@ -46,8 +46,20 @@ public class ApprovalDocumentController {
     }
 
     @GetMapping("/newApproval.do")
-    public String newApproval(Model model) {
+    public String newApproval(Model model, @RequestParam(defaultValue = "") String approvalNo) {
         List<Department> departments = service.selectDepartmentList();
+        if(approvalNo != null && !approvalNo.equals("")) {
+        	int appType = Integer.parseInt(approvalNo.substring(0,1));
+        	model.addAttribute("appType", appType);
+        	List<ResponseSpecificApproval> approvalInfo = new ArrayList<>();
+        	try {
+        	    approvalInfo = service.getSpecificApproval(approvalNo);
+        	    String approvalInfoJson = mapper.writeValueAsString(approvalInfo);
+        	    model.addAttribute("approvalInfo", approvalInfoJson);
+        	} catch(Exception e){
+        	    e.printStackTrace();
+        	}
+        }
         model.addAttribute("departments", departments);
         return "approval/newApprovalForm";
     }

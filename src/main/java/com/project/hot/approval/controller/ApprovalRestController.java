@@ -172,4 +172,15 @@ public class ApprovalRestController {
 			return "실패!";
 		}
 	}
+	
+	@PostMapping("/deleteApproval")
+	public String deleteApproval(@RequestBody String approvalNo) {
+		int result=service.deleteApproval(approvalNo);
+		if(result>0) {
+			return "성공!";
+		}else {
+			return "실패!";
+		}
+	}
+	
 }

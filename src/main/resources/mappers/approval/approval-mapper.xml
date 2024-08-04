@@ -43,11 +43,17 @@
 		<association property="edf" resultMap="expenditureFormMap"/>
 		<association property="ctf" resultMap="commutingTimeFormMap"/>
 		<collection property="referenceEmployee" ofType="com.project.hot.approval.model.dto.Reference">
+			<id property="referenceNo" column="REFERENCE_NO"/>
+			<result property="referenceType" column="REFERENCE_TYPE"/>
 		  <association property="employeeNo" javaType="com.project.hot.employee.model.dto.Employee">
+		    <result property="employeeNo" column="REFERENCE_EMPLOYEE_NO"/>
 		    <result property="employeeName" column="REFERENCE_EMPLOYEE_NAME"/>
 		    <association property="departmentCode" javaType="com.project.hot.employee.model.dto.Department">
 		      <result property="departmentTitle" column="REFERENCE_DEPARTMENT_TITLE"/>
 		    </association>
+		    <association property="positionCode" javaType="com.project.hot.employee.model.dto.Position">
+				<result property="positionTitle" column="REFERENCE_POSITION_TITLE"/>
+			</association>
 		  </association>
 		</collection>
 		<collection property="approverEmployee" ofType="com.project.hot.approval.model.dto.Approver">
@@ -59,6 +65,10 @@
 				<result property="employeeName" column="APPROVER_EMPLOYEE_NAME"/>
 				<association property="departmentCode" javaType="com.project.hot.employee.model.dto.Department">
 					<result property="departmentTitle" column="APPROVER_DEPARTMENT_TITLE"/>
+				</association>
+				<association property="positionCode" javaType="com.project.hot.employee.model.dto.Position">
+					<id property="positionCode" column="APPROVER_POSITION_CODE"/>
+					<result property="positionTitle" column="APPROVER_POSITION_TITLE"/>
 				</association>
 			</association>
 		</collection>
@@ -375,12 +385,17 @@
 				, ap.APPROVER_LEVEL AS APPROVER_APPROVER_LEVEL
 				, ap.APPROVER_STATUS AS APPROVER_APPROVER_STATUS
 				, ap.APPROVER_DATE AS APPROVER_APPROVER_DATE
+				, rf.REFERENCE_NO
+				, rf.REFERENCE_TYPE
 				, ref_emp.EMPLOYEE_NO AS REFERENCE_EMPLOYEE_NO
 				, ref_emp.EMPLOYEE_NAME AS REFERENCE_EMPLOYEE_NAME
 				, ref_dept.DEPARTMENT_TITLE AS REFERENCE_DEPARTMENT_TITLE
+				, ref_pos.POSITION_TITLE AS REFERENCE_POSITION_TITLE
 				, approver.EMPLOYEE_NO AS APPROVER_EMPLOYEE_NO
 				, approver.EMPLOYEE_NAME AS APPROVER_EMPLOYEE_NAME
 				, approverdept.DEPARTMENT_TITLE AS APPROVER_DEPARTMENT_TITLE
+				, approverpos.POSITION_CODE AS APPROVER_POSITION_CODE
+				, approverpos.POSITION_TITLE AS APPROVER_POSITION_TITLE
 		<if test="targetNo != null and targetNo.length() > 0">
 	        <choose>
 	            <when test='no.equals("1")'>
@@ -429,9 +444,13 @@
 		LEFT JOIN
 		    DEPARTMENT approverdept ON approverdept.DEPARTMENT_CODE=approver.DEPARTMENT_CODE
 		LEFT JOIN
+			POSITION approverpos ON approverpos.POSITION_CODE=approver.POSITION_CODE
+		LEFT JOIN
 		    EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
 		LEFT JOIN
 		    DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
+		LEFT JOIN
+			POSITION ref_pos ON ref_pos.POSITION_CODE=ref_emp.POSITION_CODE
 		WHERE
 		    a.APPROVAL_NO=#{targetNo}
 	</select>
@@ -601,5 +620,10 @@
 		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
 		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
 		WHERE a.EMPLOYEE_NO = #{empNo} AND a.APPROVAL_STATUS=5
+	</select>
+	
+	
+	<select id="deleteApproval" statementType="CALLABLE" parameterType="java.util.HashMap">
+		{call remove_approval(#{approvalNo, mode=IN, jdbcType=VARCHAR}, #{result, mode=OUT, jdbcType=INTEGER})}
 	</select>
 </mapper>

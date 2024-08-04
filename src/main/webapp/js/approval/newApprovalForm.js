@@ -899,3 +899,104 @@ function removeItemRow(){
 	itemRowCount--;
 }
 $(document).on('click', '.btn-remove-row', removeItemRow);
+
+console.log(approvalInfo);
+// 임시 저장에서 넘어온 경우
+$(document).ready(()=>{
+	$(document).on('keyup', '.item-quantity', calTotalPrice);
+	$(document).on('keyup', '.item-price', calTotalPrice);
+	if(appType != '' && appType != null){
+		$('#formType').val('form'+appType);
+		$('#formType').trigger('change');
+	}
+	const ap=approvalInfo[0].approval; //결재문서
+	const approvers=approvalInfo[0].approverEmployee; //결재자
+	const references=approvalInfo[0].referenceEmployee; //참조, 수신
+	const atts=approvalInfo[0].atts; //첨부파일
+	
+	//공통 요소들 값 넣기
+	
+	//제목
+	$('input[name=title]').val(ap.approvalTitle);
+	
+	//내용
+	$('textarea').val(ap.approvalContent);
+	
+	//보존연한
+	const startDate = new Date(ap.approvalDate);
+    const endDate = new Date(ap.approvalPeriod);
+
+    // 두 날짜의 연도와 월을 추출
+    const startYear = startDate.getFullYear();
+    const startMonth = startDate.getMonth(); // 0부터 시작 (0 = January, 1 = February, ...)
+    const endYear = endDate.getFullYear();
+    const endMonth = endDate.getMonth(); // 0부터 시작
+
+    // 개월 수 계산
+    const yearsDifference = endYear - startYear;
+    const monthsDifference = endMonth - startMonth;
+    const month=yearsDifference * 12 + monthsDifference -1;
+	$('select[name=period]').val(month);
+	//보안등급
+	$('select[name=security]').val(ap.approvalSecurity);
+	//결재자
+	if(approvers.length>0){
+		approvers.forEach(a=>{
+			if(a.approverLevel == 1){
+				middleApprover=a.employeeNo;
+			}else{
+				finalApprover=a.employeeNo;
+			}
+		})
+	}
+	//참조자, 수신처
+	if(references.length>0){
+		references.forEach(r=>{
+			if(r.referenceType == 1){
+				//참조자
+				approvalReferers.push(r.employeeNo);
+				makeRefererTags(r.employeeNo);
+			}else{
+				//수신처
+				approvalReceivers.push(r.employeeNo);		
+				makeReceiversTag(r.employeeNo);
+			}
+		});
+	}
+	//파일 -> 못 넣네 ...
+	
+	//양식별 값 넣어주기
+	if(appType == 1){
+		//출장신청서
+		
+		
+	}else if(appType == 2){
+		//휴가신청서
+		
+	}else if(appType == 3){
+		//초과근무신청서
+		
+	}else if(appType == 4){
+		//경비지출신청서
+		const edf=approvalInfo[0].edf;
+		$('#totalAmount').val(edf.expenditureAmount); //합계가격
+		$('input[name=expenditureDate]').val(edf.expenditureDate);	
+		const edi=approvalInfo[0].edi;
+		edi.forEach((e,i)=>{
+			if(e.expenditureItemNo != null){
+				$(`input[name=items\\[${i}\\]\\.expenditureName]`).val(e.expenditureName);
+				$(`input[name=items\\[${i}\\]\\.expenditureSpec]`).val(e.expenditureSpec);
+				$(`input[name=items\\[${i}\\]\\.expenditureUnit]`).val(e.expenditureUnit);
+				$(`input[name=items\\[${i}\\]\\.expenditureQuantity]`).val(e.expenditureQuantity);
+				$(`input[name=items\\[${i}\\]\\.expenditurePrice]`).val(e.expenditurePrice);
+				$('.item-price').keyup();
+				$(`input[name=items\\[${i}\\]\\.expenditureRemark]`).val(e.expenditureRemark);
+				$('.btn-add-row').last().click();
+			}
+		});
+	}else if(appType == 5){
+		//출퇴근정정신청서
+		
+	}
+	
+});

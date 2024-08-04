@@ -1,5 +1,7 @@
 package com.project.hot.approval.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +22,7 @@ public class ExpenditureItem {
 	private Long expenditurePrice;
 	private String expenditureRemark;
 
-
+	@JsonIgnore
 	public boolean isEmpty() {
 		return expenditureName.isEmpty() && expenditureSpec.isEmpty() && expenditureUnit.isEmpty() && expenditureRemark.isEmpty()
 				&& expenditureQuantity==null && expenditurePrice==null;

@@ -178,4 +178,10 @@ public class ApprovalDaoImpl implements ApprovalDao {
 		return session.selectList("approval.getTempDocuments", empNo);
 	}
 
+	@Override
+	public int deleteApproval(SqlSession session, Map<String, Object> param) {
+		session.selectOne("approval.deleteApproval", param);
+		return (int)param.get("result");
+	}
+
 }

@@ -32,5 +32,5 @@ public interface ApprovalService {
 	List<ResponseSpecificApproval> getReferenceDocuments(int employeeNo);
 	List<ResponseSpecificApproval> getDocumentsByPosition(Map<String, Integer> param);
 	List<ResponseSpecificApproval> getTempDocuments(int employeeNo);
-
+	int deleteApproval(String approvalNo);
 }

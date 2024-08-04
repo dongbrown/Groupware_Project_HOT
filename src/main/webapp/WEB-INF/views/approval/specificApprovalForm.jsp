@@ -236,8 +236,6 @@
 	}
 	const approvalNo = approvalInfo[0].approval.approvalNo;
 	const info = approvalInfo[0];
-	console.log(approverStatus);
-	console.log(approverDate);
 	
 	/* 결재 문서 공통 부분 출력 */
     $("#approvalName").append(approvalInfo[0].approval.employeeNo.employeeName);
@@ -287,6 +285,7 @@
 		const partners = info.btf.businessTripPartners[0].employeeNo
 		$("#partners").append($("<td>").append(partners.employeeName));
 	}
+	
 	$(document).ready(function() {
 		//결재자 결재 버튼 생성
 		const loginEmployeeNo=$('#header-empNo').data('employee-no');
