@@ -78,11 +78,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 				result.put("totalPage", Math.ceil((double)rac.getWaitCount()/5));
 				result.put("approvals", dao.selectApprovalWaitList(session, param));
 			break;
-			case 2:	// 예정 문서
+			case 3:	// 예정 문서
 				result.put("totalPage", Math.ceil((double)rac.getProcessCount()/5));
 				result.put("approvals", dao.selectApprovalPendingList(session, param));
 			break;
-			case 3:	// 진행 문서
+			case 2:	// 진행 문서
 				result.put("totalPage", Math.ceil((double)rac.getPendingCount()/5));
 				result.put("approvals", dao.selectApprovalProcessList(session, param));
 			break;
