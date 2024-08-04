@@ -35,11 +35,24 @@ document.addEventListener('DOMContentLoaded', function() {
 	chatServer = new WebSocket("ws://14.36.141.71:10079/GDJ79_HOT_final/hottalk");
 	// HotTalk Open시
 	chatServer.onopen=(e)=>{
-		// console.log("WebSocket 연결 성공 : ", e);
+		console.log("WebSocket 연결 성공 : ", e);
 		//constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString())
 		setActiveButton(document.getElementById('chat-option1'));
 		const msg = new CommonMessage("enter", loginEmployeeNo).convert()
 		chatServer.send(msg);
+	}
+
+	// HotTalk Close 시
+	chatServer.onclsoe = (e) =>{
+		console.log("WebSocket 연결 종료 : ", e);
+		console.log("WebSocket 재연결 시도 중");
+		setTimeout(function() {
+            connect();
+        }, 5000);
+	}
+	// Error 발생 시
+	chatServer.onerror = (error) =>{
+		console.log("WebSocket 연결 에러 : ",error);
 	}
 
 	// 핫톡 사원 리스트 가져오기
@@ -548,18 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			break;
 		}
 	}
-	// HotTalk Close 시
-	chatServer.onclsoe = (e) =>{
-		console.log("WebSocket 연결 종료 : ", e);
-		console.log("WebSocket 재연결 시도 중");
-		setTimeout(function() {
-            connect();
-        }, 5000);
-	}
-	// Error 발생 시
-	chatServer.onerror = (error) =>{
-		console.log("WebSocket 연결 에러 : ",error);
-	}
+
 
 	function openChatRoom(sender, hotTalkNo){
 		// CommonMessage Class 생성자 : constructor(type="", sender="", receiver="", hotTalkNo="", msg="", eventTime=new Date().toISOString())
