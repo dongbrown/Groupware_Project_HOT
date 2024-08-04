@@ -79,7 +79,7 @@
 						<c:if test="${work.projectAtt[0].attNo != ''}">
 							<c:forEach items="${work.projectAtt }" var="att">
 								<div class="fileListContainer">
-									<span class="fileSpan"><c:out value="${att.attOriginalname }"/> </span>
+									<a class="fileSpan" href="<c:out value="${path}/upload/projectWork/${att.attRename }"/>" download><c:out value="${att.attOriginalname }"/> </a>
 									<span class="fileRename" style="display:none;"><c:out value="${att.attRename }"/> </span>
 									<button class="btn-close att"></button>
 								</div>

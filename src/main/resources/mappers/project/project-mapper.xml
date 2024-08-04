@@ -85,6 +85,15 @@
 		<association property="employee" resultMap="employeeMap"/>
 	</resultMap>
 
+	<!-- 프로젝트 업데이트 시 표시될 리스트  -->
+	<select id="updateProjectAll" resultMap="projectMap" parameterType="map">
+		SELECT * FROM PROJECT JOIN EMPLOYEE USING(EMPLOYEE_NO) WHERE EMPLOYEE_NO=#{employeeNo}
+	</select>
+
+	<select id="updateProjectAllCount" resultType="_int" parameterType="map">
+		SELECT COUNT(*) FROM PROJECT WHERE EMPLOYEE_NO=#{employeeNo}
+	</select>
+	<!-- ####################################### -->
 
 	<select id="selectEmpByDept" parameterType="map" resultMap="employeeMap">
 		SELECT *
@@ -109,6 +118,7 @@
 		SELECT
 		    P.PROJECT_NO,
 		    P.RPOJECT_TITLE,
+		    P.EMPLOYEE_NO,
 		    CASE
 		        WHEN PR.PROJECT_REQUEST_STATUS IS NULL AND INSTR(LISTAGG(E.EMPLOYEE_NO, ', ') WITHIN GROUP (ORDER BY E.EMPLOYEE_NO), '${employeeNo}') > 0
 		        THEN '참여'
@@ -125,6 +135,7 @@
 		GROUP BY
 		    P.PROJECT_NO,
 		    P.RPOJECT_TITLE,
+		    P.EMPLOYEE_NO,
 		    PR.PROJECT_REQUEST_STATUS
 		ORDER BY
 		    P.PROJECT_NO DESC
@@ -278,4 +289,45 @@ PR.PROJECT_REQUEST_NO,
 		WHERE
 			PROJECT_REQUEST_EMPLOYEE=#{empNo} AND PROJECT_NO=#{projectNo}
 	</delete>
+
+<!-- 프로젝트 삭제 - 삭제시 프로젝트, 프로젝트 참여맴버, 프로젝트 작업, 작업 첨부파일 조회 후 삭제 전부 삭제됨 -->
+	<delete id="deleteProject" parameterType="_int">
+		DELETE FROM PROJECT WHERE PROJECT_NO=#{projectNo}
+	</delete>
+
+	<delete id="deleteProjectMember" parameterType="_int">
+		DELETE FROM PROJECT_MEMBERS WHERE PROJECT_NO=#{projectNo}
+	</delete>
+
+	<delete id="deleteProjectWork" parameterType="_int">
+		DELETE FROM PROJECT_WORK WHERE PROJECT_NO=#{projectNo}
+	</delete>
+
+	<select id="selectDeleteAttList" parameterType="_int" resultType="String">
+		SELECT PA.ATT_RENAME
+		FROM
+			PROJECT_ATT PA
+		LEFT JOIN
+			PROJECT_WORK PW ON PA.PROJECT_WORK_NO = PW.PROJECT_WORK_NO
+		WHERE
+			PW.PROJECT_NO=#{projectNo}
+	</select>
+
+	<delete id="deleteProjectWorkAtt" parameterType="_int">
+		DELETE
+		FROM
+			PROJECT_ATT
+		WHERE
+			PROJECT_WORK_NO IN (
+		    SELECT
+		    	PW.PROJECT_WORK_NO
+		    FROM
+		    	PROJECT_WORK PW
+		    WHERE
+		    	PW.PROJECT_NO = #{projectNo}
+			)
+	</delete>
+
+
+
 </mapper>
