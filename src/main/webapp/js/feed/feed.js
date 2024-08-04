@@ -460,8 +460,7 @@ function likeFeed(feedNo, likeButton) {
             }
         },
         error: function(xhr, status, error) {
-            console.error('좋아요 오류:', error);
-            alert('좋아요 처리 중 오류가 발생했습니다.');
+
         },
         complete: function() {
             likeButton.data('processing', false);

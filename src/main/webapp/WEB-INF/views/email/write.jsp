@@ -36,6 +36,8 @@
 </div>
 
 <script>
+let contextPath = '${pageContext.request.contextPath}';
+let path = '${pageContext.request.contextPath}';
 $(document).ready(function() {
     if (typeof EmailCommon !== 'undefined') {
         if (typeof EmailCommon.initSummernote === 'function' && !EmailCommon.summernoteInitialized) {

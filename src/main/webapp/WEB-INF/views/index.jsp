@@ -7,6 +7,8 @@
 <c:import url="/WEB-INF/views/common/sidebar.jsp"/>
 <c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link href="${path}/css/common/index.css" rel="stylesheet" type="text/css">
 <section>
@@ -37,8 +39,8 @@
                     </div>
 
                 <div id="mail-card">
-                <div class="moreSmallBtn"><a href="#" style="">more+</a></div>
-                <p style="font-weight:bolder; font-size:17px; margin:10px;color:#4E73DF;">신규 커뮤니티 목록</p>
+                <div class="moreSmallBtn"><a href="${path}/community/communityList" style="">more+</a></div>
+                <p style="font-weight:bolder; font-size:17px; margin:10px;color:#4E73DF;">사내 커뮤니티 목록</p>
                 	<div>
 						<table class="table table-hover table-striped" >
 						  <thead>
@@ -324,4 +326,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script src="${path }/js/index.js"></script>
+<script src="${path }/js/schedule/calendar.js"></script>
 <c:import url="/WEB-INF/views/common/footer.jsp"/>
