@@ -6,12 +6,12 @@ $(document).ready(function() {
 
         // AJAX 요청을 통해 가입 처리
         $.ajax({
-            url: '/community/join',
+            url: contextPath + '/community/join',
             type: 'POST',
             data: { communityNo: communityId },
             success: function(response) {
                 if(response.success) {
-                    if (isPrivate === "true") {
+                    if (isPrivate === true) {
                         alert('가입 신청이 완료되었습니다. 관리자의 승인을 기다려주세요.');
                         $button.prop('disabled', true).text('신청중');
                     } else {
