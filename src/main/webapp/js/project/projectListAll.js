@@ -22,7 +22,7 @@
 //전체프로젝트 불러오는 함수
 		function getProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch(path + '/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=1')
+			fetch(path+'/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=1')
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects,1);
@@ -37,8 +37,8 @@
 
 //본인 참여 프로젝트 불러오는 함수
 		function getProjectListByEmpNo(cPage) {
-			$(path + '.conteudo__cartoes-grid').html('');
-			fetch('/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=2')
+			$('.conteudo__cartoes-grid').html('');
+			fetch(path+'/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=2')
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects,2);
@@ -53,8 +53,8 @@
 
 //참여 요청한 프로젝트 불러오는 함수
 		function getRequestProjectList(cPage) {
-			$(path + '.conteudo__cartoes-grid').html('');
-			fetch('/project/requestProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
+			$('.conteudo__cartoes-grid').html('');
+			fetch(path+'/project/requestProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects,3);
@@ -69,8 +69,8 @@
 
 //참여 요청(온)!!! 프로젝트 불러오는 함수
 		function getResponseProjectList(cPage) {
-			$(path + '.conteudo__cartoes-grid').html('');
-			fetch('/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
+			$('.conteudo__cartoes-grid').html('');
+			fetch(path+'/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList2(data.projects);
