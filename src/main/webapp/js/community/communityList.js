@@ -17,7 +17,7 @@ $(document).ready(function() {
                     } else {
                         alert('커뮤니티에 가입되었습니다.');
                         // 해당 커뮤니티의 피드 페이지로 이동
-                        window.location.href = contextPath + '/community/feed?communityNo=' + communityId;
+                        window.location.href = path +  + '/community/feed?communityNo=' + communityId;
                     }
                 } else {
                     alert('가입에 실패했습니다: ' + response.message);

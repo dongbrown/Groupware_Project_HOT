@@ -130,7 +130,7 @@ function withdrawCommunity() {
         data: JSON.stringify({ id: communityNo }),
         success: function(response) {
             alert('커뮤니티를 탈퇴하였습니다.');
-            location.href = '/community/';
+            location.href = path + '/community/';
         },
         error: function(xhr, status, error) {
             console.log('커뮤니티 탈퇴 오류:', error);
