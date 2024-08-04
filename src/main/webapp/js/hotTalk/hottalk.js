@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return now;
 	}
     let chatServer;
-	chatServer = new WebSocket("/hottalk.do");
+	chatServer = new WebSocket("ws://14.36.141.71:10079/GDJ79_HOT_final/hottalk");
 	// HotTalk Open시
 	chatServer.onopen=(e)=>{
 		// console.log("WebSocket 연결 성공 : ", e);
