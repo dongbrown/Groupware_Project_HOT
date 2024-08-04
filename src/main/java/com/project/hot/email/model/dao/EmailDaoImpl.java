@@ -126,14 +126,6 @@ public class EmailDaoImpl implements EmailDao {
     }
 
     @Override
-    public int moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession session) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("emailNos", emailNos);
-        params.put("employeeNo", employeeNo);
-        return session.update("email.moveEmailsToTrash", params);
-    }
-
-    @Override
     public List<Email> selectSentEmails(int employeeNo, int offset, int limit, SqlSession session) {
         Map<String, Object> params = new HashMap<>();
         params.put("employeeNo", employeeNo);
@@ -376,6 +368,47 @@ public class EmailDaoImpl implements EmailDao {
         params.put("employeeNo", employeeNo);
         params.put("limit", limit);
         return session.selectList("email.selectRecentInboxEmails", params);
+    }
+
+    @Override
+    public int markEmailsAsImportant(List<Integer> emailNos, int employeeNo, SqlSession sqlSession) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        return sqlSession.update("email.markEmailsAsImportant", params);
+    }
+
+    @Override
+    public int unmarkEmailsAsImportant(List<Integer> emailNos, int employeeNo, SqlSession sqlSession) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        return sqlSession.update("email.unmarkEmailsAsImportant", params);
+    }
+
+
+    @Override
+    public void markEmailsAsRead(List<Integer> emailNos, int employeeNo, SqlSession sqlSession) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        sqlSession.update("email.markEmailsAsRead", params);
+    }
+
+    @Override
+    public void toggleImportantEmails(List<Integer> emailNos, int employeeNo, SqlSession sqlSession) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        sqlSession.update("email.toggleImportantEmails", params);
+    }
+
+    @Override
+    public void moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession sqlSession) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("emailNos", emailNos);
+        params.put("employeeNo", employeeNo);
+        sqlSession.update("email.moveEmailsToTrash", params);
     }
 
 }

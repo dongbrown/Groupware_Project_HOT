@@ -38,7 +38,7 @@ public interface EmailDao {
     List<EmailAtt> selectEmailAttachments(int emailNo, SqlSession session);
     boolean toggleImportantEmail(int emailNo, int employeeNo, SqlSession session);
     List<Employee> searchEmployees(String keyword, SqlSession session);
-    int moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession session);
+    void moveEmailsToTrash(List<Integer> emailNos, int employeeNo, SqlSession session);
     EmailAtt getAttachmentById(int attachmentId, SqlSession session);
     int getUnreadCount(int employeeNo, SqlSession session);
     int markTrashAsRead(List<Integer> emailNos, SqlSession session);
@@ -58,4 +58,8 @@ public interface EmailDao {
     void updateEmail(Email email, SqlSession session);
     List<Email> getRecentEmails(int employeeNo, int limit, SqlSession session);
 	List<Email> selectRecentInboxEmails(int employeeNo, int limit, SqlSession sqlSession);
+	void markEmailsAsRead(List<Integer> emailNos, int employeeNo, SqlSession sqlSession);
+	int markEmailsAsImportant(List<Integer> emailNos, int employeeNo, SqlSession sqlSession);
+	int unmarkEmailsAsImportant(List<Integer> emailNos, int employeeNo, SqlSession sqlSession);
+	void toggleImportantEmails(List<Integer> emailNos, int employeeNo, SqlSession sqlSession);
 }
