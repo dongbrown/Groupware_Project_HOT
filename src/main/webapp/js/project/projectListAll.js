@@ -22,7 +22,7 @@
 //전체프로젝트 불러오는 함수
 		function getProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=1')
+			fetch(path + '/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=1')
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects,1);
@@ -37,7 +37,7 @@
 
 //본인 참여 프로젝트 불러오는 함수
 		function getProjectListByEmpNo(cPage) {
-			$('.conteudo__cartoes-grid').html('');
+			$(path + '.conteudo__cartoes-grid').html('');
 			fetch('/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=2')
 				.then(response => response.json())
 				.then(data => {
@@ -53,7 +53,7 @@
 
 //참여 요청한 프로젝트 불러오는 함수
 		function getRequestProjectList(cPage) {
-			$('.conteudo__cartoes-grid').html('');
+			$(path + '.conteudo__cartoes-grid').html('');
 			fetch('/project/requestProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
@@ -69,7 +69,7 @@
 
 //참여 요청(온)!!! 프로젝트 불러오는 함수
 		function getResponseProjectList(cPage) {
-			$('.conteudo__cartoes-grid').html('');
+			$(path + '.conteudo__cartoes-grid').html('');
 			fetch('/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
