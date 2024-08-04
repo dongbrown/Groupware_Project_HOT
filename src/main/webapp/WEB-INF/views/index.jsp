@@ -176,7 +176,8 @@
             <!-- 세번째 줄 wrap (켈린더, 오늘의 일정, 홍보배너, 회사점심식단표) -->
              <div id="third-wrap">
                 <div id="calender-card">
-					<div id="calendar">
+                	<div id="calendar"></div>
+<!-- 					<div id="calendar">
 				        <div id="calendar-header">
 				            <button id="prev-month" class="month-nav"><i class="fas fa-chevron-left"></i></button>
 				            <h2 id="current-month"></h2>
@@ -184,7 +185,7 @@
 				        </div>
 				        <div id="weekdays"></div>
 				        <div id="calendar-body"></div>
-				    </div>
+				    </div> -->
 				</div>
                 <div id="today-work-card">
                 	<div style="margin:10px;">
@@ -310,6 +311,17 @@
             window.location.href = '${path}/email/inbox';
         });
     });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: '${path}/schedule/getScheduleList',
+        locale: 'ko'
+    });
+    calendar.render();
+});
 </script>
 <script src="${path }/js/index.js"></script>
 <c:import url="/WEB-INF/views/common/footer.jsp"/>
