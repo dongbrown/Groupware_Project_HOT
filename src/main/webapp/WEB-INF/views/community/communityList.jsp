@@ -10,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 </head>
 <body>
     <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal}"/>
@@ -53,20 +52,20 @@
                                         <tr>
                                             <td>${community.communityNo}</td>
                                             <td class="community-title">
-											    <c:choose>
-											        <c:when test="${community.communityIsOpen ne 'N'}">
-											            <a href="${pageContext.request.contextPath}/community/feed?communityNo=${community.communityNo}">
-											                ${community.communityTitle}
-											            </a>
-											        </c:when>
-											        <c:otherwise>
-											            ${community.communityTitle}
-											        </c:otherwise>
-											    </c:choose>
-											    <c:if test="${community.communityIsOpen eq 'N'}">
-											        <img src="${pageContext.request.contextPath}/images/lock.png" alt="비공개" class="lock-icon" style="width: 16px; height: 16px; margin-left: 5px; vertical-align: middle">
-											    </c:if>
-											</td>
+                                                <c:choose>
+                                                    <c:when test="${community.communityIsOpen ne 'N'}">
+                                                        <a href="${pageContext.request.contextPath}/community/feed?communityNo=${community.communityNo}">
+                                                            ${community.communityTitle}
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${community.communityTitle}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <c:if test="${community.communityIsOpen eq 'N'}">
+                                                    <img src="${pageContext.request.contextPath}/images/lock.png" alt="비공개" class="lock-icon" style="width: 16px; height: 16px; margin-left: 5px; vertical-align: middle">
+                                                </c:if>
+                                            </td>
                                             <td>${fn:length(community.members)}</td>
                                             <td>${community.communityIntroduce}</td>
                                             <td>
@@ -77,20 +76,20 @@
                                                     </c:if>
                                                 </c:forEach>
                                                 <c:choose>
-												    <c:when test="${isMember}">
-												        <button class="btn btn-secondary btn-sm" disabled>가입중</button>
-												    </c:when>
-												    <c:otherwise>
-												        <c:choose>
-												            <c:when test="${community.communityIsOpen eq 'N'}">
-												                <button class="btn btn-warning btn-sm join-btn" data-community-id="${community.communityNo}" data-is-private="true">가입신청</button>
-												            </c:when>
-												            <c:otherwise>
-												                <button class="btn btn-primary btn-sm join-btn" data-community-id="${community.communityNo}" data-is-private="false">가입</button>
-												            </c:otherwise>
-												        </c:choose>
-												    </c:otherwise>
-												</c:choose>
+                                                    <c:when test="${isMember}">
+                                                        <button class="btn btn-secondary btn-sm" disabled>가입중</button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:choose>
+                                                            <c:when test="${community.communityIsOpen eq 'N'}">
+                                                                <button class="btn btn-warning btn-sm join-btn" data-community-id="${community.communityNo}" data-is-private="true">가입신청</button>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <button class="btn btn-primary btn-sm join-btn" data-community-id="${community.communityNo}" data-is-private="false">가입</button>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -111,15 +110,10 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- js전에 넣어야 함 -->
     <script>
-    var contextPath = '${pageContext.request.contextPath}';
-	</script>
-    <script src="${path}/js/community/communityList.js"></script>
-
-    <script>
-        // 현재 로그인한 직원 번호를 JavaScript 변수로 설정
-        var currentEmployeeNo = ${loginEmployee.employeeNo};
+        var contextPath = '${pageContext.request.contextPath}';
+        var currentEmployeeNo = '${loginEmployee.employeeNo}';
     </script>
+    <script src="${pageContext.request.contextPath}/js/community/communityList.js"></script>
 </body>
 </html>

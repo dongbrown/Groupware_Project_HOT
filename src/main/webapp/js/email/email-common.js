@@ -15,9 +15,9 @@ var EmailCommon = {
     },
 
     bindEvents: function() {
-        $(document).off('click', '.list-group-item').on('click', '.list-group-item', function(e) {
+        $(document).off('click', '.email-link').on('click', '.email-link', function(e) {
             e.preventDefault();
-            $('.list-group-item').removeClass('active');
+            $('.email-link').removeClass('active');
             $(this).addClass('active');
             var mailbox = $(this).data('mailbox');
             EmailCommon.loadMailbox(mailbox);
@@ -144,12 +144,6 @@ var EmailCommon = {
             EmailCommon.toggleImportant(emailNo);
         });
 
-        $(document).off('click', '.email-link').on('click', '.email-link', function(e) {
-            e.preventDefault();
-            var mailbox = $(this).data('mailbox');
-            EmailCommon.loadMailbox(mailbox);
-        });
-
         $(document).off('click', '#restoreBtn').on('click', '#restoreBtn', function() {
             var selectedEmails = EmailCommon.getSelectedEmails();
             if (selectedEmails.length === 0) {
@@ -159,7 +153,6 @@ var EmailCommon = {
             EmailCommon.restoreFromTrash(selectedEmails);
         });
 
-        // EmailView에서 가져온 이벤트 바인딩
         $(document).on('click', '.btn-reply', function() {
             var emailNo = $('#emailNo').val();
             EmailCommon.replyEmail(emailNo);
@@ -211,27 +204,7 @@ var EmailCommon = {
         }
     },
 
-loadInbox: function(page = 1) {
-        this.loadMailboxContent('inbox', page);
-    },
-
-    loadSent: function(page = 1) {
-        this.loadMailboxContent('sent', page);
-    },
-
-    loadSelf: function(page = 1) {
-        this.loadMailboxContent('self', page);
-    },
-
-    loadImportant: function(page = 1) {
-        this.loadMailboxContent('important', page);
-    },
-
-    loadTrash: function(page = 1) {
-        this.loadMailboxContent('trash', page);
-    },
-
-    loadMailboxContent: function(mailbox, page) {
+    loadMailbox: function(mailbox, page = 1) {
         $.ajax({
             url: this.contextPath + '/' + mailbox,
             type: 'GET',
@@ -240,11 +213,35 @@ loadInbox: function(page = 1) {
                 $('#mailContent').html(response);
                 EmailCommon.initializeMailboxFunctions(mailbox);
                 history.pushState(null, '', EmailCommon.contextPath + '/' + mailbox + '?page=' + page);
+
+                // 활성 메일함 표시 업데이트
+                $('.email-link').removeClass('active');
+                $('.email-link[data-mailbox="' + mailbox + '"]').addClass('active');
             },
             error: function() {
                 alert(mailbox + ' 메일함을 로드하는데 실패했습니다.');
             }
         });
+    },
+
+    loadInbox: function(page = 1) {
+        this.loadMailbox('inbox', page);
+    },
+
+    loadSent: function(page = 1) {
+        this.loadMailbox('sent', page);
+    },
+
+    loadSelf: function(page = 1) {
+        this.loadMailbox('self', page);
+    },
+
+    loadImportant: function(page = 1) {
+        this.loadMailbox('important', page);
+    },
+
+    loadTrash: function(page = 1) {
+        this.loadMailbox('trash', page);
     },
 
     initializeMailboxFunctions: function(mailbox) {
@@ -400,8 +397,7 @@ loadInbox: function(page = 1) {
         }
         this.updateFileList();
     },
-
-    updateFileList: function() {
+updateFileList: function() {
         var fileList = $('#fileList');
         fileList.empty();
         for (var i = 0; i < this.files.length; i++) {
@@ -798,7 +794,8 @@ loadInbox: function(page = 1) {
             }
         });
     },
-downloadAttachment: function(attachmentId, filename) {
+
+    downloadAttachment: function(attachmentId, filename) {
         var url = this.contextPath + '/download/' + attachmentId;
 
         fetch(url)
@@ -813,31 +810,6 @@ downloadAttachment: function(attachmentId, filename) {
                 console.error('파일 다운로드 중 오류 발생:', error);
                 alert('파일 다운로드에 실패했습니다.');
             });
-    },
-
-    reattachEventListeners: function() {
-        $('.email-item').off('click').on('click', function(e) {
-            if (!$(e.target).is('input:checkbox') && !$(e.target).is('.toggle-important')) {
-                var emailNo = $(this).data('email-no');
-                EmailCommon.loadEmailContent(emailNo);
-            }
-        });
-
-        $('.toggle-important').off('click').on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var emailNo = $(this).closest('.email-item').data('email-no');
-            EmailCommon.toggleImportant(emailNo);
-        });
-
-        $('.mail-item-checkbox').off('change').on('change', function() {
-            var allChecked = $('.mail-item-checkbox:checked').length === $('.mail-item-checkbox').length;
-            $('#select-all').prop('checked', allChecked);
-        });
-
-        $('#select-all').off('change').on('change', function() {
-            $('.mail-item-checkbox').prop('checked', $(this).prop('checked'));
-        });
     }
 };
 
