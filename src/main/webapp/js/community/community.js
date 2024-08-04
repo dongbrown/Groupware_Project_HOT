@@ -32,7 +32,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: '/community/insert',
+            url: path + '/community/insert',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
@@ -61,7 +61,7 @@ $(document).ready(function() {
         var isInBookmarkedSection = $community.parent().attr('id') === 'bookmarkedCommunities';
 
         $.ajax({
-            url: '/community/toggleBookmark',
+            url: path + '/community/toggleBookmark',
             type: 'POST',
             data: { communityNo: communityNo },
             success: function(response) {

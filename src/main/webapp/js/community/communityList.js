@@ -6,7 +6,7 @@ $(document).ready(function() {
 
         // AJAX 요청을 통해 가입 처리
         $.ajax({
-            url: contextPath + '/community/join',
+            url: path + '/community/join',
             type: 'POST',
             data: { communityNo: communityId },
             success: function(response) {
