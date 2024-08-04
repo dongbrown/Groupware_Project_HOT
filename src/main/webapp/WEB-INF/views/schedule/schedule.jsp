@@ -6,6 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="contextPath" content="${pageContext.request.contextPath}">
 <title>일정관리</title>
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -393,6 +394,8 @@
 
     // ceo만 전사 일정 삭제 가능하도록 변수로 js에 전달
     var isCeo = ${loginEmployee.positionCode.positionCode == 1};
+	var contextPath = '${pageContext.request.contextPath}';
+
     </script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

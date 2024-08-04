@@ -7,6 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="contextPath" content="${pageContext.request.contextPath}">
 <title>피드</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
@@ -100,7 +101,8 @@
 <!-- 콘텐츠 Wrapper 끝 -->
 
 <script>
-var loginEmployeeNo = ${loginEmployee.employeeNo};
+	var contextPath = '${pageContext.request.contextPath}';
+	var currentEmployeeNo = '${loginEmployee.employeeNo}';
 </script>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

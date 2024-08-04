@@ -1,3 +1,4 @@
+var path = $('meta[name=contextPath]').attr("content");
 $(document).ready(function() {
     // 체크박스 이벤트 바인딩
     rebindCheckboxEvents();

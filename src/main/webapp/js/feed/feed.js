@@ -1,3 +1,4 @@
+var path = $('meta[name=contextPath]').attr("content");
 $(document).ready(function() {
     loadFeeds();
 
