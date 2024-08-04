@@ -17,7 +17,6 @@
 				projectProgress:Number($('#project-progress').val()),
 				employee:[]
 			};
-			console.log(projectData);
 
 //프로젝트 참여 맴버 json 저장
 			$('#saved-members .saved-item').each(function() {
@@ -32,7 +31,7 @@
 
 //프로젝트 업데이트 ajax
 			$.ajax({
-				url: '/project/updateProject.do',
+				url: path+'/project/updateProject.do',
 				type: 'POST',
 				contentType: 'application/JSON',
 				data: JSON.stringify(projectData),
@@ -80,7 +79,7 @@
 //ajax로 해당 사원 값 가져오기
 			$.ajax({
 				type: 'GET',
-				url: '/project/selectEmpByDept.do',
+				url: path+'/project/selectEmpByDept.do',
 				data: { dept: selectedText, empNo:empNo },
 				dataType: 'json',
 				success: function(emp) {

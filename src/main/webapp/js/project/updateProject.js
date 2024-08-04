@@ -62,7 +62,7 @@
 	$(document).on('click', '.project-choice', function(e) {
 		const projectNo = Number(e.target.parentElement.children[2].textContent);
 		const empNo = Number($("#projectEmpNo").text());
-	    location.assign("/project/selectProjectByNo.do?projectNo="+projectNo+"&empNo="+empNo);
+	    location.assign(path+"/project/selectProjectByNo.do?projectNo="+projectNo+"&empNo="+empNo);
 
 	  /*  const projectNo = Number(e.target.parentElement.children[1].textContent);
 	    console.log(projectNo);

@@ -113,7 +113,6 @@ function getTodayDate() {
 			if(e.name===deleteFile){
 				files.splice(i,1);
 				/*delete e.i;*/
-				console.log(files);
 			}
 		})
     }
@@ -167,7 +166,7 @@ function getTodayDate() {
 //기존에 있던 파일 delete할 목록
 	updateData.append("delFileList", delFileNames);
 
-		fetch('/work/workupdateajax',{
+		fetch(path+'/work/workupdateajax',{
 			method:'POST',
 			body:updateData,
 		})

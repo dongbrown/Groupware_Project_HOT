@@ -327,5 +327,5 @@ function makeProjectList2(projects) {
 	$(document).on('click', '#projectListInfo', function(e) {
 		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
 		let employeeNo = $(this).closest('.elemento__cartao').find('#requestProjectEmployeeNo').text();
-		 location.assign("/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+employeeNo);
+		 location.assign(path+"/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+employeeNo);
 	})
