@@ -378,7 +378,7 @@
     <c:import url="/WEB-INF/views/common/footer.jsp" />
     </div>
     <!-- 콘텐츠 Wrapper 끝 -->
-    <script>
+<script>
     // 전사일정 데이터를 변수로 전달
     var companySchedules = [
         <c:forEach items="${companySchedules}" var="schedule" varStatus="status">
@@ -394,9 +394,9 @@
 
     // ceo만 전사 일정 삭제 가능하도록 변수로 js에 전달
     var isCeo = ${loginEmployee.positionCode.positionCode == 1};
-	var contextPath = '${pageContext.request.contextPath}';
-
-    </script>
+    var path = '${pageContext.request.contextPath}';
+    var loginEmployeeNo = '${loginEmployee.employeeNo}';
+</script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script

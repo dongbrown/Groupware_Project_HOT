@@ -36,6 +36,3 @@ $(document).ready(function() {
     // 기타 필요한 이벤트 리스너나 함수들을 여기에 추가할 수 있습니다.
 });
 
-// 디버깅을 위한 로그
-console.log("Context path:", path);
-console.log("Current employee number:", currentEmployeeNo);

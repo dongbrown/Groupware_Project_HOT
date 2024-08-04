@@ -162,7 +162,8 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    var path = "${pageContext.request.contextPath}";
+	var path = '${pageContext.request.contextPath}';
+	var loginEmployeeNo = '${loginEmployee.employeeNo}';
 </script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/community/community.js"></script>
 
