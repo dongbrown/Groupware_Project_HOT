@@ -23,4 +23,7 @@ public interface WorkDao {
 	Work selectWorkByWorkNo(SqlSession session,int workNo);
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
 	int selectProjectAllCount(SqlSession session,Map<String,Integer> param);
+	List<String> selectDeleteAttList(SqlSession session,int workNo);
+	int deleteWorkAtt(SqlSession session,int workNo);
+	int deleteWork(SqlSession session,int workNo);
 }

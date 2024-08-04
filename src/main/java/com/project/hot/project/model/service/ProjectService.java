@@ -14,6 +14,7 @@ public interface ProjectService {
 	List<Employee> selectEmpByDept(Map<String,Object> param);
 	List<Department> selectDeptAll();
 	Map<String,Object> selectProjectAll(Map<String,Integer> param);
+	Map<String,Object> updateProjectAll(Map<String,Integer> param);
 	Project selectProjectByNo(int projectNo);
 	List<ProjectEmployee> selectEmployeetByProjectNo(Map<String,Integer> param);
 	int requestJoinProject(Map<String,Integer> param);
@@ -25,5 +26,6 @@ public interface ProjectService {
 	int responseApproval(Map<String, Integer> param);
 	int requestRefuseUpdate(Map<String, Object> param);
 	int refusedCheckDelete(Map<String, Integer> param);
-
+	List<String> selectDeleteAttList(int projectNo);
+	int deleteProjectWorkAtt(int projectNo);
 }

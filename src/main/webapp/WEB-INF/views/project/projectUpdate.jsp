@@ -53,12 +53,11 @@
 													<button type="button" class="btn-close"
 														data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
-												<div class="modal-body">프로젝트를 정말 삭제하시겠습니까?</div>
+												<div class="modal-body">프로젝트를 삭제하시면 프로젝트 관련 작업들도 같이 삭제됩니다.<br>삭제하시겠습니까?</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary"
 														data-bs-dismiss="modal">취소</button>
-													<button type="button" class="btn btn-primary"
-														onclick="delectProjectBtn();">삭제</button>
+													<button type="button" id="delectProjectFinalBtn" class="btn btn-primary">삭제</button>
 												</div>
 											</div>
 										</div>
@@ -219,8 +218,8 @@
 </section>
 </div>
 <script>
-const path='${path}';
-const empNo='${loginEmployee.employeeNo}'
+	const path="${path}"
+	const empNo ="${loginEmployee.employeeNo }";
 </script>
 <script src="${path }/js/project/updateProject.js"></script>
 <script src='${path }/js/common/pagebar.js'></script>

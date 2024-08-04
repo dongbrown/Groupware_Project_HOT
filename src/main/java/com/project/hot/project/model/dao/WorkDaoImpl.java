@@ -81,4 +81,19 @@ public class WorkDaoImpl implements WorkDao {
 		return session.selectOne("work.selectWorkAllCountByProjectNo",param.get("projectNo"));
 	}
 
+	@Override
+	public List<String> selectDeleteAttList(SqlSession session, int workNo) {
+		return session.selectList("work.selectDeleteAttList",workNo);
+	}
+
+	@Override
+	public int deleteWorkAtt(SqlSession session, int workNo) {
+		return session.delete("work.deleteWorkListAtt",workNo);
+	}
+
+	@Override
+	public int deleteWork(SqlSession session, int workNo) {
+		return session.delete("work.deleteWork",workNo);
+	}
+
 }

@@ -33,7 +33,7 @@
 
 				//td 삭제 버튼
 				const $deleteButtonCell = $('<td>');
-				const $deleteButton = $('<button>', { class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#workDeleteModal', text: '삭제' });
+				const $deleteButton = $('<button>', { id:'deleteWorkBtn', class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#workDeleteModal', text: '삭제' });
 
 				//td 진행률
 				$graphContainer.append($bar).append($percentageText);
@@ -58,7 +58,40 @@
 /*------------------------------------------*/
 
 //작업 선택 시 작업 수정 할 페이지 이동
-		$(document).on('click', '.work-choice', function() {
-			const workNo = $(this).closest('.work-choice').children().eq(2).text();
-			location.assign('/work/workupdatedetail.do?workNo='+workNo);
-	})
+	$(document).on('click', '.work-choice > :lt(5)', function(e) {
+		const workNo = $(this).closest('.work-choice').children().eq(2).text();
+		location.assign('/work/workupdatedetail.do?workNo='+workNo);
+	});
+
+//작업 삭제 버튼 구현
+	$(document).on('click', '#deleteWorkBtn', function() {
+		const workNo = $(this).closest('.work-choice').children().eq(2).text();
+			$(document).on('click', '#deleteWorkFinalBtn', function(e) {
+			fetch(path+"/work/deleteWork.do",{
+				method:'POST',
+				headers: {
+			        'Content-Type': 'application/json'
+			    },
+			     body: JSON.stringify({
+		            workNo: workNo,
+        		}),
+			})
+			.then(response => {
+		        if (!response.ok) {
+		            throw new Error('서버 응답이 실패했습니다.');
+		        }
+		        return response.text();
+			})
+			.then(data=>{
+				alert("삭제 완료");
+				location.reload();
+			})
+			.catch(error=>{
+				alert("프로젝트 삭제 실패");
+				console.log(error);
+			})
+		});
+	});
+
+
+
