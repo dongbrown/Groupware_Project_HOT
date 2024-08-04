@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="path" value="${pageContext.request.contextPath}"/>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="contextPath" content="${pageContext.request.contextPath}">
     <title>커뮤니티 목록</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
@@ -54,7 +57,7 @@
                                             <td class="community-title">
                                                 <c:choose>
                                                     <c:when test="${community.communityIsOpen ne 'N'}">
-                                                        <a href="${pageContext.request.contextPath}/community/feed?communityNo=${community.communityNo}">
+                                                        <a href="${path}/community/feed?communityNo=${community.communityNo}">
                                                             ${community.communityTitle}
                                                         </a>
                                                     </c:when>
@@ -63,7 +66,7 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                                 <c:if test="${community.communityIsOpen eq 'N'}">
-                                                    <img src="${pageContext.request.contextPath}/images/lock.png" alt="비공개" class="lock-icon" style="width: 16px; height: 16px; margin-left: 5px; vertical-align: middle">
+                                                    <img src="${path}/images/lock.png" alt="비공개" class="lock-icon" style="width: 16px; height: 16px; margin-left: 5px; vertical-align: middle">
                                                 </c:if>
                                             </td>
                                             <td>${fn:length(community.members)}</td>
@@ -111,9 +114,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        var contextPath = '${pageContext.request.contextPath}';
-        var currentEmployeeNo = '${loginEmployee.employeeNo}';
+        var path = '${pageContext.request.contextPath}';
+        var loginEmployeeNo = '${loginEmployee.employeeNo}';
     </script>
-    <script src="${pageContext.request.contextPath}/js/community/communityList.js"></script>
+    <script src="${path}/js/community/communityList.js"></script>
 </body>
 </html>

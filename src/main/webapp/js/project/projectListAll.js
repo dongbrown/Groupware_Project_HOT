@@ -22,7 +22,7 @@
 //전체프로젝트 불러오는 함수
 		function getProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=1')
+			fetch(path+'/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=1')
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects,1);
@@ -38,7 +38,7 @@
 //본인 참여 프로젝트 불러오는 함수
 		function getProjectListByEmpNo(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=2')
+			fetch(path+'/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=2')
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects,2);
@@ -54,7 +54,7 @@
 //참여 요청한 프로젝트 불러오는 함수
 		function getRequestProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/requestProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
+			fetch(path+'/project/requestProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects,3);
@@ -70,7 +70,7 @@
 //참여 요청(온)!!! 프로젝트 불러오는 함수
 		function getResponseProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
+			fetch(path+'/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList2(data.projects);
@@ -96,7 +96,7 @@
 
 					const $projectDiv=$('<div>',{class:'elemento__cartao--fundo',css:{backgroundImage:'url(https://images.unsplash.com/photo-1604147706283-d7119b5b822c?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)'}});
 					const $projectDiv2=$('<div>',{class:'elemento__cartao--conteudo',id:'selectProejctInfo'});
-					const $projectPtag=$('<p>',{class:'elemento__cartao--texto-categoria'}).html('프로젝트 번호 : <span id="requestProjectNo">'+p.projectNo+'</span><span id="requestProjectEmployeeNo" style="display:none;">'+p.employeeNo+'</span>');
+					const $projectPtag=$('<p>',{class:'elemento__cartao--texto-categoria'}).html('프로젝트 번호 : <span id="requestProjectNo">'+p.projectNo+'</span><span id="requestProjectEmployeeNo">'+p.employeeNo+'</span>');
 					const $projectH3tag=$('<h3>',{class:'elemento__cartao--texto-titulo'}).text(p.projectTitle);
 					const $projectMemberWrab=$('<div>',{class:'container'});
 					const $projectMemberWrab1=$('<div>',{id:'memberWrab'});
@@ -164,7 +164,7 @@ function makeProjectList2(projects) {
 	    e.preventDefault(); // 기본 동작 방지 (모달 열림 방지)
 	    let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
 	    let projectEmpNo = $(this).closest('.elemento__cartao').find('#requestProjectEmployeeNo').text();
-
+		console.log(projectNo+"  "+projectEmpNo);
 		 $('#projectRequestBtn').off('click').on('click', function() {
 			fetch(path+'/project/requestProject.do',{
 				method:'POST',
@@ -327,5 +327,5 @@ function makeProjectList2(projects) {
 	$(document).on('click', '#projectListInfo', function(e) {
 		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
 		let employeeNo = $(this).closest('.elemento__cartao').find('#requestProjectEmployeeNo').text();
-		 location.assign("/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+employeeNo);
+		 location.assign(path+"/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+employeeNo);
 	})

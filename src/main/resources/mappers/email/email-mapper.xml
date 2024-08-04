@@ -350,16 +350,6 @@
            OR EMPLOYEE_ID LIKE '%' || #{keyword} || '%'
     </select>
 
-    <!-- 휴지통으로 이동 -->
-    <update id="moveEmailsToTrash" parameterType="map">
-        UPDATE EMAIL_RECEIVER
-        SET EMAIL_RECEIVER_ISDELETE = 'Y'
-        WHERE EMAIL_NO IN
-        <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
-            #{emailNo}
-        </foreach>
-        AND EMPLOYEE_NO = #{employeeNo}
-    </update>
 
     <!-- 읽지 않은 이메일 수 조회 -->
     <select id="getUnreadCount" parameterType="int" resultType="int">
@@ -730,5 +720,63 @@
 		WHERE ROWNUM <= #{limit}
 		]]>
 	</select>
+
+    <!-- 여러 이메일을 중요 표시로 변경 -->
+    <update id="markEmailsAsImportant" parameterType="map">
+        UPDATE EMAIL_RECEIVER
+        SET EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+        WHERE EMAIL_NO IN
+        <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+            #{emailNo}
+        </foreach>
+        AND EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_RECEIVER_ISIMPORTANT = 'N'
+    </update>
+
+    <!-- 여러 이메일의 중요 표시 해제 -->
+    <update id="unmarkEmailsAsImportant" parameterType="map">
+        UPDATE EMAIL_RECEIVER
+        SET EMAIL_RECEIVER_ISIMPORTANT = 'N'
+        WHERE EMAIL_NO IN
+        <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+            #{emailNo}
+        </foreach>
+        AND EMPLOYEE_NO = #{employeeNo}
+        AND EMAIL_RECEIVER_ISIMPORTANT = 'Y'
+    </update>
+
+    <update id="markEmailsAsRead" parameterType="map">
+        UPDATE EMAIL_RECEIVER
+        SET EMAIL_RECEIVER_ISREAD = 'Y'
+        WHERE EMAIL_NO IN
+        <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+            #{emailNo}
+        </foreach>
+        AND EMPLOYEE_NO = #{employeeNo}
+    </update>
+
+    <update id="toggleImportantEmails" parameterType="map">
+        UPDATE EMAIL_RECEIVER
+        SET EMAIL_RECEIVER_ISIMPORTANT =
+            CASE
+                WHEN EMAIL_RECEIVER_ISIMPORTANT = 'Y' THEN 'N'
+                ELSE 'Y'
+            END
+        WHERE EMAIL_NO IN
+        <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+            #{emailNo}
+        </foreach>
+        AND EMPLOYEE_NO = #{employeeNo}
+    </update>
+
+    <update id="moveEmailsToTrash" parameterType="map">
+        UPDATE EMAIL_RECEIVER
+        SET EMAIL_RECEIVER_ISDELETE = 'Y'
+        WHERE EMAIL_NO IN
+        <foreach item="emailNo" collection="emailNos" open="(" separator="," close=")">
+            #{emailNo}
+        </foreach>
+        AND EMPLOYEE_NO = #{employeeNo}
+    </update>
 
 </mapper>

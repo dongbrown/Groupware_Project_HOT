@@ -33,8 +33,17 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@Override
 	public int deleteProject(SqlSession session, int projectNo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return session.delete("project.deleteProject",projectNo);
+	}
+
+	@Override
+	public int deleteProjectMember(SqlSession session, int projectNo) {
+		return session.delete("project.deleteProjectMember",projectNo);
+	}
+
+	@Override
+	public int deleteProjectWork(SqlSession session, int projectNo) {
+		return session.delete("project.deleteProjectWork",projectNo);
 	}
 
 	@Override
@@ -135,5 +144,28 @@ public class ProjectDaoImpl implements ProjectDao {
 	public int refusedCheckDelete(SqlSession session, Map<String, Integer> param) {
 		return session.delete("project.refusedCheckDelete",param);
 	}
+
+	@Override
+	public List<Project> updateProjectAll(SqlSession session, Map<String, Integer> param) {
+		RowBounds rb = new RowBounds((param.get("cPage")-1)*param.get("numPerpage"),param.get("numPerpage"));
+		List<Project> result=session.selectList("project.updateProjectAll",param,rb);
+		return result;
+	}
+
+	@Override
+	public int updateProjectAllCount(SqlSession session, Map<String, Integer> param) {
+		return session.selectOne("project.updateProjectAllCount");
+	}
+
+	@Override
+	public List<String> selectDeleteAttList(SqlSession session, int projectNo) {
+		return session.selectList("project.selectDeleteAttList",projectNo);
+	}
+
+	@Override
+	public int deleteProjectWorkAtt(SqlSession session, int projectNo) {
+		return session.delete("project.deleteProjectWorkAtt",projectNo);
+	}
+
 
 }

@@ -1,3 +1,6 @@
+// path 변수를 전역 범위에서 정의
+var path = $('meta[name=contextPath]').attr("content");
+
 $(document).ready(function() {
     // 모달 관련 변수
     var modal = $("#createCommunityModal");
@@ -32,7 +35,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: '/community/insert',
+            url: path + '/community/insert',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
@@ -61,7 +64,7 @@ $(document).ready(function() {
         var isInBookmarkedSection = $community.parent().attr('id') === 'bookmarkedCommunities';
 
         $.ajax({
-            url: '/community/toggleBookmark',
+            url: path + '/community/toggleBookmark',
             type: 'POST',
             data: { communityNo: communityNo },
             success: function(response) {
@@ -127,7 +130,7 @@ $(document).ready(function() {
     $(document).on('click', '.group', function(e) {
         if (!$(e.target).hasClass('star')) {
             var communityNo = $(this).data('community-no');
-            window.location.href = '/community/feed?communityNo=' + communityNo;
+            window.location.href = path + '/community/feed?communityNo=' + communityNo;
         }
     });
 

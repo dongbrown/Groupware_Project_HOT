@@ -72,4 +72,19 @@ public class WorkServiceImpl implements WorkService {
 
 	}
 
+	@Override
+	public List<String> selectDeleteAttList(int workNo) {
+		return dao.selectDeleteAttList(session, workNo);
+	}
+
+	@Override
+	public int deleteWorkAtt(int workNo) {
+		return dao.deleteWorkAtt(session, workNo);
+	}
+
+	@Override
+	public int deleteWork(int workNo) {
+		return dao.deleteWork(session, workNo);
+	}
+
 }

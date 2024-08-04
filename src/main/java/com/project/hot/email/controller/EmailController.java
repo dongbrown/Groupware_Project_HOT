@@ -91,7 +91,7 @@ public class EmailController {
                 result = service.getTrashEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             default:
-                return "redirect:/email?mailbox=inbox";
+                return "redirect:/email/inbox";
         }
 
         model.addAttribute("emails", result.get("emails"));
@@ -340,23 +340,7 @@ public class EmailController {
         }
     }
 
-    @PostMapping("/move-to-trash")
-    @ResponseBody
-    public ResponseEntity<?> moveEmailsToTrash(@RequestBody List<Integer> emailNos) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        int employeeNo = loginEmployee.getEmployeeNo();
 
-        try {
-            int movedCount = service.moveEmailsToTrash(emailNos, employeeNo);
-            String message = movedCount > 1 ?
-                    movedCount + "개의 이메일이 휴지통으로 이동되었습니다." :
-                    "이메일이 휴지통으로 이동되었습니다.";
-            return ResponseEntity.ok(message);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("이메일 이동 실패: " + e.getMessage());
-        }
-    }
 
     @GetMapping("/search")
     public String searchEmails(@RequestParam String keyword,
@@ -391,45 +375,54 @@ public class EmailController {
         return counts;
     }
 
-    @PostMapping("/mark-as-read/{emailNo}")
+    @PostMapping("/mark-as-read")
     @ResponseBody
-    public ResponseEntity<?> markAsRead(@PathVariable int emailNo) {
+    public ResponseEntity<?> markAsRead(@RequestBody List<Integer> emailNos,
+                                        @RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "10") int size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
         try {
-            service.markEmailAsRead(emailNo, employeeNo);
-            return ResponseEntity.ok("이메일이 읽음 상태로 변경되었습니다.");
+            Map<String, Object> result = service.markEmailsAsRead(emailNos, employeeNo, page, size);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("상태 변경 실패: " + e.getMessage());
         }
     }
 
-    @PostMapping("/toggle-important/{emailNo}")
+    @PostMapping("/toggle-important")
     @ResponseBody
-    public ResponseEntity<?> toggleImportant(@PathVariable int emailNo) {
+    public ResponseEntity<?> toggleImportant(@RequestBody List<Integer> emailNos,
+                                             @RequestParam(defaultValue = "1") int page,
+                                             @RequestParam(defaultValue = "10") int size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
         try {
-            boolean isImportant = service.toggleImportantEmail(emailNo, employeeNo);
-            String message = isImportant ? "중요 이메일로 변경되었습니다." : "이메일의 중요 표시가 해제되었습니다.";
-            return ResponseEntity.ok(message);
+            Map<String, Object> result = service.toggleImportantEmails(emailNos, employeeNo, page, size);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("중요 표시 변경 실패: " + e.getMessage());
         }
     }
 
-    @PostMapping("/trash/mark-as-read")
+    @PostMapping("/move-to-trash")
     @ResponseBody
-    public ResponseEntity<?> markTrashAsRead(@RequestBody List<Integer> emailNos) {
+    public ResponseEntity<?> moveEmailsToTrash(@RequestBody List<Integer> emailNos,
+                                               @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "10") int size) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+
         try {
-            int updatedCount = service.markTrashAsRead(emailNos);
-            return ResponseEntity.ok("성공적으로 " + updatedCount + "개의 이메일을 읽음 처리했습니다.");
+            Map<String, Object> result = service.moveEmailsToTrash(emailNos, employeeNo, page, size);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("읽음 처리 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.badRequest().body("이메일 이동 실패: " + e.getMessage());
         }
     }
 
