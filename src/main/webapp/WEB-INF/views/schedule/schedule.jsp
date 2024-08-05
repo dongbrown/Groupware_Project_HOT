@@ -1,10 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="path" value="${pageContext.request.contextPath }"/>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="contextPath" content="${pageContext.request.contextPath}">
 <title>일정관리</title>
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -376,7 +378,7 @@
     <c:import url="/WEB-INF/views/common/footer.jsp" />
     </div>
     <!-- 콘텐츠 Wrapper 끝 -->
-    <script>
+<script>
     // 전사일정 데이터를 변수로 전달
     var companySchedules = [
         <c:forEach items="${companySchedules}" var="schedule" varStatus="status">
@@ -392,7 +394,9 @@
 
     // ceo만 전사 일정 삭제 가능하도록 변수로 js에 전달
     var isCeo = ${loginEmployee.positionCode.positionCode == 1};
-    </script>
+    var path = '${pageContext.request.contextPath}';
+    var loginEmployeeNo = '${loginEmployee.employeeNo}';
+</script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script

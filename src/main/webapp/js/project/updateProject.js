@@ -3,7 +3,7 @@
 		function getProjectList(cPage) {
 			$('#project-list-table>tbody').html('');
 
-			fetch(path + '/project/projectupdateajax?cPage=' + cPage+'&employeeNo='+empNo)
+			fetch(path + '/project/projectupdatelistajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
 					makeProjectList(data.projects);
@@ -34,7 +34,7 @@
 
 				//td 삭제 버튼
 				const $deleteButtonCell = $('<td>');
-				const $deleteButton = $('<button>', { class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#projectDeleteModal', text: '삭제' });
+				const $deleteButton = $('<button>', { id: 'deleteProjectBtn',class: 'btn btn-sm btn-danger', 'data-bs-toggle': 'modal', 'data-bs-target': '#projectDeleteModal', text: '삭제' });
 
 				//td 진행률
 				$graphContainer.append($bar).append($percentageText);
@@ -62,7 +62,7 @@
 	$(document).on('click', '.project-choice', function(e) {
 		const projectNo = Number(e.target.parentElement.children[2].textContent);
 		const empNo = Number($("#projectEmpNo").text());
-	    location.assign("/project/selectProjectByNo.do?projectNo="+projectNo+"&empNo="+empNo);
+	    location.assign(path+"/project/selectProjectByNo.do?projectNo="+projectNo+"&empNo="+empNo);
 
 	  /*  const projectNo = Number(e.target.parentElement.children[1].textContent);
 	    console.log(projectNo);
@@ -120,31 +120,32 @@
     });
 
 //프로젝트 삭제 버튼
-	const delectProjectBtn=()=>{
-		const projectNo = Number(e.target.parentElement.children[2].textContent);
-
-		$.ajax({
-			url:"/project/deleteProject.do",
-			type:"GET",
-			data: { projectNo: projectNo, empNo: empNo },
-			dataType: 'json',
-			success: function() {
-				alert("삭제되었습니다.");
-			},
-			error: function(){
-				alert("삭제 실패");
-			}
-
-		})
-	}
-
-	/*$("#projectUpdateCancle").click(e=>{
-	    const projectNo = e.target.parentElement.children[1].textContent;
-	    console.log(projectNo); // 프로젝트 고유번호 넘겨서 프로젝트 수정페이지로 이동
-//선택된 프로젝트가 없습니다 이미지 안보이게
-
-	    $("#input-member").css('display','none');
-	    $("#noneProjectImg").css('display','block');
-	    $("#project-list").css('display','block');
-	    $("#project-update-window").css('display','none');//ajax 받아온 값 지워주기
-    });*/
+	$(document).on('click', '#deleteProjectBtn', function(e) {
+		const projectNo = Number($(this).closest('tr').children().eq(2).text());
+		$(document).on('click', '#delectProjectFinalBtn', function(e) {
+			fetch(path+"/project/deleteProject.do",{
+				method:'POST',
+				headers: {
+			        'Content-Type': 'application/json'
+			    },
+			     body: JSON.stringify({
+		            projectNo: projectNo,
+		            empNo: empNo
+        		}),
+			})
+			.then(response => {
+		        if (!response.ok) {
+		            throw new Error('서버 응답이 실패했습니다.');
+		        }
+		        return response.text();
+			})
+			.then(data=>{
+				alert("삭제 완료");
+				location.reload();
+			})
+			.catch(error=>{
+				alert("프로젝트 삭제 실패");
+				console.log(error);
+			})
+		});
+	});

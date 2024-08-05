@@ -54,5 +54,5 @@ getWorkList(1);
 		//프로젝트 - 작업 클릭시 해당 작업 조회 페이지 이동
 		$(document).on('click', '.work-choice', function(e) {
 			const workNo = $(this).find('td:eq(2)').text();
-			location.assign('/work/selectworkdetail.do?workNo='+workNo);
+			location.assign(path+'/work/selectworkdetail.do?workNo='+workNo);
 		})

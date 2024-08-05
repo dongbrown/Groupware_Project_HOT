@@ -1,7 +1,7 @@
 function connectSse() {
 
 	const loginEmployeeNo = $('#header-empNo').data('employeeNo');
-	const eventSource = new EventSource(`/subscribe/${loginEmployeeNo}`);
+	const eventSource = new EventSource(`http://14.36.141.71:10079/GDJ79_HOT_final/subscribe/${loginEmployeeNo}`);
 	// console.log(loginEmployeeNo);
 	eventSource.onmessage = function(event){
 		// console.log("Receive Message : "+event.data);

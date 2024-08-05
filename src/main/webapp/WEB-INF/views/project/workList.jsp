@@ -58,4 +58,7 @@
 					</div>
 </section>
 </div>
+<script>
+const path="${path}"
+</script>
 <c:import url="/WEB-INF/views/common/footer.jsp"/>

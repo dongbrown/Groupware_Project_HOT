@@ -22,7 +22,6 @@
 	display: flex;
 	flex-direction: column;
     align-items: center;
-    border:1px solid red;
 }
 
 .profile-div {
@@ -33,7 +32,6 @@
     justify-content: center;
     justify-content: space-evenly;
     min-width:1100px;
-    border:1px solid red;
 }
 
 .photo-div {
@@ -43,7 +41,6 @@
     width: 400px;
     height: 400px;
 	justify-content: center;
-    border:1px solid red;
 }
 
 .employee-photo {
@@ -70,7 +67,6 @@
     margin-left: 10%;
     font-size: 2rem;
     font-weight: 900;
-    border:1px solid red;
 }
 
 .info-div div{

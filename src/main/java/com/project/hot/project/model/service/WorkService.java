@@ -15,4 +15,7 @@ public interface WorkService {
 	int insertWorkAtt(Map<String,Object> param);
 	Map<String,Object> selectWorkAll(Map<String,Integer> param);
 	Work selectWorkByWorkNo(int workNo);
+	List<String> selectDeleteAttList(int workNo);
+	int deleteWorkAtt(int workNo);
+	int deleteWork(int workNo);
 }

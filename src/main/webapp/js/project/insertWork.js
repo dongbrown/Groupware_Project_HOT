@@ -57,7 +57,7 @@ getProjectList(1);
 	$(document).on('click', '.project-choice', function(e) {
 		const projectNo = Number(e.target.parentElement.children[2].textContent);
 		const empNo = Number($("#projectEmpNo").text());
-	    location.assign("/work/insertwork.do?projectNo="+projectNo);
+	    location.assign(path+"/work/insertwork.do?projectNo="+projectNo);
 	});
 
 

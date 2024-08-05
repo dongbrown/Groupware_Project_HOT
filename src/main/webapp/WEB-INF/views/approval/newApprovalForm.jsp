@@ -29,7 +29,7 @@ request.setAttribute("currentDate", formattedDate);
 		<div>
 			<h3>결재 신청서</h3>
 		</div>
-		<div class="content-container" STYLE="border: 1px solid red">
+		<div class="content-container">
 			<div class="left-section">
 				<div class="form-group">
 					<label for="formType">전자결재 양식 선택</label> <select id="formType"

@@ -20,7 +20,6 @@ public interface EmailService {
     Email getEmailByNo(int emailNo);
     Employee findEmployeeByEmployeeId(String employeeId);
     List<Employee> searchEmployees(String keyword);
-    int moveEmailsToTrash(List<Integer> emailNos, int employeeNo);
     void saveEmail(Email email, MultipartFile[] attachments) throws IOException;
     void deleteEmails(List<Integer> emailNos);
     byte[] downloadAttachment(int attachmentId) throws IOException;
@@ -29,9 +28,6 @@ public interface EmailService {
     Email prepareReplyEmail(Email originalEmail);
     Email prepareForwardEmail(Email originalEmail);
     int getUnreadCount(int employeeNo);
-    void markEmailAsRead(int emailNo, int employeeNo);
-    boolean toggleImportantEmail(int emailNo, int employeeNo);
-    int markTrashAsRead(List<Integer> emailNos);
     int deletePermanently(List<Integer> emailNos, int employeeNo);
     int restoreFromTrash(List<Integer> emailNos, int employeeNo);
     EmailAtt getAttachment(int attachmentId);
@@ -41,4 +37,8 @@ public interface EmailService {
     Integer getImportantUnreadCount(int employeeNo);
     Integer getTrashCount(int employeeNo);
 	List<Email> getRecentInboxEmails(int employeeNo, int i);
+	Map<String, Object> markEmailsAsRead(List<Integer> emailNos, int employeeNo, int page, int size);
+	Map<String, Object> toggleImportantEmails(List<Integer> emailNos, int employeeNo, int page, int size);
+	Map<String, Object> moveEmailsToTrash(List<Integer> emailNos, int employeeNo, int page, int size);
+
 }

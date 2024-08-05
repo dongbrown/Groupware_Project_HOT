@@ -56,8 +56,22 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public int deleteProject(int projectNo) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = dao.deleteProject(session, projectNo);
+		if(result > 0) {
+			int resultMember = dao.deleteProjectMember(session, projectNo);
+			if(resultMember > 0) {
+				int resultWork = dao.deleteProjectWork(session, projectNo);
+				if(resultWork > 0) {
+					return result;
+				}else {
+					throw new RuntimeException("프로젝트 작업 삭제 실패");
+				}
+			}else {
+				throw new RuntimeException("프로젝트 맴버 삭제 실패");
+			}
+		}else {
+			throw new RuntimeException("프로젝트 삭제 실패");
+		}
 	}
 
 	@Override
@@ -142,6 +156,26 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public int refusedCheckDelete(Map<String, Integer> param) {
 		return dao.refusedCheckDelete(session, param);
+	}
+
+	@Override
+	public Map<String, Object> updateProjectAll(Map<String, Integer> param) {
+		Map<String,Object> result=new HashMap<>();
+			result.put("depts", dao.selectDeptAll(session));
+			result.put("projects", dao.updateProjectAll(session,param));
+			result.put("totalPage",Math.ceil((double)dao.updateProjectAllCount(session,param)/param.get("numPerpage")));
+		return result;
+	}
+
+	@Override
+	public List<String> selectDeleteAttList(int projectNo) {
+		return dao.selectDeleteAttList(session, projectNo);
+	}
+
+	@Override
+	public int deleteProjectWorkAtt(int projectNo) {
+		int resultAtt = dao.deleteProjectWorkAtt(session, projectNo);
+		return resultAtt;
 	}
 
 }

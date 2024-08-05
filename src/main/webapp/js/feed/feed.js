@@ -1,3 +1,4 @@
+var path = $('meta[name=contextPath]').attr("content");
 $(document).ready(function() {
     loadFeeds();
 
@@ -78,7 +79,7 @@ function submitFeed() {
     }
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/insert',
+        url: path + '/community/feed/insert',
         type: 'POST',
         data: formData,
         processData: false,
@@ -104,7 +105,7 @@ function submitFeed() {
 function loadFeeds() {
     const communityNo = $("#community-container").data("id");
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/list',
+        url: path + '/community/feed/list',
         method: 'GET',
         data: { communityNo: communityNo },
         success: function(response) {
@@ -125,12 +126,12 @@ function withdrawCommunity() {
     const communityNo = $("#community-container").data("id");
     $.ajax({
         type: 'DELETE',
-        url: '/community/feed/withdrawCommunity',
+        url: path + '/community/feed/withdrawCommunity',
         contentType: 'application/json',
         data: JSON.stringify({ id: communityNo }),
         success: function(response) {
             alert('커뮤니티를 탈퇴하였습니다.');
-            location.href = '/community/';
+            location.href = path + '/community/';
         },
         error: function(xhr, status, error) {
             console.log('커뮤니티 탈퇴 오류:', error);
@@ -234,7 +235,7 @@ function updateFeed(feedNo) {
     }
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/update',
+        url: path + '/community/feed/update',
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({ feedNo: feedNo, feedContent: updatedContent }),
@@ -259,7 +260,7 @@ function deleteFeed(feedNo) {
     if (!confirm('정말로 이 피드를 삭제하시겠습니까?')) return;
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/delete',
+        url: path + '/community/feed/delete',
         method: 'DELETE',
         contentType: 'application/json',
         data: JSON.stringify({ feedNo: feedNo }),
@@ -285,7 +286,7 @@ function showAddParticipant() {
 
 function loadDepartments() {
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/api/employee/departmentList',
+        url: path + '/api/employee/departmentList',
         type: 'GET',
         dataType: 'json',
         success: function(departments) {
@@ -302,7 +303,7 @@ function loadDepartments() {
 function loadNonParticipants() {
     const communityNo = $("#community-container").data("id");
     $.ajax({
-        url: '/community/feed/nonParticipants',
+        url: path + '/community/feed/nonParticipants',
         type: 'GET',
         data: { communityNo: communityNo },
         dataType: 'json',
@@ -403,7 +404,7 @@ function getSelectedParticipants() {
 function inviteParticipants(participants) {
     const communityNo = $("#community-container").data("id");
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/invite',
+        url: path + '/community/feed/invite',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -437,7 +438,7 @@ function likeFeed(feedNo, likeButton) {
     const likeCount = likeButton.find('.like-count');
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/like',
+        url: path + '/community/feed/like',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ feedNo: feedNo }),
@@ -459,8 +460,7 @@ function likeFeed(feedNo, likeButton) {
             }
         },
         error: function(xhr, status, error) {
-            console.error('좋아요 오류:', error);
-            alert('좋아요 처리 중 오류가 발생했습니다.');
+
         },
         complete: function() {
             likeButton.data('processing', false);
@@ -480,7 +480,7 @@ function toggleComments(feedNo) {
 
 function loadComments(feedNo) {
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comments',
+        url: path + '/community/feed/comments',
         method: 'GET',
         data: { feedNo: feedNo },
         success: function(response) {
@@ -583,7 +583,7 @@ function submitEditComment(feedNo, commentNo) {
     }
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/update',
+        url: path + '/community/feed/comment/update',
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -610,7 +610,7 @@ function deleteComment(feedNo, commentNo) {
     if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) return;
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/delete',
+        url: path + '/community/feed/comment/delete',
         method: 'DELETE',
         contentType: 'application/json',
         data: JSON.stringify({ feedCommentNo: commentNo }),
@@ -642,7 +642,7 @@ function submitReply(feedNo, parentCommentNo) {
     }
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/add',
+        url: path + '/community/feed/comment/add',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -675,7 +675,7 @@ function submitComment(feedNo) {
     }
 
     $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/community/feed/comment/add',
+        url: path + '/community/feed/comment/add',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

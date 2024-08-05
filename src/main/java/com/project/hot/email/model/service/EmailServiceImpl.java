@@ -167,11 +167,6 @@ public class EmailServiceImpl implements EmailService {
         return dao.searchEmployees(keyword, sqlSession);
     }
 
-    @Override
-    @Transactional
-    public int moveEmailsToTrash(List<Integer> emailNos, int employeeNo) {
-        return dao.moveEmailsToTrash(emailNos, employeeNo, sqlSession);
-    }
 
     @Override
     @Transactional
@@ -247,22 +242,6 @@ public class EmailServiceImpl implements EmailService {
         return dao.getUnreadCount(employeeNo, sqlSession);
     }
 
-    @Override
-    @Transactional
-    public void markEmailAsRead(int emailNo, int employeeNo) {
-        dao.updateEmailReadStatus(emailNo, employeeNo, sqlSession);
-    }
-
-    @Override
-    @Transactional
-    public boolean toggleImportantEmail(int emailNo, int employeeNo) {
-        return dao.toggleImportantEmail(emailNo, employeeNo, sqlSession);
-    }
-
-    @Override
-    public int markTrashAsRead(List<Integer> emailNos) {
-        return dao.markTrashAsRead(emailNos, sqlSession);
-    }
 
     @Override
     @Transactional
@@ -422,6 +401,24 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public List<Email> getRecentInboxEmails(int employeeNo, int limit) {
         return dao.selectRecentInboxEmails(employeeNo, limit, sqlSession);
+    }
+
+    @Override
+    public Map<String, Object> markEmailsAsRead(List<Integer> emailNos, int employeeNo, int page, int size) {
+        dao.markEmailsAsRead(emailNos, employeeNo, sqlSession);
+        return getInboxEmails(employeeNo, page, size);
+    }
+
+    @Override
+    public Map<String, Object> toggleImportantEmails(List<Integer> emailNos, int employeeNo, int page, int size) {
+    	dao.toggleImportantEmails(emailNos, employeeNo, sqlSession);
+        return getInboxEmails(employeeNo, page, size);
+    }
+
+    @Override
+    public Map<String, Object> moveEmailsToTrash(List<Integer> emailNos, int employeeNo, int page, int size) {
+    	dao.moveEmailsToTrash(emailNos, employeeNo, sqlSession);
+        return getInboxEmails(employeeNo, page, size);
     }
 
 }

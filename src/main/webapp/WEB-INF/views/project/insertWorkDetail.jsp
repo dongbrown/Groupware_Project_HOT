@@ -129,6 +129,9 @@
 	</div>
 </section>
 </div>
-<script>const empNo = "${loginEmployee.employeeNo}"</script>
+<script>
+const path="${path}"
+const empNo = "${loginEmployee.employeeNo}"
+</script>
 <script src="${path }/js/project/insertWorkDetail.js"></script>
 <c:import url="/WEB-INF/views/common/footer.jsp"/>
