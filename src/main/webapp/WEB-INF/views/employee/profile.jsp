@@ -119,10 +119,7 @@
 </div>
 <script>
 	const path = '${path}';
-	const no = $
-	{
-		loginEmployee.employeeNo
-	};
+	const no = ${loginEmployee.employeeNo};
 	const employeePhoto = '${loginEmployee.employeePhoto}';
 </script>
 <script src='${path }/js/employee/profile.js'></script>

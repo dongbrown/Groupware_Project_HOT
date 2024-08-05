@@ -7,6 +7,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="contextPath" content="${pageContext.request.contextPath}">
     <title>사내 메일</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
@@ -127,6 +128,7 @@
 <script type="text/javascript" src="${path}/js/common/pagebar.js"></script>
 
 <script>
+
 let contextPath = '${pageContext.request.contextPath}/email';
 let path = '${pageContext.request.contextPath}';
 

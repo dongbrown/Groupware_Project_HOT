@@ -24,7 +24,7 @@
                         <h4 style="margin-top: 30px; font-weight: bolder; color:white;"><c:out value="${loginEmployee.employeeName}" />  </h3>
                         <a style="color:white;"><c:out value="${loginEmployee.departmentCode.departmentTitle}" /></a>
                         <div id="member-card-mail">
-                            <div><a href="${path }/employee/profile"><img src="https://i.imgur.com/LIHIxyI.png" width="40px" style="margin-bottom: 3px;"></a></div>
+                            <div><a href="${path }/employee/profile"><img src="https://i.imgur.com/LIHIxyI.png" width="40px" style="margin-bottom: 3px;" onclick="${path}/email/inbox?page=1"></a></div>
                             <div><a href=""><img src="https://i.imgur.com/JjYn69Q.png" width="40px"></a></div>
                         </div>
                         </div>

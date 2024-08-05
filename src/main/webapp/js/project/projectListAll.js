@@ -181,6 +181,7 @@ function makeProjectList2(projects) {
 		    })
 			.then(data=>{
 				alert("프로젝트 참여 요청 완료");
+				location.reload();
 		    $('#joinModal').modal('hide');
 			})
 			.catch(error=>{
@@ -197,7 +198,7 @@ function makeProjectList2(projects) {
 		let empNo = $(this).closest('.elemento__cartao').find('#employeeNo').text();
 
 		$("#requestApprovalBtn").click(e=>{
-			fetch(path+"requestApprovalBtn.do",{
+			fetch(path+"/project/requestApprovalBtn.do",{
 				method:'POST',
 				headers: {
 			        'Content-Type': 'application/json'
@@ -257,7 +258,7 @@ function makeProjectList2(projects) {
 
 		$("#requestRefuseResultBtn").click(e=>{
 			const refuseComent = $('#refuseTextarea').val();
-			fetch(path+'requestRefuseUpdate.do',{
+			fetch(path+'/project/requestRefuseUpdate.do',{
 				method:'POST',
 				headers: {
 			        'Content-Type': 'application/json'
@@ -297,7 +298,7 @@ function makeProjectList2(projects) {
 		}
 		//거절 코멘트 확인 후 삭제 버튼
 		$("#refusedCheckBtn").click(e=>{
-			fetch(path+'refusedCheckDelete.do',{
+			fetch(path+'/project/refusedCheckDelete.do',{
 				method:'POST',
 				headers: {
 			        'Content-Type': 'application/json'

@@ -1,6 +1,3 @@
-// contextPath 가져오기
-var path = $('meta[name=contextPath]').attr("content");
-
 $(document).ready(function() {
     // 가입 버튼 클릭 이벤트
     $(document).on('click', '.join-btn', function() {
