@@ -1,3 +1,5 @@
+var path = $('meta[name=contextPath]').attr("content");
+
 var EmailCommon = {
     contextPath: '',
     files: [],
@@ -9,7 +11,7 @@ var EmailCommon = {
         }
         window.EmailCommonInitialized = true;
 
-        this.contextPath = contextPath;
+        this.contextPath = path;
         this.bindEvents();
 
         this.updateUnreadCounts();
