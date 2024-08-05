@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev,next',
             center: 'title',
-            right: 'dayGridMonth'
+            right: 'today'
         },
         initialView: 'dayGridMonth',
         titleFormat: { month: 'long' },
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
      function updateTodaySchedules(allSchedules) {
         var todolistEl = document.getElementById('todolist');
-        todolistEl.innerHTML = ''; // 기존 내용을 지웁니다.
+        todolistEl.innerHTML = '';
 
         var todaySchedules = allSchedules.filter(function(schedule) {
             return isToday(schedule.start);

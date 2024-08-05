@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <head>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/view.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/email/view.css">
 </head>
 
 
@@ -46,7 +46,7 @@
                                class="btn btn-sm btn-primary download-btn"
                                download="${attachment.emailAttOriginalFilename}">
                                 <i class="fas fa-download"></i> 다운로드
-                            </a>
+                            </a>8
                         </li>
                     </c:forEach>
                 </ul>

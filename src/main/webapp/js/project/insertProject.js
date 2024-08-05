@@ -193,7 +193,7 @@ function getTodayDate() {
 				success: function(response) {
 					alert("프로젝트 등록이 완료되었습니다.")
 					console.log(projectData);
-					location.assign("/");
+					location.assign(path+"/");
 				},
 				error: function(error) {
 					console.log(projectData);

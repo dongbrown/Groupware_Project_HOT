@@ -9,11 +9,10 @@ var EmailCommon = {
         }
         window.EmailCommonInitialized = true;
 
-        this.contextPath = contextPath;
+        this.contextPath = '/GDJ79_HOT_final' + contextPath;
         this.bindEvents();
 
         this.updateUnreadCounts();
-        setInterval(this.updateUnreadCounts.bind(this), 30000);
 
         console.log('EmailCommon initialized with contextPath:', this.contextPath);
     },
@@ -315,8 +314,7 @@ var EmailCommon = {
             data: JSON.stringify(emailNos),
             success: function(response) {
                 alert('선택한 이메일을 휴지통으로 이동했습니다.');
-                $('#mailContent').html(response);
-                EmailCommon.reattachEventListeners();
+                location.assign(path + '/email/inbox')
             },
             error: function(xhr, status, error) {
                 console.error('이메일 삭제 실패:', error);
@@ -608,9 +606,8 @@ var EmailCommon = {
             data: JSON.stringify(emailNos),
             success: function(response) {
                 console.log('이메일을 읽음으로 표시했습니다.');
-                EmailCommon.updateUnreadCount();
-                $('#mailContent').html(response);
-                EmailCommon.reattachEventListeners();
+                location.assign(path + '/email/inbox')
+
             },
             error: function(xhr, status, error) {
                 console.error('이메일 읽음 표시 실패:', error);
@@ -629,8 +626,11 @@ var EmailCommon = {
             data: JSON.stringify(emailNos),
             success: function(response) {
                 console.log('이메일의 중요 표시를 변경했습니다.');
+  				location.assign(path + '/email/inbox')
+
                 $('#mailContent').html(response);
                 EmailCommon.reattachEventListeners();
+
             },
             error: function(xhr, status, error) {
                 console.error('중요 표시 변경 실패:', error);
@@ -640,7 +640,7 @@ var EmailCommon = {
 
     replyEmail: function(emailNo) {
         $.ajax({
-            url: this.contextPath + '/reply/' + emailNo,
+            url: this.contextPath + '/GDJ79_HOT_final/email/reply/' + emailNo,
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
@@ -655,7 +655,7 @@ var EmailCommon = {
 
     forwardEmail: function(emailNo) {
         $.ajax({
-            url: this.contextPath + '/forward/' + emailNo,
+            url: this.contextPath + '/GDJ79_HOT_final/email/forward/' + emailNo,
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
@@ -671,7 +671,7 @@ var EmailCommon = {
     deleteEmail: function(emailNo) {
         if (confirm('이 이메일을 삭제하시겠습니까?')) {
             $.ajax({
-                url: this.contextPath + '/delete',
+                url: contextPath + '/delete',
                 type: 'POST',
                 data: JSON.stringify([emailNo]),
                 contentType: 'application/json',
@@ -763,8 +763,7 @@ var EmailCommon = {
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
             success: function(response) {
-                alert(response);
-                EmailCommon.loadMailbox('trash');
+     				location.assign(path + '/email/trash')
             },
             error: function(xhr, status, error) {
                 alert("읽음 처리 중 오류가 발생했습니다: " + xhr.responseText);
@@ -783,8 +782,7 @@ var EmailCommon = {
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
             success: function(response) {
-                alert(response);
-                EmailCommon.loadMailbox('trash');
+                location.assign(path + '/email/trash')
             },
             error: function(xhr, status, error) {
                 alert("영구 삭제 중 오류가 발생했습니다: " + xhr.responseText);
@@ -803,8 +801,7 @@ var EmailCommon = {
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
             success: function(response) {
-                alert(response);
-                EmailCommon.loadMailbox('trash');
+                location.assign(path + '/email/trash')
             },
             error: function(xhr, status, error) {
                 alert("복구 중 오류가 발생했습니다: " + xhr.responseText);
@@ -837,6 +834,9 @@ var EmailCommon = {
             }
         });
     },
+    replaceContent: function(content) {
+    $('#mailContent').empty().html(content);
+	},
 
     downloadAttachment: function(attachmentId, filename) {
         var url = this.contextPath + '/download/' + attachmentId;
