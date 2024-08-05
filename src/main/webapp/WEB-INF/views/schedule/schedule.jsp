@@ -42,67 +42,61 @@
                     <div id="calendar2-container">
                         <div id="calendar2"></div>
                     </div>
-                    <!-- 내 일정 -->
-                    <div class="calendar-section">
-                        <div class="calendar-type toggle-header">
-                            <img src="${path}/images/under.png" id="under" alt="v"
-                                class="arrow-icon" /> 내 일정
-                        </div>
-                        <div class="legend-items">
-                            <c:forEach var="schedule" items="${mySchedules}">
-                                <div class="legend-item">
-                                    <input type="checkbox" class="schedule-checkbox"
-                                        data-id="${schedule.id}" checked>
-                                    <span>${schedule.title}</span>
-                                    <span class="legend-color"
-                                        style="background-color: ${schedule.color};"></span>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </div>
+					<!-- 내 일정 -->
+					<div class="calendar-section">
+					    <div class="calendar-type toggle-header">
+					        <input type="checkbox" class="section-checkbox" data-section="my">
+					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" /> 내 일정
+					    </div>
+					    <div class="legend-items">
+					        <c:forEach var="schedule" items="${mySchedules}">
+					            <div class="legend-item">
+					                <input type="checkbox" class="schedule-checkbox" data-id="${schedule.id}" data-type="my" checked>
+					                <span>${schedule.title}</span>
+					                <span class="legend-color" style="background-color: ${schedule.color};"></span>
+					            </div>
+					        </c:forEach>
+					    </div>
+					</div>
 
-                    <!-- 공유 일정 -->
-                    <div class="calendar-section">
-                        <div class="calendar-type toggle-header">
-                            <img src="${path}/images/under.png" id="under" alt="v"
-                                class="arrow-icon" /> 공유 일정
-                        </div>
-                        <div class="legend-items">
-                            <c:forEach var="schedule" items="${sharedSchedules}">
-                                <div class="legend-item">
-                                    <input type="checkbox" class="schedule-checkbox"
-                                        data-id="${schedule.id}" checked>
-                                    <span>${schedule.title}</span>
-                                    <span class="legend-color"
-                                        style="background-color: ${schedule.color};"></span>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </div>
-                    <!-- 전사 일정  -->
-                    <div class="calendar-section">
-                        <div class="calendar-type toggle-header">
-                            <img src="${path}/images/under.png" id="under" alt="v"
-                                class="arrow-icon" /> 전사 일정
-                        </div>
-                        <div class="legend-items">
-                            <c:forEach var="schedule" items="${companySchedules}">
-                                <div class="legend-item">
-                                    <input type="checkbox" class="schedule-checkbox"
-                                        data-id="${schedule.id}" data-type="company" checked>
-                                    <span>${schedule.title}</span>
-                                    <span class="legend-color"
-                                        style="background-color: ${schedule.color};"></span>
-                                </div>
-                            </c:forEach>
-                        </div>
-                        <div>
-                            <c:if test="${loginEmployee.positionCode.positionCode == 1}">
-                                <button id="addCompanyScheduleBtn" class="btn btn-primary">전사일정
-                                    등록</button>
-                            </c:if>
-                        </div>
-                    </div>
+					<!-- 공유 일정 -->
+					<div class="calendar-section">
+					    <div class="calendar-type toggle-header">
+					        <input type="checkbox" class="section-checkbox" data-section="share">
+					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" /> 공유 일정
+					    </div>
+					    <div class="legend-items">
+					        <c:forEach var="schedule" items="${sharedSchedules}">
+					            <div class="legend-item">
+					                <input type="checkbox" class="schedule-checkbox" data-id="${schedule.id}" data-type="share" checked>
+					                <span>${schedule.title}</span>
+					                <span class="legend-color" style="background-color: ${schedule.color};"></span>
+					            </div>
+					        </c:forEach>
+					    </div>
+					</div>
+
+					<!-- 전사 일정  -->
+					<div class="calendar-section">
+					    <div class="calendar-type toggle-header">
+					        <input type="checkbox" class="section-checkbox" data-section="company">
+					        <img src="${path}/images/under.png" id="under" alt="v" class="arrow-icon" /> 전사 일정
+					    </div>
+					    <div class="legend-items">
+					        <c:forEach var="schedule" items="${companySchedules}">
+					            <div class="legend-item">
+					                <input type="checkbox" class="schedule-checkbox" data-id="${schedule.id}" data-type="company" checked>
+					                <span>${schedule.title}</span>
+					                <span class="legend-color" style="background-color: ${schedule.color};"></span>
+					            </div>
+					        </c:forEach>
+					    </div>
+					    <div>
+					        <c:if test="${loginEmployee.positionCode.positionCode == 1}">
+					            <button id="addCompanyScheduleBtn" class="btn btn-primary">전사일정 등록</button>
+					        </c:if>
+					    </div>
+					</div>
                 </div>
                 <div id="calendar-container">
                     <div id="calendar"></div>
