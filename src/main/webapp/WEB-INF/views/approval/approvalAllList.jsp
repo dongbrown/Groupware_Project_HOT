@@ -18,7 +18,7 @@
 		<div>
 		<div class="documentTitle">
 			<h3>전체 결재 문서</h3>
-			<a href="/approval/newApproval.do" />
+			<a href="/GDJ79_HOT_final/approval/newApproval.do" />
 				<button class="btn btn-primary">작성하기</button>
 			</a>
 		</div>
