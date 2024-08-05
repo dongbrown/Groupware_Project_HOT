@@ -77,12 +77,13 @@
     $(document).ready(function() {
         const currentPage = ${currentPage};
         const totalPages = ${totalPages};
+        let currentSize = 10;
         const mailbox = '${mailbox}';
 
         function goToPage(page) {
             $.ajax({
                 url: '${pageContext.request.contextPath}/email/' + mailbox,
-                data: { page: page },
+                data: { page: page, size: currentSize },
                 success: function(response) {
                     $('#emailList').html($(response).find('#emailList').html());
                     history.pushState(null, '', '${pageContext.request.contextPath}/email/' + mailbox + '?page=' + page);

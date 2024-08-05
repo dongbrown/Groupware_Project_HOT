@@ -834,11 +834,9 @@ var EmailCommon = {
             }
         });
     },
-    replaceContent: function(content) {
-    $('#mailContent').empty().html(content);
-	},
 
-    downloadAttachment: function(attachmentId, filename) {
+
+   downloadAttachment: function(attachmentId, filename) {
         var url = this.contextPath + '/download/' + attachmentId;
 
         fetch(url)
@@ -853,6 +851,15 @@ var EmailCommon = {
                 console.error('파일 다운로드 중 오류 발생:', error);
                 alert('파일 다운로드에 실패했습니다.');
             });
+    },
+
+    initAttachments: function() {
+        $('.download-btn').on('click', function(e) {
+            e.preventDefault();
+            var attachmentId = $(this).data('attachment-id');
+            var filename = $(this).data('filename');
+            EmailCommon.downloadAttachment(attachmentId, filename);
+        });
     }
 };
 
@@ -860,6 +867,7 @@ var EmailCommon = {
 $(document).ready(function() {
     var contextPath = '/email';
     EmailCommon.init(contextPath);
+    EmailCommon.initAttachments();
     $('#writeBtn').click(function(e) {
         e.preventDefault();
         EmailCommon.showWriteForm();

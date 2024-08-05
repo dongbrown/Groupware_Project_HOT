@@ -154,7 +154,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@Override
 	public int updateProjectAllCount(SqlSession session, Map<String, Integer> param) {
-		return session.selectOne("project.updateProjectAllCount");
+		return session.selectOne("project.updateProjectAllCount",param);
 	}
 
 	@Override

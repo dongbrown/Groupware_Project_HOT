@@ -51,7 +51,7 @@
 					<!-- 프로젝트 설명 -->
 					<p style="font-weight: bolder;">프로젝트 설명</p>
 					<div class="form-floating">
-						<textarea class="form-control" placeholder="Leave a comment here"
+						<textarea class="form-control" name="projectContent" placeholder="Leave a comment here"
 							id="floatingTextarea"></textarea>
 						<label for="floatingTextarea">프로젝트 설명</label> <span
 							id="project-contents-count" style="margin-left: auto;">0/1000</span>

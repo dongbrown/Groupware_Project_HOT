@@ -82,12 +82,13 @@
 <script>
     let currentPage = ${currentPage};
     const totalPages = ${totalPages};
+    let currentSize = 10;
 
     function goToPage(page) {
         console.log('goToPage called with page:', page);
         $.ajax({
             url: '${pageContext.request.contextPath}/email/${mailbox}',
-            data: { page: page },
+            data: { page: page, size: currentSize },
             success: function(response) {
                 console.log('AJAX success, response:', response);
                 $('#emailList').html($(response).find('#emailList').html());
