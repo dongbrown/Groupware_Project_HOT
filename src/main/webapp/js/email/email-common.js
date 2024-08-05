@@ -11,7 +11,7 @@ var EmailCommon = {
         }
         window.EmailCommonInitialized = true;
 
-        this.contextPath = path + 'email';
+        this.contextPath = path + '/email';
         this.bindEvents();
 
         this.updateUnreadCounts();
