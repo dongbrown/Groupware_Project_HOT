@@ -641,7 +641,7 @@ var EmailCommon = {
 
     replyEmail: function(emailNo) {
         $.ajax({
-            url: this.contextPath + '/email/reply/' + emailNo,
+            url: this.contextPath + '/GDJ79_HOT_final/email/reply/' + emailNo,
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
@@ -656,7 +656,7 @@ var EmailCommon = {
 
     forwardEmail: function(emailNo) {
         $.ajax({
-            url: this.contextPath + '/email/forward/' + emailNo,
+            url: this.contextPath + '/GDJ79_HOT_final/email/forward/' + emailNo,
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
