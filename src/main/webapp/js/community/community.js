@@ -1,6 +1,3 @@
-// path 변수를 전역 범위에서 정의
-var path = $('meta[name=contextPath]').attr("content");
-
 $(document).ready(function() {
     // 모달 관련 변수
     var modal = $("#createCommunityModal");
