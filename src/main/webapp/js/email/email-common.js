@@ -1,17 +1,21 @@
 var EmailCommon = {
     contextPath: '',
     files: [],
-    initialized: false,
 
     init: function(contextPath) {
-        if (this.initialized) return;
-        this.initialized = true;
+        if (window.EmailCommonInitialized) {
+            console.log('EmailCommon already initialized');
+            return;
+        }
+        window.EmailCommonInitialized = true;
 
         this.contextPath = contextPath;
         this.bindEvents();
 
         this.updateUnreadCounts();
         setInterval(this.updateUnreadCounts.bind(this), 30000);
+
+        console.log('EmailCommon initialized with contextPath:', this.contextPath);
     },
 
     bindEvents: function() {
@@ -774,7 +778,7 @@ var EmailCommon = {
         }
 
         $.ajax({
-            url: this.contextPath + '/trash/delete-permanently',
+            url: EmailCommon.contextPath + '/trash/delete-permanently',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
