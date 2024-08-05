@@ -28,12 +28,19 @@ public interface ProjectDao {
 	int updateProject(SqlSession session,Project p);
 	int updateProjectDeleteEmp(SqlSession session,Map<String,Integer> param);
 	int deleteProject(SqlSession session,int projectNo);
+	int deleteProjectMember(SqlSession session,int projectNo);
+	int deleteProjectWork(SqlSession session,int projectNo);
+	int deleteProjectWorkAtt(SqlSession session,int projectNo);
+	List<String> selectDeleteAttList(SqlSession session,int projectNo);
 	List<Project> selectProjectAll(SqlSession session,Map<String,Integer> param);
 	List<Project> selectProjectAllByEmpNo(SqlSession session, Map<String, Integer> param);
+	List<Project> updateProjectAll(SqlSession session,Map<String,Integer> param);
+	int updateProjectAllCount(SqlSession session, Map<String, Integer> param);
 	int selectProjectAllCountByEmpNo(SqlSession session, Map<String, Integer> param);
 	int responseApprovalInsert(SqlSession session, Map<String, Integer> param);
 	int responseApprovalDelete(SqlSession session, Map<String, Integer> param);
 	int requestRefuseUpdate(SqlSession session, Map<String, Object> param);
 	int refusedCheckDelete(SqlSession session, Map<String, Integer> param);
+
 
 }

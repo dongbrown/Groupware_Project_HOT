@@ -18,9 +18,9 @@ public class Approver {
 	private int approverNo;
 	private String approvalNo;
 	private Employee employeeNo;
-	private String approverStatus;
+	private int approverStatus;
 	private Date approverDate;
 	private String approverReject;
-	private String approverLevel;
+	private int approverLevel;
 
 }

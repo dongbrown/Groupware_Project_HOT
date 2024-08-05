@@ -4,9 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
 <c:set var="loginEmployee" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
-<c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:import url="/WEB-INF/views/common/sidebar.jsp"/>
+<c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link href="${path}/css/common/index.css" rel="stylesheet" type="text/css">
 <section>
@@ -37,7 +39,8 @@
                     </div>
 
                 <div id="mail-card">
-                <p style="font-weight:bolder; font-size:17px; margin:10px; text-align:center; color:#4E73DF;">신규 커뮤니티 목록</p>
+                <div class="moreSmallBtn"><a href="${path}/community/communityList" style="">more+</a></div>
+                <p style="font-weight:bolder; font-size:17px; margin:10px;color:#4E73DF;">사내 커뮤니티 목록</p>
                 	<div>
 						<table class="table table-hover table-striped" >
 						  <thead>
@@ -74,6 +77,7 @@
 						</div>
 					</div>
 					<div id="mainAprrovalTable">
+					<div class="moreBtn"><a href="#" style="">more+</a></div>
 						<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 결재 문서</p>
 	                	<div>
 							<table class="table table-hover table-striped" >
@@ -94,10 +98,13 @@
 
                     <div id="projectBox">
                     <p style="font-weight:bolder; font-size:20px; margin:10px;color:#4E73DF;">프로젝트현황</p>
+                    <div class="moreProjectBtn"><a href="#" style="">more+</a></div>
 					        <div class="donut-chart" data-percent="50">
 					            <svg width="100%" height="100%" viewBox="0 0 42 42">
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#3498db" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="projectChart1" style="text-align:center;">프로젝트 1</div>
+					                <div id="projectChartEmp1" style="text-align:center;">담당자 : 이홍보</div>
 					            </svg>
 					            <div class="percent">0%</div>
 					        </div>
@@ -105,6 +112,8 @@
 					            <svg width="100%" height="100%" viewBox="0 0 42 42">
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#2980b9" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="projectChart2" style="text-align:center;">프로젝트 1</div>
+					                <div id="projectChartEmp2" style="text-align:center;">담당자 : 이홍보</div>
 					            </svg>
 					            <div class="percent">0%</div>
 					        </div>
@@ -112,32 +121,65 @@
 					            <svg width="100%" height="100%" viewBox="0 0 42 42">
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
 					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#1abc9c" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="projectChart3" style="text-align:center;">프로젝트 1</div>
+					                <div id="projectChartEmp3" style="text-align:center;">담당자 : 이홍보</div>
 					            </svg>
 					            <div class="percent">0%</div>
 					        </div>
                     </div>
-                    <div>작업 현황</div>
-                </div>
-            <div id="agenda-card">
+                    <div id="projectBox">
+						<p style="font-weight:bolder; font-size:20px; margin:10px;color:#4E73DF;">작업현황</p>
+						<div class="moreProjectBtn"><a href="#" style="">more+</a></div>
+					        <div class="donut-chart" data-percent="90">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#3498db" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="workChart1" style="text-align:center;">작업 1</div>
+					            </svg>
+					            <div class="percent">0%</div>
+					        </div>
+					        <div class="donut-chart" data-percent="30">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#2980b9" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="workChart2" style="text-align:center;">작업 1</div>
+					            </svg>
+					            <div class="percent">0%</div>
 
-            <p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 메일함</p>
-					<table class="table table-hover">
-					  <thead>
-					    <tr>
-					      <th scope="col">no</th>
-					      <th scope="col">발신자</th>
-					      <th scope="col">제목</th>
-					    </tr>
-					  </thead>
-					  <tbody id="mainMailList">
-					  </tbody>
-					</table>
-			</div>
+					        </div>
+					        <div class="donut-chart" data-percent="50">
+					            <svg width="100%" height="100%" viewBox="0 0 42 42">
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#e6e6e6" stroke-width="3"></circle>
+					                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#1abc9c" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="100" class="donut"></circle>
+					                <div id="workChart3" style="text-align:center;">작업 1</div>
+					            </svg>
+					            <div class="percent">0%</div>
+					        </div>
+					</div>
+                </div>
+				<div id="agenda-card">
+					<div class="moreBtn">
+					    <a href="${path}/email/inbox?page=1" id="moreMailBtn" style="">more+</a>
+					</div>
+					<p style="font-weight:bolder; font-size:20px; margin:10px; text-align:center; color:#4E73DF;">최근 메일함</p>
+				    <table class="table table-hover">
+				        <thead>
+				            <tr>
+				                <th scope="col" style="width: 10%;">no</th>
+				                <th scope="col" style="width: 20%;">발신자</th>
+				                <th scope="col" style="width: 70%;">제목</th>
+				            </tr>
+				        </thead>
+				        <tbody id="mainMailList">
+				        </tbody>
+				    </table>
+				</div>
              </div>
             <!-- 세번째 줄 wrap (켈린더, 오늘의 일정, 홍보배너, 회사점심식단표) -->
              <div id="third-wrap">
                 <div id="calender-card">
-					<div id="calendar">
+                	<div id="calendar"></div>
+<!-- 					<div id="calendar">
 				        <div id="calendar-header">
 				            <button id="prev-month" class="month-nav"><i class="fas fa-chevron-left"></i></button>
 				            <h2 id="current-month"></h2>
@@ -145,7 +187,7 @@
 				        </div>
 				        <div id="weekdays"></div>
 				        <div id="calendar-body"></div>
-				    </div>
+				    </div> -->
 				</div>
                 <div id="today-work-card">
                 	<div style="margin:10px;">
@@ -260,9 +302,29 @@
         </div>
 </section>
 </div>
+
+<script src="${path }/email/email-common.js"></script>
 <script>
 	const path='${path}';
 	const no=${loginEmployee.employeeNo};
+    $(document).ready(function() {
+        $('#moreMailBtn').click(function(e) {
+            e.preventDefault();
+            window.location.href = '${path}/email/inbox';
+        });
+    });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: '${path}/schedule/getScheduleList',
+        locale: 'ko'
+    });
+    calendar.render();
+});
 </script>
 <script src="${path }/js/index.js"></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
+<script src="${path }/js/schedule/calendar.js"></script>
+<c:import url="/WEB-INF/views/common/footer.jsp"/>

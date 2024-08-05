@@ -8,7 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.project.hot.common.converter.StringToIntegerConverter;
 import com.project.hot.common.converter.StringToSqlDateConverter;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class WebMVCConfig implements WebMvcConfigurer{
 
 	@Override
@@ -37,7 +41,6 @@ public class WebMVCConfig implements WebMvcConfigurer{
 		registry.addConverter(new StringToSqlDateConverter());
 		registry.addConverter(new StringToIntegerConverter());
 	}
-
 
 
 //	@Bean

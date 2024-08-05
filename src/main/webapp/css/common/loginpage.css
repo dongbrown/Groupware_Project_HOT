@@ -10,7 +10,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url("https://i.imgur.com/Tu6ObVO.jpeg");
+  background-image: url("https://i.imgur.com/MQArMew.jpeg");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   width: 100%;
@@ -87,14 +87,14 @@ body {
   background: transparent;
   border: 2px solid #fff;
   border-radius: 40px;
-  color: #fff;
+  color: rgb(0, 0, 160);
+  font-weight:bolder;
   box-shadow: none;
   outline: none;
 }
 .login .inputBx input[type="submit"] {
   width: 100%;
-  background: #0078ff;
-  background: linear-gradient(45deg, #356eff, #00a696);
+  background:rgb(0, 71, 149);
   border: none;
   cursor: pointer;
 }
@@ -121,7 +121,7 @@ body {
 
 #loginBtn:hover{
     border: 2px solid rgb(226, 226, 255);
-    box-shadow: rgb(226, 226, 255) 0px 0px 12px 1px inset, rgb(226, 226, 255) 0px 0px 12px 1px;
+    box-shadow: rgb(128, 255, 255) 0px 0px 12px 1px inset, rgb(128, 255, 255) 0px 0px 12px 1px;
 }
 
 #exampleInputPassword{
@@ -134,3 +134,10 @@ body {
     color: white;
     font-size: 20px;
 }
+
+#loginBtn{
+	color:white;
+	font-size:20px;
+}
+
+

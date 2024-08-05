@@ -62,7 +62,7 @@ function getTodayDate() {
 //ajax 해당 사원 값 가져오기
 			$.ajax({
 				type: 'GET',
-				url: '/project/selectEmpByDept.do',
+				url: path+'/project/selectEmpByDept.do',
 				data: { dept: selectedText, empNo:empNo },
 				dataType: 'json',
 				success: function(emp) {
@@ -186,7 +186,7 @@ function getTodayDate() {
 
 //프로젝트 생성 ajax
 			$.ajax({
-				url: '/project/insertProject.do',
+				url: path+'/project/insertProject.do',
 				type: 'POST',
 				contentType: 'application/JSON',
 				data: JSON.stringify(projectData),
@@ -198,7 +198,7 @@ function getTodayDate() {
 				error: function(error) {
 					console.log(projectData);
 					alert("프로젝트 등록이 실패하였습니다.")
-					location.assign("/project/projectinsert.do");
+					location.assign(path+"/project/projectinsert.do");
 				}
 			});
 		});

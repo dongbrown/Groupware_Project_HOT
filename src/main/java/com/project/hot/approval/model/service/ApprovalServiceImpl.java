@@ -78,11 +78,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 				result.put("totalPage", Math.ceil((double)rac.getWaitCount()/5));
 				result.put("approvals", dao.selectApprovalWaitList(session, param));
 			break;
-			case 2:	// 예정 문서
+			case 3:	// 예정 문서
 				result.put("totalPage", Math.ceil((double)rac.getProcessCount()/5));
 				result.put("approvals", dao.selectApprovalPendingList(session, param));
 			break;
-			case 3:	// 진행 문서
+			case 2:	// 진행 문서
 				result.put("totalPage", Math.ceil((double)rac.getPendingCount()/5));
 				result.put("approvals", dao.selectApprovalProcessList(session, param));
 			break;
@@ -217,6 +217,60 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public List<ResponseSpecificApproval> getSpecificApproval(String targetNo) {
 
 		return dao.getSpecificApproval(session, targetNo);
+	}
+
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public int updateApprovalStatus(Map<String, Object> param) {
+		int status=Integer.valueOf((String)param.get("approverStatus"));
+		int level=(int)param.get("level");
+		if(status == 3 || (level == 2 && status == 1)) {
+			//전결, 마지막 결재자의 승인 시 결재문서 상태 완료
+			param.put("approvalStatus", 3);
+		}else if(status == 2) {
+			//반려면 결재문서 상태 반려
+			param.put("approvalStatus", 4);
+		}else {
+			//결재문서 상태 진행
+			param.put("approvalStatus", 2);
+		}
+		try {
+			dao.updateApprover(session, param);
+			dao.updateApprovalStatus(session, param);
+			return 1;
+		}catch(Exception e) {
+			return 0;
+		}
+	}
+
+	@Override
+	public List<ResponseSpecificApproval> getMyApproval(int employeeNo) {
+		return dao.getMyApproval(session, employeeNo);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getReceivedApproval(int employeeNo) {
+		return dao.getReceivedApproval(session, employeeNo);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getReferenceDocuments(int employeeNo) {
+		return dao.getReferenceDocuments(session, employeeNo);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getDocumentsByPosition(Map<String, Integer> param) {
+		return dao.getDocumentsByPosition(session, param);
+	}
+
+
+	@Override
+	public List<ResponseSpecificApproval> getTempDocuments(int employeeNo) {
+		return dao.getTempDocuments(session, employeeNo);
 	}
 
 

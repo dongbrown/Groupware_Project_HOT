@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<head>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/view.css">
+</head>
+
 
 <div class="email-view-container">
     <div class="email-view-header">

@@ -30,6 +30,7 @@ public class Project {
 	 	private String projectTitle;
 	 	private String projectEmployeeName;
 	    private int employeeNo;
+	    private String employeeNos;
 	    private Employee employeeCode;
 	    private int projectRank;
 	    private String projectContent;

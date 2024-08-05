@@ -1,5 +1,6 @@
 package com.project.hot.project.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import com.project.hot.project.model.dto.Project;
 import com.project.hot.project.model.dto.ProjectEmployee;
 import com.project.hot.project.model.service.ProjectService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -33,7 +35,7 @@ public class ProjectController {
 
 	@ResponseBody
 	@GetMapping("/projectupdateajax")
-	public Map<String,Object> projectUpdatePage (@RequestParam(defaultValue = "1") int cPage,
+	public Map<String,Object> workInsertPage (@RequestParam(defaultValue = "1") int cPage,
 													@RequestParam("employeeNo") int employeeNo) {
 		ObjectMapper mapper=new ObjectMapper();
 		try {
@@ -45,16 +47,30 @@ public class ProjectController {
 	};
 
 	@ResponseBody
-	@GetMapping("/projectlistallajax")
-	public Map<String,Object> projectListAll (@RequestParam(defaultValue = "1") int cPage
-												,@RequestParam int employeeNo) {
+	@GetMapping("/projectupdatelistajax")
+	public Map<String,Object> projectUpdateListPage (@RequestParam(defaultValue = "1") int cPage,
+													@RequestParam("employeeNo") int employeeNo) {
 		ObjectMapper mapper=new ObjectMapper();
 		try {
-			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo)));
+			mapper.writeValueAsString(service.updateProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo)));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo));
+		return service.updateProjectAll(Map.of("cPage",cPage,"numPerpage",5,"employeeNo",employeeNo));
+	};
+
+	@ResponseBody
+	@GetMapping("/projectlistallajax")
+	public Map<String,Object> projectListAll (@RequestParam(defaultValue = "1") int cPage
+												,@RequestParam int employeeNo
+												,@RequestParam int status) {
+		ObjectMapper mapper=new ObjectMapper();
+		try {
+			mapper.writeValueAsString(service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo,"status",status)));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return service.selectProjectAll(Map.of("cPage",cPage,"numPerpage",8,"employeeNo",employeeNo,"status",status));
 	}
 
 	@GetMapping("/projectinsert.do")
@@ -136,15 +152,37 @@ public class ProjectController {
 
 	@ResponseBody
 	@PostMapping("/deleteProject.do")
-	public ResponseEntity<String> deleteProject(@RequestBody int projectNo){
-		try {
-			service.deleteProject(projectNo);
-			return ResponseEntity.ok("프로젝트 삭제 성공");
-		} catch (Exception e) {
-			log.error("=========프로젝트 등록 중 오류 발생=========", e);
-			return ResponseEntity.badRequest().body("프로젝트 삭제 실패");
+	public ResponseEntity<String> deleteProject(@RequestBody Map<String,Integer> param,
+										HttpServletRequest request){
+			// 파일 저장 위치 변수 저장
+			String path = request.getServletContext().getRealPath("/upload/projectWork");
+	//기존 첨부파일 수정 시 삭제한 파일 upload에서 지우는 로직 && DB테이블에서도 지우기
+			List<String> attList = service.selectDeleteAttList(param.get("projectNo"));
+			File delFile = new File(path);
+			// 해당 프로젝트 > 작업 파일들 삭제
+			if (attList.size() > 0) {
+				if (delFile.exists()) {
+					// 해당파일에 존재하는 파일들 가져오기
+					File[] files = delFile.listFiles();
+					if (files != null) {
+						for (File file : files) {
+							// 파일안에 가져온 삭제할 rename파일이름이 존재하는지 확인 후 존재하면 해당파일 삭제
+							if (file.isFile() && attList.contains(file.getName())) {
+								file.delete();
+							}
+						}
+						//파일 삭제 후 db테이블에서 데이터도 삭제 진행
+						int result = service.deleteProjectWorkAtt(param.get("projectNo"));
+						if(result>0) {
+							service.deleteProject(param.get("projectNo"));
+						}else {
+							return ResponseEntity.badRequest().body("프로젝트 삭제 실패");
+						}
+					}
+				}
+			}
+			return ResponseEntity.ok().body("파일 삭제 성공");
 		}
-	}
 
 	@ResponseBody
 	@PostMapping("/requestProject.do")

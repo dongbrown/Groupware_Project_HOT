@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<link href="${path }/css/common/loginpage.css" rel="stylesheet" type="text/css">
 <c:set var="path" value="${pageContext.request.contextPath }"/>
+<link href="${path }/css/common/loginpage.css" rel="stylesheet" type="text/css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.rawgit.com/tonystar/bootstrap-float-label/v3.0.1/dist/bootstrap-float-label.min.css"/>
@@ -29,11 +29,11 @@
 
 <body>
 <div class="ring">
-  <i style="--clr:#ddfffb;"></i>
-  <i style="--clr:#002db5;"></i>
-  <i style="--clr:#5ffcff;"></i>
+  			<i style="--clr:#6e9bfb;"></i>
+         <i style="--clr:rgb(119, 0, 139);"></i>
+         <i style="--clr:#0000ff;"></i>
   <div class="login">
-    <h2>Hot Logo.</h2>
+    <img alt="" src="https://i.imgur.com/cCGzv9o.png" style="width:170px;">
     <form class="user" action="${path }/login" method="post" style="width:100%">
         <div class="inputBx">
         <input type="text" name="username" placeholder="ID">
@@ -46,8 +46,7 @@
         <div class="form-group" style="margin-top:10px ;">
             <div class="custom-control custom-checkbox small">
                 <input type="checkbox" class="custom-control-input" id="customCheck" name="remember-me">
-                <label class="custom-control-label" style="color:white; font-size:15px;" for="customCheck">Remember
-                    Me</label>
+                <label class="custom-control-label" style="color: rgb(0, 0, 160); font-size:15px; font-weight:bolder;" for="customCheck">로그인 유지</label>
             </div>
         </div>
         <div class="inputBx">
@@ -55,9 +54,6 @@
         </div>
     </form>
     <hr>
-    <div class="text-center">
-        <a id="forgotBtn" class="small" href="forgot-password.html">Forgot Password?</a>
-    </div>
   </div>
 </div>
 

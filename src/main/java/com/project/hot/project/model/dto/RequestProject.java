@@ -29,6 +29,8 @@ public class RequestProject {
 	private String projectRefuseContent;
 	private String reqEmpName;
 	private String reqEmpDeptTitle;
+	private String memberPhotos;
+	private String memberEmployeeNos;
 	private Project project;
 	private Employee employee;
 }

@@ -3,8 +3,8 @@
 <html lang="UTF-8">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="${pageContext.request.contextPath }"/>
-<c:import url="${path }/WEB-INF/views/common/sidebar.jsp"/>
-<c:import url="${path }/WEB-INF/views/common/header.jsp"/>
+<c:import url="/WEB-INF/views/common/sidebar.jsp"/>
+<c:import url="/WEB-INF/views/common/header.jsp"/>
 <link href="${path }/css/employee/addressbook.css" rel="stylesheet" type="text/css">
 <section class="address">
 	<div class="address-title">
@@ -38,4 +38,4 @@
 <script src='${path }/js/employee/addressbook.js'></script>
 <script src='${path }/js/common/pagebar.js'></script>
 <script src='${path }/js/common/loading.js'></script>
-<c:import url="${path }/WEB-INF/views/common/footer.jsp"/>
+<c:import url="/WEB-INF/views/common/footer.jsp"/>

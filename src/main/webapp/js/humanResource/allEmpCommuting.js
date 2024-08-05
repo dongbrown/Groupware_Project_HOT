@@ -105,11 +105,7 @@ function searchEmpCommuting(cPage){
 		}
 	}
 
-	const reqPath='/api/hr/selectAllEmpCommuting';
-	const url=new URL(reqPath, window.location.origin);
-	url.search=query.toString();
-
-	fetch(url)
+	fetch(path+`/api/hr/selectAllEmpCommuting?${query.toString()}`)
 	.then(response=>response.json())
 	.then(data=>{
 		console.log(data);

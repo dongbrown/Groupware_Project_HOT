@@ -58,87 +58,127 @@ public class EmailController {
     public String showEmail() {
         return "email/email";
     }
+
     @GetMapping
     public String showEmailMain(@RequestParam(required = false, defaultValue = "inbox") String mailbox, Model model) {
-        // 여기서 기본 이메일 페이지를 로드하고, 필요한 데이터를 모델에 추가합니다.
         model.addAttribute("currentMailbox", mailbox);
-        return "email/email";  // 메인 이메일 페이지 뷰
+        return "email/email";
     }
 
     @GetMapping("/{mailbox}")
-    public String getMailboxContent(@PathVariable String mailbox, Model model) {
+    public String getMailboxContent(@PathVariable String mailbox,
+                                    @RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> emails;
+        Map<String, Object> result;
 
         switch (mailbox) {
             case "inbox":
-                emails = service.getInboxEmails(loginEmployee.getEmployeeNo());
+                result = service.getInboxEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "sent":
-                emails = service.getSentEmails(loginEmployee.getEmployeeNo());
+                result = service.getSentEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "important":
-                emails = service.getImportantEmails(loginEmployee.getEmployeeNo());
+                result = service.getImportantEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "self":
-                emails = service.getSelfEmails(loginEmployee.getEmployeeNo());
+                result = service.getSelfEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             case "trash":
-                emails = service.getTrashEmails(loginEmployee.getEmployeeNo());
+                result = service.getTrashEmails(loginEmployee.getEmployeeNo(), page, size);
                 break;
             default:
-                return "redirect:/email?mailbox=inbox";
+                return "redirect:/email/inbox";
         }
 
-        model.addAttribute("emails", emails);
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", mailbox);
         return "email/" + mailbox;
     }
 
-
     @GetMapping("/inbox")
-    public String inbox(Model model) {
+    public String inbox(@RequestParam(defaultValue = "1") int page,
+                        @RequestParam(defaultValue = "10") int size,
+                        Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> inboxEmails = service.getInboxEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", inboxEmails);
-        return "email/inbox";
+        Map<String, Object> result = service.getInboxEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "inbox");
+
+        return "email/email";
     }
 
     @GetMapping("/sent")
-    public String sent(Model model) {
+    public String sent(@RequestParam(defaultValue = "1") int page,
+                       @RequestParam(defaultValue = "10") int size,
+                       Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> sentEmails = service.getSentEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", sentEmails);
-        return "email/sent";
-    }
+        Map<String, Object> result = service.getSentEmails(loginEmployee.getEmployeeNo(), page, size);
 
-    @GetMapping("/important")
-    public String important(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> importantEmails = service.getImportantEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", importantEmails);
-        return "email/important";
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "sent");
+
+        return "email/email";
     }
 
     @GetMapping("/self")
-    public String self(Model model) {
+    public String self(@RequestParam(defaultValue = "1") int page,
+                       @RequestParam(defaultValue = "10") int size,
+                       Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> selfEmails = service.getSelfEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", selfEmails);
-        return "email/self";
+        Map<String, Object> result = service.getSelfEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "self");
+
+        return "email/email";
+    }
+
+    @GetMapping("/important")
+    public String important(@RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "10") int size,
+                            Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        Map<String, Object> result = service.getImportantEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "important");
+
+        return "email/email";
     }
 
     @GetMapping("/trash")
-    public String trash(Model model) {
+    public String trash(@RequestParam(defaultValue = "1") int page,
+                        @RequestParam(defaultValue = "10") int size,
+                        Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
-        List<Email> trashEmails = service.getTrashEmails(loginEmployee.getEmployeeNo());
-        model.addAttribute("emails", trashEmails);
-        return "email/trash";
+        Map<String, Object> result = service.getTrashEmails(loginEmployee.getEmployeeNo(), page, size);
+
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
+        model.addAttribute("mailbox", "trash");
+
+        return "email/email";
     }
 
     @GetMapping("/view/{emailNo}")
@@ -159,12 +199,6 @@ public class EmailController {
         return "email/view";
     }
 
-//    @GetMapping("/write")
-//    public String showWriteForm(Model model) {
-//        model.addAttribute("email", new Email());
-//        return "email/write";
-//    }
-
     @GetMapping("/write")
     public String showWriteForm(@RequestParam(required = false) String action,
                                 @RequestParam(required = false) Integer emailNo,
@@ -175,7 +209,6 @@ public class EmailController {
             Email originalEmail = service.getEmailByNo(emailNo);
 
             if ("reply".equals(action)) {
-                // 답장 처리
                 email.setEmailTitle("Re: " + originalEmail.getEmailTitle());
                 EmailReceiver receiver = EmailReceiver.builder()
                     .employee(originalEmail.getSender())
@@ -190,18 +223,18 @@ public class EmailController {
                                        "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
                                        "날짜: " + originalEmail.getEmailSendDate() + "\n" +
                                        "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                       "\n" +
                                        originalEmail.getEmailContent();
                 email.setEmailContent(quotedContent);
 
-                // 받는 사람 이메일 주소를 모델에 추가
                 model.addAttribute("receiverEmail", originalEmail.getSender().getEmployeeId() + "@hot.com");
             } else if ("forward".equals(action)) {
-                // 전달 처리
                 email.setEmailTitle("Fwd: " + originalEmail.getEmailTitle());
                 String forwardedContent = "\n\n-------- 전달된 메시지 --------\n" +
                                           "보낸사람: " + originalEmail.getSender().getEmployeeName() + "\n" +
                                           "날짜: " + originalEmail.getEmailSendDate() + "\n" +
                                           "제목: " + originalEmail.getEmailTitle() + "\n\n" +
+                                          "\n" +
                                           originalEmail.getEmailContent();
                 email.setEmailContent(forwardedContent);
                 email.setHasAttachment(originalEmail.hasAttachment());
@@ -209,7 +242,8 @@ public class EmailController {
         }
 
         model.addAttribute("email", email);
-        return "email/write";
+        model.addAttribute("mailbox", "write");
+        return "email/email";
     }
 
     @GetMapping("/write-self")
@@ -218,7 +252,8 @@ public class EmailController {
         Employee loginEmployee = (Employee) auth.getPrincipal();
         model.addAttribute("email", new Email());
         model.addAttribute("loginEmployee", loginEmployee);
-        return "email/write-self";
+        model.addAttribute("mailbox", "write-self");
+        return "email/email";
     }
 
     @PostMapping("/send")
@@ -305,37 +340,24 @@ public class EmailController {
         }
     }
 
-    @PostMapping("/move-to-trash")
-    @ResponseBody
-    public ResponseEntity<?> moveEmailsToTrash(@RequestBody List<Integer> emailNos) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Employee loginEmployee = (Employee) auth.getPrincipal();
-        int employeeNo = loginEmployee.getEmployeeNo();
 
-        try {
-            int movedCount = service.moveEmailsToTrash(emailNos, employeeNo);
-            String message = movedCount > 1 ?
-                    movedCount + "개의 이메일이 휴지통으로 이동되었습니다." :
-                    "이메일이 휴지통으로 이동되었습니다.";
-            return ResponseEntity.ok(message);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("이메일 이동 실패: " + e.getMessage());
-        }
-    }
 
     @GetMapping("/search")
-    public String searchEmails(@RequestParam String keyword, Model model) {
+    public String searchEmails(@RequestParam String keyword,
+                               @RequestParam(defaultValue = "1") int page,
+                               @RequestParam(defaultValue = "10") int size,
+                               Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
-        List<Email> searchResults = service.searchEmails(employeeNo, keyword);
-        model.addAttribute("emails", searchResults);
+        Map<String, Object> result = service.searchEmails(employeeNo, keyword, page, size);
+        model.addAttribute("emails", result.get("emails"));
+        model.addAttribute("currentPage", result.get("currentPage"));
+        model.addAttribute("totalPages", result.get("totalPages"));
 
         return "email/inbox-list";
     }
-
-
 
     @GetMapping("/unread-counts")
     @ResponseBody
@@ -353,45 +375,54 @@ public class EmailController {
         return counts;
     }
 
-    @PostMapping("/mark-as-read/{emailNo}")
+    @PostMapping("/mark-as-read")
     @ResponseBody
-    public ResponseEntity<?> markAsRead(@PathVariable int emailNo) {
+    public ResponseEntity<?> markAsRead(@RequestBody List<Integer> emailNos,
+                                        @RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "10") int size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
         try {
-            service.markEmailAsRead(emailNo, employeeNo);
-            return ResponseEntity.ok("이메일이 읽음 상태로 변경되었습니다.");
+            Map<String, Object> result = service.markEmailsAsRead(emailNos, employeeNo, page, size);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("상태 변경 실패: " + e.getMessage());
         }
     }
 
-    @PostMapping("/toggle-important/{emailNo}")
+    @PostMapping("/toggle-important")
     @ResponseBody
-    public ResponseEntity<?> toggleImportant(@PathVariable int emailNo) {
+    public ResponseEntity<?> toggleImportant(@RequestBody List<Integer> emailNos,
+                                             @RequestParam(defaultValue = "1") int page,
+                                             @RequestParam(defaultValue = "10") int size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Employee loginEmployee = (Employee) auth.getPrincipal();
         int employeeNo = loginEmployee.getEmployeeNo();
 
         try {
-            boolean isImportant = service.toggleImportantEmail(emailNo, employeeNo);
-            String message = isImportant ? "중요 이메일로 변경되었습니다." : "이메일의 중요 표시가 해제되었습니다.";
-            return ResponseEntity.ok(message);
+            Map<String, Object> result = service.toggleImportantEmails(emailNos, employeeNo, page, size);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("중요 표시 변경 실패: " + e.getMessage());
         }
     }
 
-    @PostMapping("/trash/mark-as-read")
+    @PostMapping("/move-to-trash")
     @ResponseBody
-    public ResponseEntity<?> markTrashAsRead(@RequestBody List<Integer> emailNos) {
+    public ResponseEntity<?> moveEmailsToTrash(@RequestBody List<Integer> emailNos,
+                                               @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "10") int size) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Employee loginEmployee = (Employee) auth.getPrincipal();
+        int employeeNo = loginEmployee.getEmployeeNo();
+
         try {
-            int updatedCount = service.markTrashAsRead(emailNos);
-            return ResponseEntity.ok("성공적으로 " + updatedCount + "개의 이메일을 읽음 처리했습니다.");
+            Map<String, Object> result = service.moveEmailsToTrash(emailNos, employeeNo, page, size);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("읽음 처리 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.badRequest().body("이메일 이동 실패: " + e.getMessage());
         }
     }
 

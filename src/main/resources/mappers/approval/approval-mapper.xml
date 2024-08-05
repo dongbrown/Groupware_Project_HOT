@@ -12,6 +12,7 @@
 	    <result property="approvalStatus" column="APPROVAL_STATUS"/>
 	    <result property="approvalSecurity" column="APPROVAL_SECURITY"/>
 	    <association property="employeeNo" resultMap="employee.employeeMap"/>
+	    <association property="vacationForm" resultMap="vacationFormMap"/>
 	    <collection property="approvers" resultMap="approverMap"/>
 	</resultMap>
 
@@ -51,7 +52,10 @@
 		</collection>
 		<collection property="approverEmployee" ofType="com.project.hot.approval.model.dto.Approver">
 			<result property="approverLevel" column="APPROVER_APPROVER_LEVEL"/>
+			<result property="approverStatus" column="APPROVER_APPROVER_STATUS"/>
+			<result property="approverDate" column="APPROVER_APPROVER_DATE"/>
 			<association property="employeeNo" javaType="com.project.hot.employee.model.dto.Employee">
+				<id property="employeeNo" column="APPROVER_EMPLOYEE_NO"/>
 				<result property="employeeName" column="APPROVER_EMPLOYEE_NAME"/>
 				<association property="departmentCode" javaType="com.project.hot.employee.model.dto.Department">
 					<result property="departmentTitle" column="APPROVER_DEPARTMENT_TITLE"/>
@@ -85,7 +89,7 @@
 	</resultMap>
 
 	<resultMap id="vacationFormMap" type="com.project.hot.approval.model.dto.VacationForm">
-		<id property="vatationForm" column="VACATION_FORM_NO"/>
+		<id property="vacationFormNo" column="VACATION_FORM_NO"/>
 		<result property="approvalNo" column="APPROVAL_NO"/>
 		<result property="vacationStart" column="VACATION_START"/>
 		<result property="vacationEnd" column="VACATION_END"/>
@@ -352,30 +356,25 @@
 		WHERE APPROVAL_STATUS = 3 AND b.EMPLOYEE_NO = #{no}
 		ORDER BY a.APPROVAL_DATE DESC
 	</select>
-<!--
- 	<insert id="insertExpenditureForm" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
-		INSERT INTO EXPENDITURE_FORM VALUES
-		(SEQ_EXPENDITURE_FORM.NEXTVAL, #{approvalNo}, #{expenditureDate}, #{expenditureAmount})
-		<selectKey resultType="int" order="AFTER" keyProperty="expenditureFormNo">
-			SELECT SEQ_EXPENDITURE_FORM.CURRVAL FROM DUAL
-		</selectKey>
+	<insert id="insertExpenditureForm" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
+		INSERT INTO EXPENDITURE_FORM VALUES (SEQ_EXPENDITURE_FORM.NEXTVAL, #{approvalNo}, #{expenditureDate}, #{expenditureAmount})
+		<selectKey resultType="int" order="AFTER" keyProperty="expenditureFormNo"> SELECT SEQ_EXPENDITURE_FORM.CURRVAL FROM DUAL </selectKey>
 	</insert>
 
  	<insert id="insertExpenditureItem" parameterType="com.project.hot.approval.model.dto.RequestExpenditure">
-		INSERT ALL
-		<foreach collection="expenditureName" item="name" index="i">
-			INTO EXPENDITURE_ITEM VALUES (SEQ_EXPENDITURE_ITEM.NEXTVAL, #{expenditureFormNo}, #{name}, #{expenditureSpec[i]},
-			#{expenditureUnit[i]}, #{expenditureQuantity[i]}, #{expenditurePrice[i]}, #{expenditureRemark[i]})
-		</foreach>
-		SELECT * FROM DUAL
+		INSERT INTO EXPENDITURE_ITEM (EXPENDITURE_ITEM_NO, EXPENDITURE_FORM_NO, EXPENDITURE_NAME, EXPENDITURE_SPEC, EXPENDITURE_UNIT, EXPENDITURE_QUANTITY, EXPENDITURE_PRICE, EXPENDITURE_REMARK) SELECT SEQ_EXPENDITURE_ITEM.NEXTVAL AS EXPENDITURE_ITEM_NO, I.* FROM(
+		<foreach collection="items" item="i" separator="UNION ALL "> SELECT #{expenditureFormNo} AS EXPENDITURE_FORM_NO, #{i.expenditureName} AS EXPENDITURE_NAME, #{i.expenditureSpec} AS EXPENDITURE_SPEC, #{i.expenditureUnit} AS EXPENDITURE_UNIT, #{i.expenditureQuantity} AS EXPENDITURE_QUANTITY, #{i.expenditurePrice} AS EXPENDITURE_PRICE, #{i.expenditureRemark} AS EXPENDITURE_REMARK FROM DUAL </foreach>
+		) I
 	</insert>
--->
+
 	<select id="getSpecificApproval" resultMap="responseSpecificApprovalMap" parameterType="map">
 		SELECT	a.*
 				, e.*
 				, dept.*
 				, att.*
 				, ap.APPROVER_LEVEL AS APPROVER_APPROVER_LEVEL
+				, ap.APPROVER_STATUS AS APPROVER_APPROVER_STATUS
+				, ap.APPROVER_DATE AS APPROVER_APPROVER_DATE
 				, ref_emp.EMPLOYEE_NO AS REFERENCE_EMPLOYEE_NO
 				, ref_emp.EMPLOYEE_NAME AS REFERENCE_EMPLOYEE_NAME
 				, ref_dept.DEPARTMENT_TITLE AS REFERENCE_DEPARTMENT_TITLE
@@ -385,14 +384,17 @@
 		<if test="targetNo != null and targetNo.length() > 0">
 	        <choose>
 	            <when test='no.equals("1")'>
+	            , ctf.*
 	            FROM APPROVAL a
 	                LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
 	            </when>
 	        	<when test='no.equals("2")'>
+	        	, vf.*
 	        	FROM APPROVAL a
 	                LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
 	            </when>
 	            <when test='no.equals("3")'>
+	            , otf.*
 	            FROM APPROVAL a
 	                LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
 	            </when>
@@ -404,6 +406,8 @@
 	                LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
 	            </when>
 	            <otherwise>
+	            , btf.*
+	            , btp.*
 	            FROM APPROVAL a
 	                LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
 	                LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
@@ -430,5 +434,172 @@
 		    DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
 		WHERE
 		    a.APPROVAL_NO=#{targetNo}
+	</select>
+	<update id="updateApprover" >
+		UPDATE APPROVER
+		SET  APPROVER_STATUS = #{approverStatus}, APPROVER_REJECT = #{approverReject}, APPROVER_DATE = SYSDATE
+		WHERE APPROVAL_NO = #{approvalNo} AND EMPLOYEE_NO = #{employeeNo}
+	</update>
+
+	<update id="updateApprovalStatus">
+		UPDATE APPROVAL
+		SET APPROVAL_STATUS = #{approvalStatus}
+		WHERE APPROVAL_NO = #{approvalNo}
+	</update>
+	<select id="getMyApproval" resultMap="responseSpecificApprovalMap" parameterType="_int">
+		SELECT	a.APPROVAL_TITLE
+            , a.APPROVAL_NO
+            , a.APPROVAL_DATE
+            , e.EMPLOYEE_NAME
+            , dept.DEPARTMENT_TITLE
+            , ap.APPROVER_DATE
+            , approver.EMPLOYEE_NAME AS APPROVER_EMPLOYEE_NAME
+            , a.APPROVAL_STATUS
+            , a.APPROVAL_SECURITY
+        FROM APPROVAL a
+        LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN EXPENDITURE_FORM ef ON ef.APPROVAL_NO = a.APPROVAL_NO
+	    LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
+        LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
+    	LEFT JOIN EMPLOYEE e ON e.EMPLOYEE_NO=a.EMPLOYEE_NO
+		JOIN DEPARTMENT dept ON dept.DEPARTMENT_CODE=e.DEPARTMENT_CODE
+		LEFT JOIN APPROVAL_ATT att ON att.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN REFERENCE rf ON rf.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN APPROVER ap ON ap.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN EMPLOYEE approver ON approver.EMPLOYEE_NO=ap.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT approverdept ON approverdept.DEPARTMENT_CODE=approver.DEPARTMENT_CODE
+		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
+		WHERE a.EMPLOYEE_NO=#{empNo}
+	</select>
+	<select id="getReceivedApproval" resultMap="responseSpecificApprovalMap" parameterType="_int">
+		SELECT	a.APPROVAL_TITLE
+            , a.APPROVAL_NO
+            , a.APPROVAL_DATE
+            , e.EMPLOYEE_NAME
+            , dept.DEPARTMENT_TITLE
+            , ap.APPROVER_DATE
+            , approver.EMPLOYEE_NAME AS APPROVER_EMPLOYEE_NAME
+            , a.APPROVAL_STATUS
+            , a.APPROVAL_SECURITY
+        FROM APPROVAL a
+        LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN EXPENDITURE_FORM ef ON ef.APPROVAL_NO = a.APPROVAL_NO
+	    LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
+        LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
+    	LEFT JOIN EMPLOYEE e ON e.EMPLOYEE_NO=a.EMPLOYEE_NO
+		JOIN DEPARTMENT dept ON dept.DEPARTMENT_CODE=e.DEPARTMENT_CODE
+		LEFT JOIN APPROVAL_ATT att ON att.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN REFERENCE rf ON rf.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN APPROVER ap ON ap.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN EMPLOYEE approver ON approver.EMPLOYEE_NO=ap.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT approverdept ON approverdept.DEPARTMENT_CODE=approver.DEPARTMENT_CODE
+		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
+		WHERE rf.EMPLOYEE_NO=#{empNo} AND rf.REFERENCE_TYPE=2 AND (ap.APPROVER_STATUS=1 OR ap.APPROVER_STATUS=3)
+	</select>
+	<select id="getReferenceDocuments" resultMap="responseSpecificApprovalMap" parameterType="_int">
+		SELECT	a.APPROVAL_TITLE
+            , a.APPROVAL_NO
+            , a.APPROVAL_DATE
+            , e.EMPLOYEE_NAME
+            , dept.DEPARTMENT_TITLE
+            , ap.APPROVER_DATE
+            , approver.EMPLOYEE_NAME AS APPROVER_EMPLOYEE_NAME
+            , a.APPROVAL_STATUS
+            , a.APPROVAL_SECURITY
+        FROM APPROVAL a
+        LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN EXPENDITURE_FORM ef ON ef.APPROVAL_NO = a.APPROVAL_NO
+	    LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
+        LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
+    	LEFT JOIN EMPLOYEE e ON e.EMPLOYEE_NO=a.EMPLOYEE_NO
+		JOIN DEPARTMENT dept ON dept.DEPARTMENT_CODE=e.DEPARTMENT_CODE
+		LEFT JOIN APPROVAL_ATT att ON att.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN REFERENCE rf ON rf.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN APPROVER ap ON ap.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN EMPLOYEE approver ON approver.EMPLOYEE_NO=ap.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT approverdept ON approverdept.DEPARTMENT_CODE=approver.DEPARTMENT_CODE
+		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
+		WHERE rf.EMPLOYEE_NO=#{empNo} AND rf.REFERENCE_TYPE=1
+	</select>
+	<select id="getDocumentsByPosition" resultMap="responseSpecificApprovalMap" parameterType="map">
+		SELECT	a.APPROVAL_TITLE
+            , a.APPROVAL_NO
+            , a.APPROVAL_DATE
+            , e.EMPLOYEE_NAME
+            , dept.DEPARTMENT_TITLE
+            , ap.APPROVER_DATE
+            , approver.EMPLOYEE_NAME AS APPROVER_EMPLOYEE_NAME
+            , a.APPROVAL_STATUS
+            , a.APPROVAL_SECURITY
+        FROM APPROVAL a
+        LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN EXPENDITURE_FORM ef ON ef.APPROVAL_NO = a.APPROVAL_NO
+	    LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
+        LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
+    	LEFT JOIN EMPLOYEE e ON e.EMPLOYEE_NO=a.EMPLOYEE_NO
+		JOIN DEPARTMENT dept ON dept.DEPARTMENT_CODE=e.DEPARTMENT_CODE
+		LEFT JOIN APPROVAL_ATT att ON att.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN REFERENCE rf ON rf.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN APPROVER ap ON ap.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN EMPLOYEE approver ON approver.EMPLOYEE_NO=ap.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT approverdept ON approverdept.DEPARTMENT_CODE=approver.DEPARTMENT_CODE
+		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
+		<if test="empPos != null and empPos &lt; 8">
+		WHERE
+			a.APPROVAL_SECURITY='B' AND a.EMPLOYEE_NO != #{empNo}
+		</if>
+		<if test="empPos != null and 8 &lt; empPos and empPos &lt; 10">
+		WHERE
+			a.APPROVAL_SECURITY IN ('A', 'B') AND a.EMPLOYEE_NO != #{empNo}
+		</if>
+		<if test="empPos != null and 10 &lt; empPos">
+		WHERE
+			a.APPROVAL_SECURITY IN ('S', 'A', 'B') AND a.EMPLOYEE_NO != #{empNo}
+		</if>
+	</select>
+	<select id="getTempDocuments" resultMap="responseSpecificApprovalMap" parameterType="map">
+		SELECT	a.APPROVAL_TITLE
+            , a.APPROVAL_NO
+            , a.APPROVAL_DATE
+            , e.EMPLOYEE_NAME
+            , dept.DEPARTMENT_TITLE
+            , ap.APPROVER_DATE
+            , approver.EMPLOYEE_NAME AS APPROVER_EMPLOYEE_NAME
+            , a.APPROVAL_STATUS
+            , a.APPROVAL_SECURITY
+        FROM APPROVAL a
+        LEFT JOIN COMMUTING_TIME_FORM ctf ON ctf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN VACATION_FORM vf ON vf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN OVERTIME_FORM otf ON otf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN EXPENDITURE_FORM ef ON ef.APPROVAL_NO = a.APPROVAL_NO
+	    LEFT JOIN EXPENDITURE_ITEM ei ON ei.EXPENDITURE_FORM_NO = ef.EXPENDITURE_FORM_NO
+        LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
+        LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
+    	LEFT JOIN EMPLOYEE e ON e.EMPLOYEE_NO=a.EMPLOYEE_NO
+		JOIN DEPARTMENT dept ON dept.DEPARTMENT_CODE=e.DEPARTMENT_CODE
+		LEFT JOIN APPROVAL_ATT att ON att.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN REFERENCE rf ON rf.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN APPROVER ap ON ap.APPROVAL_NO=a.APPROVAL_NO
+		LEFT JOIN EMPLOYEE approver ON approver.EMPLOYEE_NO=ap.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT approverdept ON approverdept.DEPARTMENT_CODE=approver.DEPARTMENT_CODE
+		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
+		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
+		WHERE a.EMPLOYEE_NO = #{empNo} AND a.APPROVAL_STATUS=5
 	</select>
 </mapper>

@@ -22,10 +22,10 @@
 //전체프로젝트 불러오는 함수
 		function getProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/projectlistallajax?cPage=' + cPage+"&employeeNo=0")
+			fetch(path+'/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=1')
 				.then(response => response.json())
 				.then(data => {
-					makeProjectList(data.projects);
+					makeProjectList(data.projects,1);
 
 					const $pagebar = createPagination(cPage, data.totalPage, 'getProjectList');
 					$('.pagebar-div').html('').append($pagebar);
@@ -38,10 +38,10 @@
 //본인 참여 프로젝트 불러오는 함수
 		function getProjectListByEmpNo(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
+			fetch(path+'/project/projectlistallajax?cPage=' + cPage+'&employeeNo='+empNo+'&status=2')
 				.then(response => response.json())
 				.then(data => {
-					makeProjectList(data.projects);
+					makeProjectList(data.projects,2);
 
 					const $pagebar = createPagination(cPage, data.totalPage, 'getProjectListByEmpNo');
 					$('.pagebar-div').html('').append($pagebar);
@@ -54,10 +54,10 @@
 //참여 요청한 프로젝트 불러오는 함수
 		function getRequestProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/requestProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
+			fetch(path+'/project/requestProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
-					makeProjectList(data.projects);
+					makeProjectList(data.projects,3);
 
 					const $pagebar = createPagination(cPage, data.totalPage, 'getRequestProjectList');
 					$('.pagebar-div').html('').append($pagebar);
@@ -70,10 +70,9 @@
 //참여 요청(온)!!! 프로젝트 불러오는 함수
 		function getResponseProjectList(cPage) {
 			$('.conteudo__cartoes-grid').html('');
-			fetch('/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
+			fetch(path+'/project/responseProjectlistallajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
-					console.log(data);
 					makeProjectList2(data.projects);
 
 					const $pagebar = createPagination(cPage, data.totalPage, 'getResponseProjectList');
@@ -84,44 +83,41 @@
 				});
 		};
 
-		function makeProjectList(projects) {
+		function makeProjectList(projects,num) {
 				projects.forEach(p => {
 					let $joinBtn;
 					let joinMembers = p.memberEmployeeNos.split(',');
-					let photos = p.memberPhotos.split(',');
+					let photos = p.memberPhotos.split(',').map(photo => photo.trim());
 					let remainMember=joinMembers.length-3;
 					let $addEmpCount='';
 					let $projectInMember='';
 					let $projectAtag='';
-
+					console.log(p.projectRequestStatus);
 
 					const $projectDiv=$('<div>',{class:'elemento__cartao--fundo',css:{backgroundImage:'url(https://images.unsplash.com/photo-1604147706283-d7119b5b822c?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)'}});
 					const $projectDiv2=$('<div>',{class:'elemento__cartao--conteudo',id:'selectProejctInfo'});
-					const $projectPtag=$('<p>',{class:'elemento__cartao--texto-categoria'}).html('프로젝트 번호 : <span id="requestProjectNo">'+p.projectNo+'</span><span id="requestProjectEmployeeNo" style="display:none;">'+p.employeeNo+'</span>');
+					const $projectPtag=$('<p>',{class:'elemento__cartao--texto-categoria'}).html('프로젝트 번호 : <span id="requestProjectNo">'+p.projectNo+'</span><span id="requestProjectEmployeeNo">'+p.employeeNo+'</span>');
 					const $projectH3tag=$('<h3>',{class:'elemento__cartao--texto-titulo'}).text(p.projectTitle);
 					const $projectMemberWrab=$('<div>',{class:'container'});
 					const $projectMemberWrab1=$('<div>',{id:'memberWrab'});
 					//프로젝트 참여 요청중 버튼
-					if(p.projectRequestStatus=='요청' && p.projectRequestEmployee==empNo){
+					if(p.projectRequestStatus=='요청'){
 						$projectAtag=$('<div>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 						$joinBtn=$('<a>',{role: 'button', id: 'joinBtn', class: 'btn btn-secondary disabled', text: '참여 요청중'});
 					//프로젝트 참여 요청중 - 거절됨 버튼
-					}else if(p.projectRequestStatus=='거절' && p.projectRequestEmployee==empNo){
+					}else if(p.projectRequestStatus=='거절'){
 						$projectAtag=$('<div>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 						$joinBtn=$('<button>',{type: 'button', id: 'refusedBtn', class: 'btn btn-danger', text: '참여 거절됨','data-bs-toggle': 'modal', 'data-bs-target': '#refusedModal','data-id':p.projectRefuseContent});
 					//프로젝트 참여 요청 버튼
-					}else{
+					}else if(p.projectRequestStatus==null || p.projectRequestStatus=='참여'){
 						$projectAtag=$('<div>',{class:'elemento__cartao', href:'#',css:{cursor:'default'}});
 						$joinBtn=$('<button>',{type: 'button', id: 'joinBtn', class: 'btn btn-primary', text: '참여 요청', 'data-bs-toggle': 'modal', 'data-bs-target': '#joinModal'});
 						//본인 참여 프로젝트 표시 && 참여버튼 삭제
-						for(i=0;i<joinMembers.length;i++){
-							if(empNo==Number(joinMembers[i])){
+							if(num==2 || p.projectRequestStatus=='참여'){
 						$projectAtag=$('<a>',{id:"projectListInfo",class:'elemento__cartao', href:'#', 'data-project-no': p.projectNo});
 								$projectInMember=$('<div>',{class:'memberIcon'});
 								$joinBtn='';
-							}else if(empNo!=Number(joinMembers[i])){
 							}
-						}
 					}
 					if(remainMember!=0){
 						$addEmpCount=$('<div>',{id:'addMember', class:'circle',text:'+'+remainMember});
@@ -129,10 +125,10 @@
 					//프로젝트 리스트 참여맴버 사진 출력문
 					for(i=0;i<3;i++){
 						let $memberPhoto='';
-						if(photos[i]=='NULL'){
-							$memberPhoto=$('<div>',{class:'circle', css:{backgroundImage:"url(https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png)",backgroundSize:"100% 100% "}});
-						}else{
+						if(photos[i]!='NULL'){
 							$memberPhoto=$('<div>',{class:'circle', css:{backgroundImage:"url("+path+"/upload/employee/"+photos[i]+")",backgroundSize:"100% 100% "}});
+						}else{
+							$memberPhoto=$('<div>',{class:'circle', css:{backgroundImage:"url(https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png)",backgroundSize:"100% 100% "}});
 						}
 						$projectMemberWrab1.append($memberPhoto).append($addEmpCount);
 					};
@@ -168,7 +164,7 @@ function makeProjectList2(projects) {
 	    e.preventDefault(); // 기본 동작 방지 (모달 열림 방지)
 	    let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
 	    let projectEmpNo = $(this).closest('.elemento__cartao').find('#requestProjectEmployeeNo').text();
-
+		console.log(projectNo+"  "+projectEmpNo);
 		 $('#projectRequestBtn').off('click').on('click', function() {
 			fetch(path+'/project/requestProject.do',{
 				method:'POST',
@@ -331,5 +327,5 @@ function makeProjectList2(projects) {
 	$(document).on('click', '#projectListInfo', function(e) {
 		let projectNo = $(this).closest('.elemento__cartao').find('#requestProjectNo').text();
 		let employeeNo = $(this).closest('.elemento__cartao').find('#requestProjectEmployeeNo').text();
-		 location.assign("/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+employeeNo);
+		 location.assign(path+"/project/selectProjectListByNo.do?projectNo="+projectNo+"&empNo="+employeeNo);
 	})

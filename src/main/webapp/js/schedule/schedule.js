@@ -1,3 +1,4 @@
+var path = $('meta[name=contextPath]').attr("content");
 $(document).ready(function() {
     // 체크박스 이벤트 바인딩
     rebindCheckboxEvents();
@@ -22,7 +23,7 @@ $(document).ready(function() {
             {
                 events: function(start, end, timezone, callback) {
                     $.ajax({
-                        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/all',
+						url: path + '/schedule/all',
                         type: 'GET',
                         dataType: 'json',
                         success: function(events) {
@@ -263,7 +264,7 @@ $(document).ready(function() {
     };
 
     $.ajax({
-      url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/addSchedule',
+      url: path + '/schedule/addSchedule',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(newSchedule),
@@ -337,7 +338,7 @@ $(document).ready(function() {
 
     if (confirm('정말로 이 일정을 삭제하시겠습니까?')) {
       $.ajax({
-        url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/deleteSchedule',
+        url: path + '/schedule/deleteSchedule',
         type: 'DELETE',
         data: { id: scheduleId },
         success: function(response) {
@@ -366,7 +367,7 @@ $(document).ready(function() {
     // 부서 목록 로드
     function loadDepartments(prefix = '') {
         $.ajax({
-            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/api/employee/departmentList',
+            url: path + '/api/employee/departmentList',
             type: 'GET',
             dataType: 'json',
             success: function(departments) {
@@ -394,7 +395,7 @@ $(document).ready(function() {
     // 사원 목록 로드
     function loadEmployees(deptCode, prefix = '') {
         $.ajax({
-            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/selectEmpByDept',
+            url: path + '/schedule/selectEmpByDept',
             type: 'GET',
             data: { deptCode: deptCode },
             dataType: 'json',
@@ -477,7 +478,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/updateSchedule',
+            url: path + '/schedule/updateSchedule',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(updatedSchedule),
@@ -500,7 +501,7 @@ $(document).ready(function() {
     function refreshCalendarAndSidebar() {
         $('#calendar').fullCalendar('refetchEvents');
         $.ajax({
-            url: '/schedule/',
+            url: path + '/schedule/',
             type: 'GET',
             success: function(response) {
                 var $html = $(response);
@@ -564,7 +565,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: 'http://14.36.141.71:15555/GDJ_79_HOT_final/schedule/addCompanySchedule',
+            url: path + '/schedule/addCompanySchedule',
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),

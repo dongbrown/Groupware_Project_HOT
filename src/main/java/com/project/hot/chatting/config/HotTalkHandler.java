@@ -39,7 +39,7 @@ public class HotTalkHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
+		log.info("접속완료");
 	}
 
 	private void enterEmployees(WebSocketSession session, CommonMessageDTO msg) {

@@ -132,7 +132,7 @@ function getTodayDate() {
 	attData.append('projectWorkRank' ,document.getElementsByName("importance")[0].value),
 
 //첨부 파일에 값 저장
-			fetch('/work/insertWorkDetail.do',{
+			fetch(path+'/work/insertWorkDetail.do',{
 				method:'POST',
 				body:attData,
 			})

@@ -16,6 +16,7 @@
 		<collection property="projectAtt" resultMap="projectAttachmentMap"/>
 	</resultMap>
 
+
 	<resultMap type="projectAttachment" id="projectAttachmentMap">
 		<id column="ATT_NO" property="attNo"/>
 		<result column="PROJECT_WORK_NO" property="projectWorkNo"/>
@@ -42,6 +43,34 @@
 		SELECT * FROM PROJECT_WORK WHERE EMPLOYEE_NO=#{employeeNo}
 	</select>
 
+	<select id="selectProjectAll" parameterType="_int" resultMap="project.projectMap">
+		SELECT
+			 *
+		FROM
+			PROJECT P
+		LEFT JOIN
+			PROJECT_MEMBERS PM ON P.PROJECT_NO=PM.PROJECT_NO
+		JOIN
+			EMPLOYEE E ON E.EMPLOYEE_NO=P.EMPLOYEE_NO
+		WHERE
+			PM.EMPLOYEE_NO=${employeeNo}
+	</select>
+
+	<select id="selectProjectAllCount" parameterType="_int" resultType="_int">
+		SELECT
+			 COUNT(*)
+		FROM
+			PROJECT P
+		LEFT JOIN
+			PROJECT_MEMBERS PM ON P.PROJECT_NO=PM.PROJECT_NO
+		JOIN
+			EMPLOYEE E ON E.EMPLOYEE_NO=P.EMPLOYEE_NO
+		WHERE
+			PM.EMPLOYEE_NO=${employeeNo}
+		ORDER BY
+			P.PROJECT_START_DATE DESC
+	</select>
+
 	<select id="selectWorkAll" resultMap="workMap">
 		SELECT * FROM PROJECT_WORK
 	</select>
@@ -59,6 +88,7 @@
 			LEFT JOIN PROJECT_ATT A ON P.PROJECT_WORK_NO=A.PROJECT_WORK_NO WHERE P.PROJECT_WORK_NO = #{workNo}
 	</select>
 
+
 	<update id="updateWorkDetail" parameterType="work">
 		UPDATE PROJECT_WORK SET
 			 PROJECT_WORK_TITLE=#{projectWorkTitle}
@@ -69,11 +99,33 @@
 		WHERE PROJECT_WORK_NO=#{projectWorkNo}
 	</update>
 
+
 	<delete id="deleteWorkAtt" parameterType="list">
 		DELETE FROM PROJECT_ATT WHERE ATT_RENAME IN
 		<foreach collection="list" item="f" open="(" close=")" separator=",">
 			'${f}'
 		</foreach>
+	</delete>
+
+	<!-- 프로젝트 리스트 - 프로젝트 상세 - 작업 리스트 조회 -->
+	<select id="selectWorkAllByProjectNo" parameterType="_int" resultMap="workMap">
+		SELECT * FROM PROJECT_WORK WHERE PROJECT_NO=#{projectNo}
+	</select>
+
+	<select id="selectWorkAllCountByProjectNo" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM PROJECT_WORK WHERE PROJECT_NO=#{projectNo}
+	</select>
+	<!-- 작업 삭제 기능 - 작업삭제, 작업내 파일 리스트 출력 후 조회 삭제 -->
+	<select id="selectDeleteAttList" parameterType="_int" resultType="string">
+		SELECT ATT_RENAME FROM PROJECT_ATT WHERE PROJECT_WORK_NO = #{workNo}
+	</select>
+
+	<delete id="deleteWorkListAtt" parameterType="_int">
+		DELETE FROM PROJECT_ATT WHERE PROJECT_WORK_NO = #{workNo}
+	</delete>
+
+	<delete id="deleteWork" parameterType="_int">
+		DELETE FROM PROJECT_WORK WHERE PROJECT_WORK_NO = #{workNo}
 	</delete>
 
 

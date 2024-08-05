@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -143,6 +144,40 @@ public class WorkController {
 	    }
 	    return ResponseEntity.ok().body("작업 업데이트 성공");
 	}
+
+	@ResponseBody
+	@PostMapping("/deleteWork.do")
+	public ResponseEntity<String> deleteWork(@RequestBody Map<String,Integer> param,
+										HttpServletRequest request){
+			// 파일 저장 위치 변수 저장
+			String path = request.getServletContext().getRealPath("/upload/projectWork");
+	//기존 첨부파일 수정 시 삭제한 파일 upload에서 지우는 로직 && DB테이블에서도 지우기
+			List<String> attList = workService.selectDeleteAttList(param.get("workNo"));
+			File delFile = new File(path);
+			// 해당 작업 파일들 삭제
+			if (attList.size() > 0) {
+				if (delFile.exists()) {
+					// 해당파일에 존재하는 파일들 가져오기
+					File[] files = delFile.listFiles();
+					if (files != null) {
+						for (File file : files) {
+							// 파일안에 가져온 삭제할 rename파일이름이 존재하는지 확인 후 존재하면 해당파일 삭제
+							if (file.isFile() && attList.contains(file.getName())) {
+								file.delete();
+							}
+						}
+						//파일 삭제 후 db테이블에서 데이터도 삭제 진행
+						int result = workService.deleteWorkAtt(param.get("workNo"));
+						if(result>0) {
+							workService.deleteWork(param.get("workNo"));
+						}else {
+							return ResponseEntity.badRequest().body("작업 삭제 실패");
+						}
+					}
+				}
+			}
+			return ResponseEntity.ok().body("작업 삭제 성공");
+		}
 
 	@ResponseBody
 	@GetMapping("/workupdateajax")

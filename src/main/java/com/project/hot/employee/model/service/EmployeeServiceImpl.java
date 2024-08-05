@@ -62,9 +62,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		//오늘 출퇴근시간 저장
 		Commuting today=dao.selectTodayCommuting(session, param);
-		if(today.getCommutingGoWorkTime()!=null) rc.setTodayGoWorkTime(today.getCommutingGoWorkTime());
-		if(today.getCommutingLeaveWorkTime()!=null) rc.setTodayLeaveWorkTime(today.getCommutingLeaveWorkTime());
-
+		if(today != null) {
+			if(today.getCommutingGoWorkTime()!=null) rc.setTodayGoWorkTime(today.getCommutingGoWorkTime());
+			if(today.getCommutingLeaveWorkTime()!=null) rc.setTodayLeaveWorkTime(today.getCommutingLeaveWorkTime());
+		}
 
 		//이번달 근무일수 저장
 		rc.setTotalWorkDay((int)c.stream().filter(f->!(f.getCommutingStatus().equals("연차")||f.getCommutingStatus().equals("결근"))).count());
