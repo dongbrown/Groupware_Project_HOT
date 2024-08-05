@@ -18,7 +18,7 @@
 		<div>
 		<div class="documentTitle">
 			<h3>전체 결재 문서</h3>
-			<a href="<c:url value='${path }/approval/newApproval.do' />">
+			<a href="'${pageContext.request.contextPath }'/approval/newApproval.do" />
 				<button class="btn btn-primary">작성하기</button>
 			</a>
 		</div>
