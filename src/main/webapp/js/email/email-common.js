@@ -9,7 +9,7 @@ var EmailCommon = {
         }
         window.EmailCommonInitialized = true;
 
-        this.contextPath = contextPath + '/email';
+        this.contextPath = contextPath;
         this.bindEvents();
 
         this.updateUnreadCounts();
