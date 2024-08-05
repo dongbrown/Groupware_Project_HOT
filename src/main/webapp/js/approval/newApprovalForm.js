@@ -433,16 +433,23 @@ function removeElement(element) {
 	const no = $(element).siblings().eq(0).val();
 	if($(element).parent().attr('class') == 'referer-item'){
 		//참조자 삭제
-		approvalReferers.forEach(e=>{
+		approvalReferers.forEach((e,i)=>{
 			if(e.employeeNo == no){
-				approvalReferers.pop(e);
+				approvalReferers.splice(i, 1);
+			}
+		})
+	}else if($(element).parent().attr('class') == 'receiver-item'){
+		//수신처 삭제
+		approvalReceivers.forEach((e,i)=>{
+			if(e.employeeNo == no){
+				approvalReceivers.splice(i, 1);
 			}
 		})
 	}else{
-		//수신처 삭제
-		approvalReceivers.forEach(e=>{
+		//동행자 삭제
+		approvalPartners.forEach((e,i)=>{
 			if(e.employeeNo == no){
-				approvalReceivers.pop(e);
+				approvalPartners.splice(i, 1);
 			}
 		})
 	}
@@ -913,15 +920,15 @@ $(document).ready(()=>{
 	const approvers=approvalInfo[0].approverEmployee; //결재자
 	const references=approvalInfo[0].referenceEmployee; //참조, 수신
 	const atts=approvalInfo[0].atts; //첨부파일
-	
+
 	//공통 요소들 값 넣기
-	
+
 	//제목
 	$('input[name=title]').val(ap.approvalTitle);
-	
+
 	//내용
 	$('textarea').val(ap.approvalContent);
-	
+
 	//보존연한
 	const startDate = new Date(ap.approvalDate);
     const endDate = new Date(ap.approvalPeriod);
@@ -958,29 +965,59 @@ $(document).ready(()=>{
 				makeRefererTags(r.employeeNo);
 			}else{
 				//수신처
-				approvalReceivers.push(r.employeeNo);		
+				approvalReceivers.push(r.employeeNo);
 				makeReceiversTag(r.employeeNo);
 			}
 		});
 	}
 	//파일 -> 못 넣네 ...
-	
+
 	//양식별 값 넣어주기
 	if(appType == 1){
 		//출장신청서
-		
-		
+		const btf=approvalInfo[0].btf;
+		const btp=approvalInfo[0].btp;
+
+		//출장지
+		$('input[name=businessTripDestination]').val(btf.businessTripDestination);
+
+		//출장 시작, 종료일
+		$('input[name=businessTripStartDate]').val(btf.businessTripStartDate);
+		$('input[name=businessTripEndDate]').val(btf.businessTripEndDate);
+
+		//비상연락처
+		$('input[name=businessTripEmergency]').val(btf.businessTripEmergency);
+
+		//동행자
+		if(btp != null && btp.length>0){
+			btp[0].employee.forEach(e=>{
+				approvalPartners.push(e);
+				makePartnersTag(e);
+			})
+		}
+
 	}else if(appType == 2){
 		//휴가신청서
-		
+		const vf=approvalInfo[0].vf;
+		//휴가 시작, 종료일
+		$('input[name=vacationStart]').val(vf.vacationStart);
+		$('input[name=vacationEnd]').val(vf.vacationEnd);
+		//비상연락처
+		$('input[name=vacationEmergency]').val(vf.vacationEmergency);
+
 	}else if(appType == 3){
 		//초과근무신청서
-		
+		const otf=approvalInfo[0].otf;
+		//초과근무 일자, 시작시간, 끝시간
+		$('input[name=overtimeDate]').val(otf.overtimeDate);
+		$('input[name=overtimeStartTime]').val(otf.overtimeStartTime.split('T')[1].split(':').slice(0, 2).join(':'));
+		$('input[name=overtimeEndTime]').val(otf.overtimeEndTime.split('T')[1].split(':').slice(0, 2).join(':'));
+
 	}else if(appType == 4){
 		//경비지출신청서
 		const edf=approvalInfo[0].edf;
 		$('#totalAmount').val(edf.expenditureAmount); //합계가격
-		$('input[name=expenditureDate]').val(edf.expenditureDate);	
+		$('input[name=expenditureDate]').val(edf.expenditureDate);
 		const edi=approvalInfo[0].edi;
 		edi.forEach((e,i)=>{
 			if(e.expenditureItemNo != null){
@@ -996,7 +1033,11 @@ $(document).ready(()=>{
 		});
 	}else if(appType == 5){
 		//출퇴근정정신청서
-		
+		const ctf=approvalInfo[0].ctf;
+		//정정할 일자, 출퇴종류, 정정시간
+		$('input[name=commutingWorkDate]').val(ctf.commutingWorkDate);
+		$('select[name=commutingType]').val(ctf.commutingType);
+		$('input[name=commutingEditTime]').val(ctf.commutingEditTime.split('T')[1].split(':').slice(0, 2).join(':'));
 	}
-	
+
 });

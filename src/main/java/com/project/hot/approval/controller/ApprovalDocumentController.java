@@ -50,6 +50,8 @@ public class ApprovalDocumentController {
         List<Department> departments = service.selectDepartmentList();
         if(approvalNo != null && !approvalNo.equals("")) {
         	int appType = Integer.parseInt(approvalNo.substring(0,1));
+        	if(appType==5) appType=1;
+        	else if(appType==1) appType=5;
         	model.addAttribute("appType", appType);
         	List<ResponseSpecificApproval> approvalInfo = new ArrayList<>();
         	try {

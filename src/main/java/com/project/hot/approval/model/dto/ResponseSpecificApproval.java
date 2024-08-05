@@ -16,6 +16,7 @@ public class ResponseSpecificApproval {
 	private Approval approval;
 	private List<ApprovalAtt> atts;
 	private BusinessTripForm btf;
+	private List<BusinessTripPartner> btp;
 	private VacationForm vf;
 	private OvertimeForm otf;
 	private ExpenditureForm edf;

@@ -74,6 +74,7 @@
 		</collection>
 		<collection property="edi" resultMap="expenditureItemMap"/>
 		<collection property="atts" resultMap="approvalAttMap"/>
+		<collection property="btp" resultMap="businessTripPartnerMap"/>
 	</resultMap>
 
 
@@ -92,9 +93,27 @@
 		<result property="businessTripEndDate" column="BUSINESS_TRIP_END_DATE"/>
 		<result property="businessTripDestination" column="BUSINESS_TRIP_DESTINATION"/>
 		<result property="businessTripEmergency" column="BUSINESS_TRIP_EMERGENCY"/>
-		<collection property="businessTripPartners" ofType="com.project.hot.approval.model.dto.BusinessTripPartner">
-			<id property="businessTripFormNo" column="BUSINESS_TRIP_FORM_NO"/>
-			<association property="employeeNo" resultMap="employee.employeeMap"/>
+		<!-- <collection property="businessTripPartners" ofType="com.project.hot.approval.model.dto.BusinessTripPartner">
+			<result property="businessTripFormNo" column="BUSINESS_TRIP_FORM_NO"/>
+			<collection property="employeeNo" javaType="com.project.hot.employee.model.dto.Employee">
+				<id property="employeeNo" column="BTP_EMPLOYEE_NO"/>
+				<result property="employeeName" column="BTP_EMPLOYEE_NAME"/>
+			</collection>
+		</collection> -->
+	</resultMap>
+
+	<resultMap id="businessTripPartnerMap" type="com.project.hot.approval.model.dto.BusinessTripPartner">
+		<result property="businessTripFormNo" column="BUSINESS_TRIP_FORM_NO"/>
+		<collection property="employee" ofType="com.project.hot.employee.model.dto.Employee">
+			<id property="employeeNo" column="BTP_EMPLOYEE_NO"/>
+			<result property="employeeName" column="BTP_EMPLOYEE_NAME"/>
+			<association property="departmentCode" javaType="com.project.hot.employee.model.dto.Department">
+				<result property="departmentTitle" column="BTP_DEPARTMENT_TITLE"/>
+			</association>
+			<association property="positionCode" javaType="com.project.hot.employee.model.dto.Position">
+				<id property="positionCode" column="BTP_POSITION_CODE"/>
+				<result property="positionTitle" column="BTP_POSITION_TITLE"/>
+			</association>
 		</collection>
 	</resultMap>
 
@@ -423,9 +442,16 @@
 	            <otherwise>
 	            , btf.*
 	            , btp.*
+	            , btpe.EMPLOYEE_NO AS BTP_EMPLOYEE_NO
+	            , btpe.EMPLOYEE_NAME AS BTP_EMPLOYEE_NAME
+	            , btped.DEPARTMENT_TITLE AS BTP_DEPARTMENT_TITLE
+	            , btpep.POSITION_TITLE AS BTP_POSITION_TITLE
 	            FROM APPROVAL a
 	                LEFT JOIN BUSINESS_TRIP_FORM btf ON btf.APPROVAL_NO = a.APPROVAL_NO
 	                LEFT JOIN BUSINESS_TRIP_PARTNER btp ON btp.BUSINESS_TRIP_FORM_NO = btf.BUSINESS_TRIP_FORM_NO
+	                JOIN EMPLOYEE btpe ON btp.EMPLOYEE_NO = btpe.EMPLOYEE_NO
+	                JOIN POSITION btpep ON btpep.POSITION_CODE = btpe.POSITION_CODE
+	                JOIN DEPARTMENT btped ON btped.DEPARTMENT_CODE = btpe.DEPARTMENT_CODE
 	            </otherwise>
 	        </choose>
     	</if>
@@ -453,6 +479,7 @@
 			POSITION ref_pos ON ref_pos.POSITION_CODE=ref_emp.POSITION_CODE
 		WHERE
 		    a.APPROVAL_NO=#{targetNo}
+		ORDER BY a.APPROVAL_DATE DESC
 	</select>
 	<update id="updateApprover" >
 		UPDATE APPROVER
@@ -493,6 +520,7 @@
 		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
 		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
 		WHERE a.EMPLOYEE_NO=#{empNo}
+		ORDER BY a.APPROVAL_DATE DESC
 	</select>
 	<select id="getReceivedApproval" resultMap="responseSpecificApprovalMap" parameterType="_int">
 		SELECT	a.APPROVAL_TITLE
@@ -522,6 +550,7 @@
 		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
 		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
 		WHERE rf.EMPLOYEE_NO=#{empNo} AND rf.REFERENCE_TYPE=2 AND (ap.APPROVER_STATUS=1 OR ap.APPROVER_STATUS=3)
+		ORDER BY a.APPROVAL_DATE DESC
 	</select>
 	<select id="getReferenceDocuments" resultMap="responseSpecificApprovalMap" parameterType="_int">
 		SELECT	a.APPROVAL_TITLE
@@ -551,6 +580,7 @@
 		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
 		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
 		WHERE rf.EMPLOYEE_NO=#{empNo} AND rf.REFERENCE_TYPE=1
+		ORDER BY a.APPROVAL_DATE DESC
 	</select>
 	<select id="getDocumentsByPosition" resultMap="responseSpecificApprovalMap" parameterType="map">
 		SELECT	a.APPROVAL_TITLE
@@ -620,9 +650,10 @@
 		LEFT JOIN EMPLOYEE ref_emp ON ref_emp.EMPLOYEE_NO=rf.EMPLOYEE_NO
 		LEFT JOIN DEPARTMENT ref_dept ON ref_dept.DEPARTMENT_CODE=ref_emp.DEPARTMENT_CODE
 		WHERE a.EMPLOYEE_NO = #{empNo} AND a.APPROVAL_STATUS=5
+		ORDER BY a.APPROVAL_DATE DESC
 	</select>
-	
-	
+
+
 	<select id="deleteApproval" statementType="CALLABLE" parameterType="java.util.HashMap">
 		{call remove_approval(#{approvalNo, mode=IN, jdbcType=VARCHAR}, #{result, mode=OUT, jdbcType=INTEGER})}
 	</select>
