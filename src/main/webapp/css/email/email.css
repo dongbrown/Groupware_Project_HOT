@@ -171,9 +171,9 @@ body {
 
 .email-actions-bottom {
     display: flex;
-    justify-content: space-between;
-    padding-top: 10px;
-    border-top: 1px solid #ddd;
+ /*    justify-content: space-between; */
+/*     padding-top: 10px; */
+  /*   border-top: 1px solid #ddd; */
 }
 .nav-link:hover {
     background-color: #f5f6f7;
