@@ -13,7 +13,6 @@ var EmailCommon = {
         this.bindEvents();
 
         this.updateUnreadCounts();
-        setInterval(this.updateUnreadCounts.bind(this), 30000);
 
         console.log('EmailCommon initialized with contextPath:', this.contextPath);
     },

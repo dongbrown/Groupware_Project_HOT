@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <head>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/view.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/email/view.css">
 </head>
 
 
