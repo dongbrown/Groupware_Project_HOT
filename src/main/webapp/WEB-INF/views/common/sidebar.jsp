@@ -249,16 +249,27 @@
 
         </ul>
         <!-- End of Sidebar -->
-<script src="${pageContext.request.contextPath}/js/email-common.js"></script>
+<script src="${pageContext.request.contextPath}/js/email/email-common.js"></script>
 <script>
 $(document).ready(function() {
     var contextPath = '${pageContext.request.contextPath}/email';
-    EmailCommon.init(contextPath);
+
+    // EmailCommon이 이미 초기화되지 않았다면 초기화 진행
+    if (typeof EmailCommon !== 'undefined' && !window.EmailCommonInitialized) {
+        EmailCommon.init(contextPath);
+    }
+
+    // 안 읽은 메일 개수 업데이트 함수
+    function updateUnreadCounts() {
+        if (typeof EmailCommon !== 'undefined' && EmailCommon.updateUnreadCounts) {
+            EmailCommon.updateUnreadCounts();
+        }
+    }
 
     // 초기 로드 시 안 읽은 메일 개수 업데이트
-    EmailCommon.updateUnreadCounts();
+    updateUnreadCounts();
 
     // 30초마다 안 읽은 메일 개수 업데이트
-    setInterval(EmailCommon.updateUnreadCounts, 30000);
+    setInterval(updateUnreadCounts, 30000);
 });
 </script>
