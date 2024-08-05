@@ -47,7 +47,7 @@
                                     <button onclick="location.href='${path}/email/inbox'">
                                         <i class="fas fa-inbox"></i>
                                         <span>받은메일함</span>
-                                        <span class="badge">${inboxUnreadCount}</span>
+                                        <span class="badge bg-primary rounded-pill" id="inboxUnreadCount">${inboxUnreadCount}</span>
                                     </button>
                                 </li>
                                 <li class="menu-item ${mailbox eq 'sent' ? 'active' : ''}">

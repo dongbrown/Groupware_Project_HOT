@@ -30,7 +30,7 @@
             <!-- 페이지 콘텐츠 시작 -->
             <div class="container-fluid">
                 <div class="page-header">
-                    <h1 class="text-primary">커뮤니티 목록</h1>
+                    <h1 class="text-primary">HOT Community</h1>
                     <p class="lead">모든 커뮤니티 목록입니다. 원하는 커뮤니티에 가입하여 활동을 시작해보세요.</p>
                 </div>
 
