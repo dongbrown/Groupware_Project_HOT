@@ -98,7 +98,7 @@ function changeTitle(e){
 function searchEmployee(cPage){
 	const name=$('.search-name').val().trim();
 	let title=$('.department-menu-title').text().trim();
-	if(title == '부서선택') title='';
+	if(title == '부서선택' || title == '부서전체') title='';
 	$('.card-div').html('');
 	showLoadingSpinner($('.card-div'));
 	fetch(`${path}/api/employee/employeeList?cPage=${cPage}&name=${name}&title=${title}`)
