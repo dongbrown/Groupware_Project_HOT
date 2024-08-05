@@ -46,21 +46,21 @@
                                             ${community.communityTitle}
                                             <span class="star active" data-community-no="${community.communityNo}">★</span>
                                         </div>
-                                        <div class="member-icons">
-                                            <c:forEach var="photo" items="${community.employeePhotoList}" begin="0" end="2" varStatus="status">
-                                                <c:choose>
-                                                    <c:when test="${empty photo or photo eq 'NULL'}">
-                                                        <img src="${pageContext.request.contextPath}/images/profile.png" alt="Default User" class="user-icon" title="Employee ${status.index + 1}">
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <img src="${pageContext.request.contextPath}/images/${photo}" alt="User" class="user-icon" title="Employee ${status.index + 1}">
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </c:forEach>
-                                            <c:if test="${fn:length(community.employeePhotoList) > 3}">
-                                                <span class="more-members">+${fn:length(community.employeePhotoList) - 3}</span>
-                                            </c:if>
-                                        </div>
+										<div class="member-icons">
+										    <c:forEach var="photo" items="${community.employeePhotoList}" begin="0" end="2" varStatus="status">
+										        <c:choose>
+										            <c:when test="${empty photo or photo eq 'NULL'}">
+										                <div class="circle" style="background-image: url('https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png'); background-size: cover;" title="Employee ${status.index + 1}"></div>
+										            </c:when>
+										            <c:otherwise>
+										                <div class="circle" style="background-image: url('${pageContext.request.contextPath}/upload/employee/${photo}'); background-size: cover;" title="Employee ${status.index + 1}"></div>
+										            </c:otherwise>
+										        </c:choose>
+										    </c:forEach>
+										    <c:if test="${fn:length(community.employeePhotoList) > 3}">
+										        <span class="more-members">+${fn:length(community.employeePhotoList) - 3}</span>
+										    </c:if>
+										</div>
                                     </div>
                                 </c:if>
                             </c:forEach>
@@ -85,22 +85,22 @@
                                             ${isBookmarked ? '★' : '☆'}
                                         </span>
                                     </div>
-                                    <div class="member-icons">
-                                        <c:forEach var="photo" items="${community.employeePhotoList}" begin="0" end="2" varStatus="status">
-                                            <c:choose>
-                                                <c:when test="${empty photo or photo eq 'NULL'}">
-                                                    <img src="${path}/images/profile.png" alt="Default User" class="user-icon" title="Employee ${status.index + 1}">
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <img src="${path}/images/${photo}" alt="User" class="user-icon" title="Employee ${status.index + 1}">
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
-                                        <c:if test="${fn:length(community.employeePhotoList) > 3}">
-                                            <span class="more-members">+${fn:length(community.employeePhotoList) - 3}</span>
-                                        </c:if>
-                                    </div>
-                                </div>
+									<div class="member-icons">
+									    <c:forEach var="photo" items="${community.employeePhotoList}" begin="0" end="2" varStatus="status">
+									        <c:choose>
+									            <c:when test="${empty photo or photo eq 'NULL'}">
+									                <div class="circle" style="background-image: url('https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png'); background-size: 100% 100%;" title="Employee ${status.index + 1}"></div>
+									            </c:when>
+									            <c:otherwise>
+									                <div class="circle" style="background-image: url('${path}/upload/employee/${photo}'); background-size: 100% 100%;" title="Employee ${status.index + 1}"></div>
+									            </c:otherwise>
+									        </c:choose>
+									    </c:forEach>
+									    <c:if test="${fn:length(community.employeePhotoList) > 3}">
+									        <span class="more-members">+${fn:length(community.employeePhotoList) - 3}</span>
+									    </c:if>
+									</div>
+								</div>
                             </c:forEach>
                             <div class="add-group" id="addGroupBtn">+</div>
                         </div>

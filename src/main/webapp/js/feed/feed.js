@@ -148,7 +148,9 @@ function displayFeeds(feeds) {
 }
 
 function createFeedHtml(feed) {
-    const isAuthor = feed.employeeNo === getLoginEmployeeNo();
+    const isAuthor = String(feed.employeeNo) === String(loginEmployeeNo);
+    console.log(`Feed ${feed.feedNo}: LoginEmployee=${loginEmployeeNo}, FeedEmployee=${feed.employeeNo}, IsAuthor=${isAuthor}`);
+
     let menuHtml = '';
     if (isAuthor) {
         menuHtml = `
@@ -169,10 +171,20 @@ function createFeedHtml(feed) {
 
     const likedClass = feed.isLiked ? 'liked' : '';
 
-  return `
+    let profilePhotoHtml = '';
+    if (feed.employeePhoto && feed.employeePhoto !== 'NULL') {
+        profilePhotoHtml = `<div class="circle" style="background-image: url('${path}/upload/employee/${feed.employeePhoto}'); background-size: cover;"></div>`;
+    } else {
+        profilePhotoHtml = `<div class="circle" style="background-image: url('https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png'); background-size: cover;"></div>`;
+    }
+
+    return `
         <div class="feed-item" id="feed-${feed.feedNo}" data-feed-no="${feed.feedNo}">
             <div class="feed-header">
-                <h5>${feed.employeeName}</h5>
+                <div class="feed-header-left">
+                    ${profilePhotoHtml}
+                    <h5>${feed.employeeName}</h5>
+                </div>
                 ${menuHtml}
             </div>
             <p class="feed-content">${feed.feedContent}</p>
@@ -207,6 +219,7 @@ function toggleFeedMenu(feedNo) {
 }
 
 function getLoginEmployeeNo() {
+	console.log(loginEmployeeNo);
     return loginEmployeeNo;
 }
 
@@ -523,9 +536,11 @@ function displayComments(feedNo, comments) {
 function createCommentHtml(comment, feedNo, isReply = false) {
     const formattedDate = formatDate(comment.feedCommentEnrolldate);
     const replyButton = !isReply ?
-        `<button class="btn btn-sm btn-outline-secondary reply-btn" onclick="showReplyForm(${feedNo}, ${comment.feedCommentNo})">답글</button>` : '';
+        `<button class="reply-btn" onclick="showReplyForm(${feedNo}, ${comment.feedCommentNo})">답글</button>` : '';
 
-    const isLoginUser = comment.employeeNo === getLoginEmployeeNo();
+    const isLoginUser = String(comment.employeeNo) === String(getLoginEmployeeNo());
+    console.log(`Comment ${comment.feedCommentNo}: LoginEmployee=${getLoginEmployeeNo()}, CommentEmployee=${comment.employeeNo}, IsLoginUser=${isLoginUser}`);
+
     const editDeleteButtons = isLoginUser ? `
         <div class="comment-actions">
             <button class="btn btn-sm btn-outline-primary edit-comment-btn" onclick="showEditCommentForm(${feedNo}, ${comment.feedCommentNo})">수정</button>
@@ -533,13 +548,27 @@ function createCommentHtml(comment, feedNo, isReply = false) {
         </div>
     ` : '';
 
+    let profilePhotoHtml = '';
+    if (comment.employeePhoto && comment.employeePhoto !== 'NULL') {
+        profilePhotoHtml = `<div class="circle" style="background-image: url('${path}/upload/employee/${comment.employeePhoto}'); background-size: cover;"></div>`;
+    } else {
+        profilePhotoHtml = `<div class="circle" style="background-image: url('https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png'); background-size: cover;"></div>`;
+    }
+
     return `
         <div class="comment" data-comment-id="${comment.feedCommentNo}">
             <div class="comment-content">
-                <strong>${escapeHtml(comment.employeeName)}</strong>
+                <div class="comment-header">
+                    ${profilePhotoHtml}
+                    <div class="comment-info">
+                        <strong>${escapeHtml(comment.employeeName)}</strong>
+                    </div>
+                </div>
                 <p class="comment-text">${escapeHtml(comment.feedCommentContent)}</p>
-                <small class="text-muted">${formattedDate}</small>
-                ${replyButton}
+                <div class="comment-footer">
+                    <small class="text-muted">${formattedDate}</small>
+                    ${replyButton}
+                </div>
             </div>
             ${editDeleteButtons}
             ${!isReply ? `
