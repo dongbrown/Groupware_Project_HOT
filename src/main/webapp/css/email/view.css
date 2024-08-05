@@ -3,156 +3,159 @@
 
 /* 이메일 상세 보기 컨테이너 스타일 */
 .email-view-container {
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  margin: 20px 0;
+    padding: 20px !important;
+    background-color: #ffffff !important;
+    border-radius: 5px !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1) !important;
+    margin: 20px 0 !important;
 }
 
 .email-view-header {
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+    border-bottom: 1px solid #ddd !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 20px !important;
 }
 
 .title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 10px !important;
 }
 
 .email-title {
-  margin: 0;
-  font-size: 24px;
+    margin: 0 !important;
+    font-size: 24px !important;
+    flex-grow: 1 !important;
 }
 
 .btn-print {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: #5f6368;
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 18px !important;
+    color: #5f6368 !important;
+    margin-left: 10px !important;
 }
 
 .email-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
 }
 
 .sender-info {
-  display: flex;
-  align-items: center;
+    display: flex !important;
+    align-items: center !important;
 }
 
 .sender-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 15px;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    margin-right: 15px !important;
 }
 
 .sender-details {
-  display: flex;
-  flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 .sender-name {
-  font-weight: bold;
+    font-weight: bold !important;
 }
 
 .sender-email {
-  color: #5f6368;
+    color: #5f6368 !important;
 }
 
 .email-date {
-  color: #5f6368;
+    color: #5f6368 !important;
 }
 
+/* 나머지 스타일은 그대로 유지 */
 .email-view-body {
-  margin-bottom: 20px;
+    margin-bottom: 20px !important;
 }
 
 .email-content {
-  white-space: pre-wrap;
-  font-size: 16px;
-  line-height: 1.5;
+    white-space: pre-wrap !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
 }
 
 .email-view-footer {
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+    border-top: 1px solid #ddd !important;
+    padding-top: 10px !important;
 }
 
 .email-attachments {
-  margin-top: 20px;
+    margin-top: 20px !important;
 }
 
 .attachment-list {
-  list-style: none;
-  padding: 0;
+    list-style: none !important;
+    padding: 0 !important;
 }
 
 .attachment-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 10px !important;
 }
 
 .attachment-icon {
-  margin-right: 10px;
+    margin-right: 10px !important;
 }
 
 .download-btn {
-  margin-left: auto;
+    margin-left: auto !important;
 }
 
 /* 버튼 스타일 */
 .btn {
-  display: inline-block;
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  cursor: pointer;
-  user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
+    display: inline-block !important;
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    line-height: 1.42857143 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    background-image: none !important;
+    border: 1px solid transparent !important;
+    border-radius: 4px !important;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
+    color: #fff !important;
+    background-color: #337ab7 !important;
+    border-color: #2e6da4 !important;
 }
 
 .btn-secondary {
-  color: #333;
-  background-color: #fff;
-  border-color: #ccc;
+    color: #333 !important;
+    background-color: #fff !important;
+    border-color: #ccc !important;
 }
 
 .btn-danger {
-  color: #fff;
-  background-color: #d9534f;
-  border-color: #d43f3a;
+    color: #fff !important;
+    background-color: #d9534f !important;
+    border-color: #d43f3a !important;
 }
 
 .email-actions-bottom {
-  display: flex;
-  justify-content: flex-start;
-  gap: 10px;
-  margin-top: 20px;
+    display: flex !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
 }
 
 @media print {
-  .email-actions-bottom, .btn-print {
-    display: none;
-  }
+    .email-actions-bottom, .btn-print {
+        display: none !important;
+    }
 }

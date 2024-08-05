@@ -7,15 +7,16 @@ $(document).ready(function() {
         header: {
             left: 'prev,next today',
             center: 'title',
-            right: 'month,agendaWeek'
-            // agendaWeek,agendaDay 주, 일 필요하면 right에 추가
+            right: 'month,agendaWeek,listMonth'
         },
-        titleFormat: 'MMMM',
+        titleFormat: 'MMMM YYYY',
         initialDate: 'default',
         selectable: true,
         selectHelper: true,
-        editable: true, //드래그와 리사이징 활성화
-        eventLimit: true,
+        editable: true,
+        eventLimit: true, // 'more' 링크 활성화
+        eventLimitClick: 'popover', // 'more' 클릭 시 팝오버로 표시
+        eventLimitText: '더보기', // 'more' 텍스트를 '더보기'로 변경
         timeZone: 'Asia/Seoul',
         locale: 'ko',
         eventSources: [
@@ -58,6 +59,11 @@ $(document).ready(function() {
 			    timezone: 'local'
 			},
         ],
+        views: {
+            month: {
+                eventLimit: 4 // 하루에 최대 4개의 이벤트만 표시
+            }
+        },
 		eventRender: function(event, element) {
 		    if (event.source.googleCalendarId) {
 		        console.log('Rendering Google Calendar event:', event);
