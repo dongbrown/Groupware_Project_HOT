@@ -144,8 +144,7 @@ function getTodayDate() {
 			})
 			.then(data => {
 				alert("작업 등록이 완료되었습니다.");
-				location.assign('/');
-				console.log(data);
+				location.assign(path+'/work/workinsert.do');
 			})
 			.catch(error => {
 				alert('작업 파일 등록을 실패했습니다.');

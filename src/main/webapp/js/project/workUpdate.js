@@ -58,9 +58,9 @@
 /*------------------------------------------*/
 
 //작업 선택 시 작업 수정 할 페이지 이동
-	$(document).on('click', '.work-choice > :lt(5)', function(e) {
-		const workNo = $(this).closest('.work-choice').children().eq(2).text();
-		location.assign(path+'/work/workupdatedetail.do?workNo='+workNo);
+	$(document).on('click', '.work-choice td:not(:last-child)', function(e) {
+	    const workNo = $(this).closest('tr').children().eq(2).text();
+	    location.assign(path + '/work/workupdatedetail.do?workNo=' + workNo);
 	});
 
 //작업 삭제 버튼 구현
