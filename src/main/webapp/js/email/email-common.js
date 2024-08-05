@@ -314,8 +314,7 @@ var EmailCommon = {
             data: JSON.stringify(emailNos),
             success: function(response) {
                 alert('선택한 이메일을 휴지통으로 이동했습니다.');
-                $('#mailContent').html(response);
-                EmailCommon.reattachEventListeners();
+                location.assign(path + '/email/inbox')
             },
             error: function(xhr, status, error) {
                 console.error('이메일 삭제 실패:', error);
