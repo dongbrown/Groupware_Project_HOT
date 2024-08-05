@@ -92,16 +92,16 @@ body {
 }
 
 .upload-btn {
-    background-color: #e4e6eb;
+    /* background-color: #e4e6eb; */
     border: none;
     padding: 0.5rem;
     border-radius: 50%;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    /* transition: background-color 0.3s ease; */
 }
 
 .upload-btn:hover {
-    background-color: #d8dadf;
+    /* background-color: #d8dadf; */
 }
 
 .submit-btn {
