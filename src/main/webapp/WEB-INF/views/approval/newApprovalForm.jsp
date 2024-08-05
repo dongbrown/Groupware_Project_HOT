@@ -834,6 +834,13 @@ request.setAttribute("currentDate", formattedDate);
 </section>
 <script>
 	const path = '${path}';
+	const appType='${appType}';
+	let approvalInfo;
+	try {
+	    approvalInfo = JSON.parse('${approvalInfo}'.replace(/&quot;/g, '"'));
+	} catch (error) {
+	    console.error("JSON 파싱 오류:", error);
+	}
 </script>
 <script src='${path }/js/approval/newApprovalForm.js'></script>
 <c:import url="/WEB-INF/views/common/footer.jsp" />

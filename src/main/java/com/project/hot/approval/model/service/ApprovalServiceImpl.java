@@ -274,4 +274,13 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 
+	@Override
+	public int deleteApproval(String approvalNo) {
+		Map<String, Object> param=new HashMap<>();
+		param.put("approvalNo", approvalNo);
+		param.put("result", 0);
+		return dao.deleteApproval(session, param);
+	}
+
+
 }
