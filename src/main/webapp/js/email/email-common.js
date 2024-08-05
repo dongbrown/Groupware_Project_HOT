@@ -629,8 +629,11 @@ var EmailCommon = {
             data: JSON.stringify(emailNos),
             success: function(response) {
                 console.log('이메일의 중요 표시를 변경했습니다.');
+  EmailCommon.reloadCurrentMailbox();
+
                 $('#mailContent').html(response);
                 EmailCommon.reattachEventListeners();
+
             },
             error: function(xhr, status, error) {
                 console.error('중요 표시 변경 실패:', error);
@@ -640,7 +643,7 @@ var EmailCommon = {
 
     replyEmail: function(emailNo) {
         $.ajax({
-            url: this.contextPath + '/reply/' + emailNo,
+            url: this.contextPath + '/email/reply/' + emailNo,
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
@@ -655,7 +658,7 @@ var EmailCommon = {
 
     forwardEmail: function(emailNo) {
         $.ajax({
-            url: this.contextPath + '/forward/' + emailNo,
+            url: this.contextPath + '/email/forward/' + emailNo,
             type: 'GET',
             success: function(response) {
                 $('#mailContent').html(response);
@@ -837,6 +840,9 @@ var EmailCommon = {
             }
         });
     },
+    replaceContent: function(content) {
+    $('#mailContent').empty().html(content);
+	},
 
     downloadAttachment: function(attachmentId, filename) {
         var url = this.contextPath + '/download/' + attachmentId;
