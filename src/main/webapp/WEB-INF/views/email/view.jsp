@@ -46,7 +46,7 @@
                                class="btn btn-sm btn-primary download-btn"
                                download="${attachment.emailAttOriginalFilename}">
                                 <i class="fas fa-download"></i> 다운로드
-                            </a>
+                            </a>8
                         </li>
                     </c:forEach>
                 </ul>
