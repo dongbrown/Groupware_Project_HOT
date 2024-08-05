@@ -23,6 +23,7 @@ function makeOrgChart(orgData) {
 		direction: 'top',
 		enableExpandCollapse: true,
 		nodeTemplate: (content) => {
+			console.log(content);
 			if (content.dept != null) {
 				return `
                 <div style="

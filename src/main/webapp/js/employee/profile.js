@@ -94,6 +94,9 @@ $(document).ready(()=>{
 		}
 	});
 
+
+});
+
 	function uploadFile(upFile){
 		let fd=new FormData();
 		fd.append('upFile', upFile);
@@ -120,7 +123,6 @@ $(document).ready(()=>{
 			console.log(error.message);
 		})
 	}
-});
 
 //다음 주소찾기 api
 var element_layer = document.getElementById('layer');
