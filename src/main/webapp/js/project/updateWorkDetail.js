@@ -178,7 +178,7 @@ function getTodayDate() {
 		})
 		.then(data=>{
 			alert("작업 업데이트가 완료되었습니다.");
-				location.assign('/');
+				location.assign(path+'/work/workupdate.do');
 				console.log(data);
 		})
 		.catch(error=>{
