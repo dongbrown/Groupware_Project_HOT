@@ -2,7 +2,6 @@
 //페이지 불러오는 함수
 		function getProjectList(cPage) {
 			$('#project-list-table>tbody').html('');
-
 			fetch(path + '/project/projectupdatelistajax?cPage=' + cPage+'&employeeNo='+empNo)
 				.then(response => response.json())
 				.then(data => {
@@ -61,7 +60,6 @@
 /*프로젝트 목록중 하나 클릭시 해당 프로젝트 정보와 수정가능한 테이블 표시*/
 	$(document).on('click', '.project-choice', function(e) {
 		const projectNo = Number(e.target.parentElement.children[2].textContent);
-		const empNo = Number($("#projectEmpNo").text());
 	    location.assign(path+"/project/selectProjectByNo.do?projectNo="+projectNo+"&empNo="+empNo);
 
 	  /*  const projectNo = Number(e.target.parentElement.children[1].textContent);
