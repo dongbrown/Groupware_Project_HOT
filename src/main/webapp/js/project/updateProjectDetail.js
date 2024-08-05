@@ -38,12 +38,12 @@
 				success: function(response) {
 					alert("프로젝트 수정이 완료되었습니다.")
 					console.log(projectData);
-					location.assign("/project/projectupdate.do");
+					location.assign(path+"/project/projectupdate.do");
 				},
 				error: function(error) {
 					alert("프로젝트 수정이 실패하였습니다.")
 					console.log(projectData);
-					location.assign("/project/projectupdate.do");
+					location.assign(path+"/project/projectupdate.do");
 				}
 			});
 		});

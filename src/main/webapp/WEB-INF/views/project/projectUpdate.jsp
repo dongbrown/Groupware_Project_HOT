@@ -218,7 +218,7 @@
 </section>
 </div>
 <script>
-	const path="${path}"
+	const path="${path}";
 	const empNo ="${loginEmployee.employeeNo }";
 </script>
 <script src="${path }/js/project/updateProject.js"></script>
