@@ -56,22 +56,36 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public int deleteProject(int projectNo) {
-		int result = dao.deleteProject(session, projectNo);
-		if(result > 0) {
-			int resultMember = dao.deleteProjectMember(session, projectNo);
-			if(resultMember > 0) {
-				int resultWork = dao.deleteProjectWork(session, projectNo);
-				if(resultWork > 0) {
-					return result;
-				}else {
-					throw new RuntimeException("프로젝트 작업 삭제 실패");
-				}
-			}else {
-				throw new RuntimeException("프로젝트 맴버 삭제 실패");
-			}
-		}else {
-			throw new RuntimeException("프로젝트 삭제 실패");
-		}
+		 // 프로젝트 멤버 삭제
+	    try {
+	        int resultMember = dao.deleteProjectMember(session, projectNo);
+	        if (resultMember == 0) {
+	            // 삭제할 프로젝트 멤버가 없는 경우 (오류가 아님)
+	            System.out.println("삭제할 프로젝트 멤버가 없습니다.");
+	        }
+	    } catch (Exception e) {
+	        throw new RuntimeException("프로젝트 멤버 삭제 실패", e);
+	    }
+
+	    // 프로젝트 작업 삭제
+	    try {
+	        int resultWork = dao.deleteProjectWork(session, projectNo);
+	        if (resultWork == 0) {
+	            // 삭제할 프로젝트 작업이 없는 경우 (오류가 아님)
+	            System.out.println("삭제할 프로젝트 작업이 없습니다.");
+	        }
+	    } catch (Exception e) {
+	        throw new RuntimeException("프로젝트 작업 삭제 실패", e);
+	    }
+
+	    // 프로젝트 삭제
+	    int result = dao.deleteProject(session, projectNo);
+	    if (result > 0) {
+	        return result;
+	    } else {
+	        throw new RuntimeException("프로젝트 삭제 실패");
+	    }
+
 	}
 
 	@Override

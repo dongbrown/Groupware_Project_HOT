@@ -158,7 +158,7 @@ function getTodayDate() {
 //작업 내용 저장
 	updateData.append("projectWorkNo", $("input[name='workNo']").val());
 	updateData.append("projectWorkTitle", $("#work-title").val());
-	updateData.append("projectWorkContent", $("#floatingTextarea").val());
+	updateData.append("projectWorkContent", $("#floatingTextarea").val().replace(/\n/g, "\\n").replace(/\r/g, "\\r"));
 	updateData.append("projectWorkEndDate", $("#work-end-date").val());
 	updateData.append("projectWorkRank", $("#work-rank").val());
 	updateData.append("projectWorkProgress", $("#work-progress").val());
