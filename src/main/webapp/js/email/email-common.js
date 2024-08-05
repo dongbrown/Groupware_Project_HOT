@@ -9,7 +9,7 @@ var EmailCommon = {
         }
         window.EmailCommonInitialized = true;
 
-        this.contextPath = contextPath + '/GDJ79_HOT_final';
+        this.contextPath = '/GDJ79_HOT_final' + contextPath;
         this.bindEvents();
 
         this.updateUnreadCounts();
