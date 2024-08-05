@@ -608,9 +608,8 @@ var EmailCommon = {
             data: JSON.stringify(emailNos),
             success: function(response) {
                 console.log('이메일을 읽음으로 표시했습니다.');
-                EmailCommon.updateUnreadCount();
-                $('#mailContent').html(response);
-                EmailCommon.reattachEventListeners();
+                location.assign(path + '/email/inbox')
+
             },
             error: function(xhr, status, error) {
                 console.error('이메일 읽음 표시 실패:', error);
@@ -629,7 +628,7 @@ var EmailCommon = {
             data: JSON.stringify(emailNos),
             success: function(response) {
                 console.log('이메일의 중요 표시를 변경했습니다.');
-  EmailCommon.reloadCurrentMailbox();
+  				location.assign(path + '/email/inbox')
 
                 $('#mailContent').html(response);
                 EmailCommon.reattachEventListeners();
@@ -766,8 +765,7 @@ var EmailCommon = {
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
             success: function(response) {
-                alert(response);
-                EmailCommon.loadMailbox('trash');
+     				location.assign(path + '/email/trash')
             },
             error: function(xhr, status, error) {
                 alert("읽음 처리 중 오류가 발생했습니다: " + xhr.responseText);
@@ -786,8 +784,7 @@ var EmailCommon = {
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
             success: function(response) {
-                alert(response);
-                EmailCommon.loadMailbox('trash');
+                location.assign(path + '/email/trash')
             },
             error: function(xhr, status, error) {
                 alert("영구 삭제 중 오류가 발생했습니다: " + xhr.responseText);
@@ -806,8 +803,7 @@ var EmailCommon = {
             contentType: 'application/json',
             data: JSON.stringify(emailNos),
             success: function(response) {
-                alert(response);
-                EmailCommon.loadMailbox('trash');
+                location.assign(path + '/email/trash')
             },
             error: function(xhr, status, error) {
                 alert("복구 중 오류가 발생했습니다: " + xhr.responseText);

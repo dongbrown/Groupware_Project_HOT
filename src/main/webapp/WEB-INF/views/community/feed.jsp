@@ -50,9 +50,10 @@
                     <textarea id="feedContent" name="content" rows="4" placeholder="새로운 소식이나 정보를 공유하세요!"></textarea>
                     <div class="button-container">
                         <input type="file" id="file-upload" style="display: none;" />
-                        <button type="button" class="upload-btn" onclick="document.getElementById('file-upload').click();">
-                            <i class="fas fa-image"></i>
+                        <button type="button" class="upload-btn" >
+                            <!-- <i class="fas fa-image"></i> -->
                         </button>
+
                         <button type="submit" class="submit-btn">올리기</button>
                     </div>
                 </form>

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+/* $(document).ready(function() {
     EmailApp.init();
 
     $('#sidebarWriteBtn').click(function(e) {
@@ -11,6 +11,7 @@ $(document).ready(function() {
         EmailCommon.showWriteForm(true);
     });
 });
+*/
 
 var EmailApp = {
     init: function() {
