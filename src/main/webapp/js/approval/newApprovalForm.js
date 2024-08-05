@@ -49,8 +49,7 @@ function calTotalPrice(){
 }
 
 //휴대폰번호 입력 처리
-document.getElementById('phoneNumber').addEventListener('input', makePhoneFormat);
-
+$('.phoneNumber').on('input', makePhoneFormat);
 function makePhoneFormat(){
     let input = this.value.replace(/\D/g, ''); // 숫자만 남기기
     let formatted = '';

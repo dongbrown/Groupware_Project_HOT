@@ -204,7 +204,7 @@ request.setAttribute("currentDate", formattedDate);
 										class="form-control" required></td>
 									<th>비상연락처</th>
 									<td><input type="tel" id="phoneNumber"
-										name="businessTripEmergency" class="form-control"></td>
+										name="businessTripEmergency" class="form-control phoneNumber"></td>
 									<th>보안등급<span class="asterisk">*</span></th>
 									<td><select id="securityLevel" class="form-control"
 										name="security" required>
@@ -345,7 +345,7 @@ request.setAttribute("currentDate", formattedDate);
 								<tr>
 									<th>비상연락처</th>
 									<td><input type="tel" id="phoneNumber"
-										class="form-control" name="vacationEmergency"></td>
+										class="form-control phoneNumber" name="vacationEmergency"></td>
 									<th>수신처<span class="asterisk">*</span></th>
 									<td colspan="3">
 										<div id="recipient" class="form-control recipientDiv"></div>
