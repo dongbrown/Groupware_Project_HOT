@@ -167,7 +167,7 @@
 			AND v.VACATION_TYPE = #{svd.type}
 		</if>
 		<if test="svd.name != null and svd.name != ''">
-			AND e.EMPLOYEE_NAME LIKE ${svd.name}
+			AND e.EMPLOYEE_NAME LIKE '%${svd.name}%'
 		</if>
 		<if test="svd.code != null">
 			AND d.DEPARTMENT_CODE = #{svd.code}
@@ -192,7 +192,7 @@
 			AND v.VACATION_TYPE = #{svd.type}
 		</if>
 		<if test="svd.name != null and svd.name != ''">
-			AND e.EMPLOYEE_NAME LIKE ${svd.name}
+			AND e.EMPLOYEE_NAME LIKE '%${svd.name}%'
 		</if>
 		<if test="svd.code != null">
 			AND d.DEPARTMENT_CODE = #{svd.code}
