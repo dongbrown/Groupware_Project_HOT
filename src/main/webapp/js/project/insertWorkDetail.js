@@ -127,7 +127,7 @@ function getTodayDate() {
 	attData.append('projectNo', document.getElementsByName("projectNo")[0].value),
 	attData.append('employeeNo', empNo),
 	attData.append('projectWorkTitle' ,document.getElementsByName("workTitle")[0].value),
-	attData.append('projectWorkContent' ,document.getElementsByName("workContent")[0].value),
+	attData.append('projectWorkContent', document.getElementsByName("workContent")[0].value.replace(/\n/g, "\\n").replace(/\r/g, "\\r")),
 	attData.append('projectWorkEndDate' ,document.getElementById("project-end-date").value),
 	attData.append('projectWorkRank' ,document.getElementsByName("importance")[0].value),
 

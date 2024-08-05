@@ -155,6 +155,7 @@ public class ProjectController {
 	public ResponseEntity<String> deleteProject(@RequestBody Map<String,Integer> param,
 										HttpServletRequest request){
 			// 파일 저장 위치 변수 저장
+			int delProject=0;
 			String path = request.getServletContext().getRealPath("/upload/projectWork");
 	//기존 첨부파일 수정 시 삭제한 파일 upload에서 지우는 로직 && DB테이블에서도 지우기
 			List<String> attList = service.selectDeleteAttList(param.get("projectNo"));
@@ -171,17 +172,20 @@ public class ProjectController {
 								file.delete();
 							}
 						}
+
 						//파일 삭제 후 db테이블에서 데이터도 삭제 진행
 						int result = service.deleteProjectWorkAtt(param.get("projectNo"));
+
 						if(result>0) {
-							service.deleteProject(param.get("projectNo"));
+							return ResponseEntity.ok("파일 삭제 성공");
 						}else {
-							return ResponseEntity.badRequest().body("프로젝트 삭제 실패");
+							return ResponseEntity.badRequest().body("파일 삭제 실패");
 						}
 					}
 				}
 			}
-			return ResponseEntity.ok().body("파일 삭제 성공");
+			service.deleteProject(param.get("projectNo"));
+			return ResponseEntity.ok("프로젝트 삭제 성공");
 		}
 
 	@ResponseBody

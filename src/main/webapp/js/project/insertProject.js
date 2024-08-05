@@ -162,7 +162,7 @@ function getTodayDate() {
 				projectTitle: $('input[name="projectTitle"]').val(),
 				employeeNo: empNo,
 				projectRank: $('select[name="importance"]').val(),
-				projectContent: $('textarea[name="projectContent"]').val(),
+				projectContent: $('textarea[name="projectContent"]').val().replace(/\n/g, "\\n").replace(/\r/g, "\\r"),
 				projectBudget: Number($('#project-budget').val().replace(/,/g, "")),
 				projectEndDate: $('#project-end-date').val(),
 				employee:[]

@@ -11,7 +11,7 @@
 				employeeNo: $('input[name="employeeNo"]').val(),
 				projectTitle: $('input[name="projectTitle"]').val(),
 				projectRank: Number($('#project-rank').val()),
-				projectContent: $('#floatingTextarea').val(),
+				projectContent: $('textarea[name="projectContent"]').val().replace(/\n/g, "\\n").replace(/\r/g, "\\r"),
 				projectBudget: Number($('#project-budget').val().replace(/,/g, "")),
 				projectEndDate: $('#project-end-date').val(),
 				projectProgress:Number($('#project-progress').val()),
