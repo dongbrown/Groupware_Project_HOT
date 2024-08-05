@@ -671,7 +671,7 @@ var EmailCommon = {
     deleteEmail: function(emailNo) {
         if (confirm('이 이메일을 삭제하시겠습니까?')) {
             $.ajax({
-                url: this.contextPath + '/delete',
+                url: this.contextPath + '/GDJ79_HOT_final/delete',
                 type: 'POST',
                 data: JSON.stringify([emailNo]),
                 contentType: 'application/json',
@@ -688,7 +688,7 @@ var EmailCommon = {
 
     updateUnreadCounts: function() {
         $.ajax({
-            url: this.contextPath + '/unread-counts',
+            url: this.contextPath + '/GDJ79_HOT_final/unread-counts',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
