@@ -2,7 +2,7 @@
 <img src="https://github.com/user-attachments/assets/8592ffd9-35d9-400e-98cf-7ae4281dd909" style="width: 100%;">
 <br>
 
-## 프로젝트 소개
+## ✋ 프로젝트 소개
 
 <table border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -15,7 +15,7 @@
   </tr>
 </table>
 
-### 개발 기간 : 2024.06.25 ~ 2024.08.06
+### 📅 개발 기간 : 2024.06.25 ~ 2024.08.06
 <br>
 
 
@@ -29,7 +29,29 @@
 <img src="https://github.com/user-attachments/assets/916150a1-d754-4247-b437-48e2655ebda2" style="width: 48%; height: 300px;"/>
 <br>
 
-## 구현 기능
+## 📃 WBS 및 ERD
+<details>
+  <summary><b>WBS</b></summary>
+  <br>
+  <div markdown="1">
+    <ul>
+      <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fa4dad6af-2889-4f24-849e-36828eac7662%2F121c0abb-b926-416e-a1ee-b3467ccd8bda%2FUntitled.png?table=block&id=42a5f2b1-81dd-48c5-a524-1e9bc27d6fc4&spaceId=a4dad6af-2889-4f24-849e-36828eac7662&width=2000&userId=17bae69d-6413-43c4-854c-4fa3895934cb&cache=v2"/>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary><b>ERD</b></summary>
+  <br>
+  <div markdown="1">
+    <ul>
+      <img src="https://github.com/user-attachments/assets/edabadf3-6251-49d6-944b-00eb5b7f530b"/>
+      <img src="https://github.com/user-attachments/assets/6a93b317-4219-428c-95d6-0b3728e9b78d"/>
+    </ul>
+  </div>
+</details>
+
+## 🔧 구현 기능
 
 ### (1) 채팅 서비스
 
@@ -150,7 +172,7 @@
 </details>
 
 
-## 배운 점 & 아쉬운 점
+## 📚 배운 점 & 아쉬운 점
 ### 해당 프로젝트에서 무엇을 배웠는가 ?
 <ul align="justify">
   <li>
