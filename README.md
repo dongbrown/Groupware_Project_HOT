@@ -24,11 +24,14 @@
 ## 👨‍👨‍👧‍👧 팀원 소개
 <img src="https://github.com/user-attachments/assets/1f5bb2d6-f4ef-4bd2-9f39-f70c4effd765" style="width: 100%;"/>
 
+<br>
+<br>
 
 ## ⚙️ 기술 스택
 <img src="https://github.com/user-attachments/assets/383fd344-4fb0-43d3-8bcb-002b0c357c82" style="width: 48%; height: 300px;"/>
 <img src="https://github.com/user-attachments/assets/916150a1-d754-4247-b437-48e2655ebda2" style="width: 48%; height: 300px;"/>
 <br>
+
 
 ## 📃 WBS 및 ERD
 <details>
@@ -51,6 +54,8 @@
     </ul>
   </div>
 </details>
+<br>
+
 
 ## 🔧 구현 기능
 
@@ -171,6 +176,7 @@
     </ul>
   </div>
 </details>
+<br>
 
 
 ## 📚 배운 점 & 아쉬운 점
