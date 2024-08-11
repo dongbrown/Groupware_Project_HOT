@@ -62,6 +62,16 @@
 ### (1) 채팅 서비스
 
 <details>
+  <summary><b>File 구조</b></summary>
+  <br>
+  <div markdown="1">
+    <ul>
+      <img src="https://github.com/user-attachments/assets/6aceacfc-63cd-411b-8647-34e31701ea70"/>
+    </ul>
+  </div>
+</details>
+
+<details>
   <summary><b>기능 1. SpringBoot WebSocket을 활용한 채팅 기능</b></summary>
   <br>
   <div markdown="1">
@@ -143,7 +153,15 @@
 <br>
 
 ### (2) 전자결재 조회 기능
-
+<details>
+  <summary><b>File 구조</b></summary>
+  <br>
+  <div markdown="1">
+    <ul>
+      <img src="https://github.com/user-attachments/assets/f0ad1bc8-1427-487c-b1fd-a6c387cc0775"/>
+    </ul>
+  </div>
+</details>
 <details>
   <summary><b>기능 1. 전체 전자 결재 문서 조회 기능</b></summary>
   <br>
